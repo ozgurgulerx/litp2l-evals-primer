@@ -1,7 +1,7 @@
 site_name: Evals Primer
 site_description: A practical field guide to evaluating AI systems
 site_author: Ozgur Guler
-site_url: https://ozgurgulerx.github.io/litp2l-evals-primer/
+site_url: https://ozgurguler.org/litp2l-evals-primer/
 repo_url: https://github.com/ozgurgulerx/litp2l-evals-primer
 repo_name: ozgurgulerx/litp2l-evals-primer
 edit_uri: edit/main/docs/
@@ -63,4 +63,3 @@ extra_css:
   - stylesheets/extra.css
 
 copyright: Copyright &copy; 2026 Ozgur Guler
-
