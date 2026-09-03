@@ -9,6 +9,7 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: en
+  favicon: assets/favicon.svg
   icon:
     logo: material/chart-box-outline
     repo: fontawesome/brands/github
