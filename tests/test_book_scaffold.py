@@ -30,6 +30,14 @@ class BookConfigurationTests(unittest.TestCase):
         self.assertRegex(configuration, r"(?m)^\s+primary:\s+green\s*$")
         self.assertRegex(configuration, r"(?m)^\s+accent:\s+light green\s*$")
 
+    def test_configuration_uses_custom_topic_favicon(self) -> None:
+        configuration = (REPOSITORY_ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+        favicon = REPOSITORY_ROOT / "docs/assets/favicon.svg"
+
+        self.assertIn("favicon: assets/favicon.svg", configuration)
+        self.assertTrue(favicon.is_file())
+        self.assertIn("<svg", favicon.read_text(encoding="utf-8"))
+
     def test_navigation_references_every_chapter(self) -> None:
         configuration = (REPOSITORY_ROOT / "mkdocs.yml").read_text(encoding="utf-8")
 
