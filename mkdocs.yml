@@ -1,0 +1,66 @@
+site_name: Evals Primer
+site_description: A practical field guide to evaluating AI systems
+site_author: Ozgur Guler
+site_url: https://ozgurgulerx.github.io/litp2l-evals-primer/
+repo_url: https://github.com/ozgurgulerx/litp2l-evals-primer
+repo_name: ozgurgulerx/litp2l-evals-primer
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  icon:
+    logo: material/chart-box-outline
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: green
+      accent: light green
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: green
+      accent: light green
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - content.action.edit
+    - content.code.copy
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+
+nav:
+  - Start Here: index.md
+  - 1. Foundations: foundations.md
+  - 2. Dataset Design: dataset-design.md
+  - 3. Metrics: metrics.md
+  - 4. LLM as a Judge: llm-as-a-judge.md
+  - 5. Production Evals: production-evals.md
+  - 6. Shipping Checklist: checklist.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+
+copyright: Copyright &copy; 2026 Ozgur Guler
+

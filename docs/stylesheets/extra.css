@@ -1,0 +1,64 @@
+:root {
+  --md-primary-fg-color: #087f5b;
+  --md-primary-fg-color--light: #20c997;
+  --md-primary-fg-color--dark: #065f46;
+  --md-accent-fg-color: #2f9e44;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 155;
+  --md-default-bg-color: #071b15;
+  --md-default-bg-color--light: #0b2a20;
+}
+
+.evals-hero {
+  background:
+    radial-gradient(circle at top right, rgb(255 255 255 / 18%), transparent 38%),
+    linear-gradient(135deg, #065f46 0%, #0ca678 58%, #69db7c 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 1rem 2.4rem rgb(6 95 70 / 18%);
+  color: #fff;
+  margin: 1rem 0 2rem;
+  overflow: hidden;
+  padding: clamp(2rem, 7vw, 4.5rem);
+}
+
+.evals-hero h1 {
+  color: #fff;
+  font-size: clamp(2.6rem, 8vw, 5rem);
+  letter-spacing: -0.04em;
+  margin: 0 0 0.5rem;
+}
+
+.evals-hero p {
+  font-size: 1.15rem;
+  margin-bottom: 0;
+  max-width: 34rem;
+}
+
+.chapter-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  margin: 1.5rem 0;
+}
+
+.chapter-card {
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 32%, transparent);
+  border-radius: 0.85rem;
+  color: inherit;
+  padding: 1rem 1.1rem;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.chapter-card:hover {
+  border-color: var(--md-accent-fg-color);
+  transform: translateY(-2px);
+}
+
+.chapter-card strong {
+  color: var(--md-primary-fg-color);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
