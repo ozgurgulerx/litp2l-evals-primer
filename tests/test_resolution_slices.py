@@ -7,7 +7,11 @@ from dataclasses import replace
 from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
-from cx_eval_lab.order_resolution import DescriptiveResolver, example_cases
+from cx_eval_lab.order_resolution import (
+    DescriptiveResolver,
+    FirstRecordResolver,
+    example_cases,
+)
 from cx_eval_lab.resolution_runner import make_manifest, run_paired_resolution
 from tests.test_resolution_semantic import NativeFixtureJudge, packet_for, setup_stage
 
@@ -57,6 +61,35 @@ class ResolutionSliceTests(unittest.TestCase):
             report = self.derive(packet, trust=frozenset({stage.calibration_hash}))
             self.assertEqual(8, len(report['joint']['overall']['changes']['unqualified']))
             self.assertEqual(8, len(report['structural']['overall']['changes']['unchanged_pass']))
+
+    def test_unknown_joint_evidence_does_not_erase_observed_structural_failures(self):
+        stage = setup_stage(NativeFixtureJudge('abstain'))
+        packet = packet_for(stage, FirstRecordResolver())
+        report = self.derive(packet, trust=frozenset({stage.calibration_hash}))
+        self.assertEqual(6, len(report['structural']['overall']['changes']['regressed']))
+        self.assertEqual(8, len(report['joint']['overall']['changes']['unqualified']))
+        self.assertTrue(any(not check['passed'] for pair in report['joint']['pairs']
+                            for check in pair['candidate_evidence']['structural_checks']))
+
+    def test_structural_projection_never_inherits_joint_statistical_authority(self):
+        source = example_cases()[0]
+        cases = tuple(replace(source, case_id=f'case-{i}',
+            request=replace(source.request, customer_id=f'customer-{i}'),
+            orders=tuple(replace(order, customer_id=f'customer-{i}')
+                         if order.customer_id == source.request.customer_id else order
+                         for order in source.orders)) for i in range(2))
+        stage, agent = setup_stage(), DescriptiveResolver()
+        manifest = replace(make_manifest(cases, agent.name, agent.name, semantic_stage=stage),
+                           minimum_independent_clusters=2)
+        packet = run_paired_resolution(cases=cases, baseline_agent=agent, candidate_agent=agent,
+                                      manifest=manifest, semantic_stage=stage).to_dict()
+        report = self.derive(packet, trust=frozenset({stage.calibration_hash}))
+        self.assertEqual('lab_pass', report['joint']['status'])
+        self.assertIsNotNone(report['joint']['overall']['comparison'])
+        self.assertEqual('hold', report['structural']['status'])
+        self.assertIsNone(report['structural']['overall']['comparison'])
+        self.assertTrue(all(row['comparison'] is None for row in report['structural']['slices']))
+        self.assertFalse(report['deployment_authorized'])
 
     def test_required_plan_is_bound_before_actual_execution(self):
         agent, cases = DescriptiveResolver(), example_cases()
