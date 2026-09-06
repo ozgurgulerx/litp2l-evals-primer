@@ -25,6 +25,28 @@ def source_check_double(manifest, *, expected_revision, expected_evaluator_versi
 
 
 class CurrentReleaseStudyTests(unittest.TestCase):
+    def test_conformance_requires_the_expected_reason_not_only_outer_action(self):
+        from copy import deepcopy
+        from cx_eval_lab.current_release_study import run_study, _conforms
+        with patch('cx_eval_lab.release_now.verify_sources', side_effect=source_check_double):
+            study = run_study()
+        mutations = (
+            (('checks', 'campaign', 'status'), 'hold'),
+            (('checks', 'base_receipt', 'comparison', 'status'), 'pass'),
+            (('checks', 'chronology', 'evidence_after_decision'), True),
+            (('checks', 'chronology', 'known_timestamps_checked'), 0),
+            (('deployment_authorized',), True),
+            (('authority_ceiling',), 'canary'),
+        )
+        for path, value in mutations:
+            controls = deepcopy(study['assessments'])
+            target = controls[0]['assessment']
+            for key in path[:-1]:
+                target = target[key]
+            target[path[-1]] = value
+            with self.subTest(path=path):
+                self.assertFalse(_conforms(controls, study['expected_revision']))
+
     def test_control_orchestration_without_claiming_unit_source_attestation(self):
         from cx_eval_lab.current_release_study import run_study
         with patch('cx_eval_lab.release_now.verify_sources', side_effect=source_check_double):
