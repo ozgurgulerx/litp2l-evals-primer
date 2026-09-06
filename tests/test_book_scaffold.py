@@ -35,6 +35,7 @@ EXPECTED_CHAPTERS = (
     "docs/research-to-practice.md",
     "docs/long-running-serving.md",
     "docs/modern-agent-architectures.md",
+    "docs/knowledge-action-study.md",
     "docs/eval-operations-integrity.md",
 )
 
