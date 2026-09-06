@@ -38,6 +38,7 @@ def evaluate_agent(
     cases: tuple[RefundCase, ...],
     measurement_profile: MeasurementProfile | None = DEFAULT_MEASUREMENT_PROFILE,
     fault_mode: str | None = None,
+    semantic_stage=None,
 ) -> EvaluationReport:
     if not cases:
         raise ValueError("at least one evaluation case is required")
@@ -46,7 +47,7 @@ def evaluate_agent(
         raise ValueError("all cases in one run must share a dataset version")
 
     case_results = tuple(
-        _evaluate_isolated(agent, case, measurement_profile, fault_mode)
+        _evaluate_isolated(agent, case, measurement_profile, fault_mode, semantic_stage)
         for case in cases
     )
     successful_results = tuple(result for result in case_results if result.passed)
@@ -117,6 +118,7 @@ def run_paired_experiment(
     manifest: ExperimentManifest,
     baseline_measurement_profile: MeasurementProfile | None,
     candidate_measurement_profile: MeasurementProfile | None,
+    semantic_stage=None,
 ) -> PairedExperiment:
     """Run registered baseline/candidate repetitions on identical isolated cases."""
 
@@ -139,12 +141,14 @@ def run_paired_experiment(
                 case,
                 baseline_measurement_profile,
                 None,
+                semantic_stage,
             )
             candidate_result, candidate_payload = _execute_isolated(
                 candidate_agent,
                 case,
                 candidate_measurement_profile,
                 None,
+                semantic_stage,
             )
             arm_artifacts = tuple(
                 TrialArtifact.capture({
@@ -211,11 +215,12 @@ def _evaluate_isolated(
     case: RefundCase,
     measurement_profile: MeasurementProfile | None,
     fault_mode: str | None,
+    semantic_stage=None,
 ):
-    return _execute_isolated(agent, case, measurement_profile, fault_mode)[0]
+    return _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_stage)[0]
 
 
-def _execute_isolated(agent, case, measurement_profile, fault_mode):
+def _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_stage=None):
     world = RefundWorld.from_case(case)
     initial_state = world.snapshot
     tools = RefundTools(world, fault_mode=fault_mode)
@@ -244,6 +249,12 @@ def _execute_isolated(agent, case, measurement_profile, fault_mode):
             else measurement_profile.cost_usd_per_case
         )
     )
+    semantic_receipt, accepted_hashes, semantic_audit = None, frozenset(), None
+    if semantic_stage is not None:
+        semantic_receipt, accepted_hashes, semantic_audit = semantic_stage.grade(
+            case, output, world.events, world.snapshot, execution_error=execution_error,
+            measurement_kind="measured" if measurement_profile is None else measurement_profile.evidence_kind,
+        )
     result = evaluate_case(
         case,
         output,
@@ -252,6 +263,8 @@ def _execute_isolated(agent, case, measurement_profile, fault_mode):
         latency_ms=latency_ms,
         cost_usd=cost_usd,
         execution_error=execution_error,
+        semantic_evaluation_receipt=semantic_receipt,
+        qualified_semantic_calibration_hashes=accepted_hashes,
     )
     return result, {
         "schema": "refund-trial-v1",
@@ -269,8 +282,9 @@ def _execute_isolated(agent, case, measurement_profile, fault_mode):
             {"evidence_kind": "measured", "source": "runner wall-clock and runtime usage"}
             if measurement_profile is None else asdict(measurement_profile)
         ),
-        "semantic_evaluation_receipt": None,
-        "qualified_semantic_calibration_hashes": [],
+        "semantic_evaluation_receipt": None if semantic_receipt is None else semantic_receipt.to_dict(),
+        "qualified_semantic_calibration_hashes": sorted(accepted_hashes),
+        "semantic_stage": semantic_audit,
         "evaluation": result.to_dict(),
     }
 
