@@ -171,6 +171,33 @@ A useful trace crosses model, retrieval, tool, and external-state boundaries:
 
 Use standard telemetry conventions where they fit, while keeping domain-specific state and policy evidence. The local trace remains provider-neutral so observability vendors can be replaced.
 
+### Four different questions behind a green dashboard
+
+The [Telemetry Delivery Study](telemetry-delivery-study.md) executes this boundary with the real local OpenTelemetry SDK and OTLP/HTTP exporter, a loopback test receiver, and an independent request ledger. Katas 83–84 cover selective export loss, acknowledgment retry, duplicate delivery and pending feedback. It is not a production collector or an application rollout.
+
+“The agent completed,” “a span ended,” “the exporter succeeded,” and “the receiver retained the evidence” are different claims. Keep independent records for each boundary:
+
+| Question | Required evidence | Inadequate substitute |
+| --- | --- | --- |
+| What work was attempted? | An application-owned request inventory, recorded before execution | The requests that happen to appear in the tracing backend |
+| What did the application do? | Execution outcomes and authoritative side effects | A successful HTTP response from the telemetry endpoint |
+| What evidence reached the receiver? | Expected-versus-retained span identities, including parent links | A flush call returning success |
+| What do users or reviewers report? | Feedback linked to the exact request, output and evaluation version | A rating attached to a nearby timestamp or reused session ID |
+
+**Worked missingness example:** suppose 100 requests were registered, but the receiver retains results for only 80. Of those, 76 pass. The observed score is 76/80 = 95%; it is not a 95% score over all attempted work. With no additional outcome evidence, the finite attempted cohort's pass fraction is bounded by 76/100 and 96/100. Those are logical bounds, not a confidence interval or a production-population estimate. Twenty missing outcomes cannot be repaired by reporting a tighter interval around the observed 80.
+
+If a separate trusted application ledger knows all 100 outcomes, use it for application correctness and report trace coverage separately. Missing telemetry does not erase known outcomes. If the lost traces preferentially belong to errors or slow requests, the observed subset is especially misleading. Recover or explain missingness before using it to expand exposure.
+
+In OpenTelemetry Python SDK 1.44.0, `SimpleSpanProcessor.force_flush()` returns `True` without establishing successful delivery, and the processor does not propagate an exporter's returned failure as application failure. Verify receiver evidence rather than interpreting flush success as a receipt. This is a pinned implementation observation, not a promise for every processor or version. [SDK processor source](https://github.com/open-telemetry/opentelemetry-python/blob/v1.44.0/opentelemetry-sdk/src/opentelemetry/sdk/trace/export/__init__.py)
+
+### Retrying telemetry must not retry the business action
+
+A receiver may store a span and lose the acknowledgment. Retrying that export can deliver the same span twice. Deduplicate by trace and span identity, while checking for conflicting content under the same identity. Keep attempted exports, received records and unique retained spans as separate counters.
+
+Do not re-run the entire agent or payment operation merely because its telemetry export failed. The effect boundary needs its own idempotency and recovery rules. A telemetry retry repairs the evidence channel; it is not permission to repeat the customer's task.
+
+Register the response to lost evidence by risk. It may mean holding exposure expansion, pausing an audit-required write path, or continuing a bounded read-only service with an incident open. “Telemetry is optional” and “any exporter outage stops every request” are both incomplete policies. Include expected inventory, permissible loss, recovery deadline and decision owner.
+
 ## Protect sensitive payloads
 
 Prompts, completions, retrieved content, and tool arguments may contain personal, proprietary, or secret data. Do not log full payloads by default.
@@ -183,6 +210,16 @@ Separate:
 - governed raw evidence with retention/deletion policy.
 
 Redact before general telemetry export, restrict access by role, record review purpose, and test redaction. A trace that cannot be safely inspected is not solved by copying it into more systems.
+
+Prefer constructing spans from an allowlist over capturing everything and hoping to remove secrets later. Review span names, resource attributes, status descriptions, exception messages, event attributes and correlation identifiers—not only prompt fields. A harmless attribute name can still carry a sensitive value. Use fixed enumerations and opaque generated identifiers where possible. OpenTelemetry's sensitive-data guidance describes filtering and transformation controls; the choice of acceptable data still belongs to the application. [Handling sensitive data](https://opentelemetry.io/docs/security/handling-sensitive-data/)
+
+A plain hash of a predictable email address or order number is not reliable anonymization: an observer can try candidate inputs and compare their hashes. Pseudonymous references still need controlled mapping, retention and access. Do not export that mapping beside the reference. Keep raw evaluation evidence in a separately governed store, and test that deliberately planted private strings never appear in the serialized export, including failure paths.
+
+### Feedback joins are part of evaluation correctness
+
+Use distinct identities for the request, output version, evaluation version and annotation. An exact retry of the same annotation should be idempotent. The same annotation ID with a different target or verdict should be rejected or handled through an explicit revision protocol—not silently overwrite history. Separate reviewer disagreements from delivery duplicates.
+
+Retain feedback whose target trace has not arrived as pending, with an observable aging policy. Do not attach it to another request or drop it to improve join rates. Successful joining proves referential consistency, not reviewer identity, independent annotation, or the truth of the rating. Likewise, satisfaction among responders does not establish verified resolution for nonresponders. Report request coverage, annotation coverage and authoritative outcomes separately.
 
 ## Sample by risk and information value
 

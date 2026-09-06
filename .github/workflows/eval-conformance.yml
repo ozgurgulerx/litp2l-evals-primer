@@ -25,12 +25,12 @@ jobs:
           python-version: '3.12'
           enable-cache: false
       - name: Install locked development dependencies
-        run: uv sync --frozen --group dev --extra openai
+        run: uv sync --frozen --group dev --extra openai --extra telemetry
       - name: Unit, integration, and local CLI conformance tests
         run: |
-          uv run --extra openai coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
-          uv run --extra openai coverage report --fail-under=80
-          uv run --extra openai coverage xml -o coverage.xml
+          uv run --extra openai --extra telemetry coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
+          uv run --extra openai --extra telemetry coverage report --fail-under=80
+          uv run --extra openai --extra telemetry coverage xml -o coverage.xml
       - name: Exercise lab pass, insufficient-evidence hold, and policy block
         run: uv run python -m cx_eval_lab.ci_conformance --output-dir ci-evidence --code-revision "$CXLAB_CODE_REVISION"
       - name: Exercise campaign consistency and release-decision composition
@@ -49,6 +49,8 @@ jobs:
         run: uv run python -m cx_eval_lab.containment_study --output ci-evidence/containment.json
       - name: Exercise cross-run cache isolation and permitted sharing
         run: uv run python -m cx_eval_lab.isolation_study --output ci-evidence/isolation.json
+      - name: Exercise loopback OTLP delivery, loss and feedback joins
+        run: uv run --extra telemetry python -m cx_eval_lab.telemetry_study --output ci-evidence/telemetry.json
       - name: Exercise reviewed incident promotion and regression reruns
         run: uv run python -m cx_eval_lab.incident_regression --output ci-evidence/incident-regression.json
       - name: Derive paired slice changes from replayed legacy executions

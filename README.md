@@ -20,7 +20,7 @@ make test
 make build
 ```
 
-`make test` includes the optional OpenAI SDK for offline transport-contract tests. The tests use an in-memory HTTP transport and synthetic credentials; they do not make paid model calls or establish model quality. For coverage, install `uv sync --frozen --group dev --extra openai` and run `uv run --extra openai coverage run --branch --source=cx_eval_lab -m unittest discover -s tests`, then `uv run --extra openai coverage report --fail-under=80`.
+`make test` includes the optional OpenAI SDK for offline transport-contract tests and the optional OpenTelemetry SDK/HTTP exporter for local telemetry tests. Provider tests use an in-memory HTTP transport and synthetic credentials. Telemetry tests use loopback-only HTTP, not a hosted collector. They do not make paid model calls or establish model quality. For coverage, install `uv sync --frozen --group dev --extra openai --extra telemetry` and run `uv run --extra openai --extra telemetry coverage run --branch --source=cx_eval_lab -m unittest discover -s tests`, then `uv run --extra openai --extra telemetry coverage report --fail-under=80`.
 
 The strict build catches broken navigation and configuration problems. Every push to `main` publishes the latest book through GitHub Pages.
 

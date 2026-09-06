@@ -7,4 +7,4 @@ serve:
 	uv run python -m mkdocs serve --dev-addr localhost:8797
 
 test:
-	uv run --extra openai python -m unittest discover -s tests -v
+	uv run --extra openai --extra telemetry python -m unittest discover -s tests -v

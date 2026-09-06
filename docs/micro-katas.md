@@ -227,6 +227,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 [Katas 64–65](order-resolution-study.md#native-paired-diagnostics-separate-the-action-from-the-explanation) derive native structural and joint changes from retained multi-order executions. Distinguish a qualified semantic failure from abstention, locate clarification and ordering failures, and reject retrospective promotion of exploratory feature slices to required gates.
 
+[Katas 83–84](telemetry-delivery-study.md) use real loopback OTLP/HTTP delivery to distinguish application outcomes from observed trace coverage. Reconcile a successful flush with lost spans, deduplicate acknowledgment retries, reject inconsistent joins and preserve feedback awaiting a missing trace. In-memory acceptance and authored ratings are not durable production evidence.
+
 [Kata 82](semantic-grading-lab.md#kata-82-a-failed-check-must-reach-the-decision) follows failed template prerequisites through message qualification, report counters and the hard gate. Tests distinguish missing support from proven falsity, reject unreviewed template rules and prevent a passing semantic receipt from bypassing a recognized template's deterministic boundary.
 
 [Kata 81](benchmark-reproducibility.md#kata-81-equal-accuracy-different-evidence) computes equal headline accuracy with different per-item failures, joins reordered records by registered identity, rejects missing and duplicate items, and locates the first observable divergence. Its inputs are invented; it is not a completed cross-framework model experiment.

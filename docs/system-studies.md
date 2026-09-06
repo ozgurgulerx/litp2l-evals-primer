@@ -39,6 +39,8 @@ The [statistical method study](statistical-method-study.md) enumerates interval 
 
 ## Initial study programme
 
+The [Telemetry Delivery Study](telemetry-delivery-study.md) now retains actual loopback OTLP/HTTP traffic: normal delivery, capacity loss, terminal rejection and acknowledgment retry produce different observed trace inventories while the independent business outcomes remain fixed. Katas 83–84 connect those results to missingness and feedback joins. The in-memory receiver is a test instrument, not an operated production collector.
+
 The [process-recovery study](process-recovery-study.md) also has retained execution evidence: twenty-one local trials compare uninterrupted execution, three crash boundaries, a new-key retry mutant, and approval revocation. It closes the gap between declared failure observations and actual process-level effects for this narrow mock-payment workflow; persistent-model and distributed-system transfer remain unproven.
 
 | Study | Central question | Candidate CX experiment |

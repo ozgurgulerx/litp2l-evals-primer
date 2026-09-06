@@ -78,8 +78,9 @@ uv run python -m unittest tests.test_ci_conformance -v
 ## Run and inspect the same checks locally
 
 ```bash
-uv run coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
-uv run coverage report --fail-under=80
+uv sync --frozen --group dev --extra openai --extra telemetry
+uv run --extra openai --extra telemetry coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
+uv run --extra openai --extra telemetry coverage report --fail-under=80
 uv run mkdocs build --strict
 ```
 
