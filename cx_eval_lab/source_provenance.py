@@ -1,6 +1,7 @@
 """Local source/input consistency, not signed provenance or execution attestation."""
 
 import hashlib
+import json
 import re
 import subprocess
 from collections.abc import Mapping
@@ -89,7 +90,8 @@ def _json_value(value):
 def _value_hash(value):
     try:
         _json_value(value)
-        return canonical_hash(value)  # Rejects nonfinite floats, including nested values.
+        json.dumps(value, allow_nan=False)
+        return canonical_hash(value)
     except (ValueError, TypeError, RecursionError) as error:
         raise ValueError('operator input values must be finite JSON-compatible data') from error
 
