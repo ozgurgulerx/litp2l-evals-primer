@@ -228,3 +228,72 @@ The fixture reports 100 input tokens and 20 output tokens. For arithmetic only, 
 **Before a live run:** select an approved agent and judge model, freeze the configuration and dataset, obtain a total spend cap, establish independent calibration evidence, and configure an operator-owned stage with synthetic admission disabled. The existing Python runner accepts that stage; the CLI does not silently create one. These offline exercises require none of those paid calls and do not stand in for them.
 
 **Interview answer:** “I account separately for application cost, evaluation overhead, and unknown expenditure. A timeout cannot clear a spend gate merely because its response is missing. Likewise, a valid cost estimate cannot qualify the judge's factual accuracy.”
+
+## Kata 47: a new evidence domain needs a new qualification scope
+
+The single-order judge accepts a refund case with one authoritative order. The unresolved-order task instead contains competing purchases, customer corrections and clarification history. Sending that evidence through the same provider does not transfer the old judge's qualification.
+
+**Task:** configure the native criterion, then submit a legacy-criterion request to it. Predict whether a provider request should be sent. Next keep the old calibration identity while changing the criterion or rubric.
+
+```python
+from cx_eval_lab.openai_judge import JudgeConfig, NATIVE_CRITERION, NATIVE_RUBRIC
+
+config = JudgeConfig(model="pinned-fixture-model", criterion_id=NATIVE_CRITERION)
+assert config.rubric == NATIVE_RUBRIC
+# Configuration only: this does not construct a client or call a provider.
+```
+
+```bash
+uv run --extra openai python -m unittest tests.test_native_openai_judge -v
+uv run --extra openai python -m cx_eval_lab.native_provider_study \
+  --output /tmp/primer-native-provider-my-first-run.json
+```
+
+Use a new output path. The study uses the installed SDK with an in-memory HTTP handler, an ephemeral non-credential and synthetic response bodies. It does not read a real API key or send network requests. The [retained artifact](assets/native-provider-campaign-v1.json) records Python 3.12.7, OpenAI SDK 3.8.0 and httpx2 2.12.0 from this execution; these are observed versions, not recommendations or claims about the latest releases.
+
+??? success "Solution: bind criterion, rubric and evidence before dispatch"
+    `JudgeConfig` accepts only the supported legacy or native criterion. Selecting the native criterion with the default rubric selects the native instructions; a custom rubric remains explicit configuration. Native instructions distinguish intended order from owned order, inspect all ledgers, use observed clarification rather than assumed consent, and separate refund confirmation from money arrival. These instructions express the desired behavior; only an empirical study can show whether a model follows them.
+
+    The native configuration hash includes its criterion and `multi_order_truth_verdict` format name. Legacy default configuration hashes remain unchanged. A request/configuration criterion mismatch returns `abstain` before transport dispatch. The evaluator-owned native stage independently checks the calibration's criterion, dataset, policy, slices, configuration, dates and error bounds. Changing a rubric does not permit reusing its old qualification.
+
+    The SDK tests inspect the actual serialized request: structured verdict schema, no tools, no storage, no streaming, disabled truncation and no SDK retries. They exercise pass/fail/abstain, 429 and invalid-usage responses, then route native evidence through the paired runner and replay. The judge sees the observed request and all order state, but no expected-order label, future customer reply, arm name or invocation ID.
+
+    The transport fixture derives its responses from the deliberately limited literal rule in Katas 45–46. Four synthetic annotation calls compile its diagnostic record; those calls are retained separately from the paired campaign ledgers. Reaching a real SDK endpoint *shape* through a mock transport does not measure a real model's truthfulness, injection resistance or generalization.
+
+    The retained-study test separately joins mock transport inputs, response IDs, verdict text and token usage, then re-decodes the successful retained provider bodies using the pinned configuration. The generic packet/campaign verifier does not perform that extra provider-body or separate-transport-log check. Re-decoding a stored verdict validates adapter interpretation, not whether the verdict itself is true.
+
+**Extend:** construct an independent annotation set with wrong-but-authorized purchases, contradictory approval explanations and ambiguous follow-ups. Freeze the native configuration and qualify it on that scope before metered live comparisons. Preserve the original single-order calibration as a different record; do not relabel it to manufacture native evidence.
+
+**Interview answer:** “Provider identity is not evaluation validity. A change in task evidence, rubric or criterion needs its own scoped qualification. I test transport separately from semantic accuracy and prevent incompatible requests from reaching the provider.”
+
+## Kata 48: an accounting pass is not a release pass
+
+The [native provider campaign study](assets/native-provider-campaign-v1.json) executes four paired controls, each containing sixteen mock-agent executions. An in-memory HTTP handler either returns the fixture verdict or a synthetic 429. The admission ledger operates before the SDK call; it does not budget the agent.
+
+| Control | Paired SDK requests | Campaign assessment | Selected agent + judge estimate | Application release |
+| --- | ---: | --- | ---: | --- |
+| Known fixture usage | 16 | `clear` | $1.285760 | `block` |
+| Every response is 429 | 16 | `hold` | unknown | `block` |
+| At most two admissions | 2 | `hold` | $1.280720 | `block` |
+| $0.000300 reserved, $0.000360 returned | 1 | `block` | $1.280360 | `block` |
+
+All monetary values are invented fixture estimates. The selected totals exclude the four calibration requests, earlier attempts and tool/hosting/storage/human costs. There are **64 paired mock-agent executions plus four calibration executions**, and **35 paired SDK requests plus four calibration requests**. Retained mock requests are not paid provider calls.
+
+**Task:** explain why the first row is clear but cannot release, why the second retains $0.008000 of reservations without a complete estimate, and why the last row blocks further dispatch even though its recorded total is known.
+
+??? success "Solution: join the accounting records, then keep authorities separate"
+    Before execution, the native runner records the direct `BudgetedSemanticJudge` wrapper's campaign policy and judge configuration in the manifest. A missing or changed registration rejects before an agent executes. This automatic wiring recognizes that concrete wrapper; it is not generic interception of arbitrary nested wrappers.
+
+    Each judge admission uses an evaluator-owned invocation ID and a hash of the **native criterion plus reconstructed native evidence**. The wrapper removes the invocation ID before forwarding the request to the provider. Campaign verification joins the packet's observed execution, judge input, qualification, judgment, receipt and ledger row. Substituting the legacy criterion hash fails even if outer hashes are recomputed. The caller supplies the packet/snapshot anchors and expected policy; a packet cannot grant itself their trust.
+
+    Known usage is `16 × $0.000360 = $0.005760` of selected judge estimates. Add the synthetic $1.28 agent subtotal for $1.285760. The campaign is internally consistent, but synthetic calibration and unqualified application prerequisites still block release. `clear` says nothing about invoice accuracy, current calibration or statistical promotion.
+
+    Each 429 abstains and retains unknown cost. No SDK retry occurs for that request, but this study deliberately attempts the next registered trial until admission policy stops it. Sixteen unknown calls retain `16 × $0.000500 = $0.008000` of reservations; those reservations are neither confirmed expenditure nor zero-cost failures. A provider-specific circuit breaker or backoff policy would be a separate control.
+
+    The two-admission control dispatches twice and refuses the other fourteen grading requests. Those refusals are not fourteen unknown provider bills: the wrapper did not dispatch them. In the overrun control, the first returned estimate exceeds its reservation. The ledger records that fact and halts further admissions; fifteen remaining judgments abstain. The request limit cannot cancel a call already in flight, and an estimate overrun demonstrates why reservation arithmetic is not a hard provider invoice ceiling.
+
+    All four application decisions are built with unqualified full tool-boundary and independent semantic prerequisites. The retained release receipts therefore remain `block`, authority `none`, regardless of the campaign's own status. Replay and the campaign assessment are inspectable local computations, not authenticated execution or authorization to deploy.
+
+**Extend:** register a provider-throttling circuit breaker, cancellation/reconciliation procedure, and independent agent budget. Test how blocked grading affects experiment completeness and denominators rather than dropping those trials. Then join current qualification and source verification to a separately authorized exposure controller. Those production controls are not established by this study.
+
+**Interview answer:** “I register admission policy before execution, join every billed or uncertain call to its evidence, and preserve denied trials. A clear accounting check cannot override unqualified graders, missing release prerequisites or insufficient samples. Budget admission also cannot promise cancellation or an exact final bill.”

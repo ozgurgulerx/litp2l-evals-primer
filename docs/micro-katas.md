@@ -221,6 +221,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 [Katas 45–46](order-resolution-study.md#kata-45-four-correct-labels-do-not-qualify-a-judge) add native multi-order semantic receipts, row-derived synthetic calibration and joint structural/semantic controls. Calculate why zero errors in two examples is weak evidence, distinguish qualified failure from abstention and missing qualification, and revoke a calibration without erasing historical grades. The literal judge, synthetic reviewers and overlapping scenarios demonstrate integration—not semantic validity or deployment permission.
 
+[Katas 47–48](semantic-grading-lab.md#kata-47-a-new-evidence-domain-needs-a-new-qualification-scope) connect that native criterion to the installed provider SDK and budgeted campaign path with in-memory HTTP. Four retained controls distinguish accounting clear/hold/block from application release, reproduce throttling and reservation overruns, and keep missing usage visible. All labels, usage and prices are synthetic; no network or paid calls are made.
+
 [Katas 18–20](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) reconstruct calibration counts from retained rows, preserve adjudication, reject declared split leakage and connect incident learning to independent requalification. The executed four-row example is synthetic and remains unqualified.
 
 [Katas 16–17](ci-gate-lab.md) exercise expected rejection in CI and the distinction between software conformance, candidate qualification, and application deployment. The command is verified locally; cloud execution and canary control remain separate milestones.
