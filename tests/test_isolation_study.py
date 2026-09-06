@@ -50,12 +50,18 @@ class IsolationStudyTests(unittest.TestCase):
             self.assertEqual({'private_marker': 'run-B'}, result['value'])
             with self.assertRaises(PermissionError):
                 worker.resolve(replace(a, run_id='run-B'), 'same query')
+            other = CacheStore(Path(root) / 'other.sqlite', 'scoped')
+            with self.assertRaises(PermissionError):
+                worker.resolve(other.issue_context('run-A'), 'same query')
             for identity in ('../private', '', 'source:run-A', None):
                 with self.subTest(identity=identity), self.assertRaises(ValueError):
                     store.issue_context(identity)
             with self.assertRaises(PermissionError):
                 worker.overwrite_policy(a)
             self.assertEqual(POLICY, worker.read_policy(b))
+            worker.resolve(a, 'policy-v1')
+            self.assertEqual(POLICY, worker.read_policy(b))
+            self.assertEqual({'private', 'shared-policy'}, {row['storage_key'][0] for row in store.snapshot()})
 
     def test_regrade_rejects_rehashed_invented_reads_and_responses(self):
         from cx_eval_lab.isolation_study import replay_study, run_study
@@ -89,6 +95,25 @@ class IsolationStudyTests(unittest.TestCase):
         report['report_hash'] = canonical_hash({key: value for key, value in report.items() if key != 'report_hash'})
         with self.assertRaises(ValueError):
             replay_study(report)
+
+    def test_registered_phase_identity_cannot_follow_a_misbound_worker(self):
+        from cx_eval_lab.isolation_study import regrade, run_comparison
+        original = run_comparison('query-only', 'fresh-workers')
+        wrong_run = copy.deepcopy(original)
+        b = wrong_run['responses'][1]
+        b['run_id'] = 'run-A'
+        for call in wrong_run['calls']:
+            if call['run_id'] == 'run-B':
+                call['run_id'] = 'run-A'
+        with self.assertRaises(ValueError):
+            regrade(wrong_run)
+        wrong_worker = copy.deepcopy(original)
+        for call in wrong_worker['calls']:
+            call['worker_id'] = 'unregistered-worker'
+        for response in wrong_worker['responses']:
+            response['worker_id'] = 'unregistered-worker'
+        with self.assertRaises(ValueError):
+            regrade(wrong_worker)
 
     def test_cli_is_exclusive(self):
         with tempfile.TemporaryDirectory() as root:
