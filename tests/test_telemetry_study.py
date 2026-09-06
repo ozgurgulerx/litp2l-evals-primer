@@ -115,7 +115,7 @@ class TelemetryStudyTests(unittest.TestCase):
     def test_idle_socket_cannot_hang_collector_shutdown(self):
         from cx_eval_lab.telemetry_collector import LocalCollector
         collector = LocalCollector('normal').__enter__()
-        connection = socket.create_connection(collector.server.server_address, timeout=2)
+        connection = socket.create_connection(('127.0.0.1', collector.server.server_port), timeout=2)
         connection.sendall(b'POST /v1/traces HTTP/1.1\r\n')
         shutdown = threading.Thread(target=collector.__exit__, daemon=True)
         shutdown.start()
@@ -215,7 +215,7 @@ class TelemetryStudyTests(unittest.TestCase):
                 ('/wrong', b'x', '1', 'application/x-protobuf'),
                 ('/v1/traces', b'bad', '3', 'application/x-protobuf'),
                 ('/v1/traces', b'x', '1', 'application/json')):
-                connection = http.client.HTTPConnection(*collector.server.server_address, timeout=3)
+                connection = http.client.HTTPConnection('127.0.0.1', collector.server.server_port, timeout=3)
                 connection.request('POST', path, body, headers={'Content-Length': length, 'Content-Type': content})
                 self.assertEqual(400, connection.getresponse().status)
                 connection.close()
