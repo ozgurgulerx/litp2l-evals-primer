@@ -2,6 +2,7 @@
 
 import json
 import copy
+import errno
 from pathlib import Path
 import subprocess
 import sys
@@ -60,7 +61,7 @@ class CIConformanceTests(unittest.TestCase):
                     if status == 'timeout':
                         raise subprocess.TimeoutExpired(command, 30, output=b'partial\xff', stderr=b'error\xfe')
                     if status == 'launch_error':
-                        raise OSError('launch unavailable')
+                        raise OSError(errno.ENOENT, 'launch unavailable', command[0])
                     if status == 'unexpected_exit':
                         return subprocess.CompletedProcess(command, 7, 'failed', 'error')
                     if defect == 'missing':
@@ -90,7 +91,8 @@ class CIConformanceTests(unittest.TestCase):
                 self.assertEqual('policy-bypass', report['failed_control'])
                 self.assertEqual(phase, report['phase'])
                 self.assertEqual(status, report['status'])
-                self.assertEqual(exception.__name__, report['error_type'])
+                self.assertEqual('FileNotFoundError' if status == 'launch_error' else exception.__name__,
+                                 report['error_type'])
                 self.assertNotIn('action', report)
                 self.assertNotIn('candidate_action', report)
                 from cx_eval_lab.evidence import canonical_hash

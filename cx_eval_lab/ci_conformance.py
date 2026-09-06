@@ -42,6 +42,28 @@ def _write(path, value):
         destination.write('\n')
 
 
+def _text(value):
+    """TimeoutExpired can retain bytes even when run requests text output."""
+    return value.decode('utf-8', errors='replace') if isinstance(value, bytes) else value or ''
+
+
+def _execute(command, record_path, expected_exit, revision):
+    try:
+        completed = subprocess.run(command, capture_output=True, text=True, timeout=30,
+                                   env={**os.environ, 'CXLAB_CODE_REVISION': revision})
+    except (subprocess.TimeoutExpired, OSError) as error:
+        record = {'returncode': None, 'expected_returncode': expected_exit,
+                  'status': 'timeout' if isinstance(error, subprocess.TimeoutExpired) else 'launch_error',
+                  'stdout': _text(getattr(error, 'stdout', None)),
+                  'stderr': _text(getattr(error, 'stderr', None))}
+        try:
+            _write(record_path, record)
+        except OSError as write_error:
+            error.add_note(f'Command diagnostic could not be written: {type(write_error).__name__}')
+        raise
+    return completed
+
+
 def run_conformance(output: Path, revision: str):
     if not revision or not revision.strip():
         raise ValueError('CI revision is required')
@@ -57,18 +79,38 @@ def run_conformance(output: Path, revision: str):
         command = [sys.executable, '-m', 'cx_eval_lab', 'experiment',
                    '--candidate-agent', candidate, '--minimum-independent-clusters', str(minimum),
                    '--output', str(output / artifact)]
-        completed = subprocess.run(command, capture_output=True, text=True, timeout=30,
-                                   env={**os.environ, 'CXLAB_CODE_REVISION': revision})
-        _write(output / f'{name}-command.json', {
-            'returncode': completed.returncode, 'expected_returncode': expected_exit,
-            'stdout': completed.stdout, 'stderr': completed.stderr,
-        })
-        if completed.returncode != expected_exit:
-            raise ValueError(f'{name}: unexpected CLI exit {completed.returncode}')
-        packet = json.loads((output / artifact).read_text(encoding='utf-8'))
-        count = verify_packet(packet, action=action, revision=revision)
-        checks.append({'name': name, 'artifact': artifact, 'action': action,
-                       'replayed_trials': count, 'artifact_hash': canonical_hash(packet)})
+        phase, status = 'command', 'command_error'
+        try:
+            completed = _execute(command, output / f'{name}-command.json', expected_exit, revision)
+            phase, status = 'command_record', 'record_error'
+            _write(output / f'{name}-command.json', {
+                'returncode': completed.returncode, 'expected_returncode': expected_exit,
+                'stdout': completed.stdout, 'stderr': completed.stderr,
+            })
+            phase, status = 'exit', 'unexpected_exit'
+            if completed.returncode != expected_exit:
+                raise ValueError(f'{name}: unexpected CLI exit {completed.returncode}')
+            phase, status = 'packet', 'invalid_packet'
+            packet = json.loads((output / artifact).read_text(encoding='utf-8'))
+            phase, status = 'verification', 'invalid_evidence'
+            count = verify_packet(packet, action=action, revision=revision)
+            checks = [*checks, {'name': name, 'artifact': artifact, 'action': action,
+                               'replayed_trials': count, 'artifact_hash': canonical_hash(packet)}]
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError,
+                subprocess.TimeoutExpired) as error:
+            if phase == 'command':
+                if isinstance(error, subprocess.TimeoutExpired):
+                    status = 'timeout'
+                elif isinstance(error, OSError):
+                    status = 'launch_error'
+            failure = {'schema': 'ci-conformance-failure-v1', 'code_revision': revision,
+                       'checks': checks, 'failed_control': name, 'phase': phase, 'status': status,
+                       'error_type': type(error).__name__, 'deployment_authorized': False}
+            try:
+                _write(output / 'conformance-failure.json', failure)
+            except OSError as write_error:
+                error.add_note(f'Failure diagnostic could not be written: {type(write_error).__name__}')
+            raise
     report = {'schema': 'ci-conformance-v1', 'code_revision': revision,
               'checks': checks, 'deployment_authorized': False,
               'meaning': 'software conformance only; no model capability or deployment qualification'}
@@ -83,7 +125,8 @@ def main():
     args = parser.parse_args()
     try:
         report = run_conformance(args.output_dir, args.code_revision)
-    except (OSError, ValueError, KeyError, subprocess.TimeoutExpired) as error:
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError,
+            subprocess.TimeoutExpired) as error:
         parser.error(f'conformance failed: {error}')
     print(f"verified {len(report['checks'])} controls; deployment_authorized=false")
     return 0
