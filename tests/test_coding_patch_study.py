@@ -57,6 +57,51 @@ class CodingPatchStudyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'replay'):
             study.verify_study(altered)
 
+    def test_rehashed_case_coverage_and_result_fabrications_fail_replay(self):
+        for defect in ('missing-case', 'invented-pass', 'integer-boolean', 'extra-field'):
+            altered = copy.deepcopy(self.report)
+            suite = altered['controls'][0]['suites'][1]
+            if defect == 'missing-case':
+                suite['results'].pop()
+                suite['registered'] -= 1
+            elif defect == 'invented-pass':
+                suite['results'][1] = {**suite['results'][1], 'output_passed': True, 'passed': True}
+                suite['passed'] += 1
+            elif defect == 'integer-boolean':
+                suite['results'][0]['input_unchanged'] = 1
+            else:
+                altered['controls'][0]['duration_seconds'] = 0
+            suite['stdout'] = json.dumps(suite['results'], sort_keys=True) + '\n'
+            altered['report_hash'] = study.digest({k: v for k, v in altered.items() if k != 'report_hash'})
+            with self.subTest(defect=defect), self.assertRaisesRegex(ValueError, 'replay'):
+                study.verify_study(altered)
+
+    def test_child_test_deletion_and_extra_files_block_after_execution(self):
+        real_run = subprocess.run
+
+        def poison(command, **kwargs):
+            result = real_run(command, **kwargs)
+            (Path(kwargs['cwd']) / 'acceptance.json').unlink()
+            (Path(kwargs['cwd']) / 'unexpected.txt').write_text('unexpected')
+            return result
+
+        with patch.object(study.subprocess, 'run', side_effect=poison):
+            report = study.run_study()
+        self.assertFalse(report['conformance_passed'])
+        self.assertEqual('integrity_blocked', report['controls'][2]['status'])
+        self.assertIn('unexpected.txt', report['controls'][2]['suites'][0]['files_after'])
+        self.assertEqual(1, len(report['controls'][2]['suites']))
+
+    def test_rehashed_invalid_duration_rejected_without_execution(self):
+        for value in (-1, 'fast', True):
+            altered = copy.deepcopy(self.report)
+            altered['controls'][0]['suites'][0]['duration_seconds'] = value
+            altered['report_hash'] = study.digest({k: v for k, v in altered.items() if k != 'report_hash'})
+            with self.subTest(value=value), patch.object(study.subprocess, 'run') as runner:
+                with self.assertRaisesRegex(ValueError, 'duration'):
+                    study.verify_study(altered)
+                runner.assert_not_called()
+
     def test_timeout_and_missing_results_cannot_pass(self):
         for effect in (subprocess.TimeoutExpired('fixed child', 5, output=b'partial\xff'),
                        subprocess.CompletedProcess([], 0, '{}', '')):
@@ -73,6 +118,22 @@ class CodingPatchStudyTests(unittest.TestCase):
                 self.assertEqual('partial\ufffd', first['stdout'])
             else:
                 self.assertEqual('invalid_results', first['status'])
+
+    def test_negative_control_transport_failure_is_not_expected_rejection(self):
+        real_run = subprocess.run
+        for defect in ('timeout', 'missing-test'):
+            def fail_original(command, defect=defect, **kwargs):
+                source = (Path(kwargs['cwd']) / 'candidate.py').read_text()
+                if source == study.BUILTINS['original-denominator']:
+                    if defect == 'timeout':
+                        raise subprocess.TimeoutExpired(command, 2)
+                    return subprocess.CompletedProcess(command, 0, '[]', '')
+                return real_run(command, **kwargs)
+
+            with self.subTest(defect=defect), patch.object(study.subprocess, 'run', side_effect=fail_original):
+                report = study.run_study()
+            self.assertEqual('accepted', report['controls'][2]['status'])
+            self.assertFalse(report['conformance_passed'])
 
     def test_missing_protected_test_blocks_before_candidate_execution(self):
         original = study._prepare
