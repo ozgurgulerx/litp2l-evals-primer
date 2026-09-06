@@ -90,7 +90,7 @@ class PairedSliceTests(unittest.TestCase):
                 self.derive(packet)
 
     def test_incomplete_pair_inventory_and_native_schema_are_rejected(self):
-        for action in ('missing', 'duplicate', 'native', 'bool-index'):
+        for action in ('missing', 'duplicate', 'native', 'bool-index', 'bool-payload-index'):
             packet = copy.deepcopy(self.study['packet'])
             if action == 'missing':
                 packet['candidate_trials'].pop()
@@ -98,6 +98,9 @@ class PairedSliceTests(unittest.TestCase):
                 packet['candidate_trials'].append(copy.deepcopy(packet['candidate_trials'][0]))
             elif action == 'native':
                 packet['trial_artifacts'][0]['payload']['schema'] = 'resolution-trial-v2'
+            elif action == 'bool-payload-index':
+                packet['trial_artifacts'][0]['payload']['identity']['trial_index'] = False
+                rehash(packet)
             else:
                 packet['baseline_trials'][0]['trial_index'] = False
             with self.assertRaises(ValueError):
