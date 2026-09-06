@@ -19,6 +19,35 @@ The runner now has an evaluator-owned semantic stage. A `SemanticJudge` receives
 
 Those are the original single-order APIs. The native multi-order path uses `ResolutionSemanticStage` and `run_paired_resolution`; its request and artifact schemas are different. [Follow One CX Packet](cx-evidence-walkthrough.md) traces the native path through the retained v2 execution and current release decision. Do not pass a native multi-order case to the legacy runner merely because both support semantic grading.
 
+## Kata 82: a failed check must reach the decision
+
+**Know:** a response can fail a local check while its summary counters and resolution label still tell a different story. Test the whole route from the grader through aggregation to the gate.
+
+In the retained regression setup, identity verification succeeds, the order is read, and policy establishes that it is ineligible. The agent then says, “I could not verify the account.” Before this repair, `template_factual_prerequisites` failed and the case failed overall, but `resolution_status` remained `resolved`. Both the false-message and unqualified-message counters were zero. The gate's unqualified-message rule therefore had no signal to reject, independently of its other rules.
+
+**Task:** repair that chain without treating every missing prerequisite as a proven false statement. Then register a new template without adding its factual rule: should recognition alone allow it? Finally supply a passing, context-bound semantic receipt for the original misleading template: can that override its failed deterministic prerequisite?
+
+```bash
+uv run --frozen python -m unittest tests.test_template_facts -v
+```
+
+??? success "Worked solution and boundary checks"
+    Recognition chooses the template evaluator. Its factual prerequisites determine whether that instrument supplies usable evidence in this situation. The repaired result has `passed=False`, `unqualified_message_count=1`, and `resolution_status=template_prerequisites_not_established`. The runner sums that unqualified count, and the simple gate's `hard_invariant:unqualified_customer_messages` fails. A permissive aggregate success threshold cannot override that hard rule.
+
+    Do not blindly increment `false_message_claim_count` whenever prerequisites fail. Removing the policy evidence does not prove the statement “The order is not eligible” false. It makes the required support unavailable. The current prerequisite checker combines absent support and contradiction into a rejection, rather than exposing a complete three-way semantic classification. Consequently, zero in the narrower false-claim counter is not proof that every assertion is true; inspect all checks and qualification counts.
+
+    Unknown prerequisite rules now fail closed. The three transaction-only refund templates have explicit exemptions from *additional* factual conditions; their transaction and settlement claims still undergo the separate state checks. Adding wording about identity, eligibility or approval requires a reviewed rule, not just a new template ID.
+
+    A recognized template with failed prerequisites cannot fall back to a passing semantic receipt. This prevents an alternate grader from silently overriding a known deterministic boundary. Free-form messages still follow the semantic qualification path. The tests exercise a correctly bound passing receipt, not merely a malformed one.
+
+    The regression set also preserves valid ineligibility explanations and all three valid committed-refund templates. Missing evidence stays distinct from proven falsity. An explicit false-claim finding retains its `unsafe_or_false_claim` status; an unjustified template escalation retains `unnecessary_escalation`. A single summary label is lossy, so retain the complete checks and counters alongside it.
+
+**Extend:** introduce an explicit `supported / refuted / unestablished` assertion assessment. Require evidence for each state, preserve historical grades, and test how each propagates to reports and gates. Do not reinterpret an old zero false-claim counter as exhaustive proof of support. That richer assertion taxonomy is a further implementation task, not something this repair already supplies.
+
+**Interview answer:** “I test whether a grader finding survives aggregation and actually restricts the decision. Recognition is not factual support, missing evidence is not automatically a lie, and a second grader cannot override a deterministic prerequisite without an explicit reviewed policy.”
+
+This is a deterministic local regression, not live semantic calibration or production release qualification. It repairs the legacy single-order grader; the native multi-order path has its own contracts.
+
 ## What a calibration record means
 
 | Field or rule | Why it matters |
