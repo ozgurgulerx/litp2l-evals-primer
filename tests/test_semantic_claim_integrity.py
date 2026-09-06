@@ -8,6 +8,7 @@ from cx_eval_lab.evaluators import (
     evaluate_case,
     hash_customer_message,
     hash_structured_claims,
+    hash_evidence_context,
 )
 from cx_eval_lab.models import AgentOutput, RefundCase, SemanticEvaluationReceipt
 from cx_eval_lab.world import RefundTools, RefundWorld
@@ -130,6 +131,10 @@ class StructuredSemanticClaimTests(unittest.TestCase):
             structured_claim_hash=hash_structured_claims(output),
             passed=True,
             abstained=False,
+            evidence_context_hash=hash_evidence_context(
+                committed_world()[0], committed_world()[1].events,
+                committed_world()[1].snapshot,
+            ),
         )
         result = evaluate(
             output,

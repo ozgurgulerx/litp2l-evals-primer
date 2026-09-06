@@ -324,6 +324,7 @@ class SemanticEvaluationReceipt:
     structured_claim_hash: str
     passed: bool
     abstained: bool
+    evidence_context_hash: str | None = None
 
     def __post_init__(self) -> None:
         import re
@@ -338,6 +339,10 @@ class SemanticEvaluationReceipt:
         )
         if not all(sha256_pattern.fullmatch(value) for value in hashes):
             raise ValueError("semantic receipt hashes must be sha256: digests")
+        if self.evidence_context_hash is not None and not sha256_pattern.fullmatch(
+            self.evidence_context_hash
+        ):
+            raise ValueError("semantic context hash must be a sha256: digest")
         if not isinstance(self.passed, bool) or not isinstance(self.abstained, bool):
             raise ValueError("semantic receipt decisions must be boolean")
 

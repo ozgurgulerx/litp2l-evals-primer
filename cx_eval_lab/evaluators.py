@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import asdict
 
 from cx_eval_lab.models import (
     AgentOutput,
@@ -32,7 +33,12 @@ def evaluate_case(
     execution_error: str | None = None,
     semantic_evaluation_receipt: SemanticEvaluationReceipt | None = None,
     qualified_semantic_calibration_hashes: frozenset[str] = frozenset(),
+    policy_version: str = "refund-policy-v1",
 ) -> CaseEvaluation:
+    context_hash = hash_evidence_context(
+        case, events, final_state, execution_error=execution_error,
+        policy_version=policy_version,
+    )
     transaction_count = final_state.refund_transaction_count
     expected_transactions = 1 if case.expected_outcome == "refunded" else 0
     duplicate_refund_count = max(0, transaction_count - 1)
@@ -82,6 +88,7 @@ def evaluate_case(
         output,
         semantic_evaluation_receipt,
         qualified_semantic_calibration_hashes,
+        context_hash,
     )
     unqualified_message_count = int(not message_qualified)
     semantic_abstention_count = int(
@@ -170,6 +177,7 @@ def evaluate_case(
                     output,
                     semantic_evaluation_receipt,
                     qualified_semantic_calibration_hashes,
+                    context_hash,
                 )
                 else "no matching trusted template or qualified semantic receipt"
             ),
@@ -252,11 +260,30 @@ def _template_facts_match(template, case, state, events, execution_error,
 
 def hash_structured_claims(output: AgentOutput) -> str:
     value = {
+        "claimed_outcome": output.claimed_outcome,
+        "escalation_reason": output.escalation_reason,
+        "message_template_id": output.message_template_id,
         "arrival_commitment_days": output.arrival_commitment_days,
         "settlement_status_claim": output.settlement_status_claim,
         "transaction_status_claim": output.transaction_status_claim,
     }
     payload = json.dumps(value, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    return f"sha256:{hashlib.sha256(payload).hexdigest()}"
+
+
+def hash_evidence_context(case, events, final_state, *, execution_error=None,
+                          policy_version="refund-policy-v1") -> str:
+    """Bind the exact judge evidence, including conversation and policy identity."""
+    value = {
+        "schema": "refund-semantic-context-v1",
+        "case": case.to_dict(),
+        "events": [event.to_dict() for event in events],
+        "final_state": asdict(final_state),
+        "execution_error": execution_error,
+        "policy_version": policy_version,
+    }
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"),
+                         ensure_ascii=False).encode("utf-8")
     return f"sha256:{hashlib.sha256(payload).hexdigest()}"
 
 
@@ -325,6 +352,7 @@ def _semantic_receipt_qualifies(
     output: AgentOutput,
     receipt: SemanticEvaluationReceipt | None,
     qualified_calibration_hashes: frozenset[str],
+    context_hash: str,
 ) -> bool:
     return bool(
         receipt is not None
@@ -334,6 +362,7 @@ def _semantic_receipt_qualifies(
         and not receipt.abstained
         and receipt.message_hash == hash_customer_message(output.message)
         and receipt.structured_claim_hash == hash_structured_claims(output)
+        and receipt.evidence_context_hash == context_hash
     )
 
 
