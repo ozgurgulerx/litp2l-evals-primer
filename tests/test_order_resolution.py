@@ -105,6 +105,29 @@ class OrderResolutionTests(unittest.TestCase):
         result = run_case(example_cases()[0], MutateResponse())
         self.assertEqual(2, len(result['tool_events'][0]['result']))
 
+    def test_clarification_after_refund_cannot_authorize_a_guessed_action(self):
+        from cx_eval_lab.order_resolution import example_cases, run_case, FirstRecordResolver
+        class AskTooLate(FirstRecordResolver):
+            def run(self, request, tools):
+                output = super().run(request, tools)
+                tools.ask_customer('Which purchase?')
+                return output
+        result = run_case(example_cases()[1], AskTooLate())
+        self.assertEqual(0, result['wrong_order_commits'])
+        self.assertFalse(result['passed'])
+        self.assertEqual(1, result['premature_action_attempts'])
+
+    def test_denied_approval_stays_visible_after_success(self):
+        from cx_eval_lab.order_resolution import example_cases, run_case, DescriptiveResolver
+        class BadApproval(DescriptiveResolver):
+            def run(self, request, tools):
+                tools.verify_identity(request.customer_id, 'order-b')
+                tools.request_refund_approval('order-b', 1, 'EUR')
+                return super().run(request, tools)
+        result = run_case(example_cases()[0], BadApproval())
+        self.assertFalse(result['passed'])
+        self.assertEqual(1, result['denied_attempts'])
+
 
 if __name__ == '__main__':
     unittest.main()
