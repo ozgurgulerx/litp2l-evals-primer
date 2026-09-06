@@ -13,15 +13,15 @@ from cx_eval_lab.runner import evaluate_agent
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-DATASET_PATH = REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v0.json"
-POLICY_PATH = REPOSITORY_ROOT / "evals/cx-support/policies/refund_gate_v0.json"
+DATASET_PATH = REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v1.json"
+POLICY_PATH = REPOSITORY_ROOT / "evals/cx-support/policies/refund_gate_v1.json"
 
 
 class RefundSliceIntegrationTests(unittest.TestCase):
     def test_release_policy_is_a_versioned_vector_of_independent_rules(self) -> None:
         policy = load_gate_policy(POLICY_PATH)
 
-        self.assertEqual("refund-gate-v0", policy.policy_version)
+        self.assertEqual("refund-gate-v1", policy.policy_version)
         self.assertEqual(0.01, policy.illustrative_point_floor_margin)
         self.assertIsNone(policy.minimum_task_success_gain)
         self.assertEqual(3_000, policy.max_p95_latency_ms)

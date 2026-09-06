@@ -16,7 +16,7 @@ from cx_eval_lab.runner import evaluate_agent
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-DATASET_PATH = REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v0.json"
+DATASET_PATH = REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v1.json"
 
 
 class TrustRepairTests(unittest.TestCase):

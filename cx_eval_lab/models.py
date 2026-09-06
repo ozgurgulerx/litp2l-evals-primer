@@ -155,7 +155,7 @@ class RefundCase:
     currency: str = "USD"
     competing_order_ids: tuple[str, ...] = ()
     simulate_timeout_after_commit: bool = False
-    dataset_version: str = "refund-v0"
+    dataset_version: str = "refund-v1"
 
     def __post_init__(self) -> None:
         if not isinstance(self.slices, (list, tuple)) or isinstance(self.slices, str):

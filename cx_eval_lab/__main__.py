@@ -29,9 +29,9 @@ from cx_eval_lab.runner import (
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET = (
-    REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v0.json"
+    REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v1.json"
 )
-DEFAULT_POLICY = REPOSITORY_ROOT / "evals/cx-support/policies/refund_gate_v0.json"
+DEFAULT_POLICY = REPOSITORY_ROOT / "evals/cx-support/policies/refund_gate_v1.json"
 
 
 def build_parser() -> argparse.ArgumentParser:

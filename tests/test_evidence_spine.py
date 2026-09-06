@@ -21,7 +21,7 @@ from cx_eval_lab.statistics import PairedTrial, paired_non_inferiority
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-DATASET_PATH = REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v0.json"
+DATASET_PATH = REPOSITORY_ROOT / "evals/cx-support/datasets/regression/refund_v1.json"
 
 
 def make_manifest(measurement_kind: str = "synthetic") -> ExperimentManifest:
@@ -33,9 +33,9 @@ def make_manifest(measurement_kind: str = "synthetic") -> ExperimentManifest:
         model_id="deterministic-reference-v1",
         prompt_version="refund-system-v1",
         tool_version="typed-refund-tools-v1",
-        dataset_version="refund-v0",
+        dataset_version="refund-v1",
         evaluator_version="refund-evaluators-v1",
-        policy_version="refund-gate-v0",
+        policy_version="refund-gate-v1",
         environment_version="python-3.12",
         population_hash="sha256:" + "a" * 64,
         repetitions=2,

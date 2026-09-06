@@ -73,7 +73,7 @@ class GatePolicy:
     @classmethod
     def for_initial_refund_slice(cls) -> GatePolicy:
         return cls(
-            policy_version="refund-gate-v0",
+            policy_version="refund-gate-v1",
             illustrative_point_floor_margin=0.01,
             minimum_task_success_gain=None,
             slice_floors=(

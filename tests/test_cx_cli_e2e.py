@@ -42,7 +42,7 @@ class CxEvalCliTests(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual("lab_pass", report["decision"]["action"])
         self.assertEqual(5, report["evaluation"]["case_count"])
-        self.assertEqual("refund-v0", report["evaluation"]["dataset_version"])
+        self.assertEqual("refund-v1", report["evaluation"]["dataset_version"])
         self.assertIn("lab_pass", result.stdout)
 
     def test_broken_agent_returns_a_blocking_exit_code_and_reasons(self) -> None:
