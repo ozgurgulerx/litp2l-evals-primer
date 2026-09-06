@@ -51,7 +51,8 @@ class OpenAIJudgeTests(unittest.TestCase):
         judge = self.judge(client)
         result = judge.evaluate(SemanticRequest('{"output":{"message":"hello"}}'))
         self.assertEqual('pass', result.verdict)
-        self.assertEqual({'timeout': 30.0, 'max_retries': 0}, client.options[0])
+        self.assertEqual({'timeout': 30.0, 'max_retries': 0,
+                          'base_url': 'https://api.openai.com/v1'}, client.options[0])
         request = client.calls[0]
         self.assertFalse(request['store'])
         self.assertFalse(request['stream'])
