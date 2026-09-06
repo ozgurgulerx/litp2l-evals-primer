@@ -3,8 +3,11 @@
 import hashlib
 import re
 import subprocess
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+
+from cx_eval_lab.evidence import canonical_hash
 
 
 MAX_FILE_BYTES = 64 * 1024 * 1024
@@ -70,13 +73,47 @@ class SourceVerification:
     deployment_authorized: bool = field(default=False, init=False)
 
 
-def verify_sources(manifest, *, root, input_files, expected_revision, expected_evaluator_version):
-    """Check all registered files against operator paths and committed source bytes.
+def _json_value(value):
+    if isinstance(value, dict):
+        if any(not isinstance(key, str) for key in value):
+            raise ValueError('JSON object keys must be strings')
+        for nested in value.values():
+            _json_value(nested)
+    elif isinstance(value, (list, tuple)):
+        for nested in value:
+            _json_value(nested)
+    elif value is not None and type(value) not in (str, bool, int, float):
+        raise ValueError('operator input must be JSON-compatible')
 
-    Caller controls root, expected identities and input_files. Manifest labels
+
+def _value_hash(value):
+    try:
+        _json_value(value)
+        return canonical_hash(value)  # Rejects nonfinite floats, including nested values.
+    except (ValueError, TypeError, RecursionError) as error:
+        raise ValueError('operator input values must be finite JSON-compatible data') from error
+
+
+def verify_sources(manifest, *, root, input_files, expected_revision, expected_evaluator_version,
+                   input_values=None):
+    """Check committed source bytes, explicit operator files and canonical JSON values.
+
+    Caller controls root, expected identities, input_files and input_values. File
+    contents are hashed as bytes; values use canonical JSON. The disjoint operator
+    maps must cover exactly the non-source registrations. Manifest labels
     never become filesystem paths. Run in a controlled, non-mutating checkout.
     This does not inspect loaded bytecode or installed third-party dependencies.
     """
+    if input_values is None:
+        input_values = {}
+    if not isinstance(input_files, Mapping) or not isinstance(input_values, Mapping):
+        raise ValueError('operator input mapping must be explicit name-to-file/value maps')
+    files, values = dict(input_files), dict(input_values)
+    names = set(files) | set(values)
+    if (any(not isinstance(name, str) or name.startswith('source:') for name in names)
+            or set(files) & set(values)):
+        raise ValueError('operator input mapping must be disjoint and exclude source registrations')
+    observed_values = tuple((name, _value_hash(value)) for name, value in values.items())
     root = Path(root).resolve()
     if (not isinstance(expected_revision, str)
             or not re.fullmatch(r'(?:[0-9a-f]{40}|[0-9a-f]{64})', expected_revision)
@@ -95,7 +132,7 @@ def verify_sources(manifest, *, root, input_files, expected_revision, expected_e
                       if name in FIXED_INPUTS or name.endswith('.py')}
     if expected_names != set(current):
         raise ValueError('committed source inventory differs from local source inventory')
-    if set(input_files) != set(registered) - set(current):
+    if names != set(registered) - set(current):
         raise ValueError('operator input mapping must cover exactly the registered inputs')
     for key, actual in current.items():
         if registered[key] != actual:
@@ -103,9 +140,9 @@ def verify_sources(manifest, *, root, input_files, expected_revision, expected_e
         name = key.removeprefix('source:')
         if _hash(_git(root, 'show', f'{expected_revision}:{name}')) != actual:
             raise ValueError('source bytes differ from committed revision')
-    observed_inputs = tuple((name, _hash(_read(path))) for name, path in input_files.items())
+    observed_inputs = (*((name, _hash(_read(path))) for name, path in files.items()), *observed_values)
     if any(registered[name] != digest for name, digest in observed_inputs):
-        raise ValueError('registered input hash differs from operator file bytes')
+        raise ValueError('registered input hash differs from operator file bytes or canonical values')
     return SourceVerification(expected_revision, expected_evaluator_version,
                               tuple(sorted((*current.items(), *observed_inputs))))
 

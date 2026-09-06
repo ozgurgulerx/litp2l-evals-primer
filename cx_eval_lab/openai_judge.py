@@ -177,17 +177,22 @@ class OpenAIResponsesJudge:
                                   timeout=config.timeout_seconds, max_retries=0))
 
     @property
-    def configuration_hash(self):
+    def configuration_identity(self):
+        """Fresh canonical-hash preimage for operator-pinned source verification."""
         # Preserve existing legacy qualification identities: the former configuration
         # implicitly supported only CRITERION. Native scope must have a distinct identity.
         settings = asdict(self.config)
         if self.config.criterion_id == CRITERION:
             settings = {key: value for key, value in settings.items() if key != 'criterion_id'}
-        return canonical_hash({'config': settings, 'schema': _schema(),
-                               'adapter': self.evaluator_version,
-                               'endpoint': 'https://api.openai.com/v1', 'max_retries': 0,
-                               **({'format_name': self.format_name}
-                                  if self.config.criterion_id == NATIVE_CRITERION else {})})
+        return {'config': settings, 'schema': _schema(),
+                'adapter': self.evaluator_version,
+                'endpoint': 'https://api.openai.com/v1', 'max_retries': 0,
+                **({'format_name': self.format_name}
+                   if self.config.criterion_id == NATIVE_CRITERION else {})}
+
+    @property
+    def configuration_hash(self):
+        return canonical_hash(self.configuration_identity)
 
     @property
     def format_name(self):
