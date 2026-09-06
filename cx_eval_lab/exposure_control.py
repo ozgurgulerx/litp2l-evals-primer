@@ -4,7 +4,7 @@ Quality thresholds exercise control flow; they are not statistical release tests
 An external trusted collector owns observations and candidate/baseline identities.
 """
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 import hashlib
 
 
@@ -99,12 +99,16 @@ class ExposureWindow:
 class ExposureDecision:
     state: ExposureState
     reason: str
-    deployment_authorized: bool = False
+    deployment_authorized: bool = field(default=False, init=False)
 
 
-def route(state, customer_id):
+def route(state, customer_id, *, now=None):
     """Stable nested customer cohorts for one candidate identity."""
     _identifier(customer_id)
+    if now is not None:
+        _clock(now)
+        if now < state.last_end or now - state.last_end > 30:
+            return 'baseline'
     digest = hashlib.sha256(f'{state.candidate}\0{customer_id}'.encode()).digest()
     bucket = int.from_bytes(digest[:8], 'big') % 10000
     return 'candidate' if bucket < state.percent * 100 else 'baseline'
