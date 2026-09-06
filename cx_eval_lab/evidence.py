@@ -257,6 +257,7 @@ class EvidenceReceipt:
     issued_at: str
     valid_until: str
     invalidation_rules: tuple[str, ...]
+    campaign_check_json: str = '{"status":"not_checked","issues":[]}'
 
     @property
     def deterministic_tests_passed(self) -> bool:
@@ -286,6 +287,7 @@ class EvidenceReceipt:
             "issued_at": self.issued_at,
             "valid_until": self.valid_until,
             "invalidation_rules": list(self.invalidation_rules),
+            "campaign_check": json.loads(self.campaign_check_json),
         }
 
     @property
@@ -302,6 +304,7 @@ def build_evidence_receipt(
     deterministic_test_receipt: DeterministicTestReceipt,
     prerequisite_receipts: tuple[PrerequisiteReceipt, ...],
     issued_at: str,
+    campaign_assessment=None,
 ) -> EvidenceReceipt:
     """Recompute every decision-bearing value from pinned experiment artifacts."""
 
@@ -360,6 +363,12 @@ def build_evidence_receipt(
         # No method currently registered by this lab may grant deployment authority.
         state, action = "evidence_ready", "lab_pass"
 
+    campaign = _campaign_check(experiment, campaign_assessment)
+    if campaign['status'] == 'block':
+        action, authority = 'block', 'none'
+    elif campaign['status'] == 'hold' and action != 'block':
+        action, authority = 'hold', 'none'
+
     component_hashes = tuple(
         sorted(
             (
@@ -367,6 +376,7 @@ def build_evidence_receipt(
                 ("manifest", manifest.content_hash),
                 ("population", manifest.population_hash),
                 ("test_receipt", deterministic_test_receipt.receipt_hash),
+                ("campaign_check", canonical_hash(campaign)),
                 *(
                     (f"prerequisite:{item.prerequisite_id}", item.content_hash)
                     for item in prerequisite_receipts
@@ -389,7 +399,25 @@ def build_evidence_receipt(
         issued_at=issued_at,
         valid_until=manifest.valid_until,
         invalidation_rules=manifest.invalidation_rules,
+        campaign_check_json=json.dumps(campaign, sort_keys=True, allow_nan=False),
     )
+
+
+def _campaign_check(experiment, assessment):
+    """A campaign component may restrict an action, never promote it."""
+    from cx_eval_lab.campaign_gate import CampaignAssessment
+    policy_hash = dict(experiment.manifest.input_hashes).get('campaign-policy')
+    uses_campaign = any(
+        (((artifact.to_dict()['payload'].get('semantic_stage') or {}).get('judgment') or {})
+         .get('campaign_audit_json')) for artifact in experiment.trial_artifacts)
+    if assessment is None:
+        return ({'status': 'hold', 'issues': ['campaign_assessment_missing']}
+                if policy_hash is not None or uses_campaign else {'status': 'not_checked', 'issues': []})
+    if (not isinstance(assessment, CampaignAssessment) or assessment.status not in {'clear', 'hold', 'block'}
+            or assessment.packet_hash != canonical_hash(experiment.to_dict())
+            or assessment.policy_hash != policy_hash):
+        raise ValueError('campaign assessment must bind this packet and its registered policy')
+    return asdict(assessment)
 
 
 def resolve_evidence_authority(
