@@ -105,6 +105,18 @@ class SourceProvenanceTests(unittest.TestCase):
         (self.root / 'notes.md').write_text('unrelated local documentation')
         self.assertFalse(self.verify().deployment_authorized)
 
+    def test_git_replacement_refs_cannot_change_the_expected_revision_tree(self):
+        (self.root / 'cx_eval_lab/evaluators.py').write_text('VERSION = 2\n')
+        self.git('add', '.')
+        self.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+                 '-c', 'commit.gpgsign=false', 'commit', '-qm', 'different source')
+        replacement = self.git('rev-parse', 'HEAD').strip()
+        # Only this disposable fixture repository is changed.
+        self.git('update-ref', 'HEAD', self.revision)
+        self.git('replace', self.revision, replacement)
+        with self.assertRaisesRegex(ValueError, 'committed'):
+            self.verify(self.manifest())
+
     def test_source_and_input_symlinks_are_rejected(self):
         manifest = self.manifest()
         target = self.root / 'cx_eval_lab/evaluators.py'
