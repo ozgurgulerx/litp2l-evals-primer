@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Long-report extraction checkpoint — 7 September 2026
+
+[Katas 78–80](long-report-study.md) and the [complete casebook](long-report-casebook.md) retain original/repaired 878/1,020-word memos, nine invented sources, six fixed questions and four registered synthesis obligations. Three controls extract directly from marked finding paragraphs without receiving gold IDs or support labels. Cited-only selection raises the unchanged original's observed support from 8/18 to 8/17 while omitting an unsupported claim. Sentence windows retain compound text without recovering its atoms; the repaired report's 16/16 conditional support still accompanies only 16/20 atomic recovery.
+
+The inputs distinguish supported statements about uncertainty from unknown underlying answers. Independent review drove regressions for overlapping gold spans and disappearing synthesis obligations, plus a corrected temporal citation judgment. Both report texts, source passages and authored review rationales remain inspectable. This is format-bound extraction and review-record computation, not automatic semantic evaluation of all surrounding prose, independent human calibration or research-agent performance.
+
+Verification at source/input revision `9ae4786`: 523 repository tests passed with 90% overall and 93% long-report-module branch-inclusive coverage. Fresh CLI output and retained replay agree; the published Python example executes, and both full report texts plus all nine source bodies match the readable casebook. Targeted Ruff/Pyright, the installed-environment dependency audit and strict build passed. All three kata solutions expanded in the local desktop preview without page overflow at 1152 pixels. Current-release composition retained one hold and six blocks, with no deployment authorization. These checks do not claim cloud CI execution, mobile/Safari QA, publication or paid model evaluations.
+
+Next locally actionable work: a pinned cross-framework reproduction with retained per-item outputs and an explicit mismatch reconciliation, or privacy-aware neutral telemetry with export-loss and feedback-join controls. Full-prose extraction validation, real research-agent comparisons, multi-agent/voice transfer and actual application release authority remain open; no narrower checkpoint replaces the full completion target.
+
 ### Report-evidence checkpoint — 7 September 2026
 
 [Katas 76–77](rag-research-evals.md#executed-report-and-citation-workshop) add an inspectable compact report, four invented sources, five claim annotations, four citation attempts and a five-question task. Computation separates 3/4 resolving links, 2/4 entailing attempted links, 2/5 citation-supported claims and 1/5 claims with current cited support. A dated authored reference correction exposes a false pass: factual correctness changes from 4/5 to 3/5 without changing the report or corpus. Original and reassessed grades remain linked and inspectable.

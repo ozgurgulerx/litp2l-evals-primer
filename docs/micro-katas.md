@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 78–80](long-report-study.md) use full original/repaired memos and a frozen source corpus to expose selective extraction, compound-claim failures and unsupported synthesis. The controls parse registered finding paragraphs; their results do not qualify arbitrary prose extraction or a real research agent.
+
 [Katas 76–77](rag-research-evals.md#executed-report-and-citation-workshop) inspect a complete compact report and frozen corpus, separate citation resolution from entailment and current support, and preserve old/new grades after a dated answer-key correction. Semantic annotations are authored; extraction and synthesis validity on long professional reports remain separate work.
 
 [Katas 74–75](llm-as-a-judge.md#executed-judge-sensitivity-workshop) execute matched order, length and rubric-wording controls, normalize A/B slots to stable answers, and show how duplicated judge errors survive majority voting. The retained local calls teach diagnostics, not measured bias rates of real LLM judges.

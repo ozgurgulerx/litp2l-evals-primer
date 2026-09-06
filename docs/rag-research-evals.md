@@ -389,6 +389,8 @@ This artifact reveals why “the answer was in the report” and “the report w
 
 ### Executed report-and-citation workshop
 
+For the next level, use the [Long-Report Evaluation Study](long-report-study.md): it separates extraction recovery, compound claims, conflicting evidence and synthesis from the compact citation mechanics below. The original example remains the starting point.
+
 The earlier refund-report table remains an illustrative scoring example. This separate [retained workshop](assets/report-citations-v1.json) freezes a complete **compact** classroom report, four invented source documents, five material claim annotations, four attempted citations and five required subquestions. It makes the joins and reassessment inspectable; it does not yet demonstrate automated extraction or synthesis evaluation on a long professional report.
 
 Here is the entire evaluated report, including its deliberate mistakes:

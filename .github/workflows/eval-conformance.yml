@@ -72,6 +72,8 @@ jobs:
         run: uv run python -m cx_eval_lab.judge_sensitivity --output ci-evidence/judge-sensitivity.json
       - name: Replay frozen report citations and dated reference correction
         run: uv run python -m cx_eval_lab.report_citations --output ci-evidence/report-citations.json
+      - name: Execute long-report extraction and synthesis review controls
+        run: uv run python -m cx_eval_lab.long_report --output ci-evidence/long-report-study.json
       - name: Reconstruct mixed-trace error-analysis teaching views
         run: >-
           uv run python -m cx_eval_lab.error_analysis_workshop
