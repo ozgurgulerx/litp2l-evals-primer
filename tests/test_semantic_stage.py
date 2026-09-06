@@ -94,7 +94,9 @@ class SemanticStageTests(unittest.TestCase):
             {'dataset_versions': ('different-dataset',)},
             {'policy_versions': ('different-policy',)},
             {'false_examples': 10},
+            {'false_examples': 30},
             {'false_passes': 20},
+            {'abstentions': 100},
         )
         for change in changes:
             with self.subTest(change=change):
@@ -121,6 +123,31 @@ class SemanticStageTests(unittest.TestCase):
         result = evaluate_agent(FreeFormReference(), (self.case,), measurement_profile=None,
                                 semantic_stage=setup_stage())
         self.assertEqual(1, result.unqualified_message_count)
+
+    def test_aggregate_calibration_cannot_claim_multiple_joint_scopes(self):
+        with self.assertRaisesRegex(ValueError, 'one joint slice scope'):
+            setup_stage(slice_scopes=(('language:en',), ('language:tr',)))
+
+    def test_revocation_and_expiry_during_judging_reject_receipts(self):
+        from cx_eval_lab.semantic import CalibrationRegistry
+        stage = setup_stage()
+        revoked = replace(stage, registry=CalibrationRegistry(stage.registry.records,
+                          frozenset({stage.calibration_hash})))
+        result = evaluate_agent(FreeFormReference(), (self.case,), semantic_stage=revoked)
+        self.assertEqual(1, result.unqualified_message_count)
+        ticks = iter((NOW, datetime(2026, 10, 2, tzinfo=timezone.utc)))
+        expires = replace(stage, clock=lambda: next(ticks))
+        result = evaluate_agent(FreeFormReference(), (self.case,), semantic_stage=expires)
+        self.assertEqual(1, result.unqualified_message_count)
+        self.assertEqual('qualification_not_current', result.case_results[0].to_dict()['semantic_stage']['reason'])
+
+    def test_semantic_pass_cannot_override_an_impossible_settlement_claim(self):
+        class FalseSettlement(FreeFormReference):
+            def run(self, request, tools):
+                return replace(super().run(request, tools), settlement_status_claim='settled')
+        result = evaluate_agent(FalseSettlement(), (self.case,), semantic_stage=setup_stage())
+        self.assertEqual(0, result.task_success_rate)
+        self.assertEqual(1, result.false_message_claim_count)
 
     def test_paired_artifact_preserves_semantic_stage_and_replays_with_external_trust(self):
         from cx_eval_lab.artifacts import replay_packet
