@@ -104,6 +104,128 @@ Without this, “90% success” has no defined target.
 
 An evaluation suite can contain all six, but each result must state which population it estimates.
 
+### Executed sampling study: the same system, different apparent failure rates
+
+A risk-enriched sample reports **37.5% failures**. Reweighting those same eight observations to the registered population gives **18.75%**. Neither number alone establishes that the population is below a 35% failure threshold: the design-aware interval is **18.75%–56.25%**.
+
+The [retained sampling study](assets/sampling-study-v1.json) makes that disagreement inspectable. Its finite synthetic population contains 16 requests: twelve routine requests with one failure, and four risk-stratum requests with three failures. The true overall failure rate is `4/16 = 25%`. Outcomes are fixed, correct binary labels in this exercise, not predictions from an LLM judge. “Risk” is a registered stratum, not an instruction to choose individual requests after reading their labels.
+
+Both designs inspect eight requests, selected uniformly **without replacement within each stratum**:
+
+| Design | Routine selected / available | Risk selected / available | Inclusion probabilities: routine / risk | Expected raw failure rate | Expected population-weighted rate |
+| --- | --- | --- | --- | --- | --- |
+| Proportional stratified | 6/12 | 2/4 | 1/2; 1/2 | 25% | 25% |
+| Risk-enriched stratified | 4/12 | 4/4 | 1/3; 1 | 41.67% | 25% |
+
+“Expected” means the average over the complete sampling distribution—not the value every realized sample must return. Proportional stratification is self-weighting here; it is not identical to an unrestricted simple random sample of eight requests. The enriched design performs a census of the risk stratum and samples fewer routine requests. Its larger expected raw rate does not mean the system got worse.
+
+### Kata 70: recover the target population without hiding the risk slice
+
+**Predict:** the worked enriched sample contains four clean routine requests and all four risk requests. Three of its eight observations fail. Which population does the raw rate describe? How much weight should each observation carry?
+
+```bash
+uv run python -m cx_eval_lab.sampling_study --output /tmp/sampling-study.json
+uv run python -m unittest tests.test_sampling_study -v
+```
+
+Choose a new output path for another run. The artifact retains the frame, fixed design, synthetic truth, selected worked-example IDs, observed labels, inclusion probabilities, weights and estimates. The estimator itself receives only frame membership and the selected labels; the separate qualification calculation uses complete synthetic truth to evaluate the method.
+
+Under the registered design, a routine observation has inclusion probability `4/12 = 1/3` and design weight `3`. A risk observation has inclusion probability `4/4 = 1` and weight `1`. The estimated failure total is therefore `0 × 3 + 3 × 1 = 3`; dividing by the **known population size 16**, not the sample size eight, gives `3/16 = 18.75%`.
+
+More generally, for a fixed population of size \(N\), binary failure labels \(y_i\), and positive inclusion probabilities \(\pi_i\), the Horvitz–Thompson population-mean estimator is:
+
+\[
+\widehat p_{HT}=\frac{1}{N}\sum_{i\in s}\frac{y_i}{\pi_i}.
+\]
+
+For this fixed-quota stratified design it equals \(\sum_h(N_h/N)\bar y_h\). The weights sum to the known population size because each stratum contributes exactly its registered quota. In other designs, dividing by the observed sum of weights is a ratio estimator, not automatically the same estimator. These are **sampling weights**, not subjective severity weights. [Statistics Canada explains design weights as inverse inclusion probabilities](https://www150.statcan.gc.ca/n1/edu/power-pouvoir/ch6/5214809-eng.htm).
+
+??? success "Solution: fix the population estimate, retain the slice finding"
+    The raw rate is `3/8 = 37.5%`. It describes the eight selected observations and overweights the risk stratum relative to this population. The weighted estimate is `0.75 × 0/4 + 0.25 × 3/4 = 18.75%`. It is a valid realized estimate under the stated sampling design; it is not the known truth of 25%. Unbiasedness means the estimator averages to the truth across possible samples, not that a particular sample is exact.
+
+    Across the enriched design's possible samples, the expected raw rate is `0.5 × 1/12 + 0.5 × 3/4 = 5/12`, approximately 41.67%. Its expected weighted rate is `0.75 × 1/12 + 0.25 × 3/4 = 1/4`. The design changes the expected mix of observed failures, not the underlying system. The proportional design uses equal inclusion probabilities, so its raw and weighted rates agree for every realized sample.
+
+    Keep the risk-stratum result beside the overall estimate: three of its four requests fail, and this stratum was fully observed. Weighting must not conceal that result or compensate for a separately prohibited action. A 35% overall threshold in this exercise is an arithmetic teaching choice, not a proposed safety tolerance. A hard safety rule can still block even if the overall population estimate is favorable.
+
+    Do not choose the four clean routine requests to obtain a favorable estimate. The worked sample is an explicitly selected illustration from the registered sampling space, not evidence that a random draw happened historically. The distribution analysis includes every possible sample, including those containing the routine failure. In an operational study, retain the randomization procedure and selection event before labels are inspected.
+
+**Interview answer criteria:** name the population and sampling unit; derive inclusion probabilities and both estimates; distinguish design weights from harm severity; explain design-unbiasedness; preserve the high-risk finding and independent release constraints.
+
+### Kata 71: a corrected point estimate still does not justify clearance
+
+**Predict:** should an illustrative `failure_rate ≤ 35%` check clear the worked sample? What changes if one selected label is missing, a stratum has zero inclusion probability, or requests from the same customer are selected together?
+
+The raw point heuristic exceeds 35%; the weighted point heuristic is below it. The uncertainty-aware diagnostic holds because the interval crosses the threshold. A weighted estimate without a design-matched uncertainty calculation cannot settle this disagreement.
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.sampling_study import estimate_sample, replay_study
+
+report = replay_study(json.loads(Path("docs/assets/sampling-study-v1.json").read_text()))
+inputs = report["inputs"]
+worked = report["worked_example"]
+result = estimate_sample(
+    inputs["frame"], inputs["allocations"]["enriched"], worked["rows"],
+    alpha=inputs["alpha"], threshold=inputs["thresholds"][0],
+)
+assert result == worked["estimate"]
+assert result["raw_failure_rate"] == 0.375
+assert result["ht_failure_rate"] == 0.1875
+assert result["decisions"]["interval"] == "hold"
+print(result["interval"], result["decisions"])
+
+# Do not discard an unlabeled selected request and keep the old weights.
+incomplete = [{**row, "failure": None} if i == 0 else dict(row)
+              for i, row in enumerate(worked["rows"])]
+try:
+    estimate_sample(inputs["frame"], inputs["allocations"]["enriched"], incomplete)
+except ValueError:
+    print("Missing label rejected; obtain evidence or register another method.")
+else:
+    raise AssertionError("Incomplete labels must not establish an estimate")
+```
+
+Here the unknown quantity in each stratum is its integer number of failures, \(M_h\). Given \(N_h\), \(n_h\) and \(M_h\), the observed failure count follows a hypergeometric distribution:
+
+\[
+P(X_h=x)=\frac{\binom{M_h}{x}\binom{N_h-M_h}{n_h-x}}{\binom{N_h}{n_h}}.
+\]
+
+This is sampling without replacement, with a finite-population correction—not repeated independent Bernoulli generation. The [R statistical reference documents this distribution and its support](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html).
+
+The implementation tries every candidate \(M_h=0,\ldots,N_h\). For an overall error budget of 0.05 and two strata, it retains counts for which **both inclusive tails** `P(X ≤ observed)` and `P(X ≥ observed)` exceed `0.05 / (2 × 2) = 0.0125`. It then combines stratum endpoints with population weights. The per-stratum error allocation and union bound give a conservative simultaneous interval; it is not a normal approximation or a generic confidence interval for arbitrary adaptive samples.
+
+??? success "Solution: uncertainty and support are separate from arithmetic"
+    With zero failures among four of twelve routine requests, the retained routine failure counts range from zero to six. Observing every risk request pins its failure count to three. Combining endpoints yields `(0 + 3)/16` through `(6 + 3)/16`, or **[18.75%, 56.25%]**. The risk census has no sampling uncertainty for those four fixed labels, but the routine sample still does. No observed routine failures does not imply no routine failures in the frame.
+
+    The point heuristics are deliberately named as illustrative. The interval diagnostic clears a numerical threshold only when its upper bound is at or below it; it exceeds the threshold only when its lower bound is above it; otherwise it holds. Even a numerical clearance does not authorize deployment. This study supplies no live population, authenticated collection, calibrated judge or application safeguards.
+
+    A missing selected label is not a pass. Dropping it changes the effective observation mechanism. The estimator rejects incomplete labels rather than silently retaining the original inclusion probability and shrinking the denominator. If a stratum has zero probability of selection, its population contribution cannot be estimated by this method. If its probability is unknown, do not invent a weight. The implementation also rejects duplicate IDs, foreign frame members, incorrect quotas and probabilities inconsistent with the registered design.
+
+    Requests in a frozen finite frame can have fixed correlated outcomes; the design-based calculation conditions on those outcomes and randomizes selection. But if the actual sampling unit is a customer or session, selecting that unit jointly changes the design. Repeated model runs also add another source of variability. Neither setting is covered by pretending that the same request-level sampling design was used. Define the desired future/customer population separately from this fixed frame.
+
+**Interview answer criteria:** derive why census and partial-sample uncertainty differ; distinguish a point heuristic, interval diagnostic and deployment authority; explain the unknown-probability, missing-label and wrong-sampling-unit failures; state what a finite-frame interval does not cover.
+
+**Inspect the entire sampling distribution:** the proportional design has `choose(12,6) × choose(4,2) = 5,544` possible ID sets; the enriched design has `choose(12,4) × choose(4,4) = 495`. The report groups equally scored samples by stratum failure counts and records their combinatorial multiplicities. Summing a cell's statistic times its probability recovers design expectation, interval coverage and threshold-decision probabilities. These are exact finite sampling-space calculations, not 6,039 new model executions or a Monte Carlo estimate.
+
+Both 35% and 20% thresholds are registered in the study. At 20%, the known 25% population rate is above the limit; inspect how often each point heuristic nevertheless clears and how the interval diagnostic behaves. A false-clear probability and a false-block probability answer different questions. Keep “hold” separate from both. Do not select a threshold after reading results and describe its performance as a preregistered guarantee.
+
+| Design, true failure rate 25%, limit 20% | Raw point false clear | Weighted point false clear | Interval false clear | Interval hold / block |
+| --- | --- | --- | --- | --- |
+| Proportional | 25% | 25% | 0% | 100% / 0% |
+| Risk-enriched | 0% | 66.67% | 0% | 66.67% / 33.33% |
+
+Correcting selection bias does not make a point-threshold rule reliable. Conversely, the enriched raw rule's zero false clears at 20% is not proof of a better estimator: it always blocks in this population, including at the more permissive 35% limit where the true rate is below the threshold. At 35%, both interval diagnostics hold on every possible sample. A method that avoids errors by withholding a conclusion has a different operating cost from one that reliably decides.
+
+For the displayed population, both interval procedures cover the truth on every possible sample. The report also checks **all 65 binary count populations** (`routine failures 0…12 × risk failures 0…4`), not just this convenient example. Minimum overall coverage is `131/132 ≈ 99.24%` for proportional allocation and `98/99 ≈ 98.99%` for enriched allocation—above the nominal 95%, reflecting conservative discrete intervals. Those results apply only to the registered sizes, allocations and confidence level. They are not a 99% claim about future application safety.
+
+The weighted estimator's mean squared error is `0.0078125` under both designs in this example; the enriched raw estimator's is `0.03125` because its sampling-mix bias contributes to error. These errors are in squared proportion units, not percentage points. Thus enrichment is not inherently a worse sampling strategy. Compare purpose, coverage, precision, cost and slice support under the actual design instead of ranking methods by one failure-rate number.
+
+**Extend to production deliberately:** separate a probability-sampled estimation stream from incident-mining and disagreement queues. Record frame/window, unit, stratum, selection time, inclusion probability, design version, outcome maturity and label provenance. Missing outcomes, model-judge errors, overlapping selection streams, changing probabilities and customer-level selection need their own estimation assumptions. Statistics Canada's [weighting guidance](https://www150.statcan.gc.ca/n1/pub/12-539-x/2009001/weighting-ponderation-eng.htm) distinguishes sampling errors from frame, measurement and nonresponse errors and requires variance estimation to reflect the design.
+
+**Evidence boundary:** this executable lesson qualifies narrow fixed-frame sampling calculations against known synthetic labels. Recomputing its hashes and estimates establishes local consistency, not authentic random selection, population coverage, human-label validity, future traffic performance or permission to expand exposure. Use [production sampling](production-evals.md#sample-by-risk-and-information-value) for operational context and [paired slice diagnostics](metrics.md#executed-paired-slice-comparison) for a different question: how a candidate changes outcomes on matched cases.
+
 ## Specify every case as an evidence contract
 
 Extend the minimal YAML with environment, trajectories, evidence, and lifecycle metadata:

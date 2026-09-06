@@ -197,6 +197,8 @@ Use layered sampling:
 
 Adaptive sampling improves discovery but biases raw rates. Retain inclusion probabilities or keep a separate representative stream for population estimates.
 
+For an executable fixed-design starting point, [Katas 70–71](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) compare proportional and risk-enriched samples of the same known population. A raw 37.5% failure rate becomes an 18.75% weighted estimate, but its interval still crosses the illustrative limit. The lesson does not implement adaptive sampling, delayed-label correction or a production collector; those require additional assumptions and controls.
+
 ## Deployment simulation
 
 Deployment simulation applies a candidate to recent production-like conversations with the previous assistant completion removed. It can reveal pre-release failures on realistic requests while avoiding direct exposure.

@@ -28,6 +28,8 @@ Never publish a rate without its sample size **n** and a confidence interval. A 
 
 An interval is useful only when its method fits the sampling and measurement process. The [executed method study and Katas 05–07](statistical-method-study.md) show three concrete failures: zero observed variance hiding rare losses, a customer-weighted contrast disagreeing with pooled task rates, and exact inference becoming confidently wrong when judge labels hide real failures. Report these assumptions alongside the interval; `n ≥ 30` does not validate them.
 
+[Katas 70–71](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) add the sampling-design question: when rare-risk cases are oversampled, what does the raw rate estimate? Recompute inverse-probability weights and finite-population intervals before interpreting a threshold. The worked design conditions on a fixed frame and correct labels; it does not remove uncertainty about future traffic or judge error.
+
 ## Measure repeatability
 
 One run is not a verdict for a nondeterministic system. Repeat trials at the blast radius the application demands and report the distribution, not only the best attempt.
