@@ -26,7 +26,8 @@ def _fields(value, keys):
 
 
 def _int(value, low=0, high=1_000_000):
-    _require(type(value) is int and low <= value <= high, 'bounded exact integer required')
+    value_type = type(value)
+    _require(value_type is int and low <= value <= high, 'bounded exact integer required')
 
 
 def _id(value):
