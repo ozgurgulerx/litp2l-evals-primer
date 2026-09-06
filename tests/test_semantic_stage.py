@@ -110,6 +110,13 @@ class SemanticStageTests(unittest.TestCase):
             self.assertEqual(0, result.task_success_rate)
             self.assertEqual(1, result.semantic_abstention_count)
 
+    def test_qualified_negative_judgment_is_a_false_claim_not_missing_qualification(self):
+        result = evaluate_agent(FreeFormReference(), (self.case,),
+                                semantic_stage=setup_stage(FixtureJudge('fail')))
+        self.assertEqual(0, result.task_success_rate)
+        self.assertEqual(0, result.unqualified_message_count)
+        self.assertEqual(1, result.false_message_claim_count)
+
     def test_synthetic_qualification_cannot_enter_measured_run(self):
         result = evaluate_agent(FreeFormReference(), (self.case,), measurement_profile=None,
                                 semantic_stage=setup_stage())
