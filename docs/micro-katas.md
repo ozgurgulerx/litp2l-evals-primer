@@ -231,6 +231,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 [Katas 38–40](eval-operations-integrity.md#kata-38-is-an-unknown-bill-free-budget) execute durable judge-budget admission, crash/reopen and concurrent-worker tests, and an inspectable four-trial campaign. Solutions separate known costs from held reservations, prevent duplicate judge dispatch, and show why budget-dependent missing judgments cannot support an agent-quality claim.
 
+[Katas 41–42](evidence-spine.md#kata-41-matching-hashes-wrong-evidence) join campaign snapshots to execution requests, qualification, verdicts and costs, then compose the campaign assessment with the existing release receipt. Retained controls demonstrate clear-plus-inconclusive hold, unknown-cost hold versus candidate failed-check block, overrun blocking and changed-snapshot rejection. They remain synthetic lab evidence, not deployment authority.
+
 [Katas 05–07](statistical-method-study.md) now cover statistical false promotion, unequal-cluster estimands, and biased judge labels, with executed enumeration results and worked solutions.
 
 The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas deepen dataset improvement, human annotation, empirical judge calibration, general clustered/sequential inference, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those further exercises remain pending until their runnable checks and worked solutions exist.

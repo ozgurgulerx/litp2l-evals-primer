@@ -204,12 +204,12 @@ A sealed set becomes optimisation data once results repeatedly shape development
 
 ## Evidence receipt and authority ceiling
 
-`build_evidence_receipt` accepts the full paired experiment and content-addressed test/prerequisite receipts. It does **not** accept a caller-supplied comparison, hard-failure count, or raw-artifact hash. It verifies every trial's manifest hash, recomputes the paired comparison using the registered plan, counts candidate hard failures, and hashes the raw experiment itself. Its decisions are deliberately asymmetric:
+`build_evidence_receipt` accepts the full paired experiment and content-addressed test/prerequisite receipts. It does **not** accept a caller-supplied comparison, hard-failure count, or raw-artifact hash. It verifies every trial's manifest hash, recomputes the paired comparison using the registered plan, counts candidate trials with failed checks, and hashes the raw experiment itself. The field named `hard_failure_count` currently includes any candidate failed check, including missing semantic qualification; it is not a count restricted to harmful side effects. Its decisions are deliberately asymmetric:
 
 - missing or unqualified prerequisites → `locked` and `block`;
 - failed deterministic checks → `buildable` and `block`;
 - insufficient independent evidence → `hold`;
-- statistical failure or any hard failure → `block`;
+- statistical failure or any candidate failed-check trial → `block`;
 - a passing result under the current teaching method → `lab_pass`, authority `lab_only`, whether its runtime fields are synthetic or measured.
 
 The current registry contains no method capable of returning `canary_eligible`. Adding one requires a separately qualified statistical implementation, trusted qualification provenance, a production transfer study, a blast limit, monitoring, rollback, mature outcomes, and accountable permission to expose real traffic.
@@ -217,6 +217,73 @@ The current registry contains no method capable of returning `canary_eligible`. 
 `resolve_evidence_authority` compares the receipt with current component hashes and its validity window. A dataset, policy, or population mismatch—or passing the expiry time—returns `expired`, `block`, and authority `none`. Re-running the resolver with unchanged inputs is idempotent.
 
 Content addressing detects mutation and binds components; it does not authenticate who produced a receipt. A production service should verify issuer identity or signatures and store receipts in an access-controlled append-only system. The local lab therefore never promotes its content-addressed receipts above `lab_only`.
+
+## Campaign evidence in the release decision
+
+The [retained campaign/release controls](assets/campaign-release-conformance-v1.json) join campaign snapshots to actual deterministic mock-world trials and then call the existing release-receipt builder. They execute three synthetic studies plus one post-capture snapshot mutation. Prices, judge verdicts, calibration and prerequisite receipts are explicit teaching fixtures; none qualifies a real service.
+
+| Control | Campaign assessment | Other evidence | Combined action |
+| --- | --- | --- | --- |
+| Four known judge estimates, within the registered allowance | `clear` | One independent customer, below the registered minimum of thirty | `hold` |
+| One unknown judge estimate and two denied judge invocations | `hold` | Candidate judgments are unqualified, producing failed checks | `block` |
+| Observed judge estimate exceeds its per-call reservation | `block` | Later judge admissions are denied | `block` |
+| Snapshot changed after the simulated operator captured its hash | `block` | The original all-known execution packet remains unchanged | `block` |
+
+The first row is the important positive control: clearing the budget component does not make the experiment statistically sufficient. The second keeps both explanations visible instead of relabeling an unqualified judgment as a demonstrated harmful action.
+
+```bash
+uv run --extra openai python -m unittest \
+  tests.test_campaign_gate tests.test_campaign_release tests.test_campaign_conformance -v
+uv run python -m cx_eval_lab.campaign_conformance \
+  --output /tmp/primer-campaign-release-my-first-run.json
+```
+
+Use a fresh output path each time. The CI workflow now includes this command and retains the report beside the other conformance evidence. This chapter records local execution; it does not assert that a GitHub workflow or production deployment has run.
+
+### Kata 41: matching hashes, wrong evidence
+
+The snapshot says 1,440 micro-USD, four finalized invocations, and no unknown costs. All packet and snapshot hashes match the references supplied to the checker. Is that enough to clear the campaign?
+
+**Task:** make each of these changes in a copied fixture, then recompute its internal hashes as if an upstream exporter had consistently produced the wrong evidence:
+
+1. Change the judge's authoritative eligibility fact without changing the executed case.
+2. Change the retained judge verdict to `fail` while keeping the semantic receipt's `passed=True`.
+3. Change the qualification record's class count without changing its independently trusted calibration receipt.
+4. Change a recorded admission's reason from `reserved` to `estimated_budget_exhausted`.
+
+??? success "Solution: join the meaning-bearing fields, not just their digests"
+    All four mutations block. `assess_campaign` first checks independently supplied packet/snapshot anchors and the operator's registered campaign policy. It then replays grades, recomputes snapshot totals from invocation rows, and joins the packet to those rows.
+
+    It reconstructs the judge request from the retained case, customer input, output, tool events, final state and policy. The ledger request hash covers `{"criterion": CRITERION, "evidence": request}`; the stage's request hash covers the request alone. They are different contracts, not interchangeable IDs.
+
+    Each invocation ID must derive from manifest, case, repetition and arm. Qualification must match the caller-trusted calibration hash; a declared `judge-config` must match the joined configuration. The semantic receipt's pass/abstention flags must match the actual retained verdict. A recorded admission must say it reserved capacity. Finally, the packet's inner judgment and campaign receipt must match the ledger's retained versions. The ledger hashes the inner judgment before the wrapper adds its campaign audit, so that field is reset to null for comparison.
+
+    Tests also reject false totals, duplicate or omitted records, foreign invocations, changed costs and mismatched operator policy. Unknown/pending costs, denied admissions and missing campaign judgments hold. Overruns and established deadline/clock violations block. The supported scope is a dedicated campaign for one packet; extra unrelated rows cannot be silently discarded to make totals fit.
+
+**Boundary:** the tests that recompute anchors deliberately simulate a coherent upstream bug. They do not prove resistance to an attacker who controls all authoritative inputs. Production anchor storage and issuer identity must be outside candidate write access. A snapshot hash also says nothing about whether later ledger changes exist. These snapshots lack an observation timestamp and event sequence sufficient to reconstruct every historical admission decision; this is a pinned consistency check, not freshness or historical enforcement attestation.
+
+**Interview answer:** “A hash proves identity relative to an anchor, not that the record describes the right execution. I join request, case, judge configuration, verdict, receipt and cost, and I separately establish who controls the anchors.”
+
+### Kata 42: a clean component cannot promote a weak experiment
+
+The campaign is `clear`, software tests pass, and the agent has no failed checks. The packet contains two repetitions per arm for one customer. The statistical plan requires thirty independent customers.
+
+**Task:** choose the combined action. Then omit campaign evidence from a manifest declaring `campaign-policy`. Finally supply a campaign assessment for a different packet.
+
+??? success "Solution: restrict, never promote"
+    The combined action is `hold`, with authority `none`: repetition does not supply thirty independent customers. Campaign `clear` leaves the existing statistical/prerequisite/test decision unchanged. Campaign `hold` restricts an otherwise passing action, but cannot downgrade an existing block. Campaign `block` forces a block. The precedence is `block > hold > existing action`.
+
+    Missing assessment for a declared campaign, or for artifacts containing campaign audit evidence, holds rather than silently skipping the check. A separate regression starts with thirty hand-authored passing pairs under the teaching method and still obtains a hold when its declared campaign assessment is absent. That isolates the missing-evidence rule from statistical insufficiency; it is not new empirical model evidence.
+
+    A supplied assessment must bind this exact experiment packet and its registered policy. A different packet or policy is rejected. The receipt records the campaign assessment and includes its content hash among decision components, so changing that component invalidates the old identity. Legacy examples with no campaign use explicitly report `not_checked`, not `clear`; their previous lab behavior remains available.
+
+**Trust boundary:** `build_evidence_receipt` consumes a trusted evaluator-produced `CampaignAssessment`; it does not rerun the snapshot checker or authenticate an uploaded assessment. The evaluation service should call `assess_campaign` with operator-controlled anchors, then pass the returned object directly. Never deserialize a candidate-provided `{"status":"clear"}` into this trusted input. Current calibration eligibility, source/environment verification and authenticated admission to the registry remain separate checks; this component does not replace them.
+
+**Interview answer:** “Independent gates combine by restriction. Budget clearance cannot buy statistical confidence, human-reviewed calibration or deployment authority. I retain component decisions and their evidence so a reviewer can distinguish a hold for uncertainty from a block for contradictory or failed checks.”
+
+### Remaining production work
+
+These controls now feed the lab's actual release-receipt implementation. They still cannot authorize a canary. The next integration must join authenticated and fresh evidence, current evaluator qualification, qualified statistics and explicit application exposure authority. Agent/tool costs, invoice reconciliation and provider cancellation also remain outside this judge-only control. Keep the original studies and grades when adding reassessment; do not overwrite historical evidence with a newer verdict.
 
 ## Artifact: paired evidence receipt
 

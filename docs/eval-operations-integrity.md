@@ -150,7 +150,7 @@ Each of the four application-agent trials has an invented $0.08 measurement prof
 
 The ledger enforces atomic local admission against operator-declared estimated-cost reservations and a call-count/deadline policy. It assumes an operator-owned local filesystem and trusted clock/client; it is not a distributed coordinator or protection against a privileged actor replacing the database. Snapshots and hashes aid inspection, not authentication.
 
-It neither proves that the per-call reservation bounds a real bill nor controls charges from callers that bypass the wrapper. Real operation still needs validated pricing bounds, provider-side quotas where available, agent/tool budgets, reconciliation, cancellation semantics, protected storage and authenticated registry admission. Campaign receipts are retained evidence; the production release gate does not yet consume them as an independent prerequisite. No receipt here authorizes deployment or exposure expansion.
+It neither proves that the per-call reservation bounds a real bill nor controls charges from callers that bypass the wrapper. Real operation still needs validated pricing bounds, provider-side quotas where available, agent/tool budgets, reconciliation, cancellation semantics, protected storage and authenticated registry admission. [Katas 41–42](evidence-spine.md#kata-41-matching-hashes-wrong-evidence) now validate pinned campaign snapshots against their trial packets and feed that component into the lab's release receipt. No receipt here authorizes deployment or exposure expansion.
 
 ## Model-versus-harness factorial experiment
 

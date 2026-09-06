@@ -19,6 +19,8 @@ Katas 36–37 add the optional Responses judge adapter: strict verdict parsing, 
 
 Katas 38–40 extend that implementation with a durable local estimated-cost judge-admission ledger, stable paired invocation IDs, unknown-cost reservations and selected agent/judge cost aggregation. A retained four-trial mock-world campaign contains two scripted judge calls and two admission denials; subprocess crash and multiprocess contention tests exercise persistence and atomic admission. This is not a provider invoice ceiling, whole-experiment resume, live semantic study or production release prerequisite. Agent/tool budgets, authenticated reconciliation, cancellation and full operational costs remain open.
 
+Katas 41–42 add pinned campaign-snapshot validation against packet execution, qualification, verdicts and cost records, plus integration with the existing lab release receipt. Four retained offline controls and a CI command exercise clear/hold/block composition. Operator anchors and prerequisite/calibration data in these controls are explicit fixtures. Snapshot freshness, issuer authentication, current-calibration composition and actual canary authority remain unestablished.
+
 | Research source | Primary contribution | Canonical treatment |
 | --- | --- | --- |
 | Best GitHub Repositories for LLM Evaluation in 2026 | Tool categories, quick starts, licensing, portability, model/application/production layers | System Studies, Benchmark Reproducibility, Courses |

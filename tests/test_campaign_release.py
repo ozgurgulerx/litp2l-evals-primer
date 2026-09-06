@@ -73,6 +73,20 @@ class CampaignReleaseTests(unittest.TestCase):
         self.assertEqual('not_checked', receipt.to_dict()['campaign_check']['status'])
         self.assertEqual('lab_pass', receipt.action)
 
+    def test_missing_campaign_holds_even_if_teaching_statistical_rule_passes(self):
+        from tests.test_evidence_spine import make_manifest, make_receipt, paired_trials
+        manifest = make_manifest()
+        manifest = replace(manifest, input_hashes=(*manifest.input_hashes,
+                           ('campaign-policy', canonical_hash('registered fixture policy'))))
+        baseline, candidate = paired_trials(30, manifest_hash=manifest.content_hash)
+        original = make_receipt()
+        receipt = build_evidence_receipt(experiment=PairedExperiment(manifest, baseline, candidate),
+            deterministic_test_receipt=original.deterministic_test_receipt,
+            prerequisite_receipts=original.prerequisite_receipts, issued_at=original.issued_at)
+        self.assertEqual('pass', receipt.comparison.status)
+        self.assertEqual('hold', receipt.action)
+        self.assertEqual('none', receipt.authority_ceiling)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -76,6 +76,22 @@ class CampaignGateTests(unittest.TestCase):
             report['ledger']['invocations'][0][field] = value
             self.assertEqual('block', self.assess(report).status)
 
+    def test_coherent_foreign_invocation_cannot_be_ignored(self):
+        report = copy.deepcopy(self.report)
+        ledger = report['ledger']
+        foreign = copy.deepcopy(ledger['invocations'][0])
+        foreign['id'] = canonical_hash('an invocation from a different experiment')
+        receipt = json.loads(foreign['receipt_json'])
+        receipt['invocation_id'] = foreign['id']
+        foreign['receipt_json'] = json.dumps(receipt)
+        ledger['invocations'].append(foreign)
+        ledger['admissions'] += 1
+        for key in ('known_estimate_micro_usd', 'committed_micro_usd', 'complete_estimate_micro_usd'):
+            ledger[key] += foreign['estimate_micro']
+        result = self.assess(report)
+        self.assertEqual('block', result.status)
+        self.assertIn('foreign_campaign_invocations', result.issues)
+
     def test_packet_to_ledger_join_is_checked_beyond_ordinary_replay(self):
         for field, value in (('invocation_id', 'wrong-id'), ('request', {'different': 'evidence'})):
             report = copy.deepcopy(self.report)
