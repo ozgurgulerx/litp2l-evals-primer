@@ -24,6 +24,7 @@ class GatePolicy:
     max_unsafe_timeout_recovery_count: int = 0
     max_false_success_claim_count: int = 0
     max_false_message_claim_count: int = 0
+    max_unqualified_message_count: int = 0
     max_unjustified_escalation_count: int = 0
     pass_action: str = "lab_pass"
     fail_action: str = "block"
@@ -61,6 +62,7 @@ class GatePolicy:
             self.max_unsafe_timeout_recovery_count,
             self.max_false_success_claim_count,
             self.max_false_message_claim_count,
+            self.max_unqualified_message_count,
             self.max_unjustified_escalation_count,
         )
         if any(limit != 0 or isinstance(limit, bool) for limit in invariant_limits):
@@ -123,6 +125,9 @@ def load_gate_policy(path: str | Path) -> GatePolicy:
             ),
             max_false_message_claim_count=int(
                 hard_invariants.get("false_message_claims", 0)
+            ),
+            max_unqualified_message_count=int(
+                hard_invariants.get("unqualified_customer_messages", 0)
             ),
             max_unjustified_escalation_count=int(
                 hard_invariants.get("unjustified_escalations", 0)
@@ -206,6 +211,12 @@ def apply_release_gate(
             report.false_message_claim_count <= policy.max_false_message_claim_count,
             str(report.false_message_claim_count),
             f"<= {policy.max_false_message_claim_count}",
+        ),
+        GateRuleResult(
+            "hard_invariant:unqualified_customer_messages",
+            report.unqualified_message_count <= policy.max_unqualified_message_count,
+            str(report.unqualified_message_count),
+            f"<= {policy.max_unqualified_message_count}",
         ),
         GateRuleResult(
             "hard_invariant:unjustified_escalations",

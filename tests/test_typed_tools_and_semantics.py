@@ -119,6 +119,8 @@ class SemanticEvaluationTests(unittest.TestCase):
                 return AgentOutput(
                     message="The money has already settled in your bank account.",
                     claimed_outcome="refunded",
+                    transaction_status_claim="committed",
+                    settlement_status_claim="settled",
                 )
 
         report = evaluate_agent(FalseSettlementAgent(), (make_case(),))

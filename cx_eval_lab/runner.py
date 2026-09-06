@@ -89,6 +89,12 @@ def evaluate_agent(
         false_message_claim_count=sum(
             result.false_message_claim_count for result in case_results
         ),
+        unqualified_message_count=sum(
+            result.unqualified_message_count for result in case_results
+        ),
+        semantic_abstention_count=sum(
+            result.semantic_abstention_count for result in case_results
+        ),
         unjustified_escalation_count=sum(
             result.unjustified_escalation_count for result in case_results
         ),

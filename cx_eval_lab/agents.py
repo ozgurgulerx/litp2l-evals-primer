@@ -4,8 +4,25 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from cx_eval_lab.models import AgentOutput, RefundAgentInput
+from cx_eval_lab.models import (
+    AgentOutput,
+    RefundAgentInput,
+    trusted_message_template_by_message,
+)
 from cx_eval_lab.world import RefundTools, ToolTimeout
+
+
+def _trusted_output(message: str, claimed_outcome: str) -> AgentOutput:
+    template = trusted_message_template_by_message(message)
+    if template is None:
+        raise ValueError("reference output must use a registered message template")
+    return AgentOutput(
+        message=message,
+        claimed_outcome=claimed_outcome,
+        transaction_status_claim=template.transaction_status_claim,
+        settlement_status_claim=template.settlement_status_claim,
+        message_template_id=template.template_id,
+    )
 
 
 @dataclass(frozen=True)
@@ -60,7 +77,7 @@ class ReferenceSupportAgent:
         return self._output("Your refund has been confirmed.", "refunded")
 
     def _output(self, message: str, claimed_outcome: str) -> AgentOutput:
-        return AgentOutput(message=message, claimed_outcome=claimed_outcome)
+        return _trusted_output(message, claimed_outcome)
 
 
 @dataclass(frozen=True)
@@ -140,4 +157,4 @@ class MutantSupportAgent:
         return self._output("Your refund has been confirmed.", "refunded")
 
     def _output(self, message: str, claimed_outcome: str) -> AgentOutput:
-        return AgentOutput(message=message, claimed_outcome=claimed_outcome)
+        return _trusted_output(message, claimed_outcome)

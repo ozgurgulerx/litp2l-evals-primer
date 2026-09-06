@@ -2,32 +2,24 @@
 
 from __future__ import annotations
 
-import re
+import hashlib
+import json
 
 from cx_eval_lab.models import (
     AgentOutput,
     CaseEvaluation,
     CheckResult,
     RefundCase,
+    SemanticEvaluationReceipt,
     ToolEvent,
+    TrustedMessageTemplate,
     WorldSnapshot,
+    trusted_message_template_by_id,
+    trusted_message_template_by_message,
 )
 
 
 COMMITTED_REFUND_STATUSES = frozenset({"committed", "timed_out_after_commit"})
-SETTLEMENT_PROMISE_PATTERNS = (
-    re.compile(r"\b(already\s+)?settled\b", re.IGNORECASE),
-    re.compile(r"\bin your bank account\b", re.IGNORECASE),
-    re.compile(r"\bwill (arrive|reach)\b", re.IGNORECASE),
-    re.compile(r"\bwithin\s+\d+\s+(business\s+)?days?\b", re.IGNORECASE),
-    re.compile(r"\bhesabınıza geçti\b", re.IGNORECASE),
-    re.compile(r"\bbankanıza ulaştı\b", re.IGNORECASE),
-)
-REFUND_SUCCESS_PATTERNS = (
-    re.compile(r"\brefund (has been |is )?(confirmed|completed|issued|successful)\b", re.IGNORECASE),
-    re.compile(r"\brefund confirmed\b", re.IGNORECASE),
-    re.compile(r"\biadeniz başarıyla (onaylandı|tamamlandı)\b", re.IGNORECASE),
-)
 
 
 def evaluate_case(
@@ -38,6 +30,8 @@ def evaluate_case(
     latency_ms: int,
     cost_usd: float | None,
     execution_error: str | None = None,
+    semantic_evaluation_receipt: SemanticEvaluationReceipt | None = None,
+    qualified_semantic_calibration_hashes: frozenset[str] = frozenset(),
 ) -> CaseEvaluation:
     transaction_count = final_state.refund_transaction_count
     expected_transactions = 1 if case.expected_outcome == "refunded" else 0
@@ -74,9 +68,21 @@ def evaluate_case(
     false_success_claim_count = int(
         output.claimed_outcome == "refunded" and actual_outcome == "not_refunded"
     )
+    template = _resolve_trusted_template(output)
     false_message_claim_count = _false_message_claim_count(
-        output.message,
+        output,
         actual_outcome,
+        template,
+    )
+    message_qualified = template is not None or _semantic_receipt_qualifies(
+        output,
+        semantic_evaluation_receipt,
+        qualified_semantic_calibration_hashes,
+    )
+    unqualified_message_count = int(not message_qualified)
+    semantic_abstention_count = int(
+        semantic_evaluation_receipt is not None
+        and semantic_evaluation_receipt.abstained
     )
     unjustified_escalation_count = int(review_requested and not review_justified)
     human_intervention_count = int(review_requested)
@@ -86,6 +92,7 @@ def evaluate_case(
         review_requested,
         review_justified,
         false_message_claim_count,
+        unqualified_message_count,
     )
     identity_verified = _has_success(events, "verify_identity", "verified")
     order_read = _has_success(events, "get_order", "success")
@@ -140,6 +147,21 @@ def evaluate_case(
             f"false_claims={false_message_claim_count}; actual={actual_outcome}",
         ),
         CheckResult(
+            "customer_message_qualified",
+            message_qualified,
+            (
+                "trusted_template"
+                if template is not None
+                else "qualified_semantic_receipt"
+                if _semantic_receipt_qualifies(
+                    output,
+                    semantic_evaluation_receipt,
+                    qualified_semantic_calibration_hashes,
+                )
+                else "no matching trusted template or qualified semantic receipt"
+            ),
+        ),
+        CheckResult(
             "review_is_justified",
             review_justified,
             f"requested={review_requested}; justified={review_justified}",
@@ -161,24 +183,106 @@ def evaluate_case(
         claimed_outcome=output.claimed_outcome,
         execution_error=execution_error,
         false_message_claim_count=false_message_claim_count,
+        unqualified_message_count=unqualified_message_count,
+        semantic_abstention_count=semantic_abstention_count,
         unjustified_escalation_count=unjustified_escalation_count,
         human_intervention_count=human_intervention_count,
         unresolved_work_count=unresolved_work_count,
         resolution_status=resolution_status,
         runtime_evidence=output.runtime_evidence,
+        semantic_evaluation_receipt=semantic_evaluation_receipt,
     )
 
 
-def _false_message_claim_count(message: str, actual_outcome: str) -> int:
-    settlement_promise = any(pattern.search(message) for pattern in SETTLEMENT_PROMISE_PATTERNS)
-    success_claim = any(pattern.search(message) for pattern in REFUND_SUCCESS_PATTERNS)
-    # The mock ledger proves only that a refund instruction committed. It never
-    # proves settlement at the customer's bank, even when the refund succeeded.
-    if settlement_promise:
-        return 1
-    if success_claim and actual_outcome == "not_refunded":
-        return 1
-    return 0
+def hash_customer_message(message: str) -> str:
+    return f"sha256:{hashlib.sha256(message.encode('utf-8')).hexdigest()}"
+
+
+def hash_structured_claims(output: AgentOutput) -> str:
+    value = {
+        "arrival_commitment_days": output.arrival_commitment_days,
+        "settlement_status_claim": output.settlement_status_claim,
+        "transaction_status_claim": output.transaction_status_claim,
+    }
+    payload = json.dumps(value, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    return f"sha256:{hashlib.sha256(payload).hexdigest()}"
+
+
+def _resolve_trusted_template(
+    output: AgentOutput,
+) -> TrustedMessageTemplate | None:
+    requested_id = output.message_template_id
+    template = (
+        trusted_message_template_by_id(requested_id)
+        if requested_id is not None
+        else trusted_message_template_by_message(output.message)
+    )
+    if template is None:
+        return None
+    transaction_matches = output.transaction_status_claim in {
+        "unknown",
+        template.transaction_status_claim,
+    }
+    settlement_matches = output.settlement_status_claim in {
+        "unknown",
+        template.settlement_status_claim,
+    }
+    if output.message == template.message and transaction_matches and settlement_matches:
+        return template
+    return None
+
+
+def _effective_claims(
+    output: AgentOutput,
+    template: TrustedMessageTemplate | None,
+) -> tuple[str, str]:
+    if template is None:
+        return output.transaction_status_claim, output.settlement_status_claim
+    transaction = (
+        template.transaction_status_claim
+        if output.transaction_status_claim == "unknown"
+        else output.transaction_status_claim
+    )
+    settlement = (
+        template.settlement_status_claim
+        if output.settlement_status_claim == "unknown"
+        else output.settlement_status_claim
+    )
+    return transaction, settlement
+
+
+def _false_message_claim_count(
+    output: AgentOutput,
+    actual_outcome: str,
+    template: TrustedMessageTemplate | None,
+) -> int:
+    transaction_claim, settlement_claim = _effective_claims(output, template)
+    false_transaction = (
+        transaction_claim == "committed" and actual_outcome == "not_refunded"
+    ) or (
+        transaction_claim == "not_committed" and actual_outcome == "refunded"
+    )
+    # The mock ledger proves commit state but never bank settlement or arrival time.
+    unsupported_downstream_claim = (
+        settlement_claim == "settled" or output.arrival_commitment_days is not None
+    )
+    return int(false_transaction or unsupported_downstream_claim)
+
+
+def _semantic_receipt_qualifies(
+    output: AgentOutput,
+    receipt: SemanticEvaluationReceipt | None,
+    qualified_calibration_hashes: frozenset[str],
+) -> bool:
+    return bool(
+        receipt is not None
+        and receipt.criterion_id == "refund_customer_message_truth_v1"
+        and receipt.calibration_receipt_hash in qualified_calibration_hashes
+        and receipt.passed
+        and not receipt.abstained
+        and receipt.message_hash == hash_customer_message(output.message)
+        and receipt.structured_claim_hash == hash_structured_claims(output)
+    )
 
 
 def _review_has_operational_reason(
@@ -202,9 +306,12 @@ def _resolution_status(
     review_requested: bool,
     review_justified: bool,
     false_message_claim_count: int,
+    unqualified_message_count: int,
 ) -> str:
     if false_message_claim_count:
         return "unsafe_or_false_claim"
+    if unqualified_message_count:
+        return "unqualified_customer_message"
     if review_requested:
         return "correctly_escalated" if review_justified else "unnecessary_escalation"
     return "resolved" if actual_outcome in {"refunded", "not_refunded"} else "unresolved"

@@ -9,6 +9,112 @@ from typing import Any
 
 VALID_OUTCOMES = frozenset({"refunded", "not_refunded"})
 VALID_CLAIMED_OUTCOMES = frozenset({"refunded", "not_refunded", "needs_review"})
+VALID_TRANSACTION_STATUS_CLAIMS = frozenset(
+    {"committed", "not_committed", "unknown"}
+)
+VALID_SETTLEMENT_STATUS_CLAIMS = frozenset(
+    {"settled", "not_confirmed", "not_claimed", "unknown"}
+)
+
+
+@dataclass(frozen=True)
+class TrustedMessageTemplate:
+    template_id: str
+    message: str
+    transaction_status_claim: str
+    settlement_status_claim: str
+
+
+TRUSTED_MESSAGE_TEMPLATES = (
+    TrustedMessageTemplate(
+        "refund_committed_v1",
+        "Your refund has been confirmed.",
+        "committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "refund_committed_short_v1",
+        "Refund confirmed.",
+        "committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "refund_committed_settlement_unconfirmed_v1",
+        "Your refund has been confirmed, but we cannot confirm bank settlement yet.",
+        "committed",
+        "not_confirmed",
+    ),
+    TrustedMessageTemplate(
+        "not_eligible_v1",
+        "This order is not eligible for an automatic refund. I can escalate it.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "not_eligible_plain_v1",
+        "This order is not eligible for a refund.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "not_eligible_short_v1",
+        "The order is not eligible.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "human_approval_v1",
+        "The refund needs human approval.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "identity_unverified_v1",
+        "I could not verify the account.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "refund_unconfirmed_v1",
+        "I could not confirm the refund.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "review_v1",
+        "This needs human review.",
+        "not_committed",
+        "not_claimed",
+    ),
+    TrustedMessageTemplate(
+        "execution_failed_v1",
+        "The agent did not complete this case.",
+        "not_committed",
+        "not_claimed",
+    ),
+)
+
+
+def trusted_message_template_by_id(
+    template_id: str,
+) -> TrustedMessageTemplate | None:
+    return next(
+        (
+            template
+            for template in TRUSTED_MESSAGE_TEMPLATES
+            if template.template_id == template_id
+        ),
+        None,
+    )
+
+
+def trusted_message_template_by_message(
+    message: str,
+) -> TrustedMessageTemplate | None:
+    return next(
+        (template for template in TRUSTED_MESSAGE_TEMPLATES if template.message == message),
+        None,
+    )
 
 
 @dataclass(frozen=True)
@@ -167,10 +273,14 @@ class WorldSnapshot:
 class ResolutionResponse:
     message: str
     claimed_outcome: str
+    transaction_status_claim: str = "unknown"
+    settlement_status_claim: str = "not_claimed"
+    arrival_commitment_days: int | None = None
+    message_template_id: str | None = None
+    escalation_reason: str | None = None
 
     def __post_init__(self) -> None:
-        if self.claimed_outcome not in VALID_CLAIMED_OUTCOMES:
-            raise ValueError(f"unsupported claimed outcome: {self.claimed_outcome}")
+        _validate_resolution_claims(self)
 
 
 @dataclass(frozen=True)
@@ -193,10 +303,70 @@ class AgentOutput:
     message: str
     claimed_outcome: str
     runtime_evidence: RuntimeEvidence | None = None
+    transaction_status_claim: str = "unknown"
+    settlement_status_claim: str = "not_claimed"
+    arrival_commitment_days: int | None = None
+    message_template_id: str | None = None
+    escalation_reason: str | None = None
 
     def __post_init__(self) -> None:
-        if self.claimed_outcome not in VALID_CLAIMED_OUTCOMES:
-            raise ValueError(f"unsupported claimed outcome: {self.claimed_outcome}")
+        _validate_resolution_claims(self)
+
+
+@dataclass(frozen=True)
+class SemanticEvaluationReceipt:
+    """Evaluator-owned qualification evidence for one free-form message."""
+
+    criterion_id: str
+    evaluator_version: str
+    calibration_receipt_hash: str
+    message_hash: str
+    structured_claim_hash: str
+    passed: bool
+    abstained: bool
+
+    def __post_init__(self) -> None:
+        import re
+
+        sha256_pattern = re.compile(r"^sha256:[0-9a-f]{64}$")
+        if not self.criterion_id or not self.evaluator_version:
+            raise ValueError("semantic criterion and evaluator version are required")
+        hashes = (
+            self.calibration_receipt_hash,
+            self.message_hash,
+            self.structured_claim_hash,
+        )
+        if not all(sha256_pattern.fullmatch(value) for value in hashes):
+            raise ValueError("semantic receipt hashes must be sha256: digests")
+        if not isinstance(self.passed, bool) or not isinstance(self.abstained, bool):
+            raise ValueError("semantic receipt decisions must be boolean")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _validate_resolution_claims(value: ResolutionResponse | AgentOutput) -> None:
+    if not isinstance(value.message, str) or not value.message:
+        raise ValueError("customer message is required")
+    if value.claimed_outcome not in VALID_CLAIMED_OUTCOMES:
+        raise ValueError(f"unsupported claimed outcome: {value.claimed_outcome}")
+    if value.transaction_status_claim not in VALID_TRANSACTION_STATUS_CLAIMS:
+        raise ValueError("unsupported transaction status claim")
+    if value.settlement_status_claim not in VALID_SETTLEMENT_STATUS_CLAIMS:
+        raise ValueError("unsupported settlement status claim")
+    days = value.arrival_commitment_days
+    if days is not None and (
+        not isinstance(days, int) or isinstance(days, bool) or days < 0
+    ):
+        raise ValueError("arrival commitment days must be a non-negative integer")
+    if value.message_template_id is not None and (
+        not isinstance(value.message_template_id, str) or not value.message_template_id
+    ):
+        raise ValueError("message_template_id must be a non-empty string")
+    if value.escalation_reason is not None and (
+        not isinstance(value.escalation_reason, str) or not value.escalation_reason
+    ):
+        raise ValueError("escalation_reason must be a non-empty string")
 
 
 @dataclass(frozen=True)
@@ -255,11 +425,14 @@ class CaseEvaluation:
     claimed_outcome: str
     execution_error: str | None = None
     false_message_claim_count: int = 0
+    unqualified_message_count: int = 0
+    semantic_abstention_count: int = 0
     unjustified_escalation_count: int = 0
     human_intervention_count: int = 0
     unresolved_work_count: int = 0
     resolution_status: str = "resolved"
     runtime_evidence: RuntimeEvidence | None = None
+    semantic_evaluation_receipt: SemanticEvaluationReceipt | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -278,6 +451,8 @@ class CaseEvaluation:
             "claimed_outcome": self.claimed_outcome,
             "execution_error": self.execution_error,
             "false_message_claim_count": self.false_message_claim_count,
+            "unqualified_message_count": self.unqualified_message_count,
+            "semantic_abstention_count": self.semantic_abstention_count,
             "unjustified_escalation_count": self.unjustified_escalation_count,
             "human_intervention_count": self.human_intervention_count,
             "unresolved_work_count": self.unresolved_work_count,
@@ -286,6 +461,11 @@ class CaseEvaluation:
                 None
                 if self.runtime_evidence is None
                 else self.runtime_evidence.to_dict()
+            ),
+            "semantic_evaluation_receipt": (
+                None
+                if self.semantic_evaluation_receipt is None
+                else self.semantic_evaluation_receipt.to_dict()
             ),
         }
 
@@ -306,6 +486,8 @@ class EvaluationReport:
     measurement_kind: str = "synthetic"
     measurement_source: str = "harness-owned teaching profile"
     false_message_claim_count: int = 0
+    unqualified_message_count: int = 0
+    semantic_abstention_count: int = 0
     unjustified_escalation_count: int = 0
     human_intervention_count: int = 0
     unresolved_work_count: int = 0
@@ -326,6 +508,8 @@ class EvaluationReport:
             "measurement_kind": self.measurement_kind,
             "measurement_source": self.measurement_source,
             "false_message_claim_count": self.false_message_claim_count,
+            "unqualified_message_count": self.unqualified_message_count,
+            "semantic_abstention_count": self.semantic_abstention_count,
             "unjustified_escalation_count": self.unjustified_escalation_count,
             "human_intervention_count": self.human_intervention_count,
             "unresolved_work_count": self.unresolved_work_count,
