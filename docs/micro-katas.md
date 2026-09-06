@@ -122,7 +122,54 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 **Evidence limits:** this is deterministic re-grading of retained mock-world executions, not agent re-execution or production attestation. The CLI uses the installed grader; it does not download or enforce its revision. Population validation covers case/customer/slice membership, not independent verification of every source-file hash. No semantic stage is selected in this CLI example, so receipts are null here; [Katas 08–10](semantic-grading-lab.md) exercise the connected optional stage. A party able to rewrite all evidence and trusted references can fabricate a self-consistent packet; external provenance and storage controls remain necessary.
 
-## What comes next
+## Kata 32: reproduce yesterday without approving today
+
+**Know first:** historical reproduction and current eligibility answer different questions. Revoking a grader's calibration does not erase a historical judgment. It changes whether that calibration can support a new decision.
+
+**Situation:** a retained packet has four paired trial executions for one synthetic case: two repetitions in each arm. An evaluator-owned fixture judge supplied context-bound receipts. At the recorded time the test registry allowed its synthetic calibration. Later, the registry revokes that calibration hash.
+
+**Predict:** should the historical grades still reproduce? Should the current-calibration assessment pass? Should either result authorize application deployment?
+
+```bash
+uv run python -m unittest tests.test_replay_authority -v
+```
+
+**Task:** keep the original packet unchanged. Supply its independently retained digest, the historical calibration trust set, a current registry snapshot and an explicit timezone-aware assessment time. Produce a separate assessment containing the packet digest, registry digest, historical-trust digest, diagnostic mode, assessment time and result counts. Never obtain the trusted anchor or registry from the packet being checked.
+
+??? success "Solution and reasoning"
+    `assess_replay` in `cx_eval_lab/replay_authority.py` first compares the full packet with the operator-supplied anchor, then calls historical replay with the separately supplied historical trust set. A malformed or non-reproducible packet raises an error. Only after reproduction does it consult the current registry for each retained semantic receipt.
+
+    Revocation or missing registration yields `qualification_missing_or_revoked`; expiry yields `qualification_not_current`. The returned assessment says `calibration_status="not_current"` while still recording four reproduced trials. Tests compare the original packet before and after to verify that the assessment did not rewrite it.
+
+    A current registry entry must match the retained qualification audit, evaluator and criterion. It must cover the case's dataset, policy and joint slice scope and satisfy its registered calibration bounds. The registry owns those checks; a receipt cannot qualify itself by naming a digest.
+
+    Synthetic qualification is rejected by default. The test explicitly uses `allow_synthetic=True` to exercise a diagnostic path. This setting is retained as `synthetic_diagnostic`, and `deployment_authorized` remains false. The fixture's claimed calibration counts are test inputs, not independent human-review evidence.
+
+**Extend:** repeat the assessment at the exact expiry time; it must no longer be current. Change a packet field while leaving the external anchor unchanged; the assessment must reject it even if its internal hashes have been recomputed. Explain why taking a new digest from the altered packet defeats that protection.
+
+**Interview answer to know:** “I preserve the original evidence and historical grade, then issue a separate time- and registry-bound assessment. A revocation changes current eligibility, not history. A digest only anchors evidence if its trusted copy is independently controlled.”
+
+## Kata 33: a current evaluator can grade a failed trial
+
+**Situation:** the registry entry is current, but a receipt has the wrong context hash. The historical grader correctly marked the customer message unqualified and the trial failed. The resulting packet is retained as a failure, not fraudulently presented as a pass.
+
+**Predict:** can historical replay succeed? Can calibration remain current? Which fields prevent a consumer from mistaking these results for successful evaluation?
+
+```bash
+uv run python -m unittest \
+  tests.test_replay_authority.ReplayAuthorityTests.test_current_calibration_does_not_hide_invalid_receipts_or_failed_grades -v
+```
+
+??? success "Solution and reasoning"
+    All four failed grades reproduce: replay success means agreement with recorded grades, not that the grades were passing. The test returns `calibration_status="current"`, `failed_trials=4`, and `unqualified_message_trials=4`. Its synthetic diagnostic permission is explicit, and deployment remains unauthorized.
+
+    Calibration eligibility describes the scoring instrument. Receipt validity describes whether a particular judgment is bound to its evidence. The trial verdict describes the system behavior under the grader. Keep all three separate. A valid judge verdict of `fail` is also a failed trial, but is not an invalid receipt or proof that the judge's calibration has expired.
+
+    If a packet has no semantic receipts, the assessment reports `calibration_status="not_applicable"`, not `"current"`. Read this as “no retained semantic receipts were checked,” not “no semantic evaluation was needed.” Historical unqualified-message counts remain visible.
+
+**Evidence boundary for both katas:** these are executed local tests using mock agents and synthetic judge responses. The new Python API does not authenticate reviewers, fetch an authoritative registry, enforce the installed grader's source revision, create a new-grader reassessment, or connect to a deployment controller. The existing `replay` CLI still performs historical replay only. The current assessment is a separate operator-invoked API; retain the registry snapshot and historical trust set alongside its digests to reproduce it later.
+
+## Further practice
 
 [Katas 28–31](sequential-decisions-lab.md) compute repeated-look false promotion, derive sequential likelihood evidence, break label and independence assumptions, and budget across release campaigns. Exact synthetic path enumeration supports the worked results, not general deployment qualification.
 

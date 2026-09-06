@@ -38,6 +38,22 @@ The shared learning loop is:
 
 ## Part I · Evaluation foundations
 
+### A learning route with evidence checkpoints
+
+Carry one customer workflow through this route. At each checkpoint, produce the named artifact before reading the solution. Record two separate fields: **evidence origin/status** (for example, constructed example, executed local mock, or live study) and **authorized use** (for example, lab-only, unqualified, or qualified for a named use). A live study is not automatically qualified, and an executed result may still use synthetic data. A later chapter does not upgrade an earlier artifact's authority.
+
+| Checkpoint | Read and practice | What you should be able to produce and defend |
+| --- | --- | --- |
+| **1. Specify the promise** | [Foundations worked checkpoint](foundations.md#worked-checkpoint-seven-surfaces-one-failed-refund-conversation), then [Katas 01–03](micro-katas.md) | A seven-surface contract separating failures, unknowns, runtime prevention and grading. Explain why a correct enum and successful API call can coexist with a failed task. |
+| **2. Build and improve the data** | [Dataset Design](dataset-design.md), [Human Evaluation](human-evaluation.md), [Katas 18–20](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) | An incident-to-regression record, group-aware split policy and adjudication record. Identify which labels may tune the system and which must remain independent. |
+| **3. Qualify the measurement** | [LLM as a Judge](llm-as-a-judge.md), [Semantic Grading Lab](semantic-grading-lab.md) | A rubric, criterion-specific error table, abstention policy and scoped qualification decision. Explain why synthetic annotation rows do not establish human agreement or live judge accuracy. |
+| **4. Inspect the execution** | [CX Eval Lab](build-the-system.md), [Kata 04](micro-katas.md#kata-04-recompute-a-grade-not-just-an-average), [Order Resolution](order-resolution-study.md), [Process Recovery](process-recovery-study.md) | A retained trace and authoritative state diff, plus an independently reconstructed grade. Distinguish re-grading, re-execution and provenance verification. |
+| **5. Defend the comparison** | [Metrics](metrics.md), [Statistical Method Study](statistical-method-study.md), [Sequential Decisions](sequential-decisions-lab.md) | A registered contrast, independent sampling unit, stopping rule and justified verdict. Reproduce a false-promotion counterexample and state where its assumptions fail. |
+| **6. Control exposure** | [Release Gates](checklist.md), [CI Gate Lab](ci-gate-lab.md), [Exposure Control Lab](exposure-control-lab.md) | Separate software conformance from candidate qualification and deployment authority. Demonstrate a hold, restriction and rollback; account for actions already completed before containment. |
+| **7. Test transfer and risk** | [Modern Architectures](modern-agent-architectures.md), [Eval Integrity](eval-operations-integrity.md), [Frontier Risk Decisions](frontier-risk-decisions.md) | A study protocol connecting actual execution to outcomes, and a claim–evidence–safeguard argument. Identify what needs human evidence or remains an unresolved research question. |
+
+For interview preparation, close the solution and defend each artifact against a changed assumption: a stale approval, correlated customer sessions, a revoked judge, missing outcomes or an interrupted write. Use [Interview & Design Drills](interview-drills.md) for broader prompts. Completing the route is practice, not an automatic certification; the [delivery map](primer-delivery-map.md) lists the still-missing live and operational evidence.
+
 The order is deliberate: establish why the evaluation exists, decide what evidence it measures, learn how to read the scores, build human evidence, calibrate model graders, test robustness and safety, evaluate retrieval and agents, reproduce benchmarks, watch the system live, and finally enforce the release decision.
 
 <div class="chapter-grid" markdown>

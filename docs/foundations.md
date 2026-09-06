@@ -402,6 +402,53 @@ Vague goal: “Make the support bot better.” Write a contract for a release th
 ??? success "Answer outline"
     Define the target population and verified resolution outcome; compare candidate and shipping baseline on paired cases; choose a product-owned non-inferiority margin; measure cost per verified success including retries; preserve hard authorization, privacy, and duplicate-action invariants; pre-register language/workflow slice floors; record model, prompt, tools, data, graders, policy, and price versions; and allow exposure to move only from offline evidence to shadow/canary if all independent rules pass. The release may claim lower measured cost, not general quality improvement, unless superiority is separately demonstrated.
 
+## Worked checkpoint: seven surfaces, one failed refund conversation
+
+The customer says, “Refund the blue backpack I bought yesterday—not the one from last week.” The mock session has verified identity. Both orders belong to that customer; only yesterday's order is the intended target. The agent selects last week's order, creates one refund, and replies, “Your money has arrived.” The payment ledger records an accepted refund instruction, not bank settlement. This is a **constructed reasoning example**, not an additional recorded trial.
+
+Before reading the solution, write a verdict for each surface. Do not infer missing measurements, and do not turn one successful API response into successful customer resolution.
+
+| Surface | Evidence needed | Verdict for the supplied facts |
+| --- | --- | --- |
+| Outcome | Intended target, final ledger for both orders, permitted amount and currency | Fail: the requested order was not refunded and another order was changed. |
+| Policy | Customer binding, eligibility, required approval, authorization scope and duplicate ledger effects | Customer ownership and one transaction are supported. Eligibility and approval compliance are unknown from this description. Backend access permission does not establish customer intent. |
+| Trajectory / tool use | Model-visible candidates, argument values, reads, checks and write ordering | Wrong-object argument selection fails. Whether all mandatory checks preceded the write requires the actual trace. |
+| Grounding / factuality | Exact customer message and authoritative transaction/settlement evidence | Fail: “money has arrived” exceeds the supplied evidence. The correct outcome enum would not repair this sentence. |
+| Conversation | Full request, corrections, clarification turns and customer-facing next step | Fail on respecting the explicit target constraint. The final message also gives an unsupported resolution; politeness cannot compensate. |
+| Efficiency | Turns, tool calls, retries, token usage and verified successes | Unmeasured. A short conversation is not evidence of efficient resolution; a failed run still consumes resources. |
+| Operations | Timing, provider/tool errors, measured prices, trace completeness and environment | Unmeasured. A successful write does not establish latency or cost compliance. |
+
+These are the same seven surfaces used in the contract above. Different names such as “tool correctness” and “trajectory,” or “factuality” and “grounding,” describe views of the same checks here, not extra mandatory taxonomies. The four planes describe ownership and lifecycle; the three axes describe where a measurement belongs. Start with this seven-row evidence table, then use the other maps when they answer a specific question.
+
+### Micro-exercise: choose the repair, not just the metric
+
+Propose one runtime prevention and one evaluation check for each observed failure. Then explain why neither an authorization test nor a schema validator is sufficient.
+
+??? success "Worked solution"
+    **Wrong object:** resolve the customer's description against candidate records and bind the chosen object to the request before committing. Ask a targeted clarification if the description remains ambiguous; do not require needless clarification when it is already resolvable. The backend still verifies ownership and write permissions independently. Evaluate final state across all candidate objects, not only the expected object: otherwise an unintended extra refund can disappear from the score.
+
+    **False settlement claim:** expose distinct states such as instruction accepted, processing and settlement confirmed. For deterministic wording, require the exact factual prerequisites. For free-form wording, assess the claim against retained current evidence using a qualified semantic stage or independent review. An allowed string or a valid enum does not establish truth.
+
+    **Missing evidence:** retain the original customer request, candidate records shown to the agent, ordered tool events, complete output and final state, plus usage and timing provenance. Missing evidence produces an unknown or unqualified result according to the registered contract; it must not silently count as a pass.
+
+    **Decision:** this trace fails the stated task contract. Do not promote it because other dimensions look good. Conversely, one failed trace does not estimate the population failure rate. A registered hard-stop rule may block release on this event; a reliability claim still requires an appropriate sample and uncertainty treatment.
+
+### Dataset improvement: keep the incident and test the boundary
+
+Create one minimized regression with both owned orders, the disambiguating customer phrase and the expected ledgers. For this constructed scenario, label its provenance as synthetic; no observed incident or original execution trace exists. When applying the exercise to a real failure, link the case to the reviewed incident and preserve its raw evidence separately under appropriate access controls. Add boundary variants: reversed candidate order, a correction before commitment, an actually ambiguous date, an unauthorized lookalike order and a refund instruction whose settlement is still pending.
+
+Do not claim that six variants are six independent customers. Group related variants for splitting and uncertainty analysis. Put the revealed example into development/regression use; evaluate generalization on separately sourced, unseen ambiguity cases. If it changes the judge rubric, requalify that judge on independent calibration data rather than grading its own newly memorized examples.
+
+For a deliberately small arithmetic example, suppose two attempts cost 0.04 and 0.06 currency units, with only the second independently verified as successful. Observed cost per verified success is `(0.04 + 0.06) / 1 = 0.10`, not 0.06. If neither succeeds, the denominator is zero: report zero verified successes and total cost, not a misleading finite cost-per-success value. This arithmetic is illustrative, not a measured price or a population estimate.
+
+### Interview checkpoint and executable follow-through
+
+**Prompt:** “All API calls returned success and the response schema passed. Why would you block this candidate?”
+
+**Answer criteria:** distinguish API success from intended final state; wrong-but-authorized from unauthorized actions; settlement evidence from transaction acceptance; unknown measurements from passes; a regression finding from a population reliability estimate. Name one retained artifact and one independently checked outcome for each claim. A strong answer also explains how the incident improves the dataset without contaminating final acceptance evidence.
+
+Now run [Kata 01](micro-katas.md#kata-01-a-trusted-sentence-that-lies) for explanation prerequisites, [Kata 04](micro-katas.md#kata-04-recompute-a-grade-not-just-an-average) for retained evidence and [Order Resolution Study](order-resolution-study.md) for competing owned objects. These are separate implemented exercises; they do not yet constitute one integrated, live-model-qualified experiment. Continue with [Dataset Design](dataset-design.md) to turn the boundary variants into a controlled dataset lifecycle.
+
 ## Verification checklist
 
 - [ ] Product promise and prohibited outcomes are observable.
