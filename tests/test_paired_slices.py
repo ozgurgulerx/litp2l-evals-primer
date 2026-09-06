@@ -121,6 +121,26 @@ class PairedSliceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.derive(packet)
 
+    def test_dataset_binding_preserves_registered_nonlexical_execution_order(self):
+        from cx_eval_lab.evidence import ExperimentManifest
+        from cx_eval_lab.models import RefundCase
+        from cx_eval_lab.paired_slices import SliceControl
+        from cx_eval_lab.runner import DEFAULT_MEASUREMENT_PROFILE, run_paired_experiment
+        cases = tuple(reversed([RefundCase.from_dict(a['payload']['case'])
+            for a in self.study['packet']['trial_artifacts']
+            if a['payload']['identity']['arm'] == 'baseline' and a['payload']['identity']['trial_index'] == 0]))
+        original = ExperimentManifest(**self.study['packet']['manifest'])
+        manifest = replace(original,
+            population_hash=canonical_hash([[c.case_id, c.customer_id, list(c.slices)] for c in cases]),
+            input_hashes=tuple((key, canonical_hash([c.to_dict() for c in cases]) if key == 'dataset' else value)
+                               for key, value in original.input_hashes))
+        packet = run_paired_experiment(baseline_agent=SliceControl(False), candidate_agent=SliceControl(True),
+            cases=cases, manifest=manifest, baseline_measurement_profile=DEFAULT_MEASUREMENT_PROFILE,
+            candidate_measurement_profile=DEFAULT_MEASUREMENT_PROFILE).to_dict()
+        packet['trial_artifacts'].reverse()  # Storage order is not the dataset registration order.
+        report = self.derive(packet)
+        self.assertEqual(0.5, report['overall']['trial_weighted_delta'])
+
     def test_incomplete_pair_inventory_and_native_schema_are_rejected(self):
         for action in ('missing', 'duplicate', 'native', 'bool-index', 'bool-payload-index'):
             packet = copy.deepcopy(self.study['packet'])
