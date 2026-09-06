@@ -112,6 +112,22 @@ class CampaignGateTests(unittest.TestCase):
         rehash_packet(report['packet'])
         self.assertEqual('block', self.assess(report).status)
 
+    def test_passed_semantic_receipt_cannot_contradict_its_judgment(self):
+        report = copy.deepcopy(self.report)
+        stage = report['packet']['trial_artifacts'][0]['payload']['semantic_stage']
+        stage['judgment']['verdict'] = 'fail'
+        row = next(row for row in report['ledger']['invocations'] if row['id'] == stage['invocation_id'])
+        inner = {**stage['judgment'], 'campaign_audit_json': None}
+        row['judgment_json'] = json.dumps(inner)
+        receipt = json.loads(row['receipt_json'])
+        receipt['judgment_hash'] = canonical_hash(inner)
+        row['receipt_json'] = json.dumps(receipt)
+        audit = json.loads(stage['judgment']['campaign_audit_json'])
+        audit['receipt'] = receipt
+        stage['judgment']['campaign_audit_json'] = json.dumps(audit)
+        rehash_packet(report['packet'])
+        self.assertEqual('block', self.assess(report).status)
+
 
 if __name__ == '__main__':
     unittest.main()
