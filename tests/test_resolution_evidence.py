@@ -109,6 +109,31 @@ class ResolutionEvidenceTests(unittest.TestCase):
                                           manifest=replace(manifest, **changes))
                 execute.assert_not_called()
 
+    def test_rehashed_measurements_must_match_their_retained_source(self):
+        packet = packet_for()
+        artifact = packet['trial_artifacts'][0]
+        payload = artifact['payload']
+        for key, value in (('latency_ms', 999999), ('cost_usd', 123.0)):
+            payload[key] = payload['evaluation'][key] = value
+            next(r for r in packet['baseline_trials'] if r['artifact_hash'] == artifact['artifact_hash'])[key] = value
+        rehash(packet)
+        with self.assertRaisesRegex(ValueError, 'measurement'):
+            replay_packet(packet)
+
+    def test_declared_arm_execution_order_matches_retained_artifact_sequence(self):
+        packet = packet_for()
+        packet['trial_artifacts'][0:2] = reversed(packet['trial_artifacts'][0:2])
+        with self.assertRaisesRegex(ValueError, 'execution order'):
+            replay_packet(packet)
+
+    def test_malformed_output_and_execution_error_fail_with_validation_error(self):
+        for field, value in (('output', []), ('execution_error', []), ('elapsed_ms', float('nan'))):
+            packet = packet_for()
+            packet['trial_artifacts'][0]['payload'][field] = value
+            rehash(packet)
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                replay_packet(packet)
+
 
 if __name__ == '__main__':
     unittest.main()
