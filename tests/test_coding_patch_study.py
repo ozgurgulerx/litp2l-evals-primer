@@ -102,6 +102,13 @@ class CodingPatchStudyTests(unittest.TestCase):
                     study.verify_study(altered)
                 runner.assert_not_called()
 
+    def test_numeric_rates_accept_integer_values_but_reject_booleans(self):
+        expected = study.VISIBLE[1]['expected']
+        self.assertTrue(study.output_matches({**expected, 'completion': 1, 'known_pass_rate': 1}, expected))
+        for field in ('registered', 'known_pass_rate', 'completion'):
+            self.assertFalse(study.output_matches({**expected, field: True}, expected))
+        self.assertFalse(study.output_matches({**expected, 'completion': float('inf')}, expected))
+
     def test_timeout_and_missing_results_cannot_pass(self):
         for effect in (subprocess.TimeoutExpired('fixed child', 5, output=b'partial\xff'),
                        subprocess.CompletedProcess([], 0, '{}', '')):
@@ -163,7 +170,7 @@ class CodingPatchStudyTests(unittest.TestCase):
 
     def test_fresh_cli_exclusive_output(self):
         with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory) / 'study.json'
+            target = Path(directory) / 'nested' / 'study.json'
             command = [sys.executable, '-m', 'cx_eval_lab.coding_patch_study', '--output', str(target)]
             first = subprocess.run(command, capture_output=True, text=True, timeout=20, check=False)
             self.assertEqual(0, first.returncode, first.stderr)

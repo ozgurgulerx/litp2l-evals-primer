@@ -1,0 +1,1467 @@
+{
+  "schema": "coding-patch-study-v1",
+  "contract": {
+    "input": "list of dictionaries; each outcome is pass, fail, or unknown; reject missing/invalid labels with ValueError",
+    "output": "registered, pass, fail, unknown integer counts (not bool); numeric rates (not bool): known_pass_rate=pass/(pass+fail) or None; completion=(pass+fail)/registered or None",
+    "side_effects": "input list and dictionaries must remain unchanged"
+  },
+  "evidence_kind": "executed_fixed_hand_authored_python_patches",
+  "source_inventory": {
+    "contract": "f7eebee4344de392aea998e05a7aac4a98e438fcebf51d5822fe5ed4f1db67b9",
+    "candidates": {
+      "original-denominator": "3df965f6a51ff7414caf30e459b1ed7ca53f20824a362b6e64ecb32a32c76f52",
+      "visible-overfit": "7b0f9f807d92b9ed2d49c66f0d8551f2cb6068217f31001246c78a07ad0f37a8",
+      "correct": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550",
+      "input-mutating": "7bf2b58c66adfca355d7c18de5391e3525b16d65c65be43d187587654c04ac07",
+      "protected-test-edit": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550"
+    },
+    "protected": {
+      "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+      "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+      "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+    },
+    "inputs": "1b40f18999d50a699a0b48b1a85d63728101ae7f84a5d0ed57ed67986a8d414e",
+    "engine": {
+      "coding_patch_study.py": "e9298286ea642a68393796a372ce0f0c8eaa3d322627d3d25d3ac1eca904e59f",
+      "coding_patch_cases.py": "69ee6ec37bb95bd51713844a6c62c0d5013dc836d69e8970aa3dff776b953d07"
+    },
+    "interpreter": {
+      "sha256": "8aa50c1a2f9965ac8c7dcc7fe82b5b450b8187a0d024fb8cd654d6ee846a2fa5",
+      "version": "3.12.7 (v3.12.7:0b05ead877f, Sep 30 2024, 23:18:00) [Clang 13.0.0 (clang-1300.0.29.30)]"
+    }
+  },
+  "controls": [
+    {
+      "name": "original-denominator",
+      "status": "rejected",
+      "files": {
+        "acceptance.json": {
+          "source": "[{\"expected\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"name\": \"empty\", \"rows\": []}, {\"expected\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"name\": \"all-unknown\", \"rows\": [{\"outcome\": \"unknown\"}]}, {\"expected\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"name\": \"missing-evidence\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"reordered\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"name\": \"all-fail\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"name\": \"metadata-preserved\", \"rows\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}]}, {\"name\": \"invalid-label\", \"raises\": \"ValueError\", \"rows\": [{\"outcome\": \"maybe\"}]}, {\"name\": \"missing-label\", \"raises\": \"ValueError\", \"rows\": [{}]}]",
+          "sha256": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+        },
+        "candidate.py": {
+          "source": "def summarize_trials(rows):\n    if not isinstance(rows, list) or any(not isinstance(row, dict) or row.get('outcome') not in ('pass', 'fail', 'unknown') for row in rows):\n        raise ValueError('invalid rows')\n    passed = sum(row['outcome'] == 'pass' for row in rows)\n    failed = sum(row['outcome'] == 'fail' for row in rows)\n    known = passed + failed\n    return {'registered': len(rows), 'pass': passed, 'fail': failed,\n            'unknown': len(rows) - known, 'known_pass_rate': passed / len(rows) if rows else None,\n            'completion': known / len(rows) if rows else None}\n",
+          "sha256": "3df965f6a51ff7414caf30e459b1ed7ca53f20824a362b6e64ecb32a32c76f52"
+        },
+        "harness.py": {
+          "source": "def output_matches(actual, expected):\n    if not isinstance(actual, dict) or set(actual) != set(expected):\n        return False\n    for key, value in expected.items():\n        observed = actual[key]\n        if key in ('registered', 'pass', 'fail', 'unknown'):\n            if type(observed) is not int or observed != value:\n                return False\n        elif value is None:\n            if observed is not None:\n                return False\n        elif type(observed) not in (int, float) or observed != value:\n            return False\n    return True\n\nimport copy\nimport json\nimport runpy\nimport sys\n\ncandidate = runpy.run_path('candidate.py')['summarize_trials']\nwith open(sys.argv[1], encoding='utf-8') as source:\n    cases = json.load(source)\nresults = []\nfor case in cases:\n    rows = copy.deepcopy(case['rows'])\n    actual, error_type = None, None\n    try:\n        actual = candidate(rows)\n        output_passed = 'expected' in case and output_matches(actual, case['expected'])\n    except Exception as error:\n        error_type = type(error).__name__\n        output_passed = error_type == case.get('raises')\n    unchanged = json.dumps(rows, sort_keys=True) == json.dumps(case['rows'], sort_keys=True)\n    results.append({'name': case['name'], 'output_passed': output_passed,\n                    'actual': actual, 'error_type': error_type, 'input_before': case['rows'], 'input_after': rows,\n                    'input_unchanged': unchanged, 'passed': output_passed and unchanged})\nprint(json.dumps(results, sort_keys=True))\nsys.exit(0 if all(row['passed'] for row in results) else 1)\n",
+          "sha256": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94"
+        },
+        "visible.json": {
+          "source": "[{\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-mixed-known\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-all-pass\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}]}]",
+          "sha256": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+        }
+      },
+      "diff": "",
+      "protected_before": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "protected_after": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "suites": [
+        {
+          "name": "visible",
+          "status": "completed",
+          "registered": 2,
+          "passed": 2,
+          "results": [
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "visible-mixed-known",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 2,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "visible-all-pass",
+              "output_passed": true,
+              "passed": true
+            }
+          ],
+          "returncode": 0,
+          "stdout": "[{\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"visible-mixed-known\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"visible-all-pass\", \"output_passed\": true, \"passed\": true}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "visible.json"
+          ],
+          "duration_seconds": 0.02211241703480482,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "3df965f6a51ff7414caf30e459b1ed7ca53f20824a362b6e64ecb32a32c76f52",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "3df965f6a51ff7414caf30e459b1ed7ca53f20824a362b6e64ecb32a32c76f52",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        },
+        {
+          "name": "acceptance",
+          "status": "completed",
+          "registered": 8,
+          "passed": 6,
+          "results": [
+            {
+              "actual": {
+                "completion": null,
+                "fail": 0,
+                "known_pass_rate": null,
+                "pass": 0,
+                "registered": 0,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [],
+              "input_before": [],
+              "input_unchanged": true,
+              "name": "empty",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 0.0,
+                "fail": 0,
+                "known_pass_rate": 0.0,
+                "pass": 0,
+                "registered": 1,
+                "unknown": 1
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "all-unknown",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 0.6666666666666666,
+                "fail": 1,
+                "known_pass_rate": 0.3333333333333333,
+                "pass": 1,
+                "registered": 3,
+                "unknown": 1
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "missing-evidence",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "reordered",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 3,
+                "known_pass_rate": 0.0,
+                "pass": 0,
+                "registered": 3,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "all-fail",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 1,
+                "registered": 1,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "metadata-preserved",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": null,
+              "error_type": "ValueError",
+              "input_after": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "invalid-label",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": null,
+              "error_type": "ValueError",
+              "input_after": [
+                {}
+              ],
+              "input_before": [
+                {}
+              ],
+              "input_unchanged": true,
+              "name": "missing-label",
+              "output_passed": true,
+              "passed": true
+            }
+          ],
+          "returncode": 1,
+          "stdout": "[{\"actual\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"error_type\": null, \"input_after\": [], \"input_before\": [], \"input_unchanged\": true, \"name\": \"empty\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"unknown\"}], \"input_unchanged\": true, \"name\": \"all-unknown\", \"output_passed\": false, \"passed\": false}, {\"actual\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.3333333333333333, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"missing-evidence\", \"output_passed\": false, \"passed\": false}, {\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"reordered\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"all-fail\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_before\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"metadata-preserved\", \"output_passed\": true, \"passed\": true}, {\"actual\": null, \"error_type\": \"ValueError\", \"input_after\": [{\"outcome\": \"maybe\"}], \"input_before\": [{\"outcome\": \"maybe\"}], \"input_unchanged\": true, \"name\": \"invalid-label\", \"output_passed\": true, \"passed\": true}, {\"actual\": null, \"error_type\": \"ValueError\", \"input_after\": [{}], \"input_before\": [{}], \"input_unchanged\": true, \"name\": \"missing-label\", \"output_passed\": true, \"passed\": true}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "acceptance.json"
+          ],
+          "duration_seconds": 0.022053458960726857,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "3df965f6a51ff7414caf30e459b1ed7ca53f20824a362b6e64ecb32a32c76f52",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "3df965f6a51ff7414caf30e459b1ed7ca53f20824a362b6e64ecb32a32c76f52",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        }
+      ]
+    },
+    {
+      "name": "visible-overfit",
+      "status": "rejected",
+      "files": {
+        "acceptance.json": {
+          "source": "[{\"expected\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"name\": \"empty\", \"rows\": []}, {\"expected\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"name\": \"all-unknown\", \"rows\": [{\"outcome\": \"unknown\"}]}, {\"expected\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"name\": \"missing-evidence\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"reordered\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"name\": \"all-fail\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"name\": \"metadata-preserved\", \"rows\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}]}, {\"name\": \"invalid-label\", \"raises\": \"ValueError\", \"rows\": [{\"outcome\": \"maybe\"}]}, {\"name\": \"missing-label\", \"raises\": \"ValueError\", \"rows\": [{}]}]",
+          "sha256": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+        },
+        "candidate.py": {
+          "source": "def summarize_trials(rows):\n    labels = [row.get('outcome') for row in rows]\n    if labels == ['pass', 'fail']:\n        return {'registered': 2, 'pass': 1, 'fail': 1, 'unknown': 0, 'known_pass_rate': 0.5, 'completion': 1.0}\n    if labels == ['pass', 'pass']:\n        return {'registered': 2, 'pass': 2, 'fail': 0, 'unknown': 0, 'known_pass_rate': 1.0, 'completion': 1.0}\n    return {}\n",
+          "sha256": "7b0f9f807d92b9ed2d49c66f0d8551f2cb6068217f31001246c78a07ad0f37a8"
+        },
+        "harness.py": {
+          "source": "def output_matches(actual, expected):\n    if not isinstance(actual, dict) or set(actual) != set(expected):\n        return False\n    for key, value in expected.items():\n        observed = actual[key]\n        if key in ('registered', 'pass', 'fail', 'unknown'):\n            if type(observed) is not int or observed != value:\n                return False\n        elif value is None:\n            if observed is not None:\n                return False\n        elif type(observed) not in (int, float) or observed != value:\n            return False\n    return True\n\nimport copy\nimport json\nimport runpy\nimport sys\n\ncandidate = runpy.run_path('candidate.py')['summarize_trials']\nwith open(sys.argv[1], encoding='utf-8') as source:\n    cases = json.load(source)\nresults = []\nfor case in cases:\n    rows = copy.deepcopy(case['rows'])\n    actual, error_type = None, None\n    try:\n        actual = candidate(rows)\n        output_passed = 'expected' in case and output_matches(actual, case['expected'])\n    except Exception as error:\n        error_type = type(error).__name__\n        output_passed = error_type == case.get('raises')\n    unchanged = json.dumps(rows, sort_keys=True) == json.dumps(case['rows'], sort_keys=True)\n    results.append({'name': case['name'], 'output_passed': output_passed,\n                    'actual': actual, 'error_type': error_type, 'input_before': case['rows'], 'input_after': rows,\n                    'input_unchanged': unchanged, 'passed': output_passed and unchanged})\nprint(json.dumps(results, sort_keys=True))\nsys.exit(0 if all(row['passed'] for row in results) else 1)\n",
+          "sha256": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94"
+        },
+        "visible.json": {
+          "source": "[{\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-mixed-known\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-all-pass\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}]}]",
+          "sha256": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+        }
+      },
+      "diff": "--- before/candidate.py\n+++ after/candidate.py\n@@ -1,9 +1,7 @@\n def summarize_trials(rows):\n-    if not isinstance(rows, list) or any(not isinstance(row, dict) or row.get('outcome') not in ('pass', 'fail', 'unknown') for row in rows):\n-        raise ValueError('invalid rows')\n-    passed = sum(row['outcome'] == 'pass' for row in rows)\n-    failed = sum(row['outcome'] == 'fail' for row in rows)\n-    known = passed + failed\n-    return {'registered': len(rows), 'pass': passed, 'fail': failed,\n-            'unknown': len(rows) - known, 'known_pass_rate': passed / len(rows) if rows else None,\n-            'completion': known / len(rows) if rows else None}\n+    labels = [row.get('outcome') for row in rows]\n+    if labels == ['pass', 'fail']:\n+        return {'registered': 2, 'pass': 1, 'fail': 1, 'unknown': 0, 'known_pass_rate': 0.5, 'completion': 1.0}\n+    if labels == ['pass', 'pass']:\n+        return {'registered': 2, 'pass': 2, 'fail': 0, 'unknown': 0, 'known_pass_rate': 1.0, 'completion': 1.0}\n+    return {}\n",
+      "protected_before": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "protected_after": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "suites": [
+        {
+          "name": "visible",
+          "status": "completed",
+          "registered": 2,
+          "passed": 2,
+          "results": [
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "visible-mixed-known",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 2,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "visible-all-pass",
+              "output_passed": true,
+              "passed": true
+            }
+          ],
+          "returncode": 0,
+          "stdout": "[{\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"visible-mixed-known\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"visible-all-pass\", \"output_passed\": true, \"passed\": true}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "visible.json"
+          ],
+          "duration_seconds": 0.021650457987561822,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7b0f9f807d92b9ed2d49c66f0d8551f2cb6068217f31001246c78a07ad0f37a8",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7b0f9f807d92b9ed2d49c66f0d8551f2cb6068217f31001246c78a07ad0f37a8",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        },
+        {
+          "name": "acceptance",
+          "status": "completed",
+          "registered": 8,
+          "passed": 0,
+          "results": [
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [],
+              "input_before": [],
+              "input_unchanged": true,
+              "name": "empty",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "all-unknown",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "missing-evidence",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "reordered",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "all-fail",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "metadata-preserved",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "invalid-label",
+              "output_passed": false,
+              "passed": false
+            },
+            {
+              "actual": {},
+              "error_type": null,
+              "input_after": [
+                {}
+              ],
+              "input_before": [
+                {}
+              ],
+              "input_unchanged": true,
+              "name": "missing-label",
+              "output_passed": false,
+              "passed": false
+            }
+          ],
+          "returncode": 1,
+          "stdout": "[{\"actual\": {}, \"error_type\": null, \"input_after\": [], \"input_before\": [], \"input_unchanged\": true, \"name\": \"empty\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"unknown\"}], \"input_unchanged\": true, \"name\": \"all-unknown\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"missing-evidence\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"reordered\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"all-fail\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_before\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"metadata-preserved\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{\"outcome\": \"maybe\"}], \"input_before\": [{\"outcome\": \"maybe\"}], \"input_unchanged\": true, \"name\": \"invalid-label\", \"output_passed\": false, \"passed\": false}, {\"actual\": {}, \"error_type\": null, \"input_after\": [{}], \"input_before\": [{}], \"input_unchanged\": true, \"name\": \"missing-label\", \"output_passed\": false, \"passed\": false}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "acceptance.json"
+          ],
+          "duration_seconds": 0.02186020801309496,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7b0f9f807d92b9ed2d49c66f0d8551f2cb6068217f31001246c78a07ad0f37a8",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7b0f9f807d92b9ed2d49c66f0d8551f2cb6068217f31001246c78a07ad0f37a8",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        }
+      ]
+    },
+    {
+      "name": "correct",
+      "status": "accepted",
+      "files": {
+        "acceptance.json": {
+          "source": "[{\"expected\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"name\": \"empty\", \"rows\": []}, {\"expected\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"name\": \"all-unknown\", \"rows\": [{\"outcome\": \"unknown\"}]}, {\"expected\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"name\": \"missing-evidence\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"reordered\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"name\": \"all-fail\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"name\": \"metadata-preserved\", \"rows\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}]}, {\"name\": \"invalid-label\", \"raises\": \"ValueError\", \"rows\": [{\"outcome\": \"maybe\"}]}, {\"name\": \"missing-label\", \"raises\": \"ValueError\", \"rows\": [{}]}]",
+          "sha256": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+        },
+        "candidate.py": {
+          "source": "def summarize_trials(rows):\n    if not isinstance(rows, list) or any(not isinstance(row, dict) or row.get('outcome') not in ('pass', 'fail', 'unknown') for row in rows):\n        raise ValueError('invalid rows')\n    passed = sum(row['outcome'] == 'pass' for row in rows)\n    failed = sum(row['outcome'] == 'fail' for row in rows)\n    known = passed + failed\n    return {'registered': len(rows), 'pass': passed, 'fail': failed,\n            'unknown': len(rows) - known, 'known_pass_rate': passed / known if known else None,\n            'completion': known / len(rows) if rows else None}\n",
+          "sha256": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550"
+        },
+        "harness.py": {
+          "source": "def output_matches(actual, expected):\n    if not isinstance(actual, dict) or set(actual) != set(expected):\n        return False\n    for key, value in expected.items():\n        observed = actual[key]\n        if key in ('registered', 'pass', 'fail', 'unknown'):\n            if type(observed) is not int or observed != value:\n                return False\n        elif value is None:\n            if observed is not None:\n                return False\n        elif type(observed) not in (int, float) or observed != value:\n            return False\n    return True\n\nimport copy\nimport json\nimport runpy\nimport sys\n\ncandidate = runpy.run_path('candidate.py')['summarize_trials']\nwith open(sys.argv[1], encoding='utf-8') as source:\n    cases = json.load(source)\nresults = []\nfor case in cases:\n    rows = copy.deepcopy(case['rows'])\n    actual, error_type = None, None\n    try:\n        actual = candidate(rows)\n        output_passed = 'expected' in case and output_matches(actual, case['expected'])\n    except Exception as error:\n        error_type = type(error).__name__\n        output_passed = error_type == case.get('raises')\n    unchanged = json.dumps(rows, sort_keys=True) == json.dumps(case['rows'], sort_keys=True)\n    results.append({'name': case['name'], 'output_passed': output_passed,\n                    'actual': actual, 'error_type': error_type, 'input_before': case['rows'], 'input_after': rows,\n                    'input_unchanged': unchanged, 'passed': output_passed and unchanged})\nprint(json.dumps(results, sort_keys=True))\nsys.exit(0 if all(row['passed'] for row in results) else 1)\n",
+          "sha256": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94"
+        },
+        "visible.json": {
+          "source": "[{\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-mixed-known\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-all-pass\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}]}]",
+          "sha256": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+        }
+      },
+      "diff": "--- before/candidate.py\n+++ after/candidate.py\n@@ -5,5 +5,5 @@\n     failed = sum(row['outcome'] == 'fail' for row in rows)\n     known = passed + failed\n     return {'registered': len(rows), 'pass': passed, 'fail': failed,\n-            'unknown': len(rows) - known, 'known_pass_rate': passed / len(rows) if rows else None,\n+            'unknown': len(rows) - known, 'known_pass_rate': passed / known if known else None,\n             'completion': known / len(rows) if rows else None}\n",
+      "protected_before": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "protected_after": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "suites": [
+        {
+          "name": "visible",
+          "status": "completed",
+          "registered": 2,
+          "passed": 2,
+          "results": [
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "visible-mixed-known",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 2,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "visible-all-pass",
+              "output_passed": true,
+              "passed": true
+            }
+          ],
+          "returncode": 0,
+          "stdout": "[{\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"visible-mixed-known\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"visible-all-pass\", \"output_passed\": true, \"passed\": true}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "visible.json"
+          ],
+          "duration_seconds": 0.02194833295652643,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        },
+        {
+          "name": "acceptance",
+          "status": "completed",
+          "registered": 8,
+          "passed": 8,
+          "results": [
+            {
+              "actual": {
+                "completion": null,
+                "fail": 0,
+                "known_pass_rate": null,
+                "pass": 0,
+                "registered": 0,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [],
+              "input_before": [],
+              "input_unchanged": true,
+              "name": "empty",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 0.0,
+                "fail": 0,
+                "known_pass_rate": null,
+                "pass": 0,
+                "registered": 1,
+                "unknown": 1
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "all-unknown",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 0.6666666666666666,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 3,
+                "unknown": 1
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "missing-evidence",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "reordered",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 3,
+                "known_pass_rate": 0.0,
+                "pass": 0,
+                "registered": 3,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "all-fail",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 1,
+                "registered": 1,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_before": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "metadata-preserved",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": null,
+              "error_type": "ValueError",
+              "input_after": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "invalid-label",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": null,
+              "error_type": "ValueError",
+              "input_after": [
+                {}
+              ],
+              "input_before": [
+                {}
+              ],
+              "input_unchanged": true,
+              "name": "missing-label",
+              "output_passed": true,
+              "passed": true
+            }
+          ],
+          "returncode": 0,
+          "stdout": "[{\"actual\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"error_type\": null, \"input_after\": [], \"input_before\": [], \"input_unchanged\": true, \"name\": \"empty\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"unknown\"}], \"input_unchanged\": true, \"name\": \"all-unknown\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"error_type\": null, \"input_after\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"missing-evidence\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"reordered\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": true, \"name\": \"all-fail\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_before\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_unchanged\": true, \"name\": \"metadata-preserved\", \"output_passed\": true, \"passed\": true}, {\"actual\": null, \"error_type\": \"ValueError\", \"input_after\": [{\"outcome\": \"maybe\"}], \"input_before\": [{\"outcome\": \"maybe\"}], \"input_unchanged\": true, \"name\": \"invalid-label\", \"output_passed\": true, \"passed\": true}, {\"actual\": null, \"error_type\": \"ValueError\", \"input_after\": [{}], \"input_before\": [{}], \"input_unchanged\": true, \"name\": \"missing-label\", \"output_passed\": true, \"passed\": true}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "acceptance.json"
+          ],
+          "duration_seconds": 0.021771333005744964,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        }
+      ]
+    },
+    {
+      "name": "input-mutating",
+      "status": "rejected",
+      "files": {
+        "acceptance.json": {
+          "source": "[{\"expected\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"name\": \"empty\", \"rows\": []}, {\"expected\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"name\": \"all-unknown\", \"rows\": [{\"outcome\": \"unknown\"}]}, {\"expected\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"name\": \"missing-evidence\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"reordered\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"name\": \"all-fail\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"name\": \"metadata-preserved\", \"rows\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}]}, {\"name\": \"invalid-label\", \"raises\": \"ValueError\", \"rows\": [{\"outcome\": \"maybe\"}]}, {\"name\": \"missing-label\", \"raises\": \"ValueError\", \"rows\": [{}]}]",
+          "sha256": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+        },
+        "candidate.py": {
+          "source": "def _summary(rows):\n    if not isinstance(rows, list) or any(not isinstance(row, dict) or row.get('outcome') not in ('pass', 'fail', 'unknown') for row in rows):\n        raise ValueError('invalid rows')\n    passed = sum(row['outcome'] == 'pass' for row in rows)\n    failed = sum(row['outcome'] == 'fail' for row in rows)\n    known = passed + failed\n    return {'registered': len(rows), 'pass': passed, 'fail': failed,\n            'unknown': len(rows) - known, 'known_pass_rate': passed / known if known else None,\n            'completion': known / len(rows) if rows else None}\n\ndef summarize_trials(rows):\n    result = _summary(rows)\n    if rows:\n        rows[0]['outcome'] = 'unknown'\n        rows.pop()\n    return result\n",
+          "sha256": "7bf2b58c66adfca355d7c18de5391e3525b16d65c65be43d187587654c04ac07"
+        },
+        "harness.py": {
+          "source": "def output_matches(actual, expected):\n    if not isinstance(actual, dict) or set(actual) != set(expected):\n        return False\n    for key, value in expected.items():\n        observed = actual[key]\n        if key in ('registered', 'pass', 'fail', 'unknown'):\n            if type(observed) is not int or observed != value:\n                return False\n        elif value is None:\n            if observed is not None:\n                return False\n        elif type(observed) not in (int, float) or observed != value:\n            return False\n    return True\n\nimport copy\nimport json\nimport runpy\nimport sys\n\ncandidate = runpy.run_path('candidate.py')['summarize_trials']\nwith open(sys.argv[1], encoding='utf-8') as source:\n    cases = json.load(source)\nresults = []\nfor case in cases:\n    rows = copy.deepcopy(case['rows'])\n    actual, error_type = None, None\n    try:\n        actual = candidate(rows)\n        output_passed = 'expected' in case and output_matches(actual, case['expected'])\n    except Exception as error:\n        error_type = type(error).__name__\n        output_passed = error_type == case.get('raises')\n    unchanged = json.dumps(rows, sort_keys=True) == json.dumps(case['rows'], sort_keys=True)\n    results.append({'name': case['name'], 'output_passed': output_passed,\n                    'actual': actual, 'error_type': error_type, 'input_before': case['rows'], 'input_after': rows,\n                    'input_unchanged': unchanged, 'passed': output_passed and unchanged})\nprint(json.dumps(results, sort_keys=True))\nsys.exit(0 if all(row['passed'] for row in results) else 1)\n",
+          "sha256": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94"
+        },
+        "visible.json": {
+          "source": "[{\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-mixed-known\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-all-pass\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}]}]",
+          "sha256": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+        }
+      },
+      "diff": "--- before/candidate.py\n+++ after/candidate.py\n@@ -1,9 +1,16 @@\n-def summarize_trials(rows):\n+def _summary(rows):\n     if not isinstance(rows, list) or any(not isinstance(row, dict) or row.get('outcome') not in ('pass', 'fail', 'unknown') for row in rows):\n         raise ValueError('invalid rows')\n     passed = sum(row['outcome'] == 'pass' for row in rows)\n     failed = sum(row['outcome'] == 'fail' for row in rows)\n     known = passed + failed\n     return {'registered': len(rows), 'pass': passed, 'fail': failed,\n-            'unknown': len(rows) - known, 'known_pass_rate': passed / len(rows) if rows else None,\n+            'unknown': len(rows) - known, 'known_pass_rate': passed / known if known else None,\n             'completion': known / len(rows) if rows else None}\n+\n+def summarize_trials(rows):\n+    result = _summary(rows)\n+    if rows:\n+        rows[0]['outcome'] = 'unknown'\n+        rows.pop()\n+    return result\n",
+      "protected_before": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "protected_after": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "suites": [
+        {
+          "name": "visible",
+          "status": "completed",
+          "registered": 2,
+          "passed": 0,
+          "results": [
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "visible-mixed-known",
+              "output_passed": true,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 2,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "visible-all-pass",
+              "output_passed": true,
+              "passed": false
+            }
+          ],
+          "returncode": 1,
+          "stdout": "[{\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": false, \"name\": \"visible-mixed-known\", \"output_passed\": true, \"passed\": false}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": false, \"name\": \"visible-all-pass\", \"output_passed\": true, \"passed\": false}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "visible.json"
+          ],
+          "duration_seconds": 0.021550207980908453,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7bf2b58c66adfca355d7c18de5391e3525b16d65c65be43d187587654c04ac07",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7bf2b58c66adfca355d7c18de5391e3525b16d65c65be43d187587654c04ac07",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        },
+        {
+          "name": "acceptance",
+          "status": "completed",
+          "registered": 8,
+          "passed": 3,
+          "results": [
+            {
+              "actual": {
+                "completion": null,
+                "fail": 0,
+                "known_pass_rate": null,
+                "pass": 0,
+                "registered": 0,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [],
+              "input_before": [],
+              "input_unchanged": true,
+              "name": "empty",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": {
+                "completion": 0.0,
+                "fail": 0,
+                "known_pass_rate": null,
+                "pass": 0,
+                "registered": 1,
+                "unknown": 1
+              },
+              "error_type": null,
+              "input_after": [],
+              "input_before": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "all-unknown",
+              "output_passed": true,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 0.6666666666666666,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 3,
+                "unknown": 1
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "pass"
+                },
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "missing-evidence",
+              "output_passed": true,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 1,
+                "known_pass_rate": 0.5,
+                "pass": 1,
+                "registered": 2,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "reordered",
+              "output_passed": true,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 3,
+                "known_pass_rate": 0.0,
+                "pass": 0,
+                "registered": 3,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [
+                {
+                  "outcome": "unknown"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                },
+                {
+                  "outcome": "fail"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "all-fail",
+              "output_passed": true,
+              "passed": false
+            },
+            {
+              "actual": {
+                "completion": 1.0,
+                "fail": 0,
+                "known_pass_rate": 1.0,
+                "pass": 1,
+                "registered": 1,
+                "unknown": 0
+              },
+              "error_type": null,
+              "input_after": [],
+              "input_before": [
+                {
+                  "id": "trial-1",
+                  "outcome": "pass"
+                }
+              ],
+              "input_unchanged": false,
+              "name": "metadata-preserved",
+              "output_passed": true,
+              "passed": false
+            },
+            {
+              "actual": null,
+              "error_type": "ValueError",
+              "input_after": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_before": [
+                {
+                  "outcome": "maybe"
+                }
+              ],
+              "input_unchanged": true,
+              "name": "invalid-label",
+              "output_passed": true,
+              "passed": true
+            },
+            {
+              "actual": null,
+              "error_type": "ValueError",
+              "input_after": [
+                {}
+              ],
+              "input_before": [
+                {}
+              ],
+              "input_unchanged": true,
+              "name": "missing-label",
+              "output_passed": true,
+              "passed": true
+            }
+          ],
+          "returncode": 1,
+          "stdout": "[{\"actual\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"error_type\": null, \"input_after\": [], \"input_before\": [], \"input_unchanged\": true, \"name\": \"empty\", \"output_passed\": true, \"passed\": true}, {\"actual\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"error_type\": null, \"input_after\": [], \"input_before\": [{\"outcome\": \"unknown\"}], \"input_unchanged\": false, \"name\": \"all-unknown\", \"output_passed\": true, \"passed\": false}, {\"actual\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}, {\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": false, \"name\": \"missing-evidence\", \"output_passed\": true, \"passed\": false}, {\"actual\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}], \"input_unchanged\": false, \"name\": \"reordered\", \"output_passed\": true, \"passed\": false}, {\"actual\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"error_type\": null, \"input_after\": [{\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}], \"input_before\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}], \"input_unchanged\": false, \"name\": \"all-fail\", \"output_passed\": true, \"passed\": false}, {\"actual\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"error_type\": null, \"input_after\": [], \"input_before\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}], \"input_unchanged\": false, \"name\": \"metadata-preserved\", \"output_passed\": true, \"passed\": false}, {\"actual\": null, \"error_type\": \"ValueError\", \"input_after\": [{\"outcome\": \"maybe\"}], \"input_before\": [{\"outcome\": \"maybe\"}], \"input_unchanged\": true, \"name\": \"invalid-label\", \"output_passed\": true, \"passed\": true}, {\"actual\": null, \"error_type\": \"ValueError\", \"input_after\": [{}], \"input_before\": [{}], \"input_unchanged\": true, \"name\": \"missing-label\", \"output_passed\": true, \"passed\": true}]\n",
+          "stderr": "",
+          "command": [
+            "<current-python>",
+            "-I",
+            "-S",
+            "harness.py",
+            "acceptance.json"
+          ],
+          "duration_seconds": 0.021850167016964406,
+          "files_before": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7bf2b58c66adfca355d7c18de5391e3525b16d65c65be43d187587654c04ac07",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          },
+          "files_after": {
+            "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b",
+            "candidate.py": "7bf2b58c66adfca355d7c18de5391e3525b16d65c65be43d187587654c04ac07",
+            "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+            "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+          }
+        }
+      ]
+    },
+    {
+      "name": "protected-test-edit",
+      "status": "integrity_blocked",
+      "files": {
+        "acceptance.json": {
+          "source": "[]",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "candidate.py": {
+          "source": "def summarize_trials(rows):\n    if not isinstance(rows, list) or any(not isinstance(row, dict) or row.get('outcome') not in ('pass', 'fail', 'unknown') for row in rows):\n        raise ValueError('invalid rows')\n    passed = sum(row['outcome'] == 'pass' for row in rows)\n    failed = sum(row['outcome'] == 'fail' for row in rows)\n    known = passed + failed\n    return {'registered': len(rows), 'pass': passed, 'fail': failed,\n            'unknown': len(rows) - known, 'known_pass_rate': passed / known if known else None,\n            'completion': known / len(rows) if rows else None}\n",
+          "sha256": "390cfb099f160aa199d5aac16b05b23c9d317ed6bc5f9d7780744327f0d96550"
+        },
+        "harness.py": {
+          "source": "def output_matches(actual, expected):\n    if not isinstance(actual, dict) or set(actual) != set(expected):\n        return False\n    for key, value in expected.items():\n        observed = actual[key]\n        if key in ('registered', 'pass', 'fail', 'unknown'):\n            if type(observed) is not int or observed != value:\n                return False\n        elif value is None:\n            if observed is not None:\n                return False\n        elif type(observed) not in (int, float) or observed != value:\n            return False\n    return True\n\nimport copy\nimport json\nimport runpy\nimport sys\n\ncandidate = runpy.run_path('candidate.py')['summarize_trials']\nwith open(sys.argv[1], encoding='utf-8') as source:\n    cases = json.load(source)\nresults = []\nfor case in cases:\n    rows = copy.deepcopy(case['rows'])\n    actual, error_type = None, None\n    try:\n        actual = candidate(rows)\n        output_passed = 'expected' in case and output_matches(actual, case['expected'])\n    except Exception as error:\n        error_type = type(error).__name__\n        output_passed = error_type == case.get('raises')\n    unchanged = json.dumps(rows, sort_keys=True) == json.dumps(case['rows'], sort_keys=True)\n    results.append({'name': case['name'], 'output_passed': output_passed,\n                    'actual': actual, 'error_type': error_type, 'input_before': case['rows'], 'input_after': rows,\n                    'input_unchanged': unchanged, 'passed': output_passed and unchanged})\nprint(json.dumps(results, sort_keys=True))\nsys.exit(0 if all(row['passed'] for row in results) else 1)\n",
+          "sha256": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94"
+        },
+        "visible.json": {
+          "source": "[{\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-mixed-known\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 2, \"registered\": 2, \"unknown\": 0}, \"name\": \"visible-all-pass\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"pass\"}]}]",
+          "sha256": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c"
+        }
+      },
+      "diff": "--- before/acceptance.json\n+++ after/acceptance.json\n@@ -1 +1 @@\n-[{\"expected\": {\"completion\": null, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 0, \"unknown\": 0}, \"name\": \"empty\", \"rows\": []}, {\"expected\": {\"completion\": 0.0, \"fail\": 0, \"known_pass_rate\": null, \"pass\": 0, \"registered\": 1, \"unknown\": 1}, \"name\": \"all-unknown\", \"rows\": [{\"outcome\": \"unknown\"}]}, {\"expected\": {\"completion\": 0.6666666666666666, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 3, \"unknown\": 1}, \"name\": \"missing-evidence\", \"rows\": [{\"outcome\": \"pass\"}, {\"outcome\": \"unknown\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 1, \"known_pass_rate\": 0.5, \"pass\": 1, \"registered\": 2, \"unknown\": 0}, \"name\": \"reordered\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"pass\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 3, \"known_pass_rate\": 0.0, \"pass\": 0, \"registered\": 3, \"unknown\": 0}, \"name\": \"all-fail\", \"rows\": [{\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}, {\"outcome\": \"fail\"}]}, {\"expected\": {\"completion\": 1.0, \"fail\": 0, \"known_pass_rate\": 1.0, \"pass\": 1, \"registered\": 1, \"unknown\": 0}, \"name\": \"metadata-preserved\", \"rows\": [{\"id\": \"trial-1\", \"outcome\": \"pass\"}]}, {\"name\": \"invalid-label\", \"raises\": \"ValueError\", \"rows\": [{\"outcome\": \"maybe\"}]}, {\"name\": \"missing-label\", \"raises\": \"ValueError\", \"rows\": [{}]}]+[]--- before/candidate.py\n+++ after/candidate.py\n@@ -5,5 +5,5 @@\n     failed = sum(row['outcome'] == 'fail' for row in rows)\n     known = passed + failed\n     return {'registered': len(rows), 'pass': passed, 'fail': failed,\n-            'unknown': len(rows) - known, 'known_pass_rate': passed / len(rows) if rows else None,\n+            'unknown': len(rows) - known, 'known_pass_rate': passed / known if known else None,\n             'completion': known / len(rows) if rows else None}\n",
+      "protected_before": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "93dd0e899e872311b59712f2932ab332e7c407ebb3375d10592bda8d9c1c832b"
+      },
+      "protected_after": {
+        "harness.py": "75e38edf729062119072bcb334914ed08a553e46a0e221801551d1f7c18e1d94",
+        "visible.json": "93d29dab649d538ba991d020782b34492ad00b5c63b8dc7313ce717de96c4c6c",
+        "acceptance.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "suites": []
+    }
+  ],
+  "conformance_passed": true,
+  "deployment_authorized": false,
+  "limitations": "Public teaching fixtures, not hidden tests or independent acceptance. Fixed hand-authored controls, not coding-agent or model performance. Temporary workspaces and isolated Python flags are not an OS sandbox; never run untrusted code with this harness. Hashes detect consistency, not authenticated provenance. Durations are observed, not stability guarantees. The eight acceptance fixtures do not cover every invalid input container shape.",
+  "report_hash": "d5e3c42d89d8af9ba5134934be7ee8e02f7f5bbe6548e122399907d341460993"
+}
