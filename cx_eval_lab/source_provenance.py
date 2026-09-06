@@ -16,8 +16,8 @@ def _hash(content):
 
 
 def _read(path):
-    path = Path(path)
-    if path.is_symlink() or not path.is_file():
+    path = Path(path).absolute()
+    if any(part.is_symlink() for part in (path, *path.parents)) or not path.is_file():
         raise ValueError('registered input must be a regular non-symlink file')
     with path.open('rb') as stream:
         content = stream.read(MAX_FILE_BYTES + 1)
