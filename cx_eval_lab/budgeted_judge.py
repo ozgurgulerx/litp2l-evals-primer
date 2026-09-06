@@ -1,11 +1,23 @@
 """Optional judge admission wrapper. It does not budget agent executions."""
 
 import json
+import math
 from dataclasses import asdict, dataclass, replace
 
 from cx_eval_lab.campaign_budget import CampaignLedger, usd_to_micro
 from cx_eval_lab.evidence import canonical_hash
 from cx_eval_lab.semantic import SemanticJudge, SemanticJudgment, SemanticRequest
+
+
+def _diagnostic(value):
+    """Keep malformed numbers visible without emitting nonstandard JSON."""
+    if isinstance(value, dict):
+        return {key: _diagnostic(item) for key, item in value.items()}
+    if isinstance(value, (tuple, list)):
+        return [_diagnostic(item) for item in value]
+    if isinstance(value, float) and not math.isfinite(value):
+        return {'invalid_nonfinite_number': str(value)}
+    return value
 
 
 @dataclass(frozen=True)
@@ -26,7 +38,7 @@ class BudgetedSemanticJudge:
         return SemanticJudgment('abstain', reason,
             None if judgment is None else judgment.runtime_evidence,
             None if judgment is None else judgment.provider_audit_json,
-            json.dumps({'status': 'held', 'reason': reason,
+            json.dumps({'status': 'abstained', 'reason': reason,
                         'campaign_policy_hash': self.ledger.policy.content_hash, **audit},
                        sort_keys=True, allow_nan=False))
 
@@ -48,14 +60,18 @@ class BudgetedSemanticJudge:
                 raise TypeError('judge returned invalid contract')
         except Exception as error:
             judgment = SemanticJudgment('abstain', f'judge_error:{type(error).__name__}')
+        valid_runtime = False
         try:
             runtime = judgment.runtime_evidence
             estimate = usd_to_micro(None if runtime is None else runtime.cost_usd)
+            valid_runtime = True
             receipt = self.ledger.finalize(request.invocation_id, estimate,
                 json.dumps(asdict(judgment), sort_keys=True, allow_nan=False))
         except Exception as error:
             return self._abstain('campaign_finalization_error', {
                 'admission': asdict(admission), 'error_type': type(error).__name__,
-                'uncommitted_judgment': asdict(judgment)}, judgment)
+                'uncommitted_judgment': _diagnostic(asdict(judgment)),
+                'accounting_state': 'unconfirmed; inspect the durable ledger'},
+                judgment if valid_runtime else replace(judgment, runtime_evidence=None))
         return replace(judgment, campaign_audit_json=json.dumps({
             'status': 'recorded', 'admission': asdict(admission), 'receipt': receipt}, sort_keys=True))
