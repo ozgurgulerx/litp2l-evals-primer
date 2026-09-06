@@ -11,6 +11,7 @@ from dataclasses import asdict, dataclass, field
 
 from cx_eval_lab.evidence import canonical_hash
 from cx_eval_lab.models import RuntimeEvidence
+from cx_eval_lab.resolution_semantic import CRITERION as NATIVE_CRITERION
 from cx_eval_lab.semantic import CRITERION, SemanticJudgment, SemanticRequest
 
 
@@ -23,6 +24,17 @@ DEFAULT_RUBRIC = (
     'Abstain when the evidence is insufficient or inconsistent to judge reliably. '
     'Return JSON with verdict (pass, fail, abstain) and a brief evidence-based explanation. '
     'Do not provide a hidden reasoning transcript. Never issue calibration or release authority.'
+)
+
+NATIVE_RUBRIC = DEFAULT_RUBRIC + (
+    ' This is a multi-order task. Establish customer intent from the original request, '
+    'corrections and observed clarification replies, never from record ordering or reference labels. '
+    'Inspect all orders and their final states, not only the selected object. Evaluate claims '
+    'about the requested object separately from ownership or authorization: an owned order may '
+    'still be the wrong order. Distinguish a confirmed refund instruction from settlement or '
+    'money arrival. Use only observed clarification events, not assumed future replies. '
+    'Judge the customer-facing claims rather than copying a structured outcome enum. '
+    'Do not invent a missing target designation or treat absent clarification as consent.'
 )
 
 
@@ -51,8 +63,13 @@ class JudgeConfig:
     input_usd_per_million: float | None = None
     output_usd_per_million: float | None = None
     price_version: str = 'unpriced'
+    criterion_id: str = CRITERION
 
     def __post_init__(self):
+        if not isinstance(self.criterion_id, str) or self.criterion_id not in (CRITERION, NATIVE_CRITERION):
+            raise ValueError('unsupported semantic judge criterion')
+        if self.criterion_id == NATIVE_CRITERION and self.rubric == DEFAULT_RUBRIC:
+            object.__setattr__(self, 'rubric', NATIVE_RUBRIC)
         for value in (self.model, self.rubric, self.price_version):
             if not isinstance(value, str) or not value.strip():
                 raise ValueError('model, rubric and price version must be explicit')
@@ -161,9 +178,20 @@ class OpenAIResponsesJudge:
 
     @property
     def configuration_hash(self):
-        return canonical_hash({'config': asdict(self.config), 'schema': _schema(),
+        # Preserve existing legacy qualification identities: the former configuration
+        # implicitly supported only CRITERION. Native scope must have a distinct identity.
+        settings = asdict(self.config)
+        if self.config.criterion_id == CRITERION:
+            settings = {key: value for key, value in settings.items() if key != 'criterion_id'}
+        return canonical_hash({'config': settings, 'schema': _schema(),
                                'adapter': self.evaluator_version,
-                               'endpoint': 'https://api.openai.com/v1', 'max_retries': 0})
+                               'endpoint': 'https://api.openai.com/v1', 'max_retries': 0,
+                               **({'format_name': self.format_name}
+                                  if self.config.criterion_id == NATIVE_CRITERION else {})})
+
+    @property
+    def format_name(self):
+        return 'multi_order_truth_verdict' if self.config.criterion_id == NATIVE_CRITERION else 'refund_truth_verdict'
 
     def _result(self, verdict, explanation, audit, runtime=None):
         return SemanticJudgment(verdict, explanation, runtime, json.dumps({
@@ -173,7 +201,7 @@ class OpenAIResponsesJudge:
 
     def evaluate(self, request):
         try:
-            if (not isinstance(request, SemanticRequest) or request.criterion_id != CRITERION
+            if (not isinstance(request, SemanticRequest) or request.criterion_id != self.config.criterion_id
                     or len(request.evidence_json.encode('utf-8')) > self.config.max_input_bytes
                     or not isinstance(_parse_json(request.evidence_json), dict)):
                 raise ValueError('invalid judge evidence request')
@@ -188,7 +216,7 @@ class OpenAIResponsesJudge:
             response = request_client.responses.create(
                 model=self.config.model, instructions=self.config.rubric,
                 input=[{'role': 'user', 'content': request.evidence_json}],
-                text={'format': {'type': 'json_schema', 'name': 'refund_truth_verdict',
+                text={'format': {'type': 'json_schema', 'name': self.format_name,
                                  'strict': True, 'schema': _schema()}},
                 max_output_tokens=self.config.max_output_tokens,
                 store=False, stream=False, tools=[], truncation='disabled')
