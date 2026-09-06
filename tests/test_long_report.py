@@ -125,3 +125,17 @@ class LongReportTests(unittest.TestCase):
         self.assertEqual(0., whole['atomic_recall']['rate'])
         self.assertEqual(['A', 'B'], whole['units'][0]['contained_claim_ids'])
         self.assertIsNone(whole['observed_support']['rate'])
+
+    def test_supported_epistemic_statement_is_not_an_unknown_assertion(self):
+        from cx_eval_lab.long_report import example_inputs, run_study
+        inputs = example_inputs()
+        original = {c['claim_id']: c for c in inputs['reports'][0]['claims']}
+        repaired = {c['claim_id']: c for c in inputs['reports'][1]['claims']}
+        self.assertEqual('supported', original['C08']['status'])
+        self.assertEqual('unknown', original['C08']['answerability'])
+        self.assertEqual('supported', repaired['C16']['status'])
+        self.assertEqual('unknown', repaired['C16']['answerability'])
+        report = run_study(inputs)
+        self.assertEqual(0, report['reports'][1]['gold_status_counts']['unknown'])
+        self.assertEqual(4, report['reports'][1]['underlying_unknown_count'])
+        self.assertEqual(20, report['reports'][1]['gold_status_counts']['supported'])
