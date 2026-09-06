@@ -1,0 +1,5184 @@
+{
+  "schema": "paired-slice-study-v1",
+  "evidence_kind": "executed_deterministic_mock",
+  "deployment_authorized": false,
+  "packet": {
+    "manifest": {
+      "experiment_id": "paired-slice-control-v1",
+      "created_at": "2026-09-07T00:00:00Z",
+      "valid_until": "2026-10-07T00:00:00Z",
+      "code_revision": "working-tree-unpinned",
+      "model_id": "deterministic-no-model",
+      "prompt_version": "visible-utterance-enum-mutant-v1",
+      "tool_version": "typed-refund-tools-v1",
+      "dataset_version": "refund-v1",
+      "evaluator_version": "refund-evaluators-v1",
+      "policy_version": "refund-gate-v1",
+      "environment_version": "python-3.12",
+      "population_hash": "sha256:ad9180108eb2bb839630d56350b54a237b376afe1a6bf20ab87eeb79a0abf6f0",
+      "repetitions": 2,
+      "measurement_kind": "synthetic",
+      "estimand": "candidate_minus_baseline_verified_success",
+      "statistical_method": "clustered_normal_interval",
+      "non_inferiority_margin": 0.03,
+      "confidence_level": 0.95,
+      "minimum_independent_clusters": 30,
+      "sequential_policy": "fixed_sample_no_interim_looks",
+      "input_hashes": [
+        [
+          "dataset",
+          "sha256:d3f60b89ff1bfee9a0bbee85d0cf801cf21b67eab2739d4848fc2eefd65be467"
+        ],
+        [
+          "slice-policy",
+          "sha256:6c3683235bd0671dbdea3a2ac560bd850454c84e0f9188049f9bc93ad1e993de"
+        ]
+      ],
+      "invalidation_rules": [
+        "source_or_dataset_or_slice_policy_change"
+      ]
+    },
+    "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+    "baseline_trials": [
+      {
+        "case_id": "case-0",
+        "trial_index": 0,
+        "cluster_id": "customer-shared",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:27d5b7054d9ae73c3caee83510c8c45ee9183710519dd5cd87a7899e0429fd81"
+      },
+      {
+        "case_id": "case-1",
+        "trial_index": 0,
+        "cluster_id": "customer-shared",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:fc5197ddcc7b04c5f00ddf822111c280de5567c7d57ae94a64c0b3018e7bdf35"
+      },
+      {
+        "case_id": "case-2",
+        "trial_index": 0,
+        "cluster_id": "customer-2",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:dbefc59c333cd296ceb493db0a706ae75e115bfa5fa1b850283f491be2efd884"
+      },
+      {
+        "case_id": "case-3",
+        "trial_index": 0,
+        "cluster_id": "customer-3",
+        "arm": "baseline",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:a824dcbdb90c1876a45f315795d8b0609fba941c73dabe8b3bf1840ed72ea762"
+      },
+      {
+        "case_id": "case-0",
+        "trial_index": 1,
+        "cluster_id": "customer-shared",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:1eff2b658dc6c7bfeb52b9b30ff79d8934e8b06df5c2b458b2322c48477da0e2"
+      },
+      {
+        "case_id": "case-1",
+        "trial_index": 1,
+        "cluster_id": "customer-shared",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:f89ce6446c53ff5b657a013b899f60525287f4f48a0de3c6f2ade0f08c30b21c"
+      },
+      {
+        "case_id": "case-2",
+        "trial_index": 1,
+        "cluster_id": "customer-2",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:1cb27b6349bbb7ff22887a88efb57ca261667494d411537a8f67d5f3f11c6fbf"
+      },
+      {
+        "case_id": "case-3",
+        "trial_index": 1,
+        "cluster_id": "customer-3",
+        "arm": "baseline",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:9c32f097177ec5435f28c2314461714e3daaa6cb826487e3742fffc5c2d5f422"
+      }
+    ],
+    "candidate_trials": [
+      {
+        "case_id": "case-0",
+        "trial_index": 0,
+        "cluster_id": "customer-shared",
+        "arm": "candidate",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:872ad8e4de920bfbdfcbb66a12629e97e1c0ece9ac7abf9eff1e72d841737c86"
+      },
+      {
+        "case_id": "case-1",
+        "trial_index": 0,
+        "cluster_id": "customer-shared",
+        "arm": "candidate",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:74c7695c989822a191521427996b28cd5d8fb3406d25cf6288408336a58107f1"
+      },
+      {
+        "case_id": "case-2",
+        "trial_index": 0,
+        "cluster_id": "customer-2",
+        "arm": "candidate",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:df0a8191374ec0592794929b5a779d6640e6ff10ff3a17488363496436517fc8"
+      },
+      {
+        "case_id": "case-3",
+        "trial_index": 0,
+        "cluster_id": "customer-3",
+        "arm": "candidate",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:444702f2cc64d4183669c2c4f6dcf9d038d37e72f1b13293100f2df7969dd6c7"
+      },
+      {
+        "case_id": "case-0",
+        "trial_index": 1,
+        "cluster_id": "customer-shared",
+        "arm": "candidate",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:dfcbb4da5d8c6dee0fd76e36fce0fd2d14f35409b630243f677b7b30e8a1db08"
+      },
+      {
+        "case_id": "case-1",
+        "trial_index": 1,
+        "cluster_id": "customer-shared",
+        "arm": "candidate",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:3db3bcd14c756e4a37cb53c2d0eade83a0a091876513865d6bd8e006489c30e8"
+      },
+      {
+        "case_id": "case-2",
+        "trial_index": 1,
+        "cluster_id": "customer-2",
+        "arm": "candidate",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [],
+        "artifact_hash": "sha256:d863a1acddb157378ab8bb657d412ab31ddd645fcdfd7e0650b88dbd5e5c8e6a"
+      },
+      {
+        "case_id": "case-3",
+        "trial_index": 1,
+        "cluster_id": "customer-3",
+        "arm": "candidate",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+        "failed_checks": [
+          "claimed_outcome_matches_state"
+        ],
+        "artifact_hash": "sha256:b1efc40055d205bd38d03f4db066d4ce6126bdf18ea6b2d857446e0aef607b88"
+      }
+    ],
+    "trial_artifacts": [
+      {
+        "artifact_hash": "sha256:27d5b7054d9ae73c3caee83510c8c45ee9183710519dd5cd87a7899e0429fd81",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-0"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-0",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-0",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-0",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-0",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-0"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-0"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-0",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-0"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-0"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-0",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-0",
+            "refund_idempotency_keys": [
+              "refund:order-0"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-0"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-0",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:872ad8e4de920bfbdfcbb66a12629e97e1c0ece9ac7abf9eff1e72d841737c86",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-0"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-0",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-0",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-0",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-0",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-0"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-0"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-0",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-0"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-0"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-0",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-0",
+            "refund_idempotency_keys": [
+              "refund:order-0"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-0"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-0",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:fc5197ddcc7b04c5f00ddf822111c280de5567c7d57ae94a64c0b3018e7bdf35",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-1"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-1",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-1",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-1",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-1",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-1"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-1"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-1",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-1"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-1"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-1",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-1",
+            "refund_idempotency_keys": [
+              "refund:order-1"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-1"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-1",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:74c7695c989822a191521427996b28cd5d8fb3406d25cf6288408336a58107f1",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-1"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-1",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-1",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-1",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-1",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-1"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-1"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-1",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-1"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-1"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-1",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-1",
+            "refund_idempotency_keys": [
+              "refund:order-1"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-1"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-1",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:dbefc59c333cd296ceb493db0a706ae75e115bfa5fa1b850283f491be2efd884",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-2"
+            ],
+            "customer_id": "customer-2",
+            "order_id": "order-2",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-2",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-2",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-2",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-2",
+                  "order_id": "order-2"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-2"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-2",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-2",
+                "order_id": "order-2"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-2"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-2",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-2",
+            "refund_idempotency_keys": [
+              "refund:order-2"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-2",
+            "verified_order_id": "order-2"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-2",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:df0a8191374ec0592794929b5a779d6640e6ff10ff3a17488363496436517fc8",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-2"
+            ],
+            "customer_id": "customer-2",
+            "order_id": "order-2",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-2",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-2",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-2",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-2",
+                  "order_id": "order-2"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-2"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-2",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-2",
+                "order_id": "order-2"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-2"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-2",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-2",
+            "refund_idempotency_keys": [
+              "refund:order-2"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-2",
+            "verified_order_id": "order-2"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-2",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:a824dcbdb90c1876a45f315795d8b0609fba941c73dabe8b3bf1840ed72ea762",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-3"
+            ],
+            "customer_id": "customer-3",
+            "order_id": "order-3",
+            "utterance": "Please refund this special request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-3",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-3",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-3",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "utterance": "Please refund this special request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-3",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-3",
+                  "order_id": "order-3"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-3"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-3",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-3",
+                "order_id": "order-3"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-3"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-3",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-3",
+            "refund_idempotency_keys": [
+              "refund:order-3"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-3",
+            "verified_order_id": "order-3"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-3",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:444702f2cc64d4183669c2c4f6dcf9d038d37e72f1b13293100f2df7969dd6c7",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-3"
+            ],
+            "customer_id": "customer-3",
+            "order_id": "order-3",
+            "utterance": "Please refund this special request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-3",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-3",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-3",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "utterance": "Please refund this special request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-3",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-3",
+                  "order_id": "order-3"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-3"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-3",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-3",
+                "order_id": "order-3"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-3"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-3",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-3",
+            "refund_idempotency_keys": [
+              "refund:order-3"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-3",
+            "verified_order_id": "order-3"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-3",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:1eff2b658dc6c7bfeb52b9b30ff79d8934e8b06df5c2b458b2322c48477da0e2",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-0"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-0",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-0",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-0",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-0",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-0"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-0"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-0",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-0"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-0"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-0",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-0",
+            "refund_idempotency_keys": [
+              "refund:order-0"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-0"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-0",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:dfcbb4da5d8c6dee0fd76e36fce0fd2d14f35409b630243f677b7b30e8a1db08",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-0"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-0",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-0",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-0",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-0",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-0"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-0"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-0",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-0"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-0"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-0",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-0",
+            "refund_idempotency_keys": [
+              "refund:order-0"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-0"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-0",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:f89ce6446c53ff5b657a013b899f60525287f4f48a0de3c6f2ade0f08c30b21c",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-1"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-1",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-1",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-1",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-1",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-1"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-1"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-1",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-1"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-1"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-1",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-1",
+            "refund_idempotency_keys": [
+              "refund:order-1"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-1"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-1",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:3db3bcd14c756e4a37cb53c2d0eade83a0a091876513865d6bd8e006489c30e8",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-1"
+            ],
+            "customer_id": "customer-shared",
+            "order_id": "order-1",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-1",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-shared",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-1",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-1",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-shared",
+                  "order_id": "order-1"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-1"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-1",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-shared",
+                "order_id": "order-1"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-1"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-1",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-1",
+            "refund_idempotency_keys": [
+              "refund:order-1"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-shared",
+            "verified_order_id": "order-1"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-1",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:1cb27b6349bbb7ff22887a88efb57ca261667494d411537a8f67d5f3f11c6fbf",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-2"
+            ],
+            "customer_id": "customer-2",
+            "order_id": "order-2",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-2",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-2",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-2",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-2",
+                  "order_id": "order-2"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-2"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-2",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-2",
+                "order_id": "order-2"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-2"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-2",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-2",
+            "refund_idempotency_keys": [
+              "refund:order-2"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-2",
+            "verified_order_id": "order-2"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-2",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:d863a1acddb157378ab8bb657d412ab31ddd645fcdfd7e0650b88dbd5e5c8e6a",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-2"
+            ],
+            "customer_id": "customer-2",
+            "order_id": "order-2",
+            "utterance": "Please refund this ordinary request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-2",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-2",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "utterance": "Please refund this ordinary request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-2",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-2",
+                  "order_id": "order-2"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-2"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-2",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:general"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-2",
+                "order_id": "order-2"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-2"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-2",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-2",
+            "refund_idempotency_keys": [
+              "refund:order-2"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-2",
+            "verified_order_id": "order-2"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-2",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:9c32f097177ec5435f28c2314461714e3daaa6cb826487e3742fffc5c2d5f422",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-3"
+            ],
+            "customer_id": "customer-3",
+            "order_id": "order-3",
+            "utterance": "Please refund this special request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-3",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-3",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-3",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "utterance": "Please refund this special request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-3",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-3",
+                  "order_id": "order-3"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-3"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-3",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-3",
+                "order_id": "order-3"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-3"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-3",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-3",
+            "refund_idempotency_keys": [
+              "refund:order-3"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-3",
+            "verified_order_id": "order-3"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "case-3",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      },
+      {
+        "artifact_hash": "sha256:b1efc40055d205bd38d03f4db066d4ce6126bdf18ea6b2d857446e0aef607b88",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-3"
+            ],
+            "customer_id": "customer-3",
+            "order_id": "order-3",
+            "utterance": "Please refund this special request."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "case-3",
+            "competing_order_ids": [],
+            "currency": "USD",
+            "customer_id": "customer-3",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-3",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "utterance": "Please refund this special request."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "case-3",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=not_refunded; actual=refunded",
+                "passed": false
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "trusted_template",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "not_refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-3",
+                  "order_id": "order-3"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-3"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-3",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "Your refund has been confirmed.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": null,
+            "slices": [
+              "all",
+              "risk:protected"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-3",
+                "order_id": "order-3"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-3"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-3",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-3",
+            "refund_idempotency_keys": [
+              "refund:order-3"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-3",
+            "verified_order_id": "order-3"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "case-3",
+            "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "not_refunded",
+            "escalation_reason": null,
+            "message": "Your refund has been confirmed.",
+            "message_template_id": "refund_committed_v1",
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": null,
+          "semantic_stage": null
+        }
+      }
+    ]
+  },
+  "report": {
+    "schema": "paired-slices-v1",
+    "packet_hash": "sha256:2854e1c4ec9bedb733f44c33432e3c4a8580d248aa5b2a3730d762c563079a9c",
+    "required_slices": [
+      "risk:protected"
+    ],
+    "slice_policy_hash": "sha256:6c3683235bd0671dbdea3a2ac560bd850454c84e0f9188049f9bc93ad1e993de",
+    "overall": {
+      "slice": "__overall__",
+      "membership": "overall",
+      "case_count": 4,
+      "pair_count": 8,
+      "customer_count": 3,
+      "eligible_pair_count": 8,
+      "eligible_customer_count": 3,
+      "changes": {
+        "fixed": [
+          {
+            "case_id": "case-0",
+            "trial_index": 0
+          },
+          {
+            "case_id": "case-0",
+            "trial_index": 1
+          },
+          {
+            "case_id": "case-1",
+            "trial_index": 0
+          },
+          {
+            "case_id": "case-1",
+            "trial_index": 1
+          },
+          {
+            "case_id": "case-2",
+            "trial_index": 0
+          },
+          {
+            "case_id": "case-2",
+            "trial_index": 1
+          }
+        ],
+        "regressed": [
+          {
+            "case_id": "case-3",
+            "trial_index": 0
+          },
+          {
+            "case_id": "case-3",
+            "trial_index": 1
+          }
+        ],
+        "unchanged_pass": [],
+        "unchanged_fail": [],
+        "unqualified": []
+      },
+      "baseline_rate": 0.25,
+      "candidate_rate": 0.75,
+      "rate_population": "qualified pairs only; descriptive, not a missingness adjustment",
+      "trial_weighted_delta": 0.5,
+      "cluster_weighted_delta": 0.3333333333333333,
+      "comparison": {
+        "method": "clustered_normal_interval",
+        "confidence_level": 0.95,
+        "margin": 0.03,
+        "pair_count": 8,
+        "independent_cluster_count": 3,
+        "minimum_independent_clusters": 30,
+        "baseline_rate": 0.25,
+        "candidate_rate": 0.75,
+        "point_difference": 0.3333333333333333,
+        "lower_bound": null,
+        "upper_bound": null,
+        "non_inferior": false,
+        "superior": false,
+        "status": "inconclusive"
+      },
+      "status": "hold",
+      "issues": []
+    },
+    "slices": [
+      {
+        "slice": "all",
+        "membership": "exploratory",
+        "case_count": 4,
+        "pair_count": 8,
+        "customer_count": 3,
+        "eligible_pair_count": 8,
+        "eligible_customer_count": 3,
+        "changes": {
+          "fixed": [
+            {
+              "case_id": "case-0",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-0",
+              "trial_index": 1
+            },
+            {
+              "case_id": "case-1",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-1",
+              "trial_index": 1
+            },
+            {
+              "case_id": "case-2",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-2",
+              "trial_index": 1
+            }
+          ],
+          "regressed": [
+            {
+              "case_id": "case-3",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-3",
+              "trial_index": 1
+            }
+          ],
+          "unchanged_pass": [],
+          "unchanged_fail": [],
+          "unqualified": []
+        },
+        "baseline_rate": 0.25,
+        "candidate_rate": 0.75,
+        "rate_population": "qualified pairs only; descriptive, not a missingness adjustment",
+        "trial_weighted_delta": 0.5,
+        "cluster_weighted_delta": 0.3333333333333333,
+        "comparison": {
+          "method": "clustered_normal_interval",
+          "confidence_level": 0.95,
+          "margin": 0.03,
+          "pair_count": 8,
+          "independent_cluster_count": 3,
+          "minimum_independent_clusters": 30,
+          "baseline_rate": 0.25,
+          "candidate_rate": 0.75,
+          "point_difference": 0.3333333333333333,
+          "lower_bound": null,
+          "upper_bound": null,
+          "non_inferior": false,
+          "superior": false,
+          "status": "inconclusive"
+        },
+        "status": "hold",
+        "issues": []
+      },
+      {
+        "slice": "risk:general",
+        "membership": "exploratory",
+        "case_count": 3,
+        "pair_count": 6,
+        "customer_count": 2,
+        "eligible_pair_count": 6,
+        "eligible_customer_count": 2,
+        "changes": {
+          "fixed": [
+            {
+              "case_id": "case-0",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-0",
+              "trial_index": 1
+            },
+            {
+              "case_id": "case-1",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-1",
+              "trial_index": 1
+            },
+            {
+              "case_id": "case-2",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-2",
+              "trial_index": 1
+            }
+          ],
+          "regressed": [],
+          "unchanged_pass": [],
+          "unchanged_fail": [],
+          "unqualified": []
+        },
+        "baseline_rate": 0.0,
+        "candidate_rate": 1.0,
+        "rate_population": "qualified pairs only; descriptive, not a missingness adjustment",
+        "trial_weighted_delta": 1.0,
+        "cluster_weighted_delta": 1.0,
+        "comparison": {
+          "method": "clustered_normal_interval",
+          "confidence_level": 0.95,
+          "margin": 0.03,
+          "pair_count": 6,
+          "independent_cluster_count": 2,
+          "minimum_independent_clusters": 30,
+          "baseline_rate": 0.0,
+          "candidate_rate": 1.0,
+          "point_difference": 1.0,
+          "lower_bound": null,
+          "upper_bound": null,
+          "non_inferior": false,
+          "superior": false,
+          "status": "inconclusive"
+        },
+        "status": "hold",
+        "issues": []
+      },
+      {
+        "slice": "risk:protected",
+        "membership": "required",
+        "case_count": 1,
+        "pair_count": 2,
+        "customer_count": 1,
+        "eligible_pair_count": 2,
+        "eligible_customer_count": 1,
+        "changes": {
+          "fixed": [],
+          "regressed": [
+            {
+              "case_id": "case-3",
+              "trial_index": 0
+            },
+            {
+              "case_id": "case-3",
+              "trial_index": 1
+            }
+          ],
+          "unchanged_pass": [],
+          "unchanged_fail": [],
+          "unqualified": []
+        },
+        "baseline_rate": 1.0,
+        "candidate_rate": 0.0,
+        "rate_population": "qualified pairs only; descriptive, not a missingness adjustment",
+        "trial_weighted_delta": -1.0,
+        "cluster_weighted_delta": -1.0,
+        "comparison": null,
+        "status": "hold",
+        "issues": []
+      }
+    ],
+    "pairs": [
+      {
+        "case_id": "case-0",
+        "trial_index": 0,
+        "customer_id": "customer-shared",
+        "slices": [
+          "all",
+          "risk:general"
+        ],
+        "outcome": "fixed",
+        "baseline": {
+          "case_id": "case-0",
+          "trial_index": 0,
+          "cluster_id": "customer-shared",
+          "arm": "baseline",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:27d5b7054d9ae73c3caee83510c8c45ee9183710519dd5cd87a7899e0429fd81"
+        },
+        "candidate": {
+          "case_id": "case-0",
+          "trial_index": 0,
+          "cluster_id": "customer-shared",
+          "arm": "candidate",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:872ad8e4de920bfbdfcbb66a12629e97e1c0ece9ac7abf9eff1e72d841737c86"
+        }
+      },
+      {
+        "case_id": "case-0",
+        "trial_index": 1,
+        "customer_id": "customer-shared",
+        "slices": [
+          "all",
+          "risk:general"
+        ],
+        "outcome": "fixed",
+        "baseline": {
+          "case_id": "case-0",
+          "trial_index": 1,
+          "cluster_id": "customer-shared",
+          "arm": "baseline",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:1eff2b658dc6c7bfeb52b9b30ff79d8934e8b06df5c2b458b2322c48477da0e2"
+        },
+        "candidate": {
+          "case_id": "case-0",
+          "trial_index": 1,
+          "cluster_id": "customer-shared",
+          "arm": "candidate",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:dfcbb4da5d8c6dee0fd76e36fce0fd2d14f35409b630243f677b7b30e8a1db08"
+        }
+      },
+      {
+        "case_id": "case-1",
+        "trial_index": 0,
+        "customer_id": "customer-shared",
+        "slices": [
+          "all",
+          "risk:general"
+        ],
+        "outcome": "fixed",
+        "baseline": {
+          "case_id": "case-1",
+          "trial_index": 0,
+          "cluster_id": "customer-shared",
+          "arm": "baseline",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:fc5197ddcc7b04c5f00ddf822111c280de5567c7d57ae94a64c0b3018e7bdf35"
+        },
+        "candidate": {
+          "case_id": "case-1",
+          "trial_index": 0,
+          "cluster_id": "customer-shared",
+          "arm": "candidate",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:74c7695c989822a191521427996b28cd5d8fb3406d25cf6288408336a58107f1"
+        }
+      },
+      {
+        "case_id": "case-1",
+        "trial_index": 1,
+        "customer_id": "customer-shared",
+        "slices": [
+          "all",
+          "risk:general"
+        ],
+        "outcome": "fixed",
+        "baseline": {
+          "case_id": "case-1",
+          "trial_index": 1,
+          "cluster_id": "customer-shared",
+          "arm": "baseline",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:f89ce6446c53ff5b657a013b899f60525287f4f48a0de3c6f2ade0f08c30b21c"
+        },
+        "candidate": {
+          "case_id": "case-1",
+          "trial_index": 1,
+          "cluster_id": "customer-shared",
+          "arm": "candidate",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:3db3bcd14c756e4a37cb53c2d0eade83a0a091876513865d6bd8e006489c30e8"
+        }
+      },
+      {
+        "case_id": "case-2",
+        "trial_index": 0,
+        "customer_id": "customer-2",
+        "slices": [
+          "all",
+          "risk:general"
+        ],
+        "outcome": "fixed",
+        "baseline": {
+          "case_id": "case-2",
+          "trial_index": 0,
+          "cluster_id": "customer-2",
+          "arm": "baseline",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:dbefc59c333cd296ceb493db0a706ae75e115bfa5fa1b850283f491be2efd884"
+        },
+        "candidate": {
+          "case_id": "case-2",
+          "trial_index": 0,
+          "cluster_id": "customer-2",
+          "arm": "candidate",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:df0a8191374ec0592794929b5a779d6640e6ff10ff3a17488363496436517fc8"
+        }
+      },
+      {
+        "case_id": "case-2",
+        "trial_index": 1,
+        "customer_id": "customer-2",
+        "slices": [
+          "all",
+          "risk:general"
+        ],
+        "outcome": "fixed",
+        "baseline": {
+          "case_id": "case-2",
+          "trial_index": 1,
+          "cluster_id": "customer-2",
+          "arm": "baseline",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:1cb27b6349bbb7ff22887a88efb57ca261667494d411537a8f67d5f3f11c6fbf"
+        },
+        "candidate": {
+          "case_id": "case-2",
+          "trial_index": 1,
+          "cluster_id": "customer-2",
+          "arm": "candidate",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:d863a1acddb157378ab8bb657d412ab31ddd645fcdfd7e0650b88dbd5e5c8e6a"
+        }
+      },
+      {
+        "case_id": "case-3",
+        "trial_index": 0,
+        "customer_id": "customer-3",
+        "slices": [
+          "all",
+          "risk:protected"
+        ],
+        "outcome": "regressed",
+        "baseline": {
+          "case_id": "case-3",
+          "trial_index": 0,
+          "cluster_id": "customer-3",
+          "arm": "baseline",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:a824dcbdb90c1876a45f315795d8b0609fba941c73dabe8b3bf1840ed72ea762"
+        },
+        "candidate": {
+          "case_id": "case-3",
+          "trial_index": 0,
+          "cluster_id": "customer-3",
+          "arm": "candidate",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:444702f2cc64d4183669c2c4f6dcf9d038d37e72f1b13293100f2df7969dd6c7"
+        }
+      },
+      {
+        "case_id": "case-3",
+        "trial_index": 1,
+        "customer_id": "customer-3",
+        "slices": [
+          "all",
+          "risk:protected"
+        ],
+        "outcome": "regressed",
+        "baseline": {
+          "case_id": "case-3",
+          "trial_index": 1,
+          "cluster_id": "customer-3",
+          "arm": "baseline",
+          "passed": true,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [],
+          "artifact_hash": "sha256:9c32f097177ec5435f28c2314461714e3daaa6cb826487e3742fffc5c2d5f422"
+        },
+        "candidate": {
+          "case_id": "case-3",
+          "trial_index": 1,
+          "cluster_id": "customer-3",
+          "arm": "candidate",
+          "passed": false,
+          "latency_ms": 250,
+          "cost_usd": 0.08,
+          "manifest_hash": "sha256:3ee980af0514bfd9beb36dc3eb493933789b5f0292909c36078accb91f540f63",
+          "failed_checks": [
+            "claimed_outcome_matches_state"
+          ],
+          "artifact_hash": "sha256:b1efc40055d205bd38d03f4db066d4ce6126bdf18ea6b2d857446e0aef607b88"
+        }
+      }
+    ],
+    "status": "hold",
+    "overlapping_slices_not_additive": true,
+    "authority_ceiling": "lab_only",
+    "deployment_authorized": false,
+    "limitations": "Replayed local grades, not execution provenance or current qualification. Required means locally registered by hash, not externally timestamped. Trial-weighted rates and equal-customer-weighted deltas use different estimands. Intervals use the existing unqualified teaching method; no joint/multiplicity-qualified inference. Exploratory slices never gate. Unqualified pairs may also contain known failed checks; those checks remain visible and are not erased or equated with a known outcome.",
+    "report_hash": "sha256:d13ad9619b023d1398f6e351da462af293a9fd8a8b62377d3f0f2699abec4271"
+  },
+  "protocol": {
+    "unqualified_candidate": false,
+    "required_slices": [
+      "risk:protected"
+    ],
+    "baseline": "incorrect outcome enum on ordinary requests",
+    "candidate": "incorrect outcome enum on special requests",
+    "all_tools": "actual reference workflow in isolated mock state",
+    "measurement": "invented default profile; no model/latency/cost population claim"
+  }
+}
