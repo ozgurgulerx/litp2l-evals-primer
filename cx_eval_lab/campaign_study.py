@@ -60,8 +60,8 @@ def _stage(judge):
                          clock=lambda: datetime(2026, 9, 6, tzinfo=timezone.utc), allow_synthetic=True)
 
 
-def run_study(*, unknown_second=True, budget_micro_usd=1000):
-    policy = CampaignPolicy('synthetic-judge-budget-v1', budget_micro_usd, 4, 2000, 600)
+def run_study(*, unknown_second=True, budget_micro_usd=1000, reservation_micro_usd=600):
+    policy = CampaignPolicy('synthetic-judge-budget-v1', budget_micro_usd, 4, 2000, reservation_micro_usd)
     dataset = ROOT / 'evals/cx-support/datasets/regression/refund_v1.json'
     cases = load_refund_cases(dataset)[:1]
     inner = ScriptedJudge(unknown_second)
@@ -93,7 +93,7 @@ def run_study(*, unknown_second=True, budget_micro_usd=1000):
     return {'study': 'judge-campaign-admission-v1', 'evidence_kind': 'executed_synthetic_protocol',
             'deployment_authorized': False, 'synthetic_calibration_hash': stage.calibration_hash,
             'protocol': {'unknown_second': unknown_second, 'budget_micro_usd': budget_micro_usd,
-                         'reservation_micro_usd': 600, 'agent_runs': 4,
+                         'reservation_micro_usd': reservation_micro_usd, 'agent_runs': 4,
                          'admission_order': 'baseline0,candidate0,baseline1,candidate1',
                          'claim': 'cost/admission demonstration, not an agent quality comparison'},
             'packet': packet, 'ledger': snapshot, 'costs': costs}
