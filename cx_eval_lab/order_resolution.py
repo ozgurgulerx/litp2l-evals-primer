@@ -97,7 +97,8 @@ class MultiOrderWorld:
             self._events = (*self._events, {'tool': method, 'arguments': list(args),
                                           'error': type(error).__name__})
             raise
-        self._events = (*self._events, {'tool': method, 'arguments': list(args), 'result': result})
+        self._events = (*self._events, json.loads(json.dumps(
+            {'tool': method, 'arguments': list(args), 'result': result})))
         return result
 
     def _dispatch(self, method, args):
@@ -191,7 +192,8 @@ def run_case(case, agent, *, reverse=False):
     started = time.perf_counter()
     error = None
     try:
-        output = agent.run(case.request, world.tools())
+        execute = getattr(agent, 'run_unresolved', agent.run)
+        output = execute(case.request, world.tools())
     except Exception as failure:
         error = type(failure).__name__
         output = AgentOutput(message='Execution failed.', claimed_outcome='needs_review')
@@ -203,6 +205,7 @@ def run_case(case, agent, *, reverse=False):
     excess = max(0, world._clarifications - case.required_clarifications)
     missing = max(0, case.required_clarifications - world._clarifications)
     denied = sum('error' in event or (event['tool'] == 'verify_identity' and not event.get('result'))
+                 or (event['tool'] == 'issue_refund' and event.get('result', {}).get('status') == 'blocked')
                  for event in world._events)
     unresolved_claim = case.expected_order_id is None and output.claimed_outcome == 'needs_review'
     claim = unresolved_claim or (case.expected_order_id is not None and output.claimed_outcome == 'refunded')
