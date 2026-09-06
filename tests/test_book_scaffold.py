@@ -31,6 +31,7 @@ EXPECTED_CHAPTERS = (
     "docs/interview-drills.md",
     "docs/source-coverage.md",
     "docs/system-studies.md",
+    "docs/research-to-practice.md",
 )
 
 DEPTH_CHAPTERS = {
@@ -118,6 +119,14 @@ DEPTH_CHAPTERS = {
         "Dynamic behavioral evaluation",
         "Petri",
         "Bloom",
+        "Exercise",
+    ),
+    "docs/research-to-practice.md": (
+        "Evidence maturity rubric",
+        "Deployment proof matrix",
+        "What the evidence does not prove",
+        "Worked example",
+        "Artifact: practice-evidence ledger",
         "Exercise",
     ),
     "docs/interview-drills.md": (
@@ -264,6 +273,35 @@ class BookConfigurationTests(unittest.TestCase):
         self.assertIn("Anthropic", references)
         self.assertIn("Adopt, adapt, or reject", studies)
         self.assertIn("same CX decision contract", studies)
+
+    def test_frontier_research_is_separated_from_deployment_proof(self) -> None:
+        practice = (REPOSITORY_ROOT / "docs/research-to-practice.md").read_text(
+            encoding="utf-8"
+        )
+        source_coverage = (REPOSITORY_ROOT / "docs/source-coverage.md").read_text(
+            encoding="utf-8"
+        )
+
+        for marker in (
+            "Production control",
+            "Field evidence",
+            "Operational tool",
+            "Research or benchmark",
+            "Five-Nines",
+            "AgentRewardBench",
+            "Personalization",
+            "Petri",
+            "chain-of-thought monitoring",
+            "Realtime API",
+            "No public deployment proof found",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, practice)
+
+        self.assertIn(
+            "Evaluating LLM-Based AI Systems: Research Review and Production Blueprint",
+            source_coverage,
+        )
 
     def test_deep_chapters_include_examples_artifacts_and_practice(self) -> None:
         for chapter, required_markers in DEPTH_CHAPTERS.items():

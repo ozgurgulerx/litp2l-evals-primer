@@ -17,6 +17,48 @@ def load_example(name: str) -> dict:
 
 
 class SyntheticBookExampleTests(unittest.TestCase):
+    def test_practice_evidence_ledger_keeps_claims_within_evidence(self) -> None:
+        artifact = load_example("practice-evidence-v1.json")
+        allowed_levels = {
+            "production_control",
+            "field_evidence",
+            "operational_tool",
+            "research_or_benchmark",
+        }
+        required_topics = {
+            "rare_failure_estimation",
+            "personalized_stateful_evaluation",
+            "evaluator_of_evaluators",
+            "judge_bias_correction",
+            "dynamic_behavioral_auditing",
+            "chain_of_thought_monitoring",
+            "realtime_voice_evaluation",
+        }
+
+        self.assertEqual(artifact["schema_version"], "practice-evidence-v1")
+        self.assertEqual(
+            {item["topic_id"] for item in artifact["claims"]}, required_topics
+        )
+        for claim in artifact["claims"]:
+            with self.subTest(topic=claim["topic_id"]):
+                self.assertIn(claim["evidence_level"], allowed_levels)
+                self.assertTrue(claim["primary_sources"])
+                self.assertTrue(claim["observed_use"])
+                self.assertTrue(claim["not_proven"])
+                self.assertIn(
+                    claim["gate_authority"],
+                    {"qualified_local_only", "shadow_only", "not_gating"},
+                )
+
+        research_only = {
+            claim["topic_id"]
+            for claim in artifact["claims"]
+            if claim["evidence_level"] == "research_or_benchmark"
+        }
+        self.assertIn("rare_failure_estimation", research_only)
+        self.assertIn("evaluator_of_evaluators", research_only)
+        self.assertIn("judge_bias_correction", research_only)
+
     def test_human_annotation_example_has_overlap_and_adjudication(self) -> None:
         artifact = load_example("human-annotations-v1.json")
         case_ids = {item["case_id"] for item in artifact["items"]}
