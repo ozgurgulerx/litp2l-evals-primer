@@ -11,6 +11,10 @@ dependencies = [
 openai = [
     "openai-agents>=0.22.0",
 ]
+telemetry = [
+    "opentelemetry-sdk==1.44.0",
+    "opentelemetry-exporter-otlp-proto-http==1.44.0",
+]
 
 [tool.uv]
 package = false
@@ -19,4 +23,3 @@ package = false
 dev = [
     "coverage>=7.16.0",
 ]
-
