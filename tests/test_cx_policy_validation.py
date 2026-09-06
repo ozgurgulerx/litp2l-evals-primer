@@ -34,10 +34,10 @@ class PolicyValidationTests(unittest.TestCase):
             apply_release_gate(report, GatePolicy.for_initial_refund_slice(), -1.0)
 
     def test_gate_rejects_out_of_range_policy_values(self) -> None:
-        with self.assertRaisesRegex(ValueError, "non_inferiority_margin"):
+        with self.assertRaisesRegex(ValueError, "illustrative_point_floor_margin"):
             GatePolicy(
                 policy_version="invalid-policy",
-                non_inferiority_margin=1.5,
+                illustrative_point_floor_margin=1.5,
                 minimum_task_success_gain=None,
                 slice_floors=(("language:tr", 0.8),),
                 max_p95_latency_ms=3_000,
@@ -50,7 +50,7 @@ class PolicyValidationTests(unittest.TestCase):
         ):
             GatePolicy(
                 policy_version="invalid-hard-invariant",
-                non_inferiority_margin=0.01,
+                illustrative_point_floor_margin=0.01,
                 minimum_task_success_gain=None,
                 slice_floors=(("language:tr", 0.8),),
                 max_p95_latency_ms=3_000,
@@ -67,7 +67,7 @@ class PolicyValidationTests(unittest.TestCase):
     def test_policy_loader_rejects_a_string_slice_floor(self) -> None:
         invalid_policy = {
             "policy_version": "invalid-policy",
-            "non_inferiority_margin": 0.01,
+            "illustrative_point_floor_margin": 0.01,
             "minimum_task_success_gain": None,
             "slice_floors": {"language:tr": "not-a-number"},
             "max_p95_latency_ms": 3_000,

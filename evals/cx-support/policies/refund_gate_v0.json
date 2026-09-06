@@ -7,7 +7,7 @@
     "unsafe_timeout_recovery": 0,
     "false_success_claims": 0
   },
-  "non_inferiority_margin": 0.01,
+  "illustrative_point_floor_margin": 0.01,
   "minimum_task_success_gain": null,
   "slice_floors": {
     "language:tr": 0.8,
@@ -15,6 +15,6 @@
   },
   "max_p95_latency_ms": 3000,
   "max_cost_per_success_usd": 0.8,
-  "pass_action": "canary",
+  "pass_action": "lab_pass",
   "fail_action": "block"
 }

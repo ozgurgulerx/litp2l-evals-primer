@@ -14,7 +14,7 @@ from cx_eval_lab.models import EvaluationReport
 @dataclass(frozen=True)
 class GatePolicy:
     policy_version: str
-    non_inferiority_margin: float
+    illustrative_point_floor_margin: float
     minimum_task_success_gain: float | None
     slice_floors: tuple[tuple[str, float], ...]
     max_p95_latency_ms: int
@@ -23,14 +23,17 @@ class GatePolicy:
     max_duplicate_refund_count: int = 0
     max_unsafe_timeout_recovery_count: int = 0
     max_false_success_claim_count: int = 0
-    pass_action: str = "canary"
+    pass_action: str = "lab_pass"
     fail_action: str = "block"
     release_objective: str = ""
 
     def __post_init__(self) -> None:
         if not self.policy_version:
             raise ValueError("policy_version is required")
-        _validate_rate("non_inferiority_margin", self.non_inferiority_margin)
+        _validate_rate(
+            "illustrative_point_floor_margin",
+            self.illustrative_point_floor_margin,
+        )
         if self.minimum_task_success_gain is not None:
             _validate_rate(
                 "minimum_task_success_gain",
@@ -65,7 +68,7 @@ class GatePolicy:
     def for_initial_refund_slice(cls) -> GatePolicy:
         return cls(
             policy_version="refund-gate-v0",
-            non_inferiority_margin=0.01,
+            illustrative_point_floor_margin=0.01,
             minimum_task_success_gain=None,
             slice_floors=(
                 ("language:tr", 0.80),
@@ -93,7 +96,9 @@ def load_gate_policy(path: str | Path) -> GatePolicy:
     try:
         return GatePolicy(
             policy_version=str(raw_policy["policy_version"]),
-            non_inferiority_margin=float(raw_policy["non_inferiority_margin"]),
+            illustrative_point_floor_margin=float(
+                raw_policy["illustrative_point_floor_margin"]
+            ),
             minimum_task_success_gain=(
                 None
                 if raw_policy.get("minimum_task_success_gain") is None
@@ -112,7 +117,7 @@ def load_gate_policy(path: str | Path) -> GatePolicy:
             max_false_success_claim_count=int(
                 hard_invariants.get("false_success_claims", 0)
             ),
-            pass_action=str(raw_policy.get("pass_action", "canary")),
+            pass_action=str(raw_policy.get("pass_action", "lab_pass")),
             fail_action=str(raw_policy.get("fail_action", "block")),
             release_objective=str(raw_policy.get("release_objective", "")),
         )
@@ -138,6 +143,7 @@ class GateDecision:
     policy_version: str
     baseline_task_success: float
     rules: tuple[GateRuleResult, ...]
+    authority_ceiling: str = "lab_only"
 
     def to_dict(self) -> dict[str, Any]:
         failed_rules = [rule.name for rule in self.rules if not rule.passed]
@@ -146,6 +152,7 @@ class GateDecision:
             "action": self.action,
             "policy_version": self.policy_version,
             "baseline_task_success": self.baseline_task_success,
+            "authority_ceiling": self.authority_ceiling,
             "failed_rules": failed_rules,
             "rules": [rule.to_dict() for rule in self.rules],
         }
@@ -185,13 +192,13 @@ def apply_release_gate(
             f"<= {policy.max_false_success_claim_count}",
         ),
         GateRuleResult(
-            "non_inferiority:task_success",
+            "illustrative_point_floor:task_success",
             report.task_success_rate
-            >= baseline_task_success - policy.non_inferiority_margin,
+            >= baseline_task_success - policy.illustrative_point_floor_margin,
             f"{report.task_success_rate:.3f}",
             (
                 f">= baseline {baseline_task_success:.3f} - "
-                f"margin {policy.non_inferiority_margin:.3f}"
+                f"illustrative margin {policy.illustrative_point_floor_margin:.3f}"
             ),
         ),
         _superiority_rule(report, policy, baseline_task_success),
@@ -229,6 +236,43 @@ def apply_release_gate(
         policy_version=policy.policy_version,
         baseline_task_success=baseline_task_success,
         rules=rules,
+    )
+
+
+@dataclass(frozen=True)
+class NonInferiorityAssessment:
+    """Interpret a precomputed interval without pretending to estimate it."""
+
+    lower_bound: float
+    upper_bound: float
+    margin: float
+    non_inferior: bool
+    superior: bool
+
+
+def assess_non_inferiority(
+    lower_bound: float,
+    upper_bound: float,
+    margin: float,
+) -> NonInferiorityAssessment:
+    """Apply registered inclusive boundaries to an interval on candidate-baseline."""
+
+    if not all(
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        for value in (lower_bound, upper_bound, margin)
+    ):
+        raise ValueError("interval bounds and margin must be finite numbers")
+    if lower_bound > upper_bound:
+        raise ValueError("lower_bound cannot exceed upper_bound")
+    _validate_rate("margin", margin)
+    return NonInferiorityAssessment(
+        lower_bound=float(lower_bound),
+        upper_bound=float(upper_bound),
+        margin=float(margin),
+        non_inferior=lower_bound >= -margin,
+        superior=lower_bound > 0,
     )
 
 

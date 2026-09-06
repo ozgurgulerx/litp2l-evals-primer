@@ -413,7 +413,9 @@ A candidate improves overall success from 82% to 86% on 50 cases. The paired int
 What can and cannot be claimed?
 
 ??? success "Answer"
-    The evidence does not establish a quality improvement because the interval includes zero. For the cost-reduction objective, test the non-inferiority contrast against the pre-registered 3-point margin; the supplied interval extends below −3, so non-inferiority is not yet established either. The safe decision is inconclusive/hold or gather more independent evidence, unless another correctly specified interval for the non-inferiority estimand supports the margin. The 25% cost reduction is a supported point estimate under the measured profile, and “zero observed violations in 50 cases” is not proof of zero risk.
+    The evidence does not establish a quality improvement because the interval includes zero, so superiority is not established. For the cost-reduction objective, test the non-inferiority contrast against the pre-registered 3-point margin. The lower bound of −2 points is above the registered −3-point margin, so non-inferiority is established under the inclusive boundary rule, assuming this is the correctly constructed interval for the registered estimand. The 25% cost reduction is a supported point estimate under the measured profile, while “zero observed violations in 50 cases” is not proof of zero risk.
+
+The executable companion is `assess_non_inferiority` in `cx_eval_lab/gate.py`. Its regression test fixes the boundary convention: a lower bound equal to `−margin` qualifies; a lower bound below it does not. This helper interprets a supplied interval—it does not estimate one from point rates.
 
 ## Verification checklist
 

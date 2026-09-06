@@ -22,7 +22,7 @@ class RefundSliceIntegrationTests(unittest.TestCase):
         policy = load_gate_policy(POLICY_PATH)
 
         self.assertEqual("refund-gate-v0", policy.policy_version)
-        self.assertEqual(0.01, policy.non_inferiority_margin)
+        self.assertEqual(0.01, policy.illustrative_point_floor_margin)
         self.assertIsNone(policy.minimum_task_success_gain)
         self.assertEqual(3_000, policy.max_p95_latency_ms)
         self.assertEqual(0.80, policy.max_cost_per_success_usd)
