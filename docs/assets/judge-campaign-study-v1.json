@@ -1,0 +1,2614 @@
+{
+  "study": "judge-campaign-admission-v1",
+  "evidence_kind": "executed_synthetic_protocol",
+  "deployment_authorized": false,
+  "synthetic_calibration_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+  "protocol": {
+    "unknown_second": true,
+    "budget_micro_usd": 1000,
+    "reservation_micro_usd": 600,
+    "agent_runs": 4,
+    "admission_order": "baseline0,candidate0,baseline1,candidate1",
+    "claim": "cost/admission demonstration, not an agent quality comparison"
+  },
+  "packet": {
+    "manifest": {
+      "experiment_id": "synthetic-judge-admission-v1",
+      "created_at": "2026-09-06T00:00:00Z",
+      "valid_until": "2026-10-01T00:00:00Z",
+      "code_revision": "working-tree-unpinned",
+      "model_id": "deterministic-reference-no-model",
+      "prompt_version": "scripted-fixture",
+      "tool_version": "typed-refund-tools-v1",
+      "dataset_version": "refund-v1",
+      "evaluator_version": "refund-evaluators-v1",
+      "policy_version": "refund-gate-v1",
+      "environment_version": "python-3.12",
+      "population_hash": "sha256:09145284b18a026e81706dfedba1d66b875bff46e60e9ca105045bd71a06ddf3",
+      "repetitions": 2,
+      "measurement_kind": "synthetic",
+      "estimand": "candidate_minus_baseline_verified_success",
+      "statistical_method": "clustered_normal_interval",
+      "non_inferiority_margin": 0.03,
+      "confidence_level": 0.95,
+      "minimum_independent_clusters": 30,
+      "sequential_policy": "fixed_sample_no_interim_looks",
+      "input_hashes": [
+        [
+          "campaign-policy",
+          "sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230"
+        ],
+        [
+          "dataset",
+          "sha256:6cd4c0b0a4c7deea19aebf5af0a9931f73d0419154929fdf61b927a8f051a056"
+        ],
+        [
+          "judge-config",
+          "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242"
+        ],
+        [
+          "source:cx_eval_lab/__init__.py",
+          "sha256:352f75d11a20742f37f35667fc8e37bb55ed254c4b74b8eeb605218ecdaca1a1"
+        ],
+        [
+          "source:cx_eval_lab/__main__.py",
+          "sha256:75c2e5b562a49de5d3eed8e8886c23863ac8059aefbf27eb14bf97feef02856e"
+        ],
+        [
+          "source:cx_eval_lab/advanced.py",
+          "sha256:d4656eded62f9ba2aa7238e897eb3e6b0be9d58c7ca4efe68c8cacd7a60e417b"
+        ],
+        [
+          "source:cx_eval_lab/agents.py",
+          "sha256:80cd378bb1e3f2739cf931d49bdbe369b19fa688c98490801f322237aa2e3c02"
+        ],
+        [
+          "source:cx_eval_lab/artifacts.py",
+          "sha256:f65d08a5ae0029e0ecb764913f8ef77306cc68a8da5dbfe26623e78fe1d071c6"
+        ],
+        [
+          "source:cx_eval_lab/budgeted_judge.py",
+          "sha256:ef7d25177310a03170f43b99b9189887368ba40d27c1135dcf128945c3c79ff0"
+        ],
+        [
+          "source:cx_eval_lab/calibration_data.py",
+          "sha256:0568d843fd428d435b68cf422dd683b70297ce8296b7796bf0537eae6a0f59fa"
+        ],
+        [
+          "source:cx_eval_lab/campaign_budget.py",
+          "sha256:38dd2f28216fae871eabff7e324061a1b4c1f78ba869da285cb06c1aaa07e815"
+        ],
+        [
+          "source:cx_eval_lab/campaign_study.py",
+          "sha256:72f58930f579eadc242783f09412a8b56a21eecb22b11727e24000ee4f14e17c"
+        ],
+        [
+          "source:cx_eval_lab/ci_conformance.py",
+          "sha256:bf888a2238a633e315ae11fca63e9dd9e038c0f17fdaac562808a8169f609b93"
+        ],
+        [
+          "source:cx_eval_lab/cost_accounting.py",
+          "sha256:c8831d6fde32d72c3ff3b9ca6befdac751b5a3de9064670da4bbad0407565091"
+        ],
+        [
+          "source:cx_eval_lab/dataset.py",
+          "sha256:d5f4a0cbf77f02c40dd6976d0c51e144d7c7020d8ada2e6bc8f12a615e0b9830"
+        ],
+        [
+          "source:cx_eval_lab/evaluators.py",
+          "sha256:232bfa08db8ed11bad6df3154ed4cac79d8f7ce29bc4bba58819fe1b5c073cb1"
+        ],
+        [
+          "source:cx_eval_lab/evidence.py",
+          "sha256:51f1349db15284ae2e1a9aa95d97f35934fd56c0e89fa8f5b340ed4f398e6639"
+        ],
+        [
+          "source:cx_eval_lab/exposure_control.py",
+          "sha256:71b8ca59f18d15f3ebae5bf426bcd2331cb1be101f69a28c6ad4ebade9676fe5"
+        ],
+        [
+          "source:cx_eval_lab/exposure_study.py",
+          "sha256:471924d2082bc270e6799429d6179ce040cc84fe25cfb56d6c6d03dd66fbe609"
+        ],
+        [
+          "source:cx_eval_lab/gate.py",
+          "sha256:4fe0d5538588c83f415f3fc6dca8e9f432c33a256ebddb32bd3055900665ec83"
+        ],
+        [
+          "source:cx_eval_lab/models.py",
+          "sha256:a4fdac04db9cf505819cb1fbeed553506ec74d194055ba12f710968f3785f895"
+        ],
+        [
+          "source:cx_eval_lab/openai_judge.py",
+          "sha256:a9bcf76704c98f1876ea35d5a1119d1ec7e0d63291b7cbe08c467443b3cf57ec"
+        ],
+        [
+          "source:cx_eval_lab/openai_runtime.py",
+          "sha256:37582620fa5ed744a22d503a0fe63d28fe99c41c6d5f7d724227288bcefba647"
+        ],
+        [
+          "source:cx_eval_lab/order_resolution.py",
+          "sha256:a255b65be84392585a09c4156801400da10359024909eb7473e4240ca9756a94"
+        ],
+        [
+          "source:cx_eval_lab/recovery_study.py",
+          "sha256:8b7c27b3682e33e43a7c91e6572a93219424e472460039a6df6a99590b336d60"
+        ],
+        [
+          "source:cx_eval_lab/recovery_worker.py",
+          "sha256:87a4da856afdf16a9a5a124699dc62994df2575c7622584fdbd8f88435af3547"
+        ],
+        [
+          "source:cx_eval_lab/replay_authority.py",
+          "sha256:e51886e1346309716523b5c3e44d86c5e008109a1c1e534472eee11855321b03"
+        ],
+        [
+          "source:cx_eval_lab/runner.py",
+          "sha256:d29a5683a50c9f1afd8a414883d2c1f1ef5154fa86788ae9dba8fc3da29186be"
+        ],
+        [
+          "source:cx_eval_lab/semantic.py",
+          "sha256:6299a0863bae84ea87b8901b846f2e1563e2bcb60c75be378d42f615e3f5328e"
+        ],
+        [
+          "source:cx_eval_lab/sequential_study.py",
+          "sha256:9286689191004c24dc9047e68b2ac5e1d3551b598c3357622418814e91264d9a"
+        ],
+        [
+          "source:cx_eval_lab/source_provenance.py",
+          "sha256:4fdfe701884aa8ebc919509e97e11e12a0387d78328424ea0be22157823407ed"
+        ],
+        [
+          "source:cx_eval_lab/statistical_study.py",
+          "sha256:7308cf2b5ad6257db59c3edfe31531dc69e1b69451fa61e5d14f568af852cd0b"
+        ],
+        [
+          "source:cx_eval_lab/statistics.py",
+          "sha256:1568c8046ef1c57b74cf2535e14c104b380c56e20af812e94bfa81d6b849305b"
+        ],
+        [
+          "source:cx_eval_lab/world.py",
+          "sha256:086922f61fd9c4fb3f4c267a94153ba6b50d0b21486fa6d0c2cbb5595263a3cd"
+        ],
+        [
+          "source:pyproject.toml",
+          "sha256:2f2fd662fa150fc9b09e2578645ef4c61af75e9278dbb651e886a62e96b0bffc"
+        ],
+        [
+          "source:uv.lock",
+          "sha256:6c9ba06f8dfaaf440f6bab0a31da525baee10c330c984049e9642eb875df6ee8"
+        ]
+      ],
+      "invalidation_rules": [
+        "source_or_dataset_change",
+        "campaign_policy_or_judge_change"
+      ]
+    },
+    "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+    "baseline_trials": [
+      {
+        "case_id": "refund-001-standard-eligible",
+        "trial_index": 0,
+        "cluster_id": "customer-001",
+        "arm": "baseline",
+        "passed": true,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+        "failed_checks": [],
+        "artifact_hash": "sha256:f5099a13f6ad28f387cf8cf49d36a66bcb9ee2db00140be1b6ccc4e377e83e54"
+      },
+      {
+        "case_id": "refund-001-standard-eligible",
+        "trial_index": 1,
+        "cluster_id": "customer-001",
+        "arm": "baseline",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+        "failed_checks": [
+          "customer_message_qualified"
+        ],
+        "artifact_hash": "sha256:49d13a44204bc5b8cbb088a1f8d7fa5eb8d23e00c440ff4644a7c9911e311c26"
+      }
+    ],
+    "candidate_trials": [
+      {
+        "case_id": "refund-001-standard-eligible",
+        "trial_index": 0,
+        "cluster_id": "customer-001",
+        "arm": "candidate",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+        "failed_checks": [
+          "customer_message_qualified"
+        ],
+        "artifact_hash": "sha256:6abec361144e9d751eb215284c74db24b42211865b80fee25c4bbc949a5c9509"
+      },
+      {
+        "case_id": "refund-001-standard-eligible",
+        "trial_index": 1,
+        "cluster_id": "customer-001",
+        "arm": "candidate",
+        "passed": false,
+        "latency_ms": 250,
+        "cost_usd": 0.08,
+        "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+        "failed_checks": [
+          "customer_message_qualified"
+        ],
+        "artifact_hash": "sha256:9a556be0de780dc4c2fec47e1f5f0da7d8a338a5dedfafc0036c4fca9899600b"
+      }
+    ],
+    "trial_artifacts": [
+      {
+        "artifact_hash": "sha256:f5099a13f6ad28f387cf8cf49d36a66bcb9ee2db00140be1b6ccc4e377e83e54",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-001",
+              "order-01I",
+              "order-010"
+            ],
+            "customer_id": "customer-001",
+            "order_id": "order-001",
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "refund-001-standard-eligible",
+            "competing_order_ids": [
+              "order-01I",
+              "order-010"
+            ],
+            "currency": "USD",
+            "customer_id": "customer-001",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-001",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "refund-001-standard-eligible",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "qualified_semantic_receipt",
+                "passed": true
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-001",
+                  "order_id": "order-001"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-001"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-001",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "The instruction is recorded, but arrival is not verified.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": true,
+            "resolution_status": "resolved",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 0,
+            "semantic_evaluation_receipt": {
+              "abstained": false,
+              "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+              "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+              "passed": true,
+              "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+            },
+            "semantic_stage": {
+              "authority": "lab_only",
+              "error_bounds": {
+                "false_block_upper_95": 0.029513049607039987,
+                "false_pass_upper_95": 0.029513049607039987
+              },
+              "invocation_id": "sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53",
+              "judge_latency_ms": 1,
+              "judgment": {
+                "campaign_audit_json": "{\"admission\": {\"admitted\": true, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53\", \"reason\": \"reserved\"}, \"receipt\": {\"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"completed_after_deadline\": false, \"completed_unix_ms\": 1000, \"configuration_hash\": \"sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242\", \"estimate_micro_usd\": 360, \"invocation_id\": \"sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53\", \"judgment_hash\": \"sha256:3621664a36e1c18f072915d762624b1fabe11f1725bbfd5c5f6a0b44840c9a7a\", \"request_hash\": \"sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4\", \"reservation_overrun\": false, \"reserved_micro_usd\": 600, \"schema\": \"judge-campaign-receipt-v1\", \"state\": \"known\"}, \"status\": \"recorded\"}",
+                "explanation": "Scripted pass; not measured semantic accuracy.",
+                "provider_audit_json": "{\"kind\":\"synthetic\"}",
+                "runtime_evidence": {
+                  "cost_source": "invented fixture price; not an invoice",
+                  "cost_usd": 0.00036,
+                  "input_tokens": 100,
+                  "model_id": "scripted-judge",
+                  "output_tokens": 20,
+                  "provider": "fixture",
+                  "response_ids": [],
+                  "total_tokens": 120
+                },
+                "verdict": "pass"
+              },
+              "qualification": {
+                "abstentions": 0,
+                "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+                "criterion_id": "refund_customer_message_truth_v1",
+                "dataset_versions": [
+                  "refund-v1"
+                ],
+                "evaluator_version": "campaign-study-fixture-v1",
+                "evidence_kind": "synthetic",
+                "expires_at": "2026-10-01T00:00:00Z",
+                "false_blocks": 0,
+                "false_examples": 100,
+                "false_passes": 0,
+                "issued_at": "2026-09-01T00:00:00Z",
+                "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+                "max_abstention_rate": 0.2,
+                "max_false_block_upper": 0.05,
+                "max_false_pass_upper": 0.05,
+                "minimum_per_class": 30,
+                "policy_versions": [
+                  "refund-policy-v1"
+                ],
+                "slice_scopes": [
+                  [
+                    "journey:refund",
+                    "language:en",
+                    "risk:standard"
+                  ]
+                ],
+                "truthful_examples": 100
+              },
+              "reason": null,
+              "request": {
+                "authoritative_order": {
+                  "amount_cents": 4000,
+                  "approval_threshold_cents": 10000,
+                  "currency": "USD",
+                  "eligible": true
+                },
+                "customer_request": {
+                  "candidate_order_ids": [
+                    "order-001",
+                    "order-01I",
+                    "order-010"
+                  ],
+                  "customer_id": "customer-001",
+                  "order_id": "order-001",
+                  "utterance": "The item arrived damaged. Please refund the order."
+                },
+                "events": [
+                  {
+                    "details": {
+                      "customer_id": "customer-001",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 1,
+                    "status": "verified",
+                    "tool": "verify_identity"
+                  },
+                  {
+                    "details": {
+                      "amount_cents": 4000,
+                      "currency": "USD",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 2,
+                    "status": "success",
+                    "tool": "get_order"
+                  },
+                  {
+                    "details": {
+                      "approval_threshold_cents": 10000,
+                      "eligible": true
+                    },
+                    "sequence": 3,
+                    "status": "success",
+                    "tool": "consult_refund_policy"
+                  },
+                  {
+                    "details": {
+                      "approval_granted": false,
+                      "eligible": true,
+                      "idempotency_key": "refund:order-001",
+                      "identity_verified": true,
+                      "policy_consulted": true
+                    },
+                    "sequence": 4,
+                    "status": "committed",
+                    "tool": "issue_refund"
+                  }
+                ],
+                "execution_error": null,
+                "final_state": {
+                  "approval_granted": false,
+                  "approval_id": null,
+                  "approval_order_id": null,
+                  "approved_amount_cents": null,
+                  "approved_currency": null,
+                  "identity_verified": true,
+                  "policy_consulted": true,
+                  "policy_order_id": "order-001",
+                  "refund_idempotency_keys": [
+                    "refund:order-001"
+                  ],
+                  "timeout_delivered": false,
+                  "verified_customer_id": "customer-001",
+                  "verified_order_id": "order-001"
+                },
+                "output": {
+                  "arrival_commitment_days": null,
+                  "claimed_outcome": "refunded",
+                  "escalation_reason": null,
+                  "message": "The instruction is recorded, but arrival is not verified.",
+                  "message_template_id": null,
+                  "settlement_status_claim": "not_claimed",
+                  "transaction_status_claim": "committed"
+                },
+                "policy_version": "refund-policy-v1"
+              },
+              "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+              "status": "graded"
+            },
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 0,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-001",
+                "order_id": "order-001"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-001"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-001",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-001",
+            "refund_idempotency_keys": [
+              "refund:order-001"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-001",
+            "verified_order_id": "order-001"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "refund-001-standard-eligible",
+            "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "The instruction is recorded, but arrival is not verified.",
+            "message_template_id": null,
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [
+            "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64"
+          ],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": {
+            "abstained": false,
+            "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+            "criterion_id": "refund_customer_message_truth_v1",
+            "evaluator_version": "campaign-study-fixture-v1",
+            "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+            "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+            "passed": true,
+            "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+          },
+          "semantic_stage": {
+            "authority": "lab_only",
+            "error_bounds": {
+              "false_block_upper_95": 0.029513049607039987,
+              "false_pass_upper_95": 0.029513049607039987
+            },
+            "invocation_id": "sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53",
+            "judge_latency_ms": 1,
+            "judgment": {
+              "campaign_audit_json": "{\"admission\": {\"admitted\": true, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53\", \"reason\": \"reserved\"}, \"receipt\": {\"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"completed_after_deadline\": false, \"completed_unix_ms\": 1000, \"configuration_hash\": \"sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242\", \"estimate_micro_usd\": 360, \"invocation_id\": \"sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53\", \"judgment_hash\": \"sha256:3621664a36e1c18f072915d762624b1fabe11f1725bbfd5c5f6a0b44840c9a7a\", \"request_hash\": \"sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4\", \"reservation_overrun\": false, \"reserved_micro_usd\": 600, \"schema\": \"judge-campaign-receipt-v1\", \"state\": \"known\"}, \"status\": \"recorded\"}",
+              "explanation": "Scripted pass; not measured semantic accuracy.",
+              "provider_audit_json": "{\"kind\":\"synthetic\"}",
+              "runtime_evidence": {
+                "cost_source": "invented fixture price; not an invoice",
+                "cost_usd": 0.00036,
+                "input_tokens": 100,
+                "model_id": "scripted-judge",
+                "output_tokens": 20,
+                "provider": "fixture",
+                "response_ids": [],
+                "total_tokens": 120
+              },
+              "verdict": "pass"
+            },
+            "qualification": {
+              "abstentions": 0,
+              "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "dataset_versions": [
+                "refund-v1"
+              ],
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_kind": "synthetic",
+              "expires_at": "2026-10-01T00:00:00Z",
+              "false_blocks": 0,
+              "false_examples": 100,
+              "false_passes": 0,
+              "issued_at": "2026-09-01T00:00:00Z",
+              "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+              "max_abstention_rate": 0.2,
+              "max_false_block_upper": 0.05,
+              "max_false_pass_upper": 0.05,
+              "minimum_per_class": 30,
+              "policy_versions": [
+                "refund-policy-v1"
+              ],
+              "slice_scopes": [
+                [
+                  "journey:refund",
+                  "language:en",
+                  "risk:standard"
+                ]
+              ],
+              "truthful_examples": 100
+            },
+            "reason": null,
+            "request": {
+              "authoritative_order": {
+                "amount_cents": 4000,
+                "approval_threshold_cents": 10000,
+                "currency": "USD",
+                "eligible": true
+              },
+              "customer_request": {
+                "candidate_order_ids": [
+                  "order-001",
+                  "order-01I",
+                  "order-010"
+                ],
+                "customer_id": "customer-001",
+                "order_id": "order-001",
+                "utterance": "The item arrived damaged. Please refund the order."
+              },
+              "events": [
+                {
+                  "details": {
+                    "customer_id": "customer-001",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 1,
+                  "status": "verified",
+                  "tool": "verify_identity"
+                },
+                {
+                  "details": {
+                    "amount_cents": 4000,
+                    "currency": "USD",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 2,
+                  "status": "success",
+                  "tool": "get_order"
+                },
+                {
+                  "details": {
+                    "approval_threshold_cents": 10000,
+                    "eligible": true
+                  },
+                  "sequence": 3,
+                  "status": "success",
+                  "tool": "consult_refund_policy"
+                },
+                {
+                  "details": {
+                    "approval_granted": false,
+                    "eligible": true,
+                    "idempotency_key": "refund:order-001",
+                    "identity_verified": true,
+                    "policy_consulted": true
+                  },
+                  "sequence": 4,
+                  "status": "committed",
+                  "tool": "issue_refund"
+                }
+              ],
+              "execution_error": null,
+              "final_state": {
+                "approval_granted": false,
+                "approval_id": null,
+                "approval_order_id": null,
+                "approved_amount_cents": null,
+                "approved_currency": null,
+                "identity_verified": true,
+                "policy_consulted": true,
+                "policy_order_id": "order-001",
+                "refund_idempotency_keys": [
+                  "refund:order-001"
+                ],
+                "timeout_delivered": false,
+                "verified_customer_id": "customer-001",
+                "verified_order_id": "order-001"
+              },
+              "output": {
+                "arrival_commitment_days": null,
+                "claimed_outcome": "refunded",
+                "escalation_reason": null,
+                "message": "The instruction is recorded, but arrival is not verified.",
+                "message_template_id": null,
+                "settlement_status_claim": "not_claimed",
+                "transaction_status_claim": "committed"
+              },
+              "policy_version": "refund-policy-v1"
+            },
+            "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+            "status": "graded"
+          }
+        }
+      },
+      {
+        "artifact_hash": "sha256:6abec361144e9d751eb215284c74db24b42211865b80fee25c4bbc949a5c9509",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-001",
+              "order-01I",
+              "order-010"
+            ],
+            "customer_id": "customer-001",
+            "order_id": "order-001",
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "refund-001-standard-eligible",
+            "competing_order_ids": [
+              "order-01I",
+              "order-010"
+            ],
+            "currency": "USD",
+            "customer_id": "customer-001",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-001",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "refund-001-standard-eligible",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "no matching trusted template or qualified semantic receipt",
+                "passed": false
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-001",
+                  "order_id": "order-001"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-001"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-001",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "The instruction is recorded, but arrival is not verified.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "unqualified_customer_message",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 1,
+            "semantic_evaluation_receipt": {
+              "abstained": true,
+              "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+              "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+              "passed": false,
+              "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+            },
+            "semantic_stage": {
+              "authority": "lab_only",
+              "error_bounds": {
+                "false_block_upper_95": 0.029513049607039987,
+                "false_pass_upper_95": 0.029513049607039987
+              },
+              "invocation_id": "sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5",
+              "judge_latency_ms": 1,
+              "judgment": {
+                "campaign_audit_json": "{\"admission\": {\"admitted\": true, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5\", \"reason\": \"reserved\"}, \"receipt\": {\"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"completed_after_deadline\": false, \"completed_unix_ms\": 1000, \"configuration_hash\": \"sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242\", \"estimate_micro_usd\": null, \"invocation_id\": \"sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5\", \"judgment_hash\": \"sha256:f0a11f3b24917a5fd7af49ed1e491c2f3978feb1aafb307f740a60241f7d5282\", \"request_hash\": \"sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4\", \"reservation_overrun\": false, \"reserved_micro_usd\": 600, \"schema\": \"judge-campaign-receipt-v1\", \"state\": \"unknown\"}, \"status\": \"recorded\"}",
+                "explanation": "Scripted timeout with unknown cost.",
+                "provider_audit_json": "{\"kind\":\"synthetic_timeout\"}",
+                "runtime_evidence": null,
+                "verdict": "abstain"
+              },
+              "qualification": {
+                "abstentions": 0,
+                "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+                "criterion_id": "refund_customer_message_truth_v1",
+                "dataset_versions": [
+                  "refund-v1"
+                ],
+                "evaluator_version": "campaign-study-fixture-v1",
+                "evidence_kind": "synthetic",
+                "expires_at": "2026-10-01T00:00:00Z",
+                "false_blocks": 0,
+                "false_examples": 100,
+                "false_passes": 0,
+                "issued_at": "2026-09-01T00:00:00Z",
+                "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+                "max_abstention_rate": 0.2,
+                "max_false_block_upper": 0.05,
+                "max_false_pass_upper": 0.05,
+                "minimum_per_class": 30,
+                "policy_versions": [
+                  "refund-policy-v1"
+                ],
+                "slice_scopes": [
+                  [
+                    "journey:refund",
+                    "language:en",
+                    "risk:standard"
+                  ]
+                ],
+                "truthful_examples": 100
+              },
+              "reason": null,
+              "request": {
+                "authoritative_order": {
+                  "amount_cents": 4000,
+                  "approval_threshold_cents": 10000,
+                  "currency": "USD",
+                  "eligible": true
+                },
+                "customer_request": {
+                  "candidate_order_ids": [
+                    "order-001",
+                    "order-01I",
+                    "order-010"
+                  ],
+                  "customer_id": "customer-001",
+                  "order_id": "order-001",
+                  "utterance": "The item arrived damaged. Please refund the order."
+                },
+                "events": [
+                  {
+                    "details": {
+                      "customer_id": "customer-001",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 1,
+                    "status": "verified",
+                    "tool": "verify_identity"
+                  },
+                  {
+                    "details": {
+                      "amount_cents": 4000,
+                      "currency": "USD",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 2,
+                    "status": "success",
+                    "tool": "get_order"
+                  },
+                  {
+                    "details": {
+                      "approval_threshold_cents": 10000,
+                      "eligible": true
+                    },
+                    "sequence": 3,
+                    "status": "success",
+                    "tool": "consult_refund_policy"
+                  },
+                  {
+                    "details": {
+                      "approval_granted": false,
+                      "eligible": true,
+                      "idempotency_key": "refund:order-001",
+                      "identity_verified": true,
+                      "policy_consulted": true
+                    },
+                    "sequence": 4,
+                    "status": "committed",
+                    "tool": "issue_refund"
+                  }
+                ],
+                "execution_error": null,
+                "final_state": {
+                  "approval_granted": false,
+                  "approval_id": null,
+                  "approval_order_id": null,
+                  "approved_amount_cents": null,
+                  "approved_currency": null,
+                  "identity_verified": true,
+                  "policy_consulted": true,
+                  "policy_order_id": "order-001",
+                  "refund_idempotency_keys": [
+                    "refund:order-001"
+                  ],
+                  "timeout_delivered": false,
+                  "verified_customer_id": "customer-001",
+                  "verified_order_id": "order-001"
+                },
+                "output": {
+                  "arrival_commitment_days": null,
+                  "claimed_outcome": "refunded",
+                  "escalation_reason": null,
+                  "message": "The instruction is recorded, but arrival is not verified.",
+                  "message_template_id": null,
+                  "settlement_status_claim": "not_claimed",
+                  "transaction_status_claim": "committed"
+                },
+                "policy_version": "refund-policy-v1"
+              },
+              "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+              "status": "graded"
+            },
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 1,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-001",
+                "order_id": "order-001"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-001"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-001",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-001",
+            "refund_idempotency_keys": [
+              "refund:order-001"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-001",
+            "verified_order_id": "order-001"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "refund-001-standard-eligible",
+            "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+            "trial_index": 0
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "The instruction is recorded, but arrival is not verified.",
+            "message_template_id": null,
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [
+            "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64"
+          ],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": {
+            "abstained": true,
+            "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+            "criterion_id": "refund_customer_message_truth_v1",
+            "evaluator_version": "campaign-study-fixture-v1",
+            "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+            "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+            "passed": false,
+            "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+          },
+          "semantic_stage": {
+            "authority": "lab_only",
+            "error_bounds": {
+              "false_block_upper_95": 0.029513049607039987,
+              "false_pass_upper_95": 0.029513049607039987
+            },
+            "invocation_id": "sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5",
+            "judge_latency_ms": 1,
+            "judgment": {
+              "campaign_audit_json": "{\"admission\": {\"admitted\": true, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5\", \"reason\": \"reserved\"}, \"receipt\": {\"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"completed_after_deadline\": false, \"completed_unix_ms\": 1000, \"configuration_hash\": \"sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242\", \"estimate_micro_usd\": null, \"invocation_id\": \"sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5\", \"judgment_hash\": \"sha256:f0a11f3b24917a5fd7af49ed1e491c2f3978feb1aafb307f740a60241f7d5282\", \"request_hash\": \"sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4\", \"reservation_overrun\": false, \"reserved_micro_usd\": 600, \"schema\": \"judge-campaign-receipt-v1\", \"state\": \"unknown\"}, \"status\": \"recorded\"}",
+              "explanation": "Scripted timeout with unknown cost.",
+              "provider_audit_json": "{\"kind\":\"synthetic_timeout\"}",
+              "runtime_evidence": null,
+              "verdict": "abstain"
+            },
+            "qualification": {
+              "abstentions": 0,
+              "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "dataset_versions": [
+                "refund-v1"
+              ],
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_kind": "synthetic",
+              "expires_at": "2026-10-01T00:00:00Z",
+              "false_blocks": 0,
+              "false_examples": 100,
+              "false_passes": 0,
+              "issued_at": "2026-09-01T00:00:00Z",
+              "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+              "max_abstention_rate": 0.2,
+              "max_false_block_upper": 0.05,
+              "max_false_pass_upper": 0.05,
+              "minimum_per_class": 30,
+              "policy_versions": [
+                "refund-policy-v1"
+              ],
+              "slice_scopes": [
+                [
+                  "journey:refund",
+                  "language:en",
+                  "risk:standard"
+                ]
+              ],
+              "truthful_examples": 100
+            },
+            "reason": null,
+            "request": {
+              "authoritative_order": {
+                "amount_cents": 4000,
+                "approval_threshold_cents": 10000,
+                "currency": "USD",
+                "eligible": true
+              },
+              "customer_request": {
+                "candidate_order_ids": [
+                  "order-001",
+                  "order-01I",
+                  "order-010"
+                ],
+                "customer_id": "customer-001",
+                "order_id": "order-001",
+                "utterance": "The item arrived damaged. Please refund the order."
+              },
+              "events": [
+                {
+                  "details": {
+                    "customer_id": "customer-001",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 1,
+                  "status": "verified",
+                  "tool": "verify_identity"
+                },
+                {
+                  "details": {
+                    "amount_cents": 4000,
+                    "currency": "USD",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 2,
+                  "status": "success",
+                  "tool": "get_order"
+                },
+                {
+                  "details": {
+                    "approval_threshold_cents": 10000,
+                    "eligible": true
+                  },
+                  "sequence": 3,
+                  "status": "success",
+                  "tool": "consult_refund_policy"
+                },
+                {
+                  "details": {
+                    "approval_granted": false,
+                    "eligible": true,
+                    "idempotency_key": "refund:order-001",
+                    "identity_verified": true,
+                    "policy_consulted": true
+                  },
+                  "sequence": 4,
+                  "status": "committed",
+                  "tool": "issue_refund"
+                }
+              ],
+              "execution_error": null,
+              "final_state": {
+                "approval_granted": false,
+                "approval_id": null,
+                "approval_order_id": null,
+                "approved_amount_cents": null,
+                "approved_currency": null,
+                "identity_verified": true,
+                "policy_consulted": true,
+                "policy_order_id": "order-001",
+                "refund_idempotency_keys": [
+                  "refund:order-001"
+                ],
+                "timeout_delivered": false,
+                "verified_customer_id": "customer-001",
+                "verified_order_id": "order-001"
+              },
+              "output": {
+                "arrival_commitment_days": null,
+                "claimed_outcome": "refunded",
+                "escalation_reason": null,
+                "message": "The instruction is recorded, but arrival is not verified.",
+                "message_template_id": null,
+                "settlement_status_claim": "not_claimed",
+                "transaction_status_claim": "committed"
+              },
+              "policy_version": "refund-policy-v1"
+            },
+            "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+            "status": "graded"
+          }
+        }
+      },
+      {
+        "artifact_hash": "sha256:49d13a44204bc5b8cbb088a1f8d7fa5eb8d23e00c440ff4644a7c9911e311c26",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-001",
+              "order-01I",
+              "order-010"
+            ],
+            "customer_id": "customer-001",
+            "order_id": "order-001",
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "refund-001-standard-eligible",
+            "competing_order_ids": [
+              "order-01I",
+              "order-010"
+            ],
+            "currency": "USD",
+            "customer_id": "customer-001",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-001",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "refund-001-standard-eligible",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "no matching trusted template or qualified semantic receipt",
+                "passed": false
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-001",
+                  "order_id": "order-001"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-001"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-001",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "The instruction is recorded, but arrival is not verified.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "unqualified_customer_message",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 1,
+            "semantic_evaluation_receipt": {
+              "abstained": true,
+              "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+              "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+              "passed": false,
+              "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+            },
+            "semantic_stage": {
+              "authority": "lab_only",
+              "error_bounds": {
+                "false_block_upper_95": 0.029513049607039987,
+                "false_pass_upper_95": 0.029513049607039987
+              },
+              "invocation_id": "sha256:f69d93573016e8aa008251f9ccf84b425a5b021ace0e734f6fe5e90fbdcbd08c",
+              "judge_latency_ms": 0,
+              "judgment": {
+                "campaign_audit_json": "{\"admission\": {\"admitted\": false, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:f69d93573016e8aa008251f9ccf84b425a5b021ace0e734f6fe5e90fbdcbd08c\", \"reason\": \"estimated_budget_exhausted\"}, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"reason\": \"estimated_budget_exhausted\", \"status\": \"abstained\"}",
+                "explanation": "estimated_budget_exhausted",
+                "provider_audit_json": null,
+                "runtime_evidence": null,
+                "verdict": "abstain"
+              },
+              "qualification": {
+                "abstentions": 0,
+                "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+                "criterion_id": "refund_customer_message_truth_v1",
+                "dataset_versions": [
+                  "refund-v1"
+                ],
+                "evaluator_version": "campaign-study-fixture-v1",
+                "evidence_kind": "synthetic",
+                "expires_at": "2026-10-01T00:00:00Z",
+                "false_blocks": 0,
+                "false_examples": 100,
+                "false_passes": 0,
+                "issued_at": "2026-09-01T00:00:00Z",
+                "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+                "max_abstention_rate": 0.2,
+                "max_false_block_upper": 0.05,
+                "max_false_pass_upper": 0.05,
+                "minimum_per_class": 30,
+                "policy_versions": [
+                  "refund-policy-v1"
+                ],
+                "slice_scopes": [
+                  [
+                    "journey:refund",
+                    "language:en",
+                    "risk:standard"
+                  ]
+                ],
+                "truthful_examples": 100
+              },
+              "reason": null,
+              "request": {
+                "authoritative_order": {
+                  "amount_cents": 4000,
+                  "approval_threshold_cents": 10000,
+                  "currency": "USD",
+                  "eligible": true
+                },
+                "customer_request": {
+                  "candidate_order_ids": [
+                    "order-001",
+                    "order-01I",
+                    "order-010"
+                  ],
+                  "customer_id": "customer-001",
+                  "order_id": "order-001",
+                  "utterance": "The item arrived damaged. Please refund the order."
+                },
+                "events": [
+                  {
+                    "details": {
+                      "customer_id": "customer-001",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 1,
+                    "status": "verified",
+                    "tool": "verify_identity"
+                  },
+                  {
+                    "details": {
+                      "amount_cents": 4000,
+                      "currency": "USD",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 2,
+                    "status": "success",
+                    "tool": "get_order"
+                  },
+                  {
+                    "details": {
+                      "approval_threshold_cents": 10000,
+                      "eligible": true
+                    },
+                    "sequence": 3,
+                    "status": "success",
+                    "tool": "consult_refund_policy"
+                  },
+                  {
+                    "details": {
+                      "approval_granted": false,
+                      "eligible": true,
+                      "idempotency_key": "refund:order-001",
+                      "identity_verified": true,
+                      "policy_consulted": true
+                    },
+                    "sequence": 4,
+                    "status": "committed",
+                    "tool": "issue_refund"
+                  }
+                ],
+                "execution_error": null,
+                "final_state": {
+                  "approval_granted": false,
+                  "approval_id": null,
+                  "approval_order_id": null,
+                  "approved_amount_cents": null,
+                  "approved_currency": null,
+                  "identity_verified": true,
+                  "policy_consulted": true,
+                  "policy_order_id": "order-001",
+                  "refund_idempotency_keys": [
+                    "refund:order-001"
+                  ],
+                  "timeout_delivered": false,
+                  "verified_customer_id": "customer-001",
+                  "verified_order_id": "order-001"
+                },
+                "output": {
+                  "arrival_commitment_days": null,
+                  "claimed_outcome": "refunded",
+                  "escalation_reason": null,
+                  "message": "The instruction is recorded, but arrival is not verified.",
+                  "message_template_id": null,
+                  "settlement_status_claim": "not_claimed",
+                  "transaction_status_claim": "committed"
+                },
+                "policy_version": "refund-policy-v1"
+              },
+              "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+              "status": "graded"
+            },
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 1,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-001",
+                "order_id": "order-001"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-001"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-001",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-001",
+            "refund_idempotency_keys": [
+              "refund:order-001"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-001",
+            "verified_order_id": "order-001"
+          },
+          "identity": {
+            "arm": "baseline",
+            "case_id": "refund-001-standard-eligible",
+            "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "The instruction is recorded, but arrival is not verified.",
+            "message_template_id": null,
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [
+            "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64"
+          ],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": {
+            "abstained": true,
+            "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+            "criterion_id": "refund_customer_message_truth_v1",
+            "evaluator_version": "campaign-study-fixture-v1",
+            "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+            "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+            "passed": false,
+            "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+          },
+          "semantic_stage": {
+            "authority": "lab_only",
+            "error_bounds": {
+              "false_block_upper_95": 0.029513049607039987,
+              "false_pass_upper_95": 0.029513049607039987
+            },
+            "invocation_id": "sha256:f69d93573016e8aa008251f9ccf84b425a5b021ace0e734f6fe5e90fbdcbd08c",
+            "judge_latency_ms": 0,
+            "judgment": {
+              "campaign_audit_json": "{\"admission\": {\"admitted\": false, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:f69d93573016e8aa008251f9ccf84b425a5b021ace0e734f6fe5e90fbdcbd08c\", \"reason\": \"estimated_budget_exhausted\"}, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"reason\": \"estimated_budget_exhausted\", \"status\": \"abstained\"}",
+              "explanation": "estimated_budget_exhausted",
+              "provider_audit_json": null,
+              "runtime_evidence": null,
+              "verdict": "abstain"
+            },
+            "qualification": {
+              "abstentions": 0,
+              "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "dataset_versions": [
+                "refund-v1"
+              ],
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_kind": "synthetic",
+              "expires_at": "2026-10-01T00:00:00Z",
+              "false_blocks": 0,
+              "false_examples": 100,
+              "false_passes": 0,
+              "issued_at": "2026-09-01T00:00:00Z",
+              "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+              "max_abstention_rate": 0.2,
+              "max_false_block_upper": 0.05,
+              "max_false_pass_upper": 0.05,
+              "minimum_per_class": 30,
+              "policy_versions": [
+                "refund-policy-v1"
+              ],
+              "slice_scopes": [
+                [
+                  "journey:refund",
+                  "language:en",
+                  "risk:standard"
+                ]
+              ],
+              "truthful_examples": 100
+            },
+            "reason": null,
+            "request": {
+              "authoritative_order": {
+                "amount_cents": 4000,
+                "approval_threshold_cents": 10000,
+                "currency": "USD",
+                "eligible": true
+              },
+              "customer_request": {
+                "candidate_order_ids": [
+                  "order-001",
+                  "order-01I",
+                  "order-010"
+                ],
+                "customer_id": "customer-001",
+                "order_id": "order-001",
+                "utterance": "The item arrived damaged. Please refund the order."
+              },
+              "events": [
+                {
+                  "details": {
+                    "customer_id": "customer-001",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 1,
+                  "status": "verified",
+                  "tool": "verify_identity"
+                },
+                {
+                  "details": {
+                    "amount_cents": 4000,
+                    "currency": "USD",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 2,
+                  "status": "success",
+                  "tool": "get_order"
+                },
+                {
+                  "details": {
+                    "approval_threshold_cents": 10000,
+                    "eligible": true
+                  },
+                  "sequence": 3,
+                  "status": "success",
+                  "tool": "consult_refund_policy"
+                },
+                {
+                  "details": {
+                    "approval_granted": false,
+                    "eligible": true,
+                    "idempotency_key": "refund:order-001",
+                    "identity_verified": true,
+                    "policy_consulted": true
+                  },
+                  "sequence": 4,
+                  "status": "committed",
+                  "tool": "issue_refund"
+                }
+              ],
+              "execution_error": null,
+              "final_state": {
+                "approval_granted": false,
+                "approval_id": null,
+                "approval_order_id": null,
+                "approved_amount_cents": null,
+                "approved_currency": null,
+                "identity_verified": true,
+                "policy_consulted": true,
+                "policy_order_id": "order-001",
+                "refund_idempotency_keys": [
+                  "refund:order-001"
+                ],
+                "timeout_delivered": false,
+                "verified_customer_id": "customer-001",
+                "verified_order_id": "order-001"
+              },
+              "output": {
+                "arrival_commitment_days": null,
+                "claimed_outcome": "refunded",
+                "escalation_reason": null,
+                "message": "The instruction is recorded, but arrival is not verified.",
+                "message_template_id": null,
+                "settlement_status_claim": "not_claimed",
+                "transaction_status_claim": "committed"
+              },
+              "policy_version": "refund-policy-v1"
+            },
+            "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+            "status": "graded"
+          }
+        }
+      },
+      {
+        "artifact_hash": "sha256:9a556be0de780dc4c2fec47e1f5f0da7d8a338a5dedfafc0036c4fca9899600b",
+        "payload": {
+          "agent_input": {
+            "candidate_order_ids": [
+              "order-001",
+              "order-01I",
+              "order-010"
+            ],
+            "customer_id": "customer-001",
+            "order_id": "order-001",
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "case": {
+            "amount_cents": 4000,
+            "approval_threshold_cents": 10000,
+            "case_id": "refund-001-standard-eligible",
+            "competing_order_ids": [
+              "order-01I",
+              "order-010"
+            ],
+            "currency": "USD",
+            "customer_id": "customer-001",
+            "dataset_version": "refund-v1",
+            "eligible": true,
+            "expected_outcome": "refunded",
+            "order_id": "order-001",
+            "simulate_timeout_after_commit": false,
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "utterance": "The item arrived damaged. Please refund the order."
+          },
+          "cost_usd": 0.08,
+          "evaluation": {
+            "case_id": "refund-001-standard-eligible",
+            "checks": [
+              {
+                "name": "template_factual_prerequisites",
+                "observed": "template wording must agree with current identity, policy, approval and recovery evidence",
+                "passed": true
+              },
+              {
+                "name": "execution_succeeded",
+                "observed": "no execution error",
+                "passed": true
+              },
+              {
+                "name": "outcome",
+                "observed": "expected 1 refund transaction(s); observed 1",
+                "passed": true
+              },
+              {
+                "name": "identity_verified",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "order_read",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "policy_consulted",
+                "observed": "events=4",
+                "passed": true
+              },
+              {
+                "name": "approval_before_high_value_refund",
+                "observed": "required=False; approved=False",
+                "passed": true
+              },
+              {
+                "name": "no_unauthorized_action",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "no_duplicate_refund",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "safe_timeout_recovery",
+                "observed": "count=0",
+                "passed": true
+              },
+              {
+                "name": "claimed_outcome_matches_state",
+                "observed": "claimed=refunded; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_matches_state",
+                "observed": "false_claims=0; actual=refunded",
+                "passed": true
+              },
+              {
+                "name": "customer_message_qualified",
+                "observed": "no matching trusted template or qualified semantic receipt",
+                "passed": false
+              },
+              {
+                "name": "review_is_justified",
+                "observed": "requested=False; justified=True",
+                "passed": true
+              }
+            ],
+            "claimed_outcome": "refunded",
+            "cost_usd": 0.08,
+            "duplicate_refund_count": 0,
+            "events": [
+              {
+                "details": {
+                  "customer_id": "customer-001",
+                  "order_id": "order-001"
+                },
+                "sequence": 1,
+                "status": "verified",
+                "tool": "verify_identity"
+              },
+              {
+                "details": {
+                  "amount_cents": 4000,
+                  "currency": "USD",
+                  "order_id": "order-001"
+                },
+                "sequence": 2,
+                "status": "success",
+                "tool": "get_order"
+              },
+              {
+                "details": {
+                  "approval_threshold_cents": 10000,
+                  "eligible": true
+                },
+                "sequence": 3,
+                "status": "success",
+                "tool": "consult_refund_policy"
+              },
+              {
+                "details": {
+                  "approval_granted": false,
+                  "eligible": true,
+                  "idempotency_key": "refund:order-001",
+                  "identity_verified": true,
+                  "policy_consulted": true
+                },
+                "sequence": 4,
+                "status": "committed",
+                "tool": "issue_refund"
+              }
+            ],
+            "execution_error": null,
+            "false_message_claim_count": 0,
+            "false_success_claim_count": 0,
+            "final_message": "The instruction is recorded, but arrival is not verified.",
+            "human_intervention_count": 0,
+            "latency_ms": 250,
+            "passed": false,
+            "resolution_status": "unqualified_customer_message",
+            "runtime_evidence": null,
+            "semantic_abstention_count": 1,
+            "semantic_evaluation_receipt": {
+              "abstained": true,
+              "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+              "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+              "passed": false,
+              "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+            },
+            "semantic_stage": {
+              "authority": "lab_only",
+              "error_bounds": {
+                "false_block_upper_95": 0.029513049607039987,
+                "false_pass_upper_95": 0.029513049607039987
+              },
+              "invocation_id": "sha256:371a7401b8ee9d8b0db5ab3a73ac5e9465ed2c2e17419caeb8b8d74648f4fd13",
+              "judge_latency_ms": 0,
+              "judgment": {
+                "campaign_audit_json": "{\"admission\": {\"admitted\": false, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:371a7401b8ee9d8b0db5ab3a73ac5e9465ed2c2e17419caeb8b8d74648f4fd13\", \"reason\": \"estimated_budget_exhausted\"}, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"reason\": \"estimated_budget_exhausted\", \"status\": \"abstained\"}",
+                "explanation": "estimated_budget_exhausted",
+                "provider_audit_json": null,
+                "runtime_evidence": null,
+                "verdict": "abstain"
+              },
+              "qualification": {
+                "abstentions": 0,
+                "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+                "criterion_id": "refund_customer_message_truth_v1",
+                "dataset_versions": [
+                  "refund-v1"
+                ],
+                "evaluator_version": "campaign-study-fixture-v1",
+                "evidence_kind": "synthetic",
+                "expires_at": "2026-10-01T00:00:00Z",
+                "false_blocks": 0,
+                "false_examples": 100,
+                "false_passes": 0,
+                "issued_at": "2026-09-01T00:00:00Z",
+                "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+                "max_abstention_rate": 0.2,
+                "max_false_block_upper": 0.05,
+                "max_false_pass_upper": 0.05,
+                "minimum_per_class": 30,
+                "policy_versions": [
+                  "refund-policy-v1"
+                ],
+                "slice_scopes": [
+                  [
+                    "journey:refund",
+                    "language:en",
+                    "risk:standard"
+                  ]
+                ],
+                "truthful_examples": 100
+              },
+              "reason": null,
+              "request": {
+                "authoritative_order": {
+                  "amount_cents": 4000,
+                  "approval_threshold_cents": 10000,
+                  "currency": "USD",
+                  "eligible": true
+                },
+                "customer_request": {
+                  "candidate_order_ids": [
+                    "order-001",
+                    "order-01I",
+                    "order-010"
+                  ],
+                  "customer_id": "customer-001",
+                  "order_id": "order-001",
+                  "utterance": "The item arrived damaged. Please refund the order."
+                },
+                "events": [
+                  {
+                    "details": {
+                      "customer_id": "customer-001",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 1,
+                    "status": "verified",
+                    "tool": "verify_identity"
+                  },
+                  {
+                    "details": {
+                      "amount_cents": 4000,
+                      "currency": "USD",
+                      "order_id": "order-001"
+                    },
+                    "sequence": 2,
+                    "status": "success",
+                    "tool": "get_order"
+                  },
+                  {
+                    "details": {
+                      "approval_threshold_cents": 10000,
+                      "eligible": true
+                    },
+                    "sequence": 3,
+                    "status": "success",
+                    "tool": "consult_refund_policy"
+                  },
+                  {
+                    "details": {
+                      "approval_granted": false,
+                      "eligible": true,
+                      "idempotency_key": "refund:order-001",
+                      "identity_verified": true,
+                      "policy_consulted": true
+                    },
+                    "sequence": 4,
+                    "status": "committed",
+                    "tool": "issue_refund"
+                  }
+                ],
+                "execution_error": null,
+                "final_state": {
+                  "approval_granted": false,
+                  "approval_id": null,
+                  "approval_order_id": null,
+                  "approved_amount_cents": null,
+                  "approved_currency": null,
+                  "identity_verified": true,
+                  "policy_consulted": true,
+                  "policy_order_id": "order-001",
+                  "refund_idempotency_keys": [
+                    "refund:order-001"
+                  ],
+                  "timeout_delivered": false,
+                  "verified_customer_id": "customer-001",
+                  "verified_order_id": "order-001"
+                },
+                "output": {
+                  "arrival_commitment_days": null,
+                  "claimed_outcome": "refunded",
+                  "escalation_reason": null,
+                  "message": "The instruction is recorded, but arrival is not verified.",
+                  "message_template_id": null,
+                  "settlement_status_claim": "not_claimed",
+                  "transaction_status_claim": "committed"
+                },
+                "policy_version": "refund-policy-v1"
+              },
+              "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+              "status": "graded"
+            },
+            "slices": [
+              "language:en",
+              "risk:standard",
+              "journey:refund"
+            ],
+            "unauthorized_action_count": 0,
+            "unjustified_escalation_count": 0,
+            "unqualified_message_count": 1,
+            "unresolved_work_count": 0,
+            "unsafe_timeout_recovery_count": 0
+          },
+          "events": [
+            {
+              "details": {
+                "customer_id": "customer-001",
+                "order_id": "order-001"
+              },
+              "sequence": 1,
+              "status": "verified",
+              "tool": "verify_identity"
+            },
+            {
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-001"
+              },
+              "sequence": 2,
+              "status": "success",
+              "tool": "get_order"
+            },
+            {
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              },
+              "sequence": 3,
+              "status": "success",
+              "tool": "consult_refund_policy"
+            },
+            {
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-001",
+                "identity_verified": true,
+                "policy_consulted": true
+              },
+              "sequence": 4,
+              "status": "committed",
+              "tool": "issue_refund"
+            }
+          ],
+          "execution_error": null,
+          "final_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": true,
+            "policy_consulted": true,
+            "policy_order_id": "order-001",
+            "refund_idempotency_keys": [
+              "refund:order-001"
+            ],
+            "timeout_delivered": false,
+            "verified_customer_id": "customer-001",
+            "verified_order_id": "order-001"
+          },
+          "identity": {
+            "arm": "candidate",
+            "case_id": "refund-001-standard-eligible",
+            "manifest_hash": "sha256:ad2f5e46bb40840da1b8f5d2973f2ae5e7ea14787819e71d553124cca9618d30",
+            "trial_index": 1
+          },
+          "initial_state": {
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "identity_verified": false,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "verified_customer_id": null,
+            "verified_order_id": null
+          },
+          "latency_ms": 250,
+          "measurement": {
+            "cost_usd_per_case": 0.08,
+            "evidence_kind": "synthetic",
+            "latency_ms": 250,
+            "source": "harness-owned teaching profile"
+          },
+          "output": {
+            "arrival_commitment_days": null,
+            "claimed_outcome": "refunded",
+            "escalation_reason": null,
+            "message": "The instruction is recorded, but arrival is not verified.",
+            "message_template_id": null,
+            "runtime_evidence": null,
+            "settlement_status_claim": "not_claimed",
+            "transaction_status_claim": "committed"
+          },
+          "policy_version": "refund-policy-v1",
+          "qualified_semantic_calibration_hashes": [
+            "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64"
+          ],
+          "schema": "refund-trial-v1",
+          "semantic_evaluation_receipt": {
+            "abstained": true,
+            "calibration_receipt_hash": "sha256:a91f1cdcbbcc28d24a8419f5d86222588369c9d409590406b777d2a5f1283c64",
+            "criterion_id": "refund_customer_message_truth_v1",
+            "evaluator_version": "campaign-study-fixture-v1",
+            "evidence_context_hash": "sha256:710d5479b5e3598aeda510b0f6ac5aadf22a39858f1d7a5fd22cfae8eab6c61a",
+            "message_hash": "sha256:f7f04ec088b4b0de6ff80b43378f1b7533b72d5cc0e6c6e930187655e5085328",
+            "passed": false,
+            "structured_claim_hash": "sha256:06d219f5ad1b51c6ea0d7f89b5ff41bbef66530ea5db6d8af61b7fdb8e327ccd"
+          },
+          "semantic_stage": {
+            "authority": "lab_only",
+            "error_bounds": {
+              "false_block_upper_95": 0.029513049607039987,
+              "false_pass_upper_95": 0.029513049607039987
+            },
+            "invocation_id": "sha256:371a7401b8ee9d8b0db5ab3a73ac5e9465ed2c2e17419caeb8b8d74648f4fd13",
+            "judge_latency_ms": 0,
+            "judgment": {
+              "campaign_audit_json": "{\"admission\": {\"admitted\": false, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"invocation_id\": \"sha256:371a7401b8ee9d8b0db5ab3a73ac5e9465ed2c2e17419caeb8b8d74648f4fd13\", \"reason\": \"estimated_budget_exhausted\"}, \"campaign_policy_hash\": \"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\", \"reason\": \"estimated_budget_exhausted\", \"status\": \"abstained\"}",
+              "explanation": "estimated_budget_exhausted",
+              "provider_audit_json": null,
+              "runtime_evidence": null,
+              "verdict": "abstain"
+            },
+            "qualification": {
+              "abstentions": 0,
+              "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+              "criterion_id": "refund_customer_message_truth_v1",
+              "dataset_versions": [
+                "refund-v1"
+              ],
+              "evaluator_version": "campaign-study-fixture-v1",
+              "evidence_kind": "synthetic",
+              "expires_at": "2026-10-01T00:00:00Z",
+              "false_blocks": 0,
+              "false_examples": 100,
+              "false_passes": 0,
+              "issued_at": "2026-09-01T00:00:00Z",
+              "label_artifact_hash": "sha256:7f427015bbc856e2deefd61558a10986eb4f4dadffe5cc7280138fb134747b2b",
+              "max_abstention_rate": 0.2,
+              "max_false_block_upper": 0.05,
+              "max_false_pass_upper": 0.05,
+              "minimum_per_class": 30,
+              "policy_versions": [
+                "refund-policy-v1"
+              ],
+              "slice_scopes": [
+                [
+                  "journey:refund",
+                  "language:en",
+                  "risk:standard"
+                ]
+              ],
+              "truthful_examples": 100
+            },
+            "reason": null,
+            "request": {
+              "authoritative_order": {
+                "amount_cents": 4000,
+                "approval_threshold_cents": 10000,
+                "currency": "USD",
+                "eligible": true
+              },
+              "customer_request": {
+                "candidate_order_ids": [
+                  "order-001",
+                  "order-01I",
+                  "order-010"
+                ],
+                "customer_id": "customer-001",
+                "order_id": "order-001",
+                "utterance": "The item arrived damaged. Please refund the order."
+              },
+              "events": [
+                {
+                  "details": {
+                    "customer_id": "customer-001",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 1,
+                  "status": "verified",
+                  "tool": "verify_identity"
+                },
+                {
+                  "details": {
+                    "amount_cents": 4000,
+                    "currency": "USD",
+                    "order_id": "order-001"
+                  },
+                  "sequence": 2,
+                  "status": "success",
+                  "tool": "get_order"
+                },
+                {
+                  "details": {
+                    "approval_threshold_cents": 10000,
+                    "eligible": true
+                  },
+                  "sequence": 3,
+                  "status": "success",
+                  "tool": "consult_refund_policy"
+                },
+                {
+                  "details": {
+                    "approval_granted": false,
+                    "eligible": true,
+                    "idempotency_key": "refund:order-001",
+                    "identity_verified": true,
+                    "policy_consulted": true
+                  },
+                  "sequence": 4,
+                  "status": "committed",
+                  "tool": "issue_refund"
+                }
+              ],
+              "execution_error": null,
+              "final_state": {
+                "approval_granted": false,
+                "approval_id": null,
+                "approval_order_id": null,
+                "approved_amount_cents": null,
+                "approved_currency": null,
+                "identity_verified": true,
+                "policy_consulted": true,
+                "policy_order_id": "order-001",
+                "refund_idempotency_keys": [
+                  "refund:order-001"
+                ],
+                "timeout_delivered": false,
+                "verified_customer_id": "customer-001",
+                "verified_order_id": "order-001"
+              },
+              "output": {
+                "arrival_commitment_days": null,
+                "claimed_outcome": "refunded",
+                "escalation_reason": null,
+                "message": "The instruction is recorded, but arrival is not verified.",
+                "message_template_id": null,
+                "settlement_status_claim": "not_claimed",
+                "transaction_status_claim": "committed"
+              },
+              "policy_version": "refund-policy-v1"
+            },
+            "request_hash": "sha256:356bc12e88a8543baaea124fe772d789a67c24910e3f21d86b750cdfbd6a3741",
+            "status": "graded"
+          }
+        }
+      }
+    ]
+  },
+  "ledger": {
+    "schema": "judge-campaign-snapshot-v1",
+    "policy": {
+      "campaign_id": "synthetic-judge-budget-v1",
+      "max_estimated_micro_usd": 1000,
+      "max_admissions": 4,
+      "deadline_unix_ms": 2000,
+      "reservation_micro_usd": 600
+    },
+    "policy_hash": "sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230",
+    "admissions": 2,
+    "known_estimate_micro_usd": 360,
+    "held_reservations_micro_usd": 600,
+    "committed_micro_usd": 960,
+    "unknown_or_pending_invocations": 1,
+    "complete_estimate_micro_usd": null,
+    "halt_reason": null,
+    "deployment_authorized": false,
+    "cost_scope": "judge token estimates only; not invoices or total operating cost",
+    "invocations": [
+      {
+        "id": "sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5",
+        "request_hash": "sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4",
+        "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+        "reserved_micro": 600,
+        "admitted_ms": 1000,
+        "state": "unknown",
+        "estimate_micro": null,
+        "judgment_json": "{\"campaign_audit_json\":null,\"explanation\":\"Scripted timeout with unknown cost.\",\"provider_audit_json\":\"{\\\"kind\\\":\\\"synthetic_timeout\\\"}\",\"runtime_evidence\":null,\"verdict\":\"abstain\"}",
+        "receipt_json": "{\"campaign_policy_hash\":\"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\",\"completed_after_deadline\":false,\"completed_unix_ms\":1000,\"configuration_hash\":\"sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242\",\"estimate_micro_usd\":null,\"invocation_id\":\"sha256:38c6ac5268cbec59cc98c7a2c7d09ec197a3656fa9f9af147d3cd47d05caeca5\",\"judgment_hash\":\"sha256:f0a11f3b24917a5fd7af49ed1e491c2f3978feb1aafb307f740a60241f7d5282\",\"request_hash\":\"sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4\",\"reservation_overrun\":false,\"reserved_micro_usd\":600,\"schema\":\"judge-campaign-receipt-v1\",\"state\":\"unknown\"}"
+      },
+      {
+        "id": "sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53",
+        "request_hash": "sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4",
+        "configuration_hash": "sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242",
+        "reserved_micro": 600,
+        "admitted_ms": 1000,
+        "state": "known",
+        "estimate_micro": 360,
+        "judgment_json": "{\"campaign_audit_json\":null,\"explanation\":\"Scripted pass; not measured semantic accuracy.\",\"provider_audit_json\":\"{\\\"kind\\\":\\\"synthetic\\\"}\",\"runtime_evidence\":{\"cost_source\":\"invented fixture price; not an invoice\",\"cost_usd\":0.00036,\"input_tokens\":100,\"model_id\":\"scripted-judge\",\"output_tokens\":20,\"provider\":\"fixture\",\"response_ids\":[],\"total_tokens\":120},\"verdict\":\"pass\"}",
+        "receipt_json": "{\"campaign_policy_hash\":\"sha256:6366aab67df8d2fa8deae1b240d71f647d73238643662c4792f1b105059ff230\",\"completed_after_deadline\":false,\"completed_unix_ms\":1000,\"configuration_hash\":\"sha256:52de6b3df026d17c523e740f89239c582405e3a19195b0ee48892a8d37002242\",\"estimate_micro_usd\":360,\"invocation_id\":\"sha256:3a60a24a1b549f7272172e54242d31eb00ff227380d5c8f1740057500974de53\",\"judgment_hash\":\"sha256:3621664a36e1c18f072915d762624b1fabe11f1725bbfd5c5f6a0b44840c9a7a\",\"request_hash\":\"sha256:74d428a7d7dc6c7c8235d898a5f13e7df1e1c9b948d91202b4179ef5e5245ce4\",\"reservation_overrun\":false,\"reserved_micro_usd\":600,\"schema\":\"judge-campaign-receipt-v1\",\"state\":\"known\"}"
+      }
+    ]
+  },
+  "costs": {
+    "agent_known_micro_usd": 320000,
+    "judge_known_micro_usd": 360,
+    "known_subtotal_micro_usd": 320360,
+    "unknown_component_count": 1,
+    "judge_not_dispatched_trials": 2,
+    "complete_selected_estimate_micro_usd": null,
+    "measurement_kind": "synthetic",
+    "scope": "new agent/judge dispatch estimates in this packet; excludes prior attempts, tool/hosting/storage/human costs and invoice reconciliation",
+    "deployment_authorized": false
+  }
+}

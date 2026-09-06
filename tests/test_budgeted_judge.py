@@ -93,6 +93,20 @@ class BudgetedJudgeTests(unittest.TestCase):
         self.assertIsNone(result.runtime_evidence)
         json.dumps(asdict(result), allow_nan=False)
 
+    def test_invalid_inner_contract_retains_unknown_reservation(self):
+        with patch.object(type(self.inner), 'evaluate', return_value=None):
+            result = self.judge.evaluate(self.request())
+        self.assertEqual('abstain', result.verdict)
+        self.assertIn('TypeError', result.explanation)
+        self.assertEqual(600, self.ledger.snapshot()['held_reservations_micro_usd'])
+
+    def test_inner_exception_is_not_a_free_retry(self):
+        with patch.object(type(self.inner), 'evaluate', side_effect=RuntimeError('private text')):
+            result = self.judge.evaluate(self.request())
+        self.assertEqual('abstain', result.verdict)
+        self.assertNotIn('private text', result.campaign_audit_json)
+        self.assertEqual('unknown', self.ledger.snapshot()['invocations'][0]['state'])
+
     def test_paired_invocations_are_distinct_reproducible_and_replayable(self):
         from cx_eval_lab.artifacts import replay_packet
         from cx_eval_lab.dataset import load_refund_cases

@@ -229,6 +229,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 [Katas 36–37](semantic-grading-lab.md#kata-36-a-passing-json-verdict-is-not-a-usable-judgment) exercise the optional provider adapter through fake envelopes, the installed SDK's in-memory HTTP transport, and paired-run replay. They distinguish refusal/incomplete responses from negative judgments, reproduce endpoint drift and malformed metering, and calculate known versus unknown evaluation cost. These are offline software tests, not a live judge qualification study.
 
+[Katas 38–40](eval-operations-integrity.md#kata-38-is-an-unknown-bill-free-budget) execute durable judge-budget admission, crash/reopen and concurrent-worker tests, and an inspectable four-trial campaign. Solutions separate known costs from held reservations, prevent duplicate judge dispatch, and show why budget-dependent missing judgments cannot support an agent-quality claim.
+
 [Katas 05–07](statistical-method-study.md) now cover statistical false promotion, unequal-cluster estimands, and biased judge labels, with executed enumeration results and worked solutions.
 
 The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas deepen dataset improvement, human annotation, empirical judge calibration, general clustered/sequential inference, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those further exercises remain pending until their runnable checks and worked solutions exist.

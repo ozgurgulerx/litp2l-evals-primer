@@ -17,6 +17,8 @@ The [Semantic Grading Lab](semantic-grading-lab.md) adds tested runner integrati
 
 Katas 36–37 add the optional Responses judge adapter: strict verdict parsing, incomplete/refusal abstention, effective-endpoint checks, defensive usage validation and retained raw response evidence. The installed SDK is exercised through an in-memory HTTP transport; four synthetic paired judgments are retained and replayed. No live semantic accuracy is established. Judge costs remain separate audit overhead, and hard campaign budgets/cancellation and reviewed live calibration are still open.
 
+Katas 38–40 extend that implementation with a durable local estimated-cost judge-admission ledger, stable paired invocation IDs, unknown-cost reservations and selected agent/judge cost aggregation. A retained four-trial mock-world campaign contains two scripted judge calls and two admission denials; subprocess crash and multiprocess contention tests exercise persistence and atomic admission. This is not a provider invoice ceiling, whole-experiment resume, live semantic study or production release prerequisite. Agent/tool budgets, authenticated reconciliation, cancellation and full operational costs remain open.
+
 | Research source | Primary contribution | Canonical treatment |
 | --- | --- | --- |
 | Best GitHub Repositories for LLM Evaluation in 2026 | Tool categories, quick starts, licensing, portability, model/application/production layers | System Studies, Benchmark Reproducibility, Courses |

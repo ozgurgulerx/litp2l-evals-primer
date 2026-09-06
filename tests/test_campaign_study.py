@@ -51,6 +51,12 @@ class CampaignStudyTests(unittest.TestCase):
             self.assertNotEqual(0, second.returncode)
             self.assertEqual(original, path.read_bytes())
 
+    def test_retained_study_costs_recompute_without_a_provider(self):
+        from cx_eval_lab.cost_accounting import summarize_packet_costs
+        report = json.loads(Path('docs/assets/judge-campaign-study-v1.json').read_text())
+        self.assertEqual(report['costs'], summarize_packet_costs(report['packet'],
+            trusted_calibration_hashes=frozenset({report['synthetic_calibration_hash']})))
+
 
 if __name__ == '__main__':
     unittest.main()

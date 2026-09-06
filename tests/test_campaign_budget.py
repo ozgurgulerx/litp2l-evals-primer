@@ -1,6 +1,7 @@
 """Durable admission controls; synthetic costs, no provider calls."""
 
 import json
+import multiprocessing
 import subprocess
 import sys
 import tempfile
@@ -10,6 +11,14 @@ from dataclasses import replace
 from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
+
+
+def process_reserve(path, policy, digest, ready, start, results, identifier):
+    from cx_eval_lab.campaign_budget import CampaignLedger, CampaignPolicy
+    ledger = CampaignLedger.open(path, CampaignPolicy(**policy), clock_ms=lambda: 1000)
+    ready.put(True)
+    if start.wait(5):
+        results.put(ledger.reserve(identifier, digest, digest).admitted)
 
 
 class CampaignBudgetTests(unittest.TestCase):
@@ -133,6 +142,48 @@ os._exit(17)
             context.prec = 2
             self.assertEqual(1235, usd_to_micro(0.0012345))
             self.assertEqual(12345000000, usd_to_micro(12345.0))
+
+    def test_independent_processes_compete_for_one_reservation(self):
+        from dataclasses import asdict
+        context = multiprocessing.get_context('spawn')
+        ready, results, start = context.Queue(), context.Queue(), context.Event()
+        processes = [context.Process(target=process_reserve, args=(str(self.path), asdict(self.policy),
+                     self.digest, ready, start, results, f'process-{index}')) for index in range(4)]
+        try:
+            for process in processes:
+                process.start()
+            for _ in processes:
+                self.assertTrue(ready.get(timeout=5))
+            start.set()
+            self.assertEqual(1, sum(results.get(timeout=5) for _ in processes))
+            for process in processes:
+                process.join(timeout=5)
+                self.assertEqual(0, process.exitcode)
+        finally:
+            for process in processes:
+                if process.is_alive():
+                    process.terminate()
+                    process.join(timeout=5)
+            ready.close()
+            results.close()
+
+    def test_clock_regression_latches_admission_closed(self):
+        self.reserve('first')
+        self.now[0] = 999
+        self.assertEqual('clock_regression', self.reserve('second').reason)
+        self.now[0] = 1001
+        self.assertEqual('clock_regression', self.reserve('third').reason)
+
+    def test_invalid_identifiers_and_missing_reservations_reject(self):
+        for identifier, digest in (('', self.digest), ('valid', 'not-a-hash')):
+            with self.assertRaises(ValueError):
+                self.ledger.reserve(identifier, digest, self.digest)
+        with self.assertRaises(ValueError):
+            self.ledger.finalize('not-reserved', 0, '{}')
+        self.reserve('first')
+        for body in ('[]', 'NaN', 'not-json', 'x' * 2000001):
+            with self.assertRaises(ValueError):
+                self.ledger.finalize('first', 1, body)
 
 
 if __name__ == '__main__':
