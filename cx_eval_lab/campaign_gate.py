@@ -11,6 +11,7 @@ from dataclasses import asdict, dataclass, field
 from cx_eval_lab.artifacts import replay_packet
 from cx_eval_lab.campaign_budget import CampaignPolicy, MAX_MONEY, usd_to_micro
 from cx_eval_lab.evidence import canonical_hash
+from cx_eval_lab.models import RefundCase
 from cx_eval_lab.semantic import CRITERION
 
 
@@ -132,12 +133,33 @@ def _snapshot(snapshot, policy, issues):
     return {row['id']: row for row in rows}, known, held
 
 
-def _join(payload, row, identifier, policy, issues):
+def _execution_request(payload):
+    case = RefundCase.from_dict(payload['case'])
+    return {'customer_request': asdict(case.agent_input),
+            'output': {key: value for key, value in payload['output'].items() if key != 'runtime_evidence'},
+            'events': payload['events'], 'final_state': payload['final_state'],
+            'policy_version': payload['policy_version'], 'execution_error': payload['execution_error'],
+            'authoritative_order': {'amount_cents': case.amount_cents, 'currency': case.currency,
+                'eligible': case.eligible, 'approval_threshold_cents': case.approval_threshold_cents}}
+
+
+def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes):
     stage = payload.get('semantic_stage') or {}
     if not stage.get('judgment') or not stage['judgment'].get('campaign_audit_json'):
         issues.add('campaign_judgment_missing')
         return
     _require(stage['invocation_id'] == identifier, 'packet_invocation_mismatch')
+    expected_request = canonical_hash(_execution_request(payload))
+    _require(canonical_hash(stage['request']) == expected_request and stage['request_hash'] == expected_request,
+             'judge_request_differs_from_execution')
+    qualification_hash = canonical_hash(stage['qualification'])
+    _require(qualification_hash in trusted_calibration_hashes, 'campaign_qualification_not_trusted')
+    receipt = payload['semantic_evaluation_receipt']
+    if receipt is not None:
+        _require(qualification_hash == receipt['calibration_receipt_hash']
+                 and receipt['evaluator_version'] == stage['qualification']['evaluator_version']
+                 and receipt['criterion_id'] == stage['qualification']['criterion_id'] == CRITERION,
+                 'campaign_qualification_receipt_mismatch')
     request_hash = canonical_hash({'criterion': CRITERION, 'evidence': stage['request']})
     configuration = stage['qualification']['configuration_hash']
     if row is not None:
@@ -152,7 +174,8 @@ def _join(payload, row, identifier, policy, issues):
     if audit['status'] == 'recorded':
         _require(row is not None and row['state'] != 'reserved' and admission['admitted'] is True,
                  'recorded_judgment_without_finalized_reservation')
-        _require(audit['receipt'] == _object(row['receipt_json']), 'packet_campaign_receipt_mismatch')
+        _require(canonical_hash(audit['receipt']) == canonical_hash(_object(row['receipt_json'])),
+                 'packet_campaign_receipt_mismatch')
         inner = {**stage['judgment'], 'campaign_audit_json': None}
         _require(canonical_hash(inner) == canonical_hash(_object(row['judgment_json'])),
                  'packet_campaign_judgment_mismatch')
@@ -198,7 +221,7 @@ def assess_campaign(packet, snapshot, *, expected_policy, trusted_packet_hash,
             identifier = canonical_hash([identity['manifest_hash'], identity['case_id'],
                                          identity['trial_index'], identity['arm']])
             expected[identifier] = payload
-            _join(payload, rows.get(identifier), identifier, expected_policy, issues)
+            _join(payload, rows.get(identifier), identifier, expected_policy, issues, trusted_calibration_hashes)
         _require(set(rows).issubset(expected), 'foreign_campaign_invocations')
         hard = {'reservation_overrun', 'deadline_reached', 'deadline_violation', 'clock_regression',
                 'admission_limit_exceeded', 'estimated_budget_exceeded'}
