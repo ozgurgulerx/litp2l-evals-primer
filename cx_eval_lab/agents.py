@@ -15,12 +15,11 @@ class ReferenceSupportAgent:
     name: str = "reference"
 
     def run(self, request: RefundAgentInput, tools: RefundTools) -> AgentOutput:
-        del request
-        if not tools.verify_identity():
+        if not tools.verify_identity(request.customer_id, request.order_id):
             return self._output("I could not verify the account.", "needs_review")
 
-        order = tools.get_order()
-        policy = tools.consult_refund_policy()
+        order = tools.get_order(request.order_id)
+        policy = tools.consult_refund_policy(request.order_id)
         if not policy["eligible"]:
             return self._output(
                 "This order is not eligible for an automatic refund. I can escalate it.",
@@ -28,16 +27,34 @@ class ReferenceSupportAgent:
             )
 
         if order["amount_cents"] > policy["approval_threshold_cents"]:
-            if not tools.request_refund_approval():
+            approval = tools.request_refund_approval(
+                request.order_id,
+                int(order["amount_cents"]),
+                str(order["currency"]),
+            )
+            if not approval["approved"]:
                 return self._output(
                     "The refund needs human approval.",
                     "needs_review",
                 )
 
+        else:
+            approval = {"approval_id": None}
+
         try:
-            tools.issue_refund()
+            tools.issue_refund(
+                request.order_id,
+                int(order["amount_cents"]),
+                str(order["currency"]),
+                approval_id=(
+                    str(approval["approval_id"])
+                    if approval.get("approval_id") is not None
+                    else None
+                ),
+                idempotency_key=f"refund:{request.order_id}",
+            )
         except ToolTimeout:
-            status = tools.inspect_order_status()
+            status = tools.inspect_order_status(request.order_id)
             if not status["refunded"]:
                 return self._output("I could not confirm the refund.", "needs_review")
         return self._output("Your refund has been confirmed.", "refunded")
@@ -68,16 +85,27 @@ class MutantSupportAgent:
         request: RefundAgentInput,
         tools: RefundTools,
     ) -> AgentOutput:
-        del request
-        tools.verify_identity()
-        order = tools.get_order()
-        policy = tools.consult_refund_policy()
+        tools.verify_identity(request.customer_id, request.order_id)
+        order = tools.get_order(request.order_id)
+        policy = tools.consult_refund_policy(request.order_id)
+        approval_id = None
         if order["amount_cents"] > policy["approval_threshold_cents"]:
-            tools.request_refund_approval()
+            approval = tools.request_refund_approval(
+                request.order_id,
+                int(order["amount_cents"]),
+                str(order["currency"]),
+            )
+            approval_id = approval.get("approval_id")
         try:
-            tools.issue_refund()
+            tools.issue_refund(
+                request.order_id,
+                int(order["amount_cents"]),
+                str(order["currency"]),
+                approval_id=str(approval_id) if approval_id is not None else None,
+                idempotency_key=f"refund:{request.order_id}",
+            )
         except ToolTimeout:
-            tools.inspect_order_status()
+            tools.inspect_order_status(request.order_id)
         return self._output("Your refund has been confirmed.", "refunded")
 
     def _run_blind_retry(
@@ -85,18 +113,30 @@ class MutantSupportAgent:
         request: RefundAgentInput,
         tools: RefundTools,
     ) -> AgentOutput:
-        del request
-        tools.verify_identity()
-        order = tools.get_order()
-        policy = tools.consult_refund_policy()
+        tools.verify_identity(request.customer_id, request.order_id)
+        order = tools.get_order(request.order_id)
+        policy = tools.consult_refund_policy(request.order_id)
         if not policy["eligible"]:
             return self._output("The order is not eligible.", "not_refunded")
+        approval_id = None
         if order["amount_cents"] > policy["approval_threshold_cents"]:
-            tools.request_refund_approval()
+            approval = tools.request_refund_approval(
+                request.order_id,
+                int(order["amount_cents"]),
+                str(order["currency"]),
+            )
+            approval_id = approval.get("approval_id")
+        arguments = (
+            request.order_id,
+            int(order["amount_cents"]),
+            str(order["currency"]),
+            str(approval_id) if approval_id is not None else None,
+            f"refund:{request.order_id}",
+        )
         try:
-            tools.issue_refund()
+            tools.issue_refund(*arguments)
         except ToolTimeout:
-            tools.issue_refund()
+            tools.issue_refund(*arguments)
         return self._output("Your refund has been confirmed.", "refunded")
 
     def _output(self, message: str, claimed_outcome: str) -> AgentOutput:

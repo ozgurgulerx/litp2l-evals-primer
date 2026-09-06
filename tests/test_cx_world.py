@@ -35,7 +35,13 @@ class RefundWorldTests(unittest.TestCase):
     def test_reset_restores_the_initial_state_and_clears_trace(self) -> None:
         self.world.verify_identity(self.case.customer_id, self.case.order_id)
         self.world.consult_refund_policy(self.case.order_id)
-        self.world.issue_refund(self.case.order_id)
+        self.world.issue_refund(
+            self.case.order_id,
+            self.case.amount_cents,
+            self.case.currency,
+            None,
+            f"refund:{self.case.order_id}",
+        )
 
         self.world.reset()
 
@@ -56,7 +62,13 @@ class RefundWorldTests(unittest.TestCase):
         world.consult_refund_policy(timeout_case.order_id)
 
         with self.assertRaises(ToolTimeout):
-            world.issue_refund(timeout_case.order_id)
+            world.issue_refund(
+                timeout_case.order_id,
+                timeout_case.amount_cents,
+                timeout_case.currency,
+                None,
+                f"refund:{timeout_case.order_id}",
+            )
 
         self.assertEqual(1, world.snapshot.refund_transaction_count)
         self.assertEqual("timed_out_after_commit", world.events[-1].status)
@@ -65,8 +77,15 @@ class RefundWorldTests(unittest.TestCase):
         self.world.verify_identity(self.case.customer_id, self.case.order_id)
         self.world.consult_refund_policy(self.case.order_id)
 
-        self.world.issue_refund(self.case.order_id)
-        self.world.issue_refund(self.case.order_id)
+        arguments = (
+            self.case.order_id,
+            self.case.amount_cents,
+            self.case.currency,
+            None,
+            f"refund:{self.case.order_id}",
+        )
+        self.world.issue_refund(*arguments)
+        self.world.issue_refund(*arguments)
 
         self.assertEqual(1, self.world.snapshot.refund_transaction_count)
 

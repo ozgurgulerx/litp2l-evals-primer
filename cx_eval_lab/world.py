@@ -54,25 +54,49 @@ class RefundWorld:
         verified = (
             customer_id == self._seed.customer_id and order_id == self._seed.order_id
         )
-        self._snapshot = replace(self._snapshot, identity_verified=verified)
-        self._record("verify_identity", "verified" if verified else "rejected")
+        self._snapshot = replace(
+            self._snapshot,
+            identity_verified=verified,
+            verified_customer_id=customer_id if verified else None,
+            verified_order_id=order_id if verified else None,
+        )
+        self._record(
+            "verify_identity",
+            "verified" if verified else "rejected",
+            customer_id=customer_id,
+            order_id=order_id,
+        )
         return verified
 
-    def get_order(self, order_id: str) -> dict[str, int]:
+    def get_order(self, order_id: str) -> dict[str, int | str]:
         if order_id != self._seed.order_id:
             self._record("get_order", "not_found")
             raise ValueError("order not found")
         if not self._snapshot.identity_verified:
             self._record("get_order", "access_denied")
             raise PermissionError("identity verification is required")
-        self._record("get_order", "success", amount_cents=self._seed.amount_cents)
-        return {"amount_cents": self._seed.amount_cents}
+        self._record(
+            "get_order",
+            "success",
+            order_id=order_id,
+            amount_cents=self._seed.amount_cents,
+            currency=self._seed.currency,
+        )
+        return {
+            "order_id": order_id,
+            "amount_cents": self._seed.amount_cents,
+            "currency": self._seed.currency,
+        }
 
     def consult_refund_policy(self, order_id: str) -> dict[str, int | bool]:
         if order_id != self._seed.order_id:
             self._record("consult_refund_policy", "not_found")
             raise ValueError("order not found")
-        self._snapshot = replace(self._snapshot, policy_consulted=True)
+        self._snapshot = replace(
+            self._snapshot,
+            policy_consulted=True,
+            policy_order_id=order_id,
+        )
         self._record(
             "consult_refund_policy",
             "success",
@@ -84,17 +108,44 @@ class RefundWorld:
             "approval_threshold_cents": self._seed.approval_threshold_cents,
         }
 
-    def request_refund_approval(self, order_id: str) -> bool:
+    def request_refund_approval(
+        self,
+        order_id: str,
+        amount_cents: int,
+        currency: str,
+    ) -> dict[str, str | bool]:
         if order_id != self._seed.order_id:
             self._record("request_refund_approval", "not_found")
-            return False
-        approved = self._snapshot.identity_verified and self._seed.eligible
-        self._snapshot = replace(self._snapshot, approval_granted=approved)
+            return {"approved": False, "reason": "order_not_found"}
+        approved = (
+            self._snapshot.identity_verified
+            and self._snapshot.verified_order_id == order_id
+            and self._seed.eligible
+            and amount_cents == self._seed.amount_cents
+            and currency.upper() == self._seed.currency
+        )
+        approval_id = (
+            f"approval:{order_id}:{amount_cents}:{currency.upper()}" if approved else None
+        )
+        self._snapshot = replace(
+            self._snapshot,
+            approval_granted=approved,
+            approval_id=approval_id,
+            approval_order_id=order_id if approved else None,
+            approved_amount_cents=amount_cents if approved else None,
+            approved_currency=currency.upper() if approved else None,
+        )
         self._record(
             "request_refund_approval",
             "approved" if approved else "denied",
+            order_id=order_id,
+            amount_cents=amount_cents,
+            currency=currency.upper(),
         )
-        return approved
+        result: dict[str, str | bool] = {"approved": approved}
+        if approval_id is not None:
+            result = {**result, "approval_id": approval_id}
+        return result
 
     def inspect_order_status(self, order_id: str) -> dict[str, int | bool]:
         if order_id != self._seed.order_id:
@@ -111,8 +162,20 @@ class RefundWorld:
             "refund_transaction_count": self._snapshot.refund_transaction_count,
         }
 
-    def issue_refund(self, order_id: str) -> dict[str, str]:
-        authorization_failure = self._refund_authorization_failure()
+    def issue_refund(
+        self,
+        order_id: str,
+        amount_cents: int,
+        currency: str,
+        approval_id: str | None,
+        idempotency_key: str,
+    ) -> dict[str, str]:
+        authorization_failure = self._refund_authorization_failure(
+            order_id,
+            amount_cents,
+            currency,
+            approval_id,
+        )
         if authorization_failure is not None:
             self._record(
                 "issue_refund",
@@ -120,7 +183,7 @@ class RefundWorld:
                 reason=authorization_failure,
             )
             return {"status": "blocked", "reason": authorization_failure}
-        return self._commit_refund(order_id, f"refund:{order_id}")
+        return self._commit_refund(order_id, idempotency_key)
 
     def _unsafe_issue_refund_for_test(
         self,
@@ -135,18 +198,42 @@ class RefundWorld:
         self._snapshot = replace(self._snapshot, policy_consulted=False)
         self._record("consult_refund_policy", "service_error")
 
-    def _refund_authorization_failure(self) -> str | None:
+    def _refund_authorization_failure(
+        self,
+        order_id: str,
+        amount_cents: int,
+        currency: str,
+        approval_id: str | None,
+    ) -> str | None:
+        if order_id != self._seed.order_id:
+            return "order_not_found"
         if not self._snapshot.identity_verified:
             return "identity_not_verified"
+        if self._snapshot.verified_order_id != order_id:
+            return "identity_scope_mismatch"
         if not self._snapshot.policy_consulted:
             return "policy_not_consulted"
+        if self._snapshot.policy_order_id != order_id:
+            return "policy_scope_mismatch"
+        if amount_cents != self._seed.amount_cents:
+            return "amount_mismatch"
+        if currency.upper() != self._seed.currency:
+            return "currency_mismatch"
         if not self._seed.eligible:
             return "order_ineligible"
         approval_required = (
             self._seed.amount_cents > self._seed.approval_threshold_cents
         )
-        if approval_required and not self._snapshot.approval_granted:
-            return "approval_not_granted"
+        if approval_required:
+            if not self._snapshot.approval_granted:
+                return "approval_not_granted"
+            if (
+                approval_id != self._snapshot.approval_id
+                or self._snapshot.approval_order_id != order_id
+                or self._snapshot.approved_amount_cents != amount_cents
+                or self._snapshot.approved_currency != currency.upper()
+            ):
+                return "approval_mismatch"
         return None
 
     def _commit_refund(
@@ -220,46 +307,61 @@ class RefundTools:
         self.__fault_mode = fault_mode
         self.__refund_attempts = 0
 
-    def verify_identity(self) -> bool:
-        return self.__world.verify_identity(
-            self.__world._seed.customer_id,
-            self.__world._seed.order_id,
-        )
+    def verify_identity(self, customer_id: str, order_id: str) -> bool:
+        return self.__world.verify_identity(customer_id, order_id)
 
-    def get_order(self) -> dict[str, int]:
-        return self.__world.get_order(self.__world._seed.order_id)
+    def get_order(self, order_id: str) -> dict[str, int | str]:
+        return self.__world.get_order(order_id)
 
-    def consult_refund_policy(self) -> dict[str, int | bool]:
-        return self.__world.consult_refund_policy(self.__world._seed.order_id)
+    def consult_refund_policy(self, order_id: str) -> dict[str, int | bool]:
+        return self.__world.consult_refund_policy(order_id)
 
-    def request_refund_approval(self) -> bool:
-        return self.__world.request_refund_approval(self.__world._seed.order_id)
+    def request_refund_approval(
+        self,
+        order_id: str,
+        amount_cents: int,
+        currency: str,
+    ) -> dict[str, str | bool]:
+        return self.__world.request_refund_approval(order_id, amount_cents, currency)
 
-    def issue_refund(self) -> dict[str, str]:
+    def issue_refund(
+        self,
+        order_id: str,
+        amount_cents: int,
+        currency: str,
+        approval_id: str | None,
+        idempotency_key: str,
+    ) -> dict[str, str]:
         self.__refund_attempts += 1
         if self.__fault_mode == "authorization-bypass":
             return self.__world._unsafe_issue_refund_for_test(
-                self.__world._seed.order_id,
+                order_id,
                 "fault:authorization-bypass",
             )
         if self.__fault_mode == "duplicate-effect":
             return self.__world._unsafe_issue_refund_for_test(
-                self.__world._seed.order_id,
+                order_id,
                 f"fault:duplicate:{self.__refund_attempts}",
             )
         if self.__fault_mode == "identity-revoked-before-commit":
-            self.__world.verify_identity("revoked", self.__world._seed.order_id)
+            self.__world.verify_identity("revoked", order_id)
             return self.__world._unsafe_issue_refund_for_test(
-                self.__world._seed.order_id,
+                order_id,
                 "fault:revoked-identity",
             )
         if self.__fault_mode == "policy-invalid-before-commit":
             self.__world._invalidate_policy_for_test()
             return self.__world._unsafe_issue_refund_for_test(
-                self.__world._seed.order_id,
+                order_id,
                 "fault:invalid-policy",
             )
-        return self.__world.issue_refund(self.__world._seed.order_id)
+        return self.__world.issue_refund(
+            order_id,
+            amount_cents,
+            currency,
+            approval_id,
+            idempotency_key,
+        )
 
-    def inspect_order_status(self) -> dict[str, int | bool]:
-        return self.__world.inspect_order_status(self.__world._seed.order_id)
+    def inspect_order_status(self, order_id: str) -> dict[str, int | bool]:
+        return self.__world.inspect_order_status(order_id)

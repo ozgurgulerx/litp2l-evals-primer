@@ -16,6 +16,9 @@ class RefundAgentInput:
     """The case fields visible to the system under test."""
 
     utterance: str
+    customer_id: str
+    order_id: str
+    candidate_order_ids: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -25,9 +28,11 @@ class RefundWorldSeed:
     customer_id: str
     order_id: str
     amount_cents: int
+    currency: str
     eligible: bool
     approval_threshold_cents: int
     simulate_timeout_after_commit: bool
+    competing_order_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -41,6 +46,8 @@ class RefundCase:
     approval_threshold_cents: int
     expected_outcome: str
     slices: tuple[str, ...]
+    currency: str = "USD"
+    competing_order_ids: tuple[str, ...] = ()
     simulate_timeout_after_commit: bool = False
     dataset_version: str = "refund-v0"
 
@@ -48,6 +55,11 @@ class RefundCase:
         if not isinstance(self.slices, (list, tuple)) or isinstance(self.slices, str):
             raise ValueError("slices must be a list or tuple of labels")
         object.__setattr__(self, "slices", tuple(self.slices))
+        if not isinstance(self.competing_order_ids, (list, tuple)) or isinstance(
+            self.competing_order_ids, str
+        ):
+            raise ValueError("competing_order_ids must be a list or tuple")
+        object.__setattr__(self, "competing_order_ids", tuple(self.competing_order_ids))
         required_strings = (
             self.case_id,
             self.customer_id,
@@ -71,6 +83,13 @@ class RefundCase:
             raise ValueError("monetary values must be integers")
         if self.amount_cents < 0 or self.approval_threshold_cents < 0:
             raise ValueError("monetary values cannot be negative")
+        if not isinstance(self.currency, str) or len(self.currency) != 3:
+            raise ValueError("currency must be a three-letter code")
+        object.__setattr__(self, "currency", self.currency.upper())
+        if self.order_id in self.competing_order_ids:
+            raise ValueError("competing orders cannot repeat the target order")
+        if len(self.competing_order_ids) != len(set(self.competing_order_ids)):
+            raise ValueError("competing order identifiers must be unique")
         if self.expected_outcome not in VALID_OUTCOMES:
             raise ValueError(f"unsupported expected outcome: {self.expected_outcome}")
         if not self.slices or not all(
@@ -80,7 +99,12 @@ class RefundCase:
 
     @property
     def agent_input(self) -> RefundAgentInput:
-        return RefundAgentInput(utterance=self.utterance)
+        return RefundAgentInput(
+            utterance=self.utterance,
+            customer_id=self.customer_id,
+            order_id=self.order_id,
+            candidate_order_ids=(self.order_id, *self.competing_order_ids),
+        )
 
     @property
     def world_seed(self) -> RefundWorldSeed:
@@ -88,9 +112,11 @@ class RefundCase:
             customer_id=self.customer_id,
             order_id=self.order_id,
             amount_cents=self.amount_cents,
+            currency=self.currency,
             eligible=self.eligible,
             approval_threshold_cents=self.approval_threshold_cents,
             simulate_timeout_after_commit=self.simulate_timeout_after_commit,
+            competing_order_ids=self.competing_order_ids,
         )
 
     @classmethod
@@ -120,8 +146,15 @@ class ToolEvent:
 @dataclass(frozen=True)
 class WorldSnapshot:
     identity_verified: bool = False
+    verified_customer_id: str | None = None
+    verified_order_id: str | None = None
     policy_consulted: bool = False
+    policy_order_id: str | None = None
     approval_granted: bool = False
+    approval_id: str | None = None
+    approval_order_id: str | None = None
+    approved_amount_cents: int | None = None
+    approved_currency: str | None = None
     refund_idempotency_keys: tuple[str, ...] = ()
     timeout_delivered: bool = False
 
@@ -156,6 +189,8 @@ class MeasurementProfile:
 
     latency_ms: int
     cost_usd_per_case: float
+    evidence_kind: str = "synthetic"
+    source: str = "harness-owned teaching profile"
 
     def __post_init__(self) -> None:
         if (
@@ -171,6 +206,10 @@ class MeasurementProfile:
             or self.cost_usd_per_case < 0
         ):
             raise ValueError("cost_usd_per_case must be finite and non-negative")
+        if self.evidence_kind not in {"synthetic", "measured"}:
+            raise ValueError("evidence_kind must be synthetic or measured")
+        if not self.source:
+            raise ValueError("measurement source is required")
 
 
 @dataclass(frozen=True)
@@ -199,6 +238,11 @@ class CaseEvaluation:
     final_message: str
     claimed_outcome: str
     execution_error: str | None = None
+    false_message_claim_count: int = 0
+    unjustified_escalation_count: int = 0
+    human_intervention_count: int = 0
+    unresolved_work_count: int = 0
+    resolution_status: str = "resolved"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -216,6 +260,11 @@ class CaseEvaluation:
             "final_message": self.final_message,
             "claimed_outcome": self.claimed_outcome,
             "execution_error": self.execution_error,
+            "false_message_claim_count": self.false_message_claim_count,
+            "unjustified_escalation_count": self.unjustified_escalation_count,
+            "human_intervention_count": self.human_intervention_count,
+            "unresolved_work_count": self.unresolved_work_count,
+            "resolution_status": self.resolution_status,
         }
 
 
@@ -232,6 +281,12 @@ class EvaluationReport:
     false_success_claim_count: int
     p95_latency_ms: int
     cost_per_success_usd: float | None
+    measurement_kind: str = "synthetic"
+    measurement_source: str = "harness-owned teaching profile"
+    false_message_claim_count: int = 0
+    unjustified_escalation_count: int = 0
+    human_intervention_count: int = 0
+    unresolved_work_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -246,5 +301,11 @@ class EvaluationReport:
             "false_success_claim_count": self.false_success_claim_count,
             "p95_latency_ms": self.p95_latency_ms,
             "cost_per_success_usd": self.cost_per_success_usd,
+            "measurement_kind": self.measurement_kind,
+            "measurement_source": self.measurement_source,
+            "false_message_claim_count": self.false_message_claim_count,
+            "unjustified_escalation_count": self.unjustified_escalation_count,
+            "human_intervention_count": self.human_intervention_count,
+            "unresolved_work_count": self.unresolved_work_count,
             "case_results": [result.to_dict() for result in self.case_results],
         }

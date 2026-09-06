@@ -76,6 +76,26 @@ def evaluate_agent(
             tuple(result.latency_ms for result in case_results)
         ),
         cost_per_success_usd=cost_per_success,
+        measurement_kind=(
+            "measured" if measurement_profile is None else measurement_profile.evidence_kind
+        ),
+        measurement_source=(
+            "runner wall-clock; cost unavailable"
+            if measurement_profile is None
+            else measurement_profile.source
+        ),
+        false_message_claim_count=sum(
+            result.false_message_claim_count for result in case_results
+        ),
+        unjustified_escalation_count=sum(
+            result.unjustified_escalation_count for result in case_results
+        ),
+        human_intervention_count=sum(
+            result.human_intervention_count for result in case_results
+        ),
+        unresolved_work_count=sum(
+            result.unresolved_work_count for result in case_results
+        ),
     )
 
 

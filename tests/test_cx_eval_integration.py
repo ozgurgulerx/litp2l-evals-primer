@@ -121,12 +121,17 @@ class RefundSliceIntegrationTests(unittest.TestCase):
             name = "denied-approval"
 
             def run(self, request, tools):
-                del request
-                tools.request_refund_approval()
-                tools.verify_identity()
-                tools.get_order()
-                tools.consult_refund_policy()
-                tools.issue_refund()
+                tools.request_refund_approval(request.order_id, 25_000, "USD")
+                tools.verify_identity(request.customer_id, request.order_id)
+                order = tools.get_order(request.order_id)
+                tools.consult_refund_policy(request.order_id)
+                tools.issue_refund(
+                    request.order_id,
+                    int(order["amount_cents"]),
+                    str(order["currency"]),
+                    approval_id=None,
+                    idempotency_key=f"refund:{request.order_id}",
+                )
                 return AgentOutput(
                     message="Your refund has been confirmed.",
                     claimed_outcome="refunded",
@@ -156,9 +161,9 @@ class RefundSliceIntegrationTests(unittest.TestCase):
                         hasattr(tools, "_case"),
                     )
                 )
-                tools.verify_identity()
-                tools.get_order()
-                tools.consult_refund_policy()
+                tools.verify_identity(request.customer_id, request.order_id)
+                tools.get_order(request.order_id)
+                tools.consult_refund_policy(request.order_id)
                 return AgentOutput(
                     message="This order is not eligible for a refund.",
                     claimed_outcome="not_refunded",
@@ -175,10 +180,9 @@ class RefundSliceIntegrationTests(unittest.TestCase):
             name = "false-success"
 
             def run(self, request, tools):
-                del request
-                tools.verify_identity()
-                tools.get_order()
-                tools.consult_refund_policy()
+                tools.verify_identity(request.customer_id, request.order_id)
+                tools.get_order(request.order_id)
+                tools.consult_refund_policy(request.order_id)
                 return AgentOutput(
                     message="İadeniz başarıyla onaylandı.",
                     claimed_outcome="refunded",
@@ -199,11 +203,16 @@ class RefundSliceIntegrationTests(unittest.TestCase):
             name = "late-order-read"
 
             def run(self, request, tools):
-                del request
-                tools.verify_identity()
-                tools.consult_refund_policy()
-                tools.issue_refund()
-                tools.get_order()
+                tools.verify_identity(request.customer_id, request.order_id)
+                tools.consult_refund_policy(request.order_id)
+                tools.issue_refund(
+                    request.order_id,
+                    4_000,
+                    "USD",
+                    approval_id=None,
+                    idempotency_key=f"refund:{request.order_id}",
+                )
+                tools.get_order(request.order_id)
                 return AgentOutput(
                     message="Your refund has been confirmed.",
                     claimed_outcome="refunded",
@@ -224,11 +233,16 @@ class RefundSliceIntegrationTests(unittest.TestCase):
             name = "revoked-identity"
 
             def run(self, request, tools):
-                del request
-                tools.verify_identity()
-                tools.get_order()
-                tools.consult_refund_policy()
-                tools.issue_refund()
+                tools.verify_identity(request.customer_id, request.order_id)
+                order = tools.get_order(request.order_id)
+                tools.consult_refund_policy(request.order_id)
+                tools.issue_refund(
+                    request.order_id,
+                    int(order["amount_cents"]),
+                    str(order["currency"]),
+                    approval_id=None,
+                    idempotency_key=f"refund:{request.order_id}",
+                )
                 return AgentOutput(
                     message="Your refund has been confirmed.",
                     claimed_outcome="refunded",
@@ -249,11 +263,16 @@ class RefundSliceIntegrationTests(unittest.TestCase):
             name = "invalidated-policy"
 
             def run(self, request, tools):
-                del request
-                tools.verify_identity()
-                tools.get_order()
-                tools.consult_refund_policy()
-                tools.issue_refund()
+                tools.verify_identity(request.customer_id, request.order_id)
+                order = tools.get_order(request.order_id)
+                tools.consult_refund_policy(request.order_id)
+                tools.issue_refund(
+                    request.order_id,
+                    int(order["amount_cents"]),
+                    str(order["currency"]),
+                    approval_id=None,
+                    idempotency_key=f"refund:{request.order_id}",
+                )
                 return AgentOutput(
                     message="Your refund has been confirmed.",
                     claimed_outcome="refunded",

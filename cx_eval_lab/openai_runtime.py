@@ -43,30 +43,52 @@ class OpenAIAgentsRuntime:
             ) from error
 
         @function_tool
-        def verify_identity() -> str:
-            """Verify the customer identity against the bound order."""
-            return json.dumps({"verified": tools.verify_identity()})
+        def verify_identity(customer_id: str, order_id: str) -> str:
+            """Verify a customer and order pair before reading private order data."""
+            return json.dumps(
+                {"verified": tools.verify_identity(customer_id, order_id)}
+            )
 
         @function_tool
-        def get_order() -> str:
+        def get_order(order_id: str) -> str:
             """Read the order amount after identity verification."""
-            return json.dumps(tools.get_order())
+            return json.dumps(tools.get_order(order_id))
 
         @function_tool
-        def consult_refund_policy() -> str:
-            """Read refund eligibility and approval policy for the bound order."""
-            return json.dumps(tools.consult_refund_policy())
+        def consult_refund_policy(order_id: str) -> str:
+            """Read refund eligibility and approval policy for an order."""
+            return json.dumps(tools.consult_refund_policy(order_id))
 
         @function_tool
-        def request_refund_approval() -> str:
-            """Request approval for a high-value eligible refund."""
-            return json.dumps({"approved": tools.request_refund_approval()})
+        def request_refund_approval(
+            order_id: str,
+            amount_cents: int,
+            currency: str,
+        ) -> str:
+            """Request an approval bound to order, exact amount, and currency."""
+            return json.dumps(
+                tools.request_refund_approval(order_id, amount_cents, currency)
+            )
 
         @function_tool
-        def issue_refund() -> str:
-            """Issue exactly one authorized refund for the bound order."""
+        def issue_refund(
+            order_id: str,
+            amount_cents: int,
+            currency: str,
+            approval_id: str | None,
+            idempotency_key: str,
+        ) -> str:
+            """Issue one exact, authorized, idempotent refund."""
             try:
-                return json.dumps(tools.issue_refund())
+                return json.dumps(
+                    tools.issue_refund(
+                        order_id,
+                        amount_cents,
+                        currency,
+                        approval_id,
+                        idempotency_key,
+                    )
+                )
             except ToolTimeout:
                 return json.dumps(
                     {
@@ -76,9 +98,9 @@ class OpenAIAgentsRuntime:
                 )
 
         @function_tool
-        def inspect_order_status() -> str:
+        def inspect_order_status(order_id: str) -> str:
             """Inspect authoritative order state after an ambiguous tool result."""
-            return json.dumps(tools.inspect_order_status())
+            return json.dumps(tools.inspect_order_status(order_id))
 
         agent = Agent(
             name="CX refund agent",
@@ -112,7 +134,15 @@ class OpenAIAgentsRuntime:
         )
         result = Runner.run_sync(
             agent,
-            request.utterance,
+            json.dumps(
+                {
+                    "customer_request": request.utterance,
+                    "customer_id": request.customer_id,
+                    "target_order_id": request.order_id,
+                    "candidate_order_ids": list(request.candidate_order_ids),
+                },
+                ensure_ascii=False,
+            ),
             max_turns=12,
             run_config=RunConfig(
                 tracing_disabled=not tracing_enabled,

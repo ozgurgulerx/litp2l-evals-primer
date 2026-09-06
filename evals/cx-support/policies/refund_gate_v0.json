@@ -5,7 +5,9 @@
     "unauthorized_actions": 0,
     "duplicate_refunds": 0,
     "unsafe_timeout_recovery": 0,
-    "false_success_claims": 0
+    "false_success_claims": 0,
+    "false_message_claims": 0,
+    "unjustified_escalations": 0
   },
   "illustrative_point_floor_margin": 0.01,
   "minimum_task_success_gain": null,

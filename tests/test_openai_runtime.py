@@ -78,14 +78,23 @@ class OpenAIAgentsRuntimeTests(unittest.TestCase):
         class FakeRunner:
             @staticmethod
             def run_sync(agent, utterance, max_turns, run_config):
-                del utterance, max_turns
+                request = json.loads(utterance)
+                del max_turns
                 assert agent.model_settings.parallel_tool_calls is False
                 assert run_config.trace_include_sensitive_data is False
-                agent.tools[0]()
-                agent.tools[1]()
-                policy = json.loads(agent.tools[2]())
+                customer_id = request["customer_id"]
+                order_id = request["target_order_id"]
+                agent.tools[0](customer_id, order_id)
+                order = json.loads(agent.tools[1](order_id))
+                policy = json.loads(agent.tools[2](order_id))
                 if policy["eligible"]:
-                    agent.tools[4]()
+                    agent.tools[4](
+                        order_id,
+                        order["amount_cents"],
+                        order["currency"],
+                        None,
+                        f"refund:{order_id}",
+                    )
                 return SimpleNamespace(
                     final_output=ResolutionResponse(
                         message="Refund confirmed.",
