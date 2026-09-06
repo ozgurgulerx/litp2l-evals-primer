@@ -19,6 +19,11 @@ class UnresolvedRequest:
     utterance: str
     customer_id: str
 
+    def __post_init__(self):
+        if not all(isinstance(value, str) and value.strip()
+                   for value in (self.utterance, self.customer_id)):
+            raise ValueError('customer context and request text are required')
+
 
 @dataclass(frozen=True)
 class OrderRecord:
