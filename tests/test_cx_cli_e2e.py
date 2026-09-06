@@ -109,6 +109,7 @@ class CxEvalCliTests(unittest.TestCase):
             artifact["experiment"]["manifest"]["sequential_policy"],
         )
         self.assertIn("deterministic_test_receipt", artifact["receipt"])
+        self.assertTrue(artifact["receipt"]["receipt_hash"].startswith("sha256:"))
         self.assertEqual(2, len(artifact["receipt"]["prerequisite_receipts"]))
 
     def test_paired_experiment_holds_when_independent_evidence_is_insufficient(self) -> None:

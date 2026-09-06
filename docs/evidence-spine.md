@@ -37,7 +37,7 @@ manifest = ExperimentManifest(
     evaluator_version="refund-evaluators-v1",
     policy_version="refund-gate-v1",
     environment_version="python-3.12-container-v4",
-    population_hash="sha256:<population digest>",
+    population_hash="sha256:" + "a" * 64,
     repetitions=3,
     measurement_kind="synthetic",
     estimand="candidate_minus_baseline_verified_task_success",
@@ -46,7 +46,10 @@ manifest = ExperimentManifest(
     confidence_level=0.95,
     minimum_independent_clusters=30,
     sequential_policy="fixed_sample_no_interim_looks",
-    input_hashes=(("dataset", "sha256:…"), ("policy", "sha256:…")),
+    input_hashes=(
+        ("dataset", "sha256:" + "b" * 64),
+        ("policy", "sha256:" + "c" * 64),
+    ),
     invalidation_rules=(
         "model_or_prompt_change",
         "tool_or_evaluator_change",
@@ -84,7 +87,7 @@ uv run python -m cx_eval_lab experiment \
   --output artifacts/runs/paired-reference.json
 ```
 
-The default five-case dataset produces ten records per arm because the registered default is two repetitions. With a thirty-cluster minimum, the command exits with `hold`: ten repeated trials still represent only five independent customer clusters. Passing `--minimum-independent-clusters 5` exercises a synthetic `lab_pass` for teaching, but it does not turn five customers into adequate production evidence. The output packet contains the manifest and its hash, every raw trial, the recomputed comparison, raw-artifact hash, content-addressed prerequisite and test receipts, component hashes, issue/expiry times, invalidation rules, and authority receipt. The command refuses to overwrite an existing packet path.
+The default five-case dataset produces ten records per arm because the registered default is two repetitions. With a thirty-cluster minimum, the command exits with `hold`: ten repeated trials still represent only five independent customer clusters. Passing `--minimum-independent-clusters 5` exercises a synthetic `lab_pass` for teaching, but it does not turn five customers into adequate production evidence. The output packet contains the manifest and its hash, every raw trial, the recomputed comparison, raw-artifact hash, content-addressed prerequisite and test receipts, component hashes, issue/expiry times, invalidation rules, and the receipt's own content hash. The command refuses to overwrite an existing packet path.
 
 ## Statistical non-inferiority
 

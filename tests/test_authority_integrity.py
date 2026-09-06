@@ -106,6 +106,7 @@ class AuthorityIntegrityTests(unittest.TestCase):
         self.assertEqual("clustered_normal_interval", receipt.comparison.method)
         self.assertEqual(30, receipt.comparison.pair_count)
         self.assertTrue(receipt.raw_artifact_hash.startswith("sha256:"))
+        self.assertEqual(receipt.content_hash, receipt.to_dict()["receipt_hash"])
 
     def test_trial_with_wrong_manifest_hash_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "trial manifest hash"):
@@ -168,11 +169,17 @@ class AuthorityIntegrityTests(unittest.TestCase):
             current_component_hashes=(("dataset", "sha256:" + "9" * 64),),
             as_of="2026-09-07T00:00:00Z",
         )
+        premature = resolve_evidence_authority(
+            receipt,
+            current_component_hashes=current_hashes,
+            as_of="2026-09-06T12:30:00Z",
+        )
 
         self.assertEqual("evidence_ready", valid.state)
         self.assertEqual("expired", time_expired.state)
         self.assertEqual("expired", changed.state)
         self.assertEqual("block", changed.action)
+        self.assertEqual("locked", premature.state)
 
     def test_unpinned_revision_cannot_describe_measured_evidence(self) -> None:
         values = manifest().to_dict()

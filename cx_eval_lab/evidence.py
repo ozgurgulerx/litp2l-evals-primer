@@ -264,7 +264,7 @@ class EvidenceReceipt:
     def prerequisite_ids(self) -> tuple[str, ...]:
         return tuple(item.prerequisite_id for item in self.prerequisite_receipts)
 
-    def to_dict(self) -> dict[str, Any]:
+    def _payload_dict(self) -> dict[str, Any]:
         return {
             "experiment_id": self.experiment_id,
             "manifest_hash": self.manifest_hash,
@@ -286,6 +286,13 @@ class EvidenceReceipt:
             "invalidation_rules": list(self.invalidation_rules),
         }
 
+    @property
+    def content_hash(self) -> str:
+        return canonical_hash(self._payload_dict())
+
+    def to_dict(self) -> dict[str, Any]:
+        return {**self._payload_dict(), "receipt_hash": self.content_hash}
+
 
 def build_evidence_receipt(
     *,
@@ -298,7 +305,10 @@ def build_evidence_receipt(
 
     manifest = experiment.manifest
     issued = _parse_timestamp(issued_at, "issued_at")
+    created = _parse_timestamp(manifest.created_at, "created_at")
     expires = _parse_timestamp(manifest.valid_until, "valid_until")
+    if issued < created:
+        raise ValueError("issued_at cannot be earlier than created_at")
     if issued > expires:
         raise ValueError("issued_at cannot be later than valid_until")
     if deterministic_test_receipt.code_revision != manifest.code_revision:
@@ -389,8 +399,11 @@ def resolve_evidence_authority(
     """Resolve expiry against time and exact current component identities."""
 
     observed_at = _parse_timestamp(as_of, "as_of")
+    issued_at = _parse_timestamp(receipt.issued_at, "issued_at")
     valid_until = _parse_timestamp(receipt.valid_until, "valid_until")
     normalized_hashes = tuple(sorted(tuple(item) for item in current_component_hashes))
+    if observed_at < issued_at:
+        return replace(receipt, state="locked", action="block", authority_ceiling="none")
     expired = observed_at > valid_until or normalized_hashes != receipt.component_hashes
     if not expired:
         return receipt

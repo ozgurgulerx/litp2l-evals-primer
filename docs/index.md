@@ -16,7 +16,7 @@ The reading order and building order are intentionally different. Readers meet t
 
 <a class="chapter-card" href="foundations/"><strong>Part I · Evaluation foundations</strong>Understand how product promises become evidence, thresholds, release decisions, and learning loops.</a>
 
-<a class="chapter-card" href="build-the-system/"><strong>Part II · Build the CX evaluation system</strong>Grow a mock refund agent into a production-shaped system with traces, graders, calibration, CI gates, and canaries.</a>
+<a class="chapter-card" href="build-the-system/"><strong>Part II · Build the CX evaluation system</strong>Grow a mock refund agent toward a production-shaped system with traces, graders, calibration, evidence receipts, and staged release controls.</a>
 
 <a class="chapter-card" href="references/"><strong>Part III · Reference library</strong>Follow the primary sources behind each claim and see which artifact each source informs.</a>
 
@@ -26,7 +26,7 @@ The reading order and building order are intentionally different. Readers meet t
 
 The shared learning loop is:
 
-`concept → CX requirement → executable artifact → observed result → source comparison → revised design`
+`concept → CX requirement → executable artifact → observed result or declared evidence gap → source comparison → revised design`
 
 ## Part I · Evaluation foundations
 
@@ -80,11 +80,11 @@ Each study asks the same questions of a paper, platform, or codebase, then recor
 
 <div class="chapter-grid" markdown>
 
-<a class="chapter-card" href="long-running-serving/"><strong>Long-running & serving failures</strong>Test compaction, restart, approvals, ambiguous commits, fallback, and human workload.</a>
+<a class="chapter-card" href="long-running-serving/"><strong>Long-running & serving failures</strong>Build scorer contracts for compaction, restart, approvals, ambiguous commits, fallback, and human workload; trace-producing trials remain pending.</a>
 
-<a class="chapter-card" href="modern-agent-architectures/"><strong>Modern agent architectures</strong>Evaluate knowledge-to-action systems, skill selection, voice timelines, and multi-agent coordination.</a>
+<a class="chapter-card" href="modern-agent-architectures/"><strong>Modern agent architectures</strong>Define typed scoring protocols for knowledge-to-action systems, skill selection, voice timelines, and multi-agent coordination; live comparisons remain pending.</a>
 
-<a class="chapter-card" href="eval-operations-integrity/"><strong>Eval operations & integrity</strong>Run resumable experiments, separate model and harness effects, protect graders, and backtest simulators.</a>
+<a class="chapter-card" href="eval-operations-integrity/"><strong>Eval operations & integrity</strong>Exercise fragment merging, model-versus-harness attribution, integrity checks, and simulator scoring; a distributed evaluation service remains pending.</a>
 
 </div>
 
