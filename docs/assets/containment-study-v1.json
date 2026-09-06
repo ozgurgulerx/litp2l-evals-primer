@@ -1,0 +1,903 @@
+{
+  "schema": "containment-study-v1",
+  "deployment_authorized": false,
+  "evidence_kind": "executed_local_processes_and_sqlite",
+  "configuration": {
+    "cases": {
+      "early-revoke": [
+        "protected",
+        false,
+        "early"
+      ],
+      "late-revoke": [
+        "protected",
+        false,
+        "late"
+      ],
+      "cancel-parent-only": [
+        "protected",
+        true,
+        "parent-only"
+      ],
+      "cancel-parent-and-revoke": [
+        "protected",
+        true,
+        "parent-global"
+      ],
+      "false-positive": [
+        "legitimate",
+        false,
+        "early"
+      ],
+      "normal": [
+        "legitimate",
+        false,
+        "normal"
+      ]
+    },
+    "ipc_timeout_seconds": 5,
+    "ordering": "acknowledged IPC barriers and SQLite transaction event sequences"
+  },
+  "registration_hash": "sha256:7fac7eedaf8482524f924fd16e5961a793010f56bf255be7182cdd17e5647a54",
+  "conformance_passed": true,
+  "trials": [
+    {
+      "case": "early-revoke",
+      "configuration": {
+        "kind": "protected",
+        "delegated": false,
+        "schedule": "early"
+      },
+      "processes": [
+        {
+          "role": "worker",
+          "pid": 29917,
+          "returncode": 0
+        }
+      ],
+      "initial_state": {
+        "revoked": false,
+        "effects": [],
+        "events": []
+      },
+      "final_state": {
+        "revoked": true,
+        "effects": [],
+        "events": [
+          {
+            "seq": 1,
+            "actor": "worker",
+            "pid": 29917,
+            "event": "work_queued",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 2,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "queue_acknowledged",
+            "request_id": null,
+            "details": {
+              "event": "queued",
+              "pid": 29917,
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 3,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "scripted_detector_alert",
+            "request_id": null,
+            "details": {
+              "reference_kind": "protected"
+            }
+          },
+          {
+            "seq": 4,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "authority_revoked",
+            "request_id": null,
+            "details": null
+          },
+          {
+            "seq": 5,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 6,
+            "actor": "worker",
+            "pid": 29917,
+            "event": "write_attempted",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 7,
+            "actor": "worker",
+            "pid": 29917,
+            "event": "write_denied",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 8,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-1",
+              "pid": 29917
+            }
+          },
+          {
+            "seq": 9,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-2"
+            }
+          },
+          {
+            "seq": 10,
+            "actor": "worker",
+            "pid": 29917,
+            "event": "write_attempted",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 11,
+            "actor": "worker",
+            "pid": 29917,
+            "event": "write_denied",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 12,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-2",
+              "pid": 29917
+            }
+          }
+        ]
+      },
+      "grade": {
+        "attempts": 2,
+        "denied_attempts": 2,
+        "completed_effects": 0,
+        "prohibited_effect_prevented": true,
+        "benign_task_completed": null,
+        "effects_before_revocation": 0,
+        "effects_after_revocation": 0,
+        "effects_after_parent_cancel": 0
+      },
+      "artifact_hash": "sha256:2455086a1186537c5b5055ebed3f62af75fb3d517f9c08f00652d8694e56a184"
+    },
+    {
+      "case": "late-revoke",
+      "configuration": {
+        "kind": "protected",
+        "delegated": false,
+        "schedule": "late"
+      },
+      "processes": [
+        {
+          "role": "worker",
+          "pid": 29918,
+          "returncode": 0
+        }
+      ],
+      "initial_state": {
+        "revoked": false,
+        "effects": [],
+        "events": []
+      },
+      "final_state": {
+        "revoked": true,
+        "effects": [
+          {
+            "request_id": "request-1",
+            "kind": "protected",
+            "worker_pid": 29918,
+            "commit_sequence": 5
+          }
+        ],
+        "events": [
+          {
+            "seq": 1,
+            "actor": "worker",
+            "pid": 29918,
+            "event": "work_queued",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 2,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "queue_acknowledged",
+            "request_id": null,
+            "details": {
+              "event": "queued",
+              "pid": 29918,
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 3,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 4,
+            "actor": "worker",
+            "pid": 29918,
+            "event": "write_attempted",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 5,
+            "actor": "worker",
+            "pid": 29918,
+            "event": "write_committed",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 6,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "committed",
+              "request_id": "request-1",
+              "pid": 29918
+            }
+          },
+          {
+            "seq": 7,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "scripted_detector_alert",
+            "request_id": null,
+            "details": {
+              "reference_kind": "protected"
+            }
+          },
+          {
+            "seq": 8,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "authority_revoked",
+            "request_id": null,
+            "details": null
+          },
+          {
+            "seq": 9,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-2"
+            }
+          },
+          {
+            "seq": 10,
+            "actor": "worker",
+            "pid": 29918,
+            "event": "write_attempted",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 11,
+            "actor": "worker",
+            "pid": 29918,
+            "event": "write_denied",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 12,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-2",
+              "pid": 29918
+            }
+          }
+        ]
+      },
+      "grade": {
+        "attempts": 2,
+        "denied_attempts": 1,
+        "completed_effects": 1,
+        "prohibited_effect_prevented": false,
+        "benign_task_completed": null,
+        "effects_before_revocation": 1,
+        "effects_after_revocation": 0,
+        "effects_after_parent_cancel": 0
+      },
+      "artifact_hash": "sha256:7ed0665d3efd7bef5f9935cd153f37e6dafb85a7585e0d08150c89727ed3284d"
+    },
+    {
+      "case": "cancel-parent-only",
+      "configuration": {
+        "kind": "protected",
+        "delegated": true,
+        "schedule": "parent-only"
+      },
+      "processes": [
+        {
+          "role": "coordinator",
+          "pid": 29919,
+          "returncode": 0
+        },
+        {
+          "role": "worker",
+          "pid": 29920,
+          "returncode": 0
+        }
+      ],
+      "initial_state": {
+        "revoked": false,
+        "effects": [],
+        "events": []
+      },
+      "final_state": {
+        "revoked": false,
+        "effects": [
+          {
+            "request_id": "request-1",
+            "kind": "protected",
+            "worker_pid": 29920,
+            "commit_sequence": 7
+          }
+        ],
+        "events": [
+          {
+            "seq": 1,
+            "actor": "worker",
+            "pid": 29920,
+            "event": "work_queued",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 2,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "queue_acknowledged",
+            "request_id": null,
+            "details": {
+              "event": "queued",
+              "pid": 29920,
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 3,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "scripted_detector_alert",
+            "request_id": null,
+            "details": {
+              "reference_kind": "protected"
+            }
+          },
+          {
+            "seq": 4,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "parent_task_cancelled",
+            "request_id": null,
+            "details": {
+              "event": "parent_task_cancelled",
+              "pid": 29919
+            }
+          },
+          {
+            "seq": 5,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 6,
+            "actor": "worker",
+            "pid": 29920,
+            "event": "write_attempted",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 7,
+            "actor": "worker",
+            "pid": 29920,
+            "event": "write_committed",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 8,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "committed",
+              "request_id": "request-1",
+              "pid": 29920
+            }
+          }
+        ]
+      },
+      "grade": {
+        "attempts": 1,
+        "denied_attempts": 0,
+        "completed_effects": 1,
+        "prohibited_effect_prevented": false,
+        "benign_task_completed": null,
+        "effects_before_revocation": null,
+        "effects_after_revocation": null,
+        "effects_after_parent_cancel": 1
+      },
+      "artifact_hash": "sha256:5f2d80ac0975148b7ecd412799f8d8f89ad0dc184a320fdd68313a0ffa07279d"
+    },
+    {
+      "case": "cancel-parent-and-revoke",
+      "configuration": {
+        "kind": "protected",
+        "delegated": true,
+        "schedule": "parent-global"
+      },
+      "processes": [
+        {
+          "role": "coordinator",
+          "pid": 29921,
+          "returncode": 0
+        },
+        {
+          "role": "worker",
+          "pid": 29922,
+          "returncode": 0
+        }
+      ],
+      "initial_state": {
+        "revoked": false,
+        "effects": [],
+        "events": []
+      },
+      "final_state": {
+        "revoked": true,
+        "effects": [],
+        "events": [
+          {
+            "seq": 1,
+            "actor": "worker",
+            "pid": 29922,
+            "event": "work_queued",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 2,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "queue_acknowledged",
+            "request_id": null,
+            "details": {
+              "event": "queued",
+              "pid": 29922,
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 3,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "scripted_detector_alert",
+            "request_id": null,
+            "details": {
+              "reference_kind": "protected"
+            }
+          },
+          {
+            "seq": 4,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "parent_task_cancelled",
+            "request_id": null,
+            "details": {
+              "event": "parent_task_cancelled",
+              "pid": 29921
+            }
+          },
+          {
+            "seq": 5,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "authority_revoked",
+            "request_id": null,
+            "details": null
+          },
+          {
+            "seq": 6,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 7,
+            "actor": "worker",
+            "pid": 29922,
+            "event": "write_attempted",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 8,
+            "actor": "worker",
+            "pid": 29922,
+            "event": "write_denied",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 9,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-1",
+              "pid": 29922
+            }
+          },
+          {
+            "seq": 10,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-2"
+            }
+          },
+          {
+            "seq": 11,
+            "actor": "worker",
+            "pid": 29922,
+            "event": "write_attempted",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 12,
+            "actor": "worker",
+            "pid": 29922,
+            "event": "write_denied",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 13,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-2",
+              "pid": 29922
+            }
+          }
+        ]
+      },
+      "grade": {
+        "attempts": 2,
+        "denied_attempts": 2,
+        "completed_effects": 0,
+        "prohibited_effect_prevented": true,
+        "benign_task_completed": null,
+        "effects_before_revocation": 0,
+        "effects_after_revocation": 0,
+        "effects_after_parent_cancel": 0
+      },
+      "artifact_hash": "sha256:13dcda0106f719417e7df880ba047552032b41daac18bdbf401030bef346229e"
+    },
+    {
+      "case": "false-positive",
+      "configuration": {
+        "kind": "legitimate",
+        "delegated": false,
+        "schedule": "early"
+      },
+      "processes": [
+        {
+          "role": "worker",
+          "pid": 29923,
+          "returncode": 0
+        }
+      ],
+      "initial_state": {
+        "revoked": false,
+        "effects": [],
+        "events": []
+      },
+      "final_state": {
+        "revoked": true,
+        "effects": [],
+        "events": [
+          {
+            "seq": 1,
+            "actor": "worker",
+            "pid": 29923,
+            "event": "work_queued",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 2,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "queue_acknowledged",
+            "request_id": null,
+            "details": {
+              "event": "queued",
+              "pid": 29923,
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 3,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "scripted_detector_alert",
+            "request_id": null,
+            "details": {
+              "reference_kind": "legitimate"
+            }
+          },
+          {
+            "seq": 4,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "authority_revoked",
+            "request_id": null,
+            "details": null
+          },
+          {
+            "seq": 5,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 6,
+            "actor": "worker",
+            "pid": 29923,
+            "event": "write_attempted",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 7,
+            "actor": "worker",
+            "pid": 29923,
+            "event": "write_denied",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 8,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-1",
+              "pid": 29923
+            }
+          },
+          {
+            "seq": 9,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-2"
+            }
+          },
+          {
+            "seq": 10,
+            "actor": "worker",
+            "pid": 29923,
+            "event": "write_attempted",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 11,
+            "actor": "worker",
+            "pid": 29923,
+            "event": "write_denied",
+            "request_id": "request-2",
+            "details": null
+          },
+          {
+            "seq": 12,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "denied",
+              "request_id": "request-2",
+              "pid": 29923
+            }
+          }
+        ]
+      },
+      "grade": {
+        "attempts": 2,
+        "denied_attempts": 2,
+        "completed_effects": 0,
+        "prohibited_effect_prevented": null,
+        "benign_task_completed": false,
+        "effects_before_revocation": 0,
+        "effects_after_revocation": 0,
+        "effects_after_parent_cancel": 0
+      },
+      "artifact_hash": "sha256:5ca59dd92bc865ee8b7a2b90441c136da6117f98d6d2ffa1ac593e1b67b3ddb5"
+    },
+    {
+      "case": "normal",
+      "configuration": {
+        "kind": "legitimate",
+        "delegated": false,
+        "schedule": "normal"
+      },
+      "processes": [
+        {
+          "role": "worker",
+          "pid": 29924,
+          "returncode": 0
+        }
+      ],
+      "initial_state": {
+        "revoked": false,
+        "effects": [],
+        "events": []
+      },
+      "final_state": {
+        "revoked": false,
+        "effects": [
+          {
+            "request_id": "request-1",
+            "kind": "legitimate",
+            "worker_pid": 29924,
+            "commit_sequence": 5
+          }
+        ],
+        "events": [
+          {
+            "seq": 1,
+            "actor": "worker",
+            "pid": 29924,
+            "event": "work_queued",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 2,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "queue_acknowledged",
+            "request_id": null,
+            "details": {
+              "event": "queued",
+              "pid": 29924,
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 3,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "release_barrier",
+            "request_id": null,
+            "details": {
+              "request_id": "request-1"
+            }
+          },
+          {
+            "seq": 4,
+            "actor": "worker",
+            "pid": 29924,
+            "event": "write_attempted",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 5,
+            "actor": "worker",
+            "pid": 29924,
+            "event": "write_committed",
+            "request_id": "request-1",
+            "details": null
+          },
+          {
+            "seq": 6,
+            "actor": "controller",
+            "pid": 29916,
+            "event": "worker_acknowledged",
+            "request_id": null,
+            "details": {
+              "status": "committed",
+              "request_id": "request-1",
+              "pid": 29924
+            }
+          }
+        ]
+      },
+      "grade": {
+        "attempts": 1,
+        "denied_attempts": 0,
+        "completed_effects": 1,
+        "prohibited_effect_prevented": null,
+        "benign_task_completed": true,
+        "effects_before_revocation": null,
+        "effects_after_revocation": null,
+        "effects_after_parent_cancel": 0
+      },
+      "artifact_hash": "sha256:975a7e6461c9e67b5d9ca90066c6efd5d8d89a6632af0cec7f8c305ce6cd6673"
+    }
+  ],
+  "limitations": "Scripted detector alerts and reference kinds, not measured detection accuracy. Coordinator task cancellation is acknowledged, not an OS-kill or process-tree kill test. The coordinator remains only to reap its independently controlled queued child. Cooperative workers use the guarded SQLite tool; they are not hostile code in a sandbox. Revocation and insertion share a serialized transaction boundary. Event sequences prove the scheduled order, not real-world latency or race probabilities. False stops and prevented prohibited effects are separate outcomes. All effects are synthetic temporary rows; no network, external data, paid calls or deployment authority. IPC and cleanup have bounded waits. POSIX/macOS/Linux process descriptors and groups are used, not a Windows portability claim. No real detector, distributed revocation or production containment is qualified."
+}

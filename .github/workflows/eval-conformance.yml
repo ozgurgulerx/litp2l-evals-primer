@@ -45,6 +45,8 @@ jobs:
         run: uv run --extra openai python -m cx_eval_lab.current_release_study --output ci-evidence/current-release.json
       - name: Execute retrieval, oracle, and full-context action controls
         run: uv run python -m cx_eval_lab.knowledge_action --output ci-evidence/knowledge-action.json
+      - name: Exercise local process containment and false-stop controls
+        run: uv run python -m cx_eval_lab.containment_study --output ci-evidence/containment.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure

@@ -98,7 +98,7 @@ The following timelines are **hand-authored exercise data**, not observed OpenAI
 
 For an implemented monitor study, retain attempted and completed actions before containment, timestamps from a common clock or documented clock-join method, queue delay, denied follow-up actions, recovery outcome, lost work, and human review time. Count missing or censored events explicitly. A stop must propagate to queued work and delegated workers; cancelling only the visible parent is not sufficient evidence.
 
-The local [process-recovery study](process-recovery-study.md) demonstrates how to inspect durable effects across interruption. It does **not** validate a threat detector, containment deadline, distributed cancellation, or monitor false-positive rate. This monitoring protocol remains to be executed.
+The local [process-recovery study](process-recovery-study.md) demonstrates how to inspect durable effects across interruption. It does **not** validate a threat detector, containment deadline, distributed cancellation, or monitor false-positive rate. The [local containment study below](#local-containment-test-the-write-boundary-not-just-the-alert) now exercises scheduled enforcement in actual processes. Detector qualification, latency distributions and distributed control remain open parts of this monitoring protocol.
 
 **Interview answer:** “I measure whether containment happened before the harmful effect, not just whether a detector fired. I retain misses, late stops, false stops, and recovery effort; fast alerts among detected cases cannot establish operational safety.”
 
@@ -167,3 +167,111 @@ These are decision requirements, not a new automated release implementation. The
 Record these as different backlog items. “We have not tested cancellation propagation” is an implementable local gap. “The available proxy does not establish practical harmful uplift” may require new validation research. Neither can be closed by adding another citation or increasing a test count.
 
 The [delivery map](primer-delivery-map.md) keeps the remaining work explicit: measured monitoring and isolation, live agent studies, qualified semantic calibration, human outcomes where relevant, and executed CI/CD and exposure-control exercises. The aim is a defensible decision whose scope survives inspection—not a claim that all frontier risk has been solved.
+
+## Local containment: test the write boundary, not just the alert
+
+The monitor says “stop.” A delegated worker already has a queued operation. Does the operation commit? That question belongs to the enforcement path, not the detector's classification score.
+
+This study uses harmless synthetic effects in a temporary local SQLite database. Scripted stop signals arrive at explicit execution barriers. The worker's write tool checks shared authority and, when permitted, inserts an effect inside the same transaction. The controller captures acknowledgements and final ledger rows. It does not infer containment from an alert message or successful process exit.
+
+The connection to frontier practice is the separation of detection, enforcement and legitimate-work interruption. OpenAI's safeguards disclosure describes monitoring that can stop potentially unauthorized activity and acknowledges that legitimate work can also be interrupted. Our local controls test neither its detectors nor its infrastructure. They test a small enforcement mechanism with known scheduled signals. [OpenAI safeguards disclosure](https://openai.com/index/path-to-astra/) (rechecked 6 September 2026).
+
+### Define the boundary before measuring it
+
+| Event | What it establishes | What it does not establish |
+| --- | --- | --- |
+| Alert emitted | The detector or controller requested intervention | The request reached every affected component |
+| Coordinator cancellation acknowledged | The coordinator accepted a task-level cancellation | A delegated worker lost write authority |
+| Shared authority revoked | The controlled tool boundary should reject subsequent authorized-path requests | An earlier effect was undone or every external system received the change |
+| Attempt denied | This attempt did not commit through the tested tool | The agent stopped trying or has no alternate write path |
+| Final ledger inspected | Which synthetic effects persisted in this database | No effects occurred in an unobserved service |
+
+The atomicity assumption matters. Checking permission, releasing the transaction, then committing an effect later creates a gap in which revocation may occur. In this local design, permission inspection and effect insertion share a write transaction. SQLite permits only one simultaneous write transaction; an immediate transaction acquires the write transaction at its start. This supplies a local ordering boundary, not a distributed cancellation guarantee. [SQLite transaction documentation](https://www.sqlite.org/lang_transaction.html).
+
+Do not describe revocation as time travel. If the effect commits first, a later revocation may prevent further effects but cannot erase the committed one. Recovery or compensation needs its own authorized operation and evidence. The [process recovery study](process-recovery-study.md) teaches how to preserve that distinction across interruption.
+
+The mechanism can be summarized as two competing transactions. This is **pseudocode**, not an authorization service or portable distributed-lock implementation:
+
+```text
+write transaction:                revoke transaction:
+  acquire write transaction        acquire write transaction
+  read current authority           set authority = revoked
+  if revoked: record denial        record revocation
+  else: insert synthetic effect    commit
+  commit
+```
+
+Whichever transaction commits first determines the relevant order at this database boundary. An alert that exists only in another process has not yet changed that authority. Do not substitute “alert requested at time T” for “revocation committed before the effect.”
+
+## Kata 54: cancellation was acknowledged, but the worker wrote
+
+Run the local process controls from the repository on macOS or Linux:
+
+```bash
+uv run python -m unittest tests.test_containment_study -v
+uv run python -m cx_eval_lab.containment_study \
+  --output /tmp/primer-containment-my-first-run.json
+```
+
+Use a new output filename. The harness creates only owned temporary databases and processes and retains their relevant evidence in the output packet. It uses explicit acknowledgements rather than sleeps to arrange the tested order. The delegated worker is an actual child of the coordinator, with separate controller-driven IPC; coordinator cancellation is task-level, not an operating-system kill experiment.
+
+The coordinator has already delegated its work and has no independent write workload in this experiment. Its cancellation acknowledgement does not establish that a general agent stopped planning, scheduling new tasks or consuming resources. The observed question is narrower: can its queued child still commit through the shared write tool?
+
+**Know:** stopping orchestration and removing effect authority are different interventions.
+
+**Task:** compare a queued delegated write after coordinator task-cancellation with the same write after shared authority revocation. Inspect actual worker outcomes and the final effect ledger. Then compare revocation before the write with revocation after its commit.
+
+??? success "Solution: follow authority to the effect boundary"
+    A cancellation acknowledgement proves only the named component's response. If a delegated worker still has a usable write path, it may finish an already queued operation. The controlled worker therefore checks current shared authority at the point where the synthetic effect is committed, not only when work is scheduled.
+
+    With revocation ordered before that transaction, the request is denied and the ledger remains empty. With revocation ordered after commit, the ledger retains the effect. Both runs can contain a successful revocation event; only the first prevented the protected effect. Grade the effect and its ordering, not the presence of a stop record.
+
+    The delegated-worker experiment uses task-level cancellation of the coordinator, not a claim that killing an operating-system process automatically terminates its descendants. Process lifetime, task state and permission state are separate controls. Record which one the implementation actually exercises.
+
+    The worker is cooperative code using the prescribed tool. It has not been shown unable to bypass that tool or alter the database directly. A real threat model needs separate service credentials, network and filesystem boundaries, and tests of every alternative effect path. Do not market a shared Boolean in a writable database as hostile-agent containment.
+
+**Extend:** add an external effect service, an already accepted remote operation, a cached credential, or a second worker. Specify the point after which cancellation cannot prevent completion. Test follow-up attempts after denial and require explicit reauthorization before any recovery operation restores write access. These extensions need their own evidence; a single-host transaction does not establish them.
+
+**Interview answer:** “I distinguish alert, cancellation, revocation and committed effect. I verify every relevant worker's authority at the effect boundary and inspect durable outcomes. A stopped coordinator and a green cancellation API are insufficient evidence of containment.”
+
+## Kata 55: a working stop can still harm the service
+
+**Know:** a correctly enforced false alarm is still an interruption of legitimate work.
+
+**Task:** run the same legitimate synthetic write with no stop and with a scripted false-positive stop. Record completion, denied attempts and unresolved work. Would successful denial in the second run justify claiming a better detector or a safer deployment?
+
+??? success "Solution: keep enforcement, detection and utility separate"
+    No. The positive control establishes that the legitimate task can complete when authority remains available. The false-stop control establishes that the enforcement mechanism can withhold that work. It does not estimate how often a real detector produces false alarms.
+
+    In these experiments the controller chooses the signal and its ordering. There is no independently evaluated classifier and no sampled deployment population. Computing a “monitor accuracy” percentage from these designed cases would disguise a control test as empirical detection evidence.
+
+    Carry three separate outcomes into a real study: detection correctness against independently reviewed labels; whether intervention preceded the consequential effect; and the legitimate work, recovery effort and human review burden lost to intervention. A dashboard that counts only blocked actions can improve while the service becomes unusable.
+
+    A false stop should not be “fixed” by silently bypassing the same authority check. Retain the incident, assess whether it is safe to resume, and issue a new scoped authorization through the intended control plane. The local stop study does not yet measure human review time, restored service quality or the safety of that reauthorization path.
+
+**Extend:** estimate review arrivals as `true positive alerts + false positive alerts`, then compare them with staffed review capacity. Register the base rate and denominators; balanced challenge sets cannot supply production prevalence. Test delayed review, abandoned tasks and repeat interruptions rather than treating every alert as a one-time fixed cost.
+
+**Interview answer:** “I qualify the detector and the enforcement path separately, then measure their combined effect on useful work. A false stop can be correctly enforced and still be a product failure. Recovery must preserve the permission boundary rather than bypass it.”
+
+### Reading the six controls
+
+The [retained local execution packet](assets/containment-study-v1.json) contains six trials, initial/final database snapshots, durable event sequences, process identities and exit status, derived grades and content hashes. All eight launched worker/coordinator processes exited with status zero in this run, including the cases where a protected effect committed. A clean exit therefore does not establish a successful containment outcome.
+
+Each row is a separately initialized local database and process run. The scripted alert/reference labels are part of the registered scenario, not independently measured detector predictions.
+
+| Control | Committed synthetic effects | Denied attempts | Interpretation |
+| --- | --- | --- | --- |
+| Revoke before protected write | 0 | 2 | Initial and fresh follow-up requests are denied |
+| Revoke after protected commit | 1 | 1 | Prior effect remains; the fresh request is denied |
+| Cancel coordinator task only | 1 | 0 | Delegated work still has effect authority |
+| Cancel coordinator and revoke shared authority | 0 | 2 | Delegated initial and follow-up requests are denied |
+| False-positive stop on legitimate work | 0 | 2 | Enforcement works, but legitimate work remains undone |
+| Legitimate work without a stop | 1 | 0 | The positive control completes |
+
+The revocation controls include a second request to test behavior after denial or after an earlier commit. The normal and cancellation-only controls each issue one request. These are not equal-sized traffic samples: do not divide pooled denials by pooled requests and label the result detector quality. The important paired comparisons are whether the first effect is prevented and whether a later request still has authority.
+
+### Evidence limits
+
+The scheduled barriers test order, not a detection-to-containment latency distribution. Repeated runs can check this harness's consistency but are not independent users or rare-event reliability evidence. Synthetic labels do not measure harmful propensity, and a scripted worker does not test adaptive behavior after denial. This is a local enforcement study—not a sandbox escape evaluation, a frontier-model safety evaluation or a deployment permit.
+
+`tests.test_containment_artifact` re-grades the retained snapshots, checks their hashes and joins worker event PIDs to the recorded process identities. Those are internal-consistency checks, not authenticated execution provenance. Running the CLI again launches new processes and produces a new packet; it does not reproduce the original process IDs. The CI workflow includes that execution command, but this chapter records local verification, not an observed cloud workflow or production release.
