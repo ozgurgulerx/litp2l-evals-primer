@@ -1,7 +1,11 @@
 """Qualify the measuring method against a known finite population model."""
 
-import math
 import unittest
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
 
 
 class StatisticalStudyTests(unittest.TestCase):
@@ -25,11 +29,12 @@ class StatisticalStudyTests(unittest.TestCase):
 
     def test_label_error_is_not_repaired_by_an_exact_interval(self):
         from cx_eval_lab.statistical_study import sparse_population_study
-        study = sparse_population_study(n=100, loss_probability=0.10,
+        study = sparse_population_study(n=200, loss_probability=0.10,
                                         hidden_loss_probability=1.0)
         self.assertEqual(-0.10, study['true_difference'])
         self.assertEqual(0, study['observed_difference'])
         self.assertEqual(0, study['methods']['exact_binomial_special_case']['coverage_probability'])
+        self.assertEqual(1, study['methods']['exact_binomial_special_case']['false_promotion_probability'])
 
     def test_exact_interval_endpoints_symmetry_and_invalid_inputs(self):
         from cx_eval_lab.statistical_study import exact_loss_interval
@@ -48,6 +53,28 @@ class StatisticalStudyTests(unittest.TestCase):
         self.assertAlmostEqual(0, result['equal_customer_difference'])
         self.assertAlmostEqual(-0.8, result['pooled_task_difference'])
         self.assertEqual(30, result['independent_clusters'])
+
+    def test_cli_persists_full_inspectable_study_without_overwriting(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'study.json'
+            command = [sys.executable, '-m', 'cx_eval_lab.statistical_study',
+                       '--output', str(path)]
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertTrue(path.exists(), 'the study CLI must preserve its evidence')
+            report = json.loads(path.read_text())
+            self.assertEqual('lab_only', report['authority'])
+            self.assertTrue(any(s['n'] == 200 and s['loss_probability'] == 0.01
+                                for s in report['studies']))
+            self.assertTrue(all('count_outcomes' in s for s in report['studies']))
+            repeat = subprocess.run(command, capture_output=True, text=True)
+            self.assertNotEqual(0, repeat.returncode)
+
+    def test_cached_counts_still_reject_boolean_inputs(self):
+        from cx_eval_lab.statistical_study import exact_loss_interval
+        exact_loss_interval(1, 30)
+        with self.assertRaises(ValueError):
+            exact_loss_interval(True, 30)
 
 
 if __name__ == '__main__':
