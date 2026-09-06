@@ -79,6 +79,53 @@ class CxEvalCliTests(unittest.TestCase):
 
         self.assertEqual(0, exit_code)
 
+    def test_paired_experiment_writes_raw_trials_comparison_and_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output_path = Path(temporary_directory) / "paired-experiment.json"
+
+            result = self.run_cli(
+                "experiment",
+                "--baseline-agent",
+                "reference",
+                "--candidate-agent",
+                "reference",
+                "--minimum-independent-clusters",
+                "5",
+                "--output",
+                str(output_path),
+            )
+            artifact = json.loads(output_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("lab_pass", artifact["receipt"]["action"])
+        self.assertEqual("lab_only", artifact["receipt"]["authority_ceiling"])
+        self.assertEqual(10, len(artifact["experiment"]["baseline_trials"]))
+        self.assertEqual(10, len(artifact["experiment"]["candidate_trials"]))
+        self.assertEqual("pass", artifact["comparison"]["status"])
+        self.assertIn("manifest_hash", artifact["experiment"])
+        self.assertIn("raw_artifact_hash", artifact["receipt"])
+
+    def test_paired_experiment_holds_when_independent_evidence_is_insufficient(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output_path = Path(temporary_directory) / "paired-hold.json"
+
+            result = self.run_cli(
+                "experiment",
+                "--baseline-agent",
+                "reference",
+                "--candidate-agent",
+                "reference",
+                "--minimum-independent-clusters",
+                "30",
+                "--output",
+                str(output_path),
+            )
+            artifact = json.loads(output_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(3, result.returncode, result.stderr)
+        self.assertEqual("hold", artifact["receipt"]["action"])
+        self.assertEqual("inconclusive", artifact["comparison"]["status"])
+
 
 if __name__ == "__main__":
     unittest.main()
