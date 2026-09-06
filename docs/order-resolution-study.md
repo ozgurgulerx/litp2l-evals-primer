@@ -173,4 +173,84 @@ The snippet re-grades trials and displays the retained release action; the study
 
 ### Next integration boundary
 
-This extension connects unresolved input, actual mock execution, artifact replay, paired statistics and a bounded release decision. It does **not** yet connect the single-order semantic judge to multi-order evidence, qualify a live model, or control real exposure. That needs a native multi-order criterion covering customer intent, every affected ledger, clarification history and customer prose; independently reviewed calibration; metered model repetitions; and the current qualification/source checks before any deployment decision. Reusing a single-order receipt by copying the expected target into its context would erase the very ambiguity this experiment tests.
+The structural extension above connects unresolved input, actual mock execution, artifact replay, paired statistics and a bounded release decision. The native semantic extension below adds a separate multi-order criterion and synthetic grading controls; it does not retrofit qualification onto the original packets. Independently reviewed calibration, metered model repetitions and current qualification/source checks remain necessary before a deployment decision. Reusing a single-order receipt by copying the expected target into its context would erase the very ambiguity this experiment tests.
+
+## Native semantic extension: bind the explanation to the whole situation
+
+“Your refund has been confirmed” can accompany a correct refund, a wrong-order refund, or no refund. Matching the sentence is not enough. The native `multi_order_customer_message_truth_v1` criterion receives the customer request, output, observed clarification and tool history, execution error, and **all** order ledgers. It does not receive the evaluator's expected order or a future scripted customer reply.
+
+The evaluator owns the grading stage. Its receipt binds the message and structured claims separately from the case, policy, request, tool history and final-state context. The manifest also registers the native judge configuration and calibration identity. Replay checks the stored judge request against the execution and checks the receipt against that judgment. Changing a request and recomputing its local hash does not repair a contradiction with the retained execution.
+
+This is not a cryptographic attestation of an original execution or independent proof that a judgment is correct. Operator-supplied trust anchors and current qualification are separate inputs. The following study exercises those interfaces with a deliberately limited **literal fixture judge**, not an LLM or a production semantic classifier.
+
+## Kata 45: four correct labels do not qualify a judge
+
+**Task:** compile a calibration record from four retained synthetic annotation rows: two truthful and two false. A literal control makes no errors on those rows. Can you claim a false-pass rate below 5%? What changes if the local demonstration accepts only two examples per class and a very loose error bound?
+
+```bash
+uv run python -m cx_eval_lab.resolution_semantic_study \
+  --output /tmp/primer-native-semantics-my-first-run.json
+uv run --extra openai python -m unittest \
+  tests.test_resolution_semantic tests.test_resolution_semantic_study -v
+```
+
+Use a new output filename. No provider call or human annotation service is used. The [retained study](assets/native-resolution-semantic-v1.json) includes calibration evidence, compiled counts, comparison packets and a revocation assessment.
+
+??? success "Solution: derive the counts, then inspect what their bounds mean"
+    The compiler joins each judgment to its evidence hash, checks the registered criterion/configuration/scope, resolves the supplied reviewer labels and derives class counts. It does not accept a caller's aggregate claim of hundreds of successful examples. Here the reviewer identities and labels are synthetic fixtures; two distinct strings are not evidence of two independent humans.
+
+    Zero false passes among two false examples gives a one-sided 95% exact binomial upper bound of `1 - 0.05**(1/2)`, approximately **77.64%**. The same bound applies to zero false blocks among two truthful examples. This calculation illustrates sampling uncertainty under a binomial model; it does not validate that model for these authored, overlapping controls.
+
+    A deliberately permissive diagnostic policy can admit the record to exercise receipt plumbing. A stricter minimum of thirty examples per class rejects it as `insufficient_calibration_examples`. Even passing that count threshold would not establish representativeness, independent labels, acceptable error bounds or deployment authority. Replicating the same rows is not new evidence.
+
+    Calibration examples are drawn from two of the four scenarios also used by the comparison controls. Their fixture group IDs identify executions, not independent customers; all scenarios share one customer. There is **no held-out transfer claim**. The literal judge can pass familiar wording in an incorrect situation, and it abstains on unsupported wording. Its purpose is to exercise the measurement pipeline while making the empirical gap visible.
+
+Recompile the retained rows without running an agent or accepting the report's aggregate counts on faith:
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.calibration_data import compile_calibration
+
+study = json.loads(Path("docs/assets/native-resolution-semantic-v1.json").read_text())
+calibration = study["calibration"]
+record = compile_calibration(calibration["annotations"], **calibration["operator_config"])
+assert record.content_hash == calibration["record_hash"]
+print(record.truthful_examples, record.false_examples)  # 2 2
+print(round(record.error_bounds["false_pass_upper_95"], 4))  # 0.7764
+```
+
+The snippet deliberately uses the artifact's synthetic operator configuration to reproduce a fixture. A production verifier must obtain reviewer trust, split exclusions and qualification policy from independently controlled inputs—not grant authority to an uploaded configuration.
+
+**Extend:** collect independently reviewed examples with contradictory identity, approval, eligibility and settlement explanations; include negation, quotations, multilingual wording and plausible paraphrases. Freeze the rubric and judge before a separate, untouched evaluation. Report false passes, false blocks and abstentions by slice, preserving disagreements rather than filtering them away. This human/model study is not performed by the command above.
+
+**Interview answer:** “I distinguish a calibration record that is structurally valid from an evaluator that is empirically qualified. I derive counts from reviewed rows, check uncertainty and scope, and evaluate the frozen judge on independent cases. Synthetic labels and a permissive registry entry cannot establish truthfulness accuracy.”
+
+## Kata 46: joint success and current qualification are different decisions
+
+The retained run executes three paired comparisons, with sixteen agent executions each, plus four calibration executions: **52 deterministic mock-agent executions** in total. Replay runs the mock tools again, not the agents. All comparison scenarios still share one customer.
+
+| Candidate | Structural passes / 8 | Joint passes / 8 | Tasks completed / 8 | Release action |
+| --- | ---: | ---: | ---: | --- |
+| False-settlement mutant | 8 | 0 | 6 | `block`, authority `none` |
+| First-record mutant | 2 | 2 | 3 | `block`, authority `none` |
+| Descriptive control | 8 | 8 | 6 | `block`, authority `none` |
+
+These are controlled contrasts, not accuracy estimates. Each comparison reports a $1.28 **synthetic agent-cost subtotal**, sixteen unknown judge-cost components and a null complete selected-cost estimate. The known judge subtotal of zero means no known amounts were added—not that those judgments were established to be free. The workflow is configured to retain the study; no completed cloud run is claimed here.
+
+**Task:** compare a correct resolver that makes an unsupported settlement promise, a first-record resolver, and the descriptive control. Then revoke the calibration record. Should replay erase old grades, keep authorizing the judge, or report two separate results?
+
+??? success "Solution: require both grades, then reassess current eligibility separately"
+    A joint trial passes only when its structural contract passes **and** its native semantic judgment is qualified and passes. A prose failure defeats a structurally correct action. A favorable prose judgment cannot override a wrong order, a rejected unauthorized attempt or a transaction before required clarification.
+
+    Preserve three semantic states: a qualified failure is evidence against the response; a qualified abstention supplies no positive verdict; an unqualified judgment lacks eligible grading evidence. All block joint success, but they have different reasons and counters. Do not label every failed trial an unqualified one or count every qualified judgment as a pass.
+
+    Historical replay uses the caller's explicit historical calibration trust. The separate current assessment checks an operator-owned registry and clock. Revocation leaves the unchanged historical evidence replayable but returns `not_current`; it does not erase completed actions or confer permission for new judgments.
+
+    Even the positive synthetic control cannot authorize deployment. These cases share one customer, the calibration/control scenarios overlap, the judge is a literal fixture, and full application prerequisites remain unqualified. The release builder retains `block` with authority `none`. Source hashes detect changes relative to an anchor; they do not authenticate the operator, human reviewers, provider bill or original execution.
+
+The native audit also checks rejected grading paths. A pre-dispatch rejection cannot acquire a fabricated request, completed judgment or usage record. If qualification expires during a call, the retained post-dispatch evidence must still match the actual request, configuration and timing; absence of a qualified receipt does not exempt that history from validation.
+
+**Extend:** replace the literal control with a bounded native provider adapter and a frozen, independently calibrated rubric. Account for agent and judge usage separately before combining selected costs; unknown judge usage is not free. The existing single-order provider adapter and campaign gate must not be assumed to support this native criterion without their own integration tests.
+
+**Interview answer:** “I require structural and semantic success together, preserve the full evidence for re-grading, and separate historical reproduction from current qualification. A revoked judge can explain an old result without remaining eligible for a new decision. A successful local control still needs representative evidence and release prerequisites.”

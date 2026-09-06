@@ -219,6 +219,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 [Katas 43–44](order-resolution-study.md#kata-43-a-summary-is-not-enough-to-reconstruct-a-decision) extend that study into native paired artifacts and mock-tool replay. Two retained comparisons demonstrate why right-order endpoints, structural contract passes, qualified messages and release authority differ. They include full-case/schedule mutation exercises and measurement-source checks; the 8/8 structural control still produces a release block.
 
+[Katas 45–46](order-resolution-study.md#kata-45-four-correct-labels-do-not-qualify-a-judge) add native multi-order semantic receipts, row-derived synthetic calibration and joint structural/semantic controls. Calculate why zero errors in two examples is weak evidence, distinguish qualified failure from abstention and missing qualification, and revoke a calibration without erasing historical grades. The literal judge, synthetic reviewers and overlapping scenarios demonstrate integration—not semantic validity or deployment permission.
+
 [Katas 18–20](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) reconstruct calibration counts from retained rows, preserve adjudication, reject declared split leakage and connect incident learning to independent requalification. The executed four-row example is synthetic and remains unqualified.
 
 [Katas 16–17](ci-gate-lab.md) exercise expected rejection in CI and the distinction between software conformance, candidate qualification, and application deployment. The command is verified locally; cloud execution and canary control remain separate milestones.

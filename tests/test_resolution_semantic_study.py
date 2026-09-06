@@ -9,6 +9,41 @@ import unittest
 
 
 class NativeSemanticStudyTests(unittest.TestCase):
+    def test_retained_rows_recompile_and_join_originating_execution(self):
+        from cx_eval_lab.calibration_data import compile_calibration
+        from cx_eval_lab.evidence import canonical_hash
+        from cx_eval_lab.resolution_semantic import judge_request, CRITERION
+        from cx_eval_lab.resolution_semantic_study import LiteralFixtureJudge
+        from cx_eval_lab.semantic import SemanticRequest
+        study = json.loads(Path('docs/assets/native-resolution-semantic-v1.json').read_text())
+        calibration = study['calibration']
+        record = compile_calibration(calibration['annotations'], **calibration['operator_config'])
+        self.assertEqual(calibration['record_hash'], record.content_hash)
+        self.assertEqual(0, record.false_passes)
+        self.assertEqual(0, record.false_blocks)
+        self.assertAlmostEqual(1 - 0.05 ** 0.5, record.error_bounds['false_pass_upper_95'])
+        origins = {row['row_id']: row for row in calibration['executions']}
+        for row in calibration['annotations']['rows']:
+            origin = origins[row['id']]
+            self.assertEqual(canonical_hash(origin['execution']), origin['execution_hash'])
+            self.assertEqual(judge_request(origin['execution']), row['evidence'])
+            verdict = LiteralFixtureJudge().evaluate(SemanticRequest(
+                json.dumps(row['evidence']), CRITERION, row['id'])).verdict
+            self.assertEqual(verdict, row['judgment']['verdict'])
+
+    def test_retained_packets_replay_with_explicit_fixture_trust_only(self):
+        from cx_eval_lab.artifacts import replay_packet
+        study = json.loads(Path('docs/assets/native-resolution-semantic-v1.json').read_text())
+        trust = {study['calibration']['record_hash']}  # Deliberately trusted synthetic fixture.
+        for control in study['comparisons']:
+            with self.assertRaises(ValueError):
+                replay_packet(control['packet'])
+            results = replay_packet(control['packet'], trusted_calibration_hashes=trust)
+            self.assertEqual(16, len(results))
+            self.assertEqual(control['candidate_joint_passes'], sum(r.passed for r in results[8:]))
+            self.assertEqual(control['candidate_structural_passes'],
+                             sum(r.structural.passed for r in results[8:]))
+
     def test_row_compilation_joint_controls_and_current_revocation_are_retained(self):
         from cx_eval_lab.resolution_semantic_study import run_study
         from cx_eval_lab.artifacts import replay_packet
