@@ -155,3 +155,56 @@ class SamplingStudyTests(unittest.TestCase):
         artifact = json.loads(path.read_text())
         self.assertEqual(run_study(), artifact)
         self.assertEqual(artifact, replay_study(artifact))
+
+    def test_tail_equality_excluded_and_asymmetric_strata_weight_by_frame_size(self):
+        from cx_eval_lab.sampling_study import count_interval, estimate_sample
+        interval = count_interval({'one': 4}, {'one': 1}, {'one': 0}, alpha=.5)
+        self.assertEqual('1/2', interval['upper_exact'])
+        frame = [{'unit_id': 'a0', 'stratum': 'a'}] + [
+            {'unit_id': f'b{i}', 'stratum': 'b'} for i in range(3)]
+        rows = [{'unit_id': 'a0', 'stratum': 'a', 'failure': True, 'pi': 1},
+                {'unit_id': 'b0', 'stratum': 'b', 'failure': False, 'pi': 1 / 3}]
+        result = estimate_sample(frame, {'a': 1, 'b': 1}, rows)
+        self.assertEqual(.5, result['raw_failure_rate'])
+        self.assertEqual(.25, result['ht_failure_rate'])
+        self.assertEqual([1., 3.], [r['inverse_pi'] for r in result['row_weights']])
+
+    def test_frame_allocation_and_alpha_fail_closed_at_boundaries(self):
+        from cx_eval_lab.sampling_study import estimate_sample, example_inputs, run_study
+        inputs = example_inputs()
+        rows = run_study()['worked_example']['rows']
+        for mode in ('duplicate-frame', 'float-allocation', 'bool-allocation', 'too-large-allocation',
+                     'empty-frame', 'wrong-sample-quota', 'alpha-zero', 'alpha-one', 'alpha-bool', 'threshold-infinity'):
+            frame, plan, sample = copy.deepcopy(inputs['frame']), dict(inputs['allocations']['enriched']), copy.deepcopy(rows)
+            kwargs = {}
+            if mode == 'duplicate-frame':
+                frame[0] = frame[1]
+            elif mode in ('float-allocation', 'bool-allocation', 'too-large-allocation'):
+                plan['routine'] = {'float-allocation': 4., 'bool-allocation': True, 'too-large-allocation': 13}[mode]
+            elif mode == 'empty-frame':
+                frame = []
+            elif mode == 'wrong-sample-quota':
+                sample[0] = {'unit_id': 'routine-6', 'stratum': 'routine', 'failure': False, 'pi': 1 / 3}
+            elif mode.startswith('alpha-'):
+                kwargs['alpha'] = {'alpha-zero': 0, 'alpha-one': 1, 'alpha-bool': True}[mode]
+            else:
+                kwargs['threshold'] = float('inf')
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                estimate_sample(frame, plan, sample, **kwargs)
+
+    def test_complete_fixed_population_labels_are_required_before_enumeration(self):
+        from cx_eval_lab.sampling_study import example_inputs, run_study
+        for mode in ('missing', 'none', 'int', 'bool-threshold', 'duplicate-threshold', 'unknown-worked-design'):
+            inputs = example_inputs()
+            if mode == 'missing':
+                del inputs['outcomes']['routine-11']
+            elif mode in ('none', 'int'):
+                inputs['outcomes']['routine-11'] = None if mode == 'none' else 0
+            elif mode == 'bool-threshold':
+                inputs['thresholds'] = [True]
+            elif mode == 'duplicate-threshold':
+                inputs['thresholds'] = [.2, .2]
+            else:
+                inputs['worked_design'] = 'unregistered'
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                run_study(inputs)
