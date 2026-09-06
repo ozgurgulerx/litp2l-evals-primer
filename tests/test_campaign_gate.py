@@ -89,6 +89,29 @@ class CampaignGateTests(unittest.TestCase):
         self.assertEqual('block', result.status)
         self.assertIn('reservation_overrun', result.issues)
 
+    def test_audit_qualification_must_match_the_trusted_receipt(self):
+        report = copy.deepcopy(self.report)
+        report['packet']['trial_artifacts'][0]['payload']['semantic_stage']['qualification']['false_examples'] = 101
+        rehash_packet(report['packet'])
+        self.assertEqual('block', self.assess(report).status)
+
+    def test_consistently_rewritten_judge_input_must_still_match_the_execution(self):
+        from cx_eval_lab.semantic import CRITERION
+        report = copy.deepcopy(self.report)
+        stage = report['packet']['trial_artifacts'][0]['payload']['semantic_stage']
+        stage['request']['authoritative_order']['eligible'] = False
+        stage['request_hash'] = canonical_hash(stage['request'])
+        row = next(row for row in report['ledger']['invocations'] if row['id'] == stage['invocation_id'])
+        row['request_hash'] = canonical_hash({'criterion': CRITERION, 'evidence': stage['request']})
+        receipt = json.loads(row['receipt_json'])
+        receipt['request_hash'] = row['request_hash']
+        row['receipt_json'] = json.dumps(receipt)
+        audit = json.loads(stage['judgment']['campaign_audit_json'])
+        audit['receipt'] = receipt
+        stage['judgment']['campaign_audit_json'] = json.dumps(audit)
+        rehash_packet(report['packet'])
+        self.assertEqual('block', self.assess(report).status)
+
 
 if __name__ == '__main__':
     unittest.main()
