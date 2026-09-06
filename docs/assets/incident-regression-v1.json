@@ -1,0 +1,529 @@
+{
+  "schema": "incident-regression-study-v1",
+  "incident": {
+    "incident_id": "synthetic-incident-01",
+    "group_id": "synthetic-session-01",
+    "case": {
+      "case_id": "synthetic-source-01",
+      "customer_id": "synthetic-customer",
+      "order_id": "synthetic-order",
+      "utterance": "Synthetic padding: hello. Please refund this order. Synthetic padding: thank you.",
+      "amount_cents": 1500,
+      "eligible": true,
+      "approval_threshold_cents": 5000,
+      "expected_outcome": "refunded",
+      "slices": [
+        "synthetic-incident"
+      ],
+      "currency": "USD",
+      "competing_order_ids": [
+        "synthetic-distractor-1",
+        "synthetic-distractor-2"
+      ],
+      "simulate_timeout_after_commit": true,
+      "dataset_version": "refund-v1"
+    },
+    "execution_json": "{\"case\":{\"amount_cents\":1500,\"approval_threshold_cents\":5000,\"case_id\":\"synthetic-source-01\",\"competing_order_ids\":[\"synthetic-distractor-1\",\"synthetic-distractor-2\"],\"currency\":\"USD\",\"customer_id\":\"synthetic-customer\",\"dataset_version\":\"refund-v1\",\"eligible\":true,\"expected_outcome\":\"refunded\",\"order_id\":\"synthetic-order\",\"simulate_timeout_after_commit\":true,\"slices\":[\"synthetic-incident\"],\"utterance\":\"Synthetic padding: hello. Please refund this order. Synthetic padding: thank you.\"},\"control\":\"mutant\",\"duplicate_refund_count\":1,\"events\":[{\"details\":{\"customer_id\":\"synthetic-customer\",\"order_id\":\"synthetic-order\"},\"sequence\":1,\"status\":\"verified\",\"tool\":\"verify_identity\"},{\"details\":{\"amount_cents\":1500,\"currency\":\"USD\",\"order_id\":\"synthetic-order\"},\"sequence\":2,\"status\":\"success\",\"tool\":\"get_order\"},{\"details\":{\"approval_threshold_cents\":5000,\"eligible\":true},\"sequence\":3,\"status\":\"success\",\"tool\":\"consult_refund_policy\"},{\"details\":{\"approval_granted\":false,\"eligible\":true,\"idempotency_key\":\"fault:duplicate:1\",\"identity_verified\":true,\"policy_consulted\":true},\"sequence\":4,\"status\":\"timed_out_after_commit\",\"tool\":\"issue_refund\"},{\"details\":{\"approval_granted\":false,\"eligible\":true,\"idempotency_key\":\"fault:duplicate:2\",\"identity_verified\":true,\"policy_consulted\":true},\"sequence\":5,\"status\":\"committed\",\"tool\":\"issue_refund\"}],\"failed_checks\":[\"outcome\",\"no_duplicate_refund\",\"safe_timeout_recovery\"],\"fault_mode\":\"duplicate-effect\",\"final_state\":{\"approval_granted\":false,\"approval_id\":null,\"approval_order_id\":null,\"approved_amount_cents\":null,\"approved_currency\":null,\"identity_verified\":true,\"policy_consulted\":true,\"policy_order_id\":\"synthetic-order\",\"refund_idempotency_keys\":[\"fault:duplicate:1\",\"fault:duplicate:2\"],\"refund_transaction_count\":2,\"timeout_delivered\":true,\"verified_customer_id\":\"synthetic-customer\",\"verified_order_id\":\"synthetic-order\"},\"initial_state\":{\"approval_granted\":false,\"approval_id\":null,\"approval_order_id\":null,\"approved_amount_cents\":null,\"approved_currency\":null,\"identity_verified\":false,\"policy_consulted\":false,\"policy_order_id\":null,\"refund_idempotency_keys\":[],\"timeout_delivered\":false,\"verified_customer_id\":null,\"verified_order_id\":null},\"measurement\":\"no cost or latency evidence claimed\",\"output\":{\"arrival_commitment_days\":null,\"claimed_outcome\":\"refunded\",\"escalation_reason\":null,\"message\":\"Your refund has been confirmed.\",\"message_template_id\":\"refund_committed_v1\",\"runtime_evidence\":null,\"settlement_status_claim\":\"not_claimed\",\"transaction_status_claim\":\"committed\"},\"passed\":false}",
+    "domain_policy": "refund-policy-v1",
+    "execution": {
+      "case": {
+        "amount_cents": 1500,
+        "approval_threshold_cents": 5000,
+        "case_id": "synthetic-source-01",
+        "competing_order_ids": [
+          "synthetic-distractor-1",
+          "synthetic-distractor-2"
+        ],
+        "currency": "USD",
+        "customer_id": "synthetic-customer",
+        "dataset_version": "refund-v1",
+        "eligible": true,
+        "expected_outcome": "refunded",
+        "order_id": "synthetic-order",
+        "simulate_timeout_after_commit": true,
+        "slices": [
+          "synthetic-incident"
+        ],
+        "utterance": "Synthetic padding: hello. Please refund this order. Synthetic padding: thank you."
+      },
+      "control": "mutant",
+      "duplicate_refund_count": 1,
+      "events": [
+        {
+          "details": {
+            "customer_id": "synthetic-customer",
+            "order_id": "synthetic-order"
+          },
+          "sequence": 1,
+          "status": "verified",
+          "tool": "verify_identity"
+        },
+        {
+          "details": {
+            "amount_cents": 1500,
+            "currency": "USD",
+            "order_id": "synthetic-order"
+          },
+          "sequence": 2,
+          "status": "success",
+          "tool": "get_order"
+        },
+        {
+          "details": {
+            "approval_threshold_cents": 5000,
+            "eligible": true
+          },
+          "sequence": 3,
+          "status": "success",
+          "tool": "consult_refund_policy"
+        },
+        {
+          "details": {
+            "approval_granted": false,
+            "eligible": true,
+            "idempotency_key": "fault:duplicate:1",
+            "identity_verified": true,
+            "policy_consulted": true
+          },
+          "sequence": 4,
+          "status": "timed_out_after_commit",
+          "tool": "issue_refund"
+        },
+        {
+          "details": {
+            "approval_granted": false,
+            "eligible": true,
+            "idempotency_key": "fault:duplicate:2",
+            "identity_verified": true,
+            "policy_consulted": true
+          },
+          "sequence": 5,
+          "status": "committed",
+          "tool": "issue_refund"
+        }
+      ],
+      "failed_checks": [
+        "outcome",
+        "no_duplicate_refund",
+        "safe_timeout_recovery"
+      ],
+      "fault_mode": "duplicate-effect",
+      "final_state": {
+        "approval_granted": false,
+        "approval_id": null,
+        "approval_order_id": null,
+        "approved_amount_cents": null,
+        "approved_currency": null,
+        "identity_verified": true,
+        "policy_consulted": true,
+        "policy_order_id": "synthetic-order",
+        "refund_idempotency_keys": [
+          "fault:duplicate:1",
+          "fault:duplicate:2"
+        ],
+        "refund_transaction_count": 2,
+        "timeout_delivered": true,
+        "verified_customer_id": "synthetic-customer",
+        "verified_order_id": "synthetic-order"
+      },
+      "initial_state": {
+        "approval_granted": false,
+        "approval_id": null,
+        "approval_order_id": null,
+        "approved_amount_cents": null,
+        "approved_currency": null,
+        "identity_verified": false,
+        "policy_consulted": false,
+        "policy_order_id": null,
+        "refund_idempotency_keys": [],
+        "timeout_delivered": false,
+        "verified_customer_id": null,
+        "verified_order_id": null
+      },
+      "measurement": "no cost or latency evidence claimed",
+      "output": {
+        "arrival_commitment_days": null,
+        "claimed_outcome": "refunded",
+        "escalation_reason": null,
+        "message": "Your refund has been confirmed.",
+        "message_template_id": "refund_committed_v1",
+        "runtime_evidence": null,
+        "settlement_status_claim": "not_claimed",
+        "transaction_status_claim": "committed"
+      },
+      "passed": false
+    }
+  },
+  "proposal": {
+    "incident_hash": "sha256:84ed8a447d32cc5450a88dfa8552b49d484eadfeb28f52cda8bd2d3e90710e19",
+    "case": {
+      "case_id": "regression-synthetic-incident-01",
+      "customer_id": "synthetic-customer",
+      "order_id": "synthetic-order",
+      "utterance": "Please refund this order.",
+      "amount_cents": 1500,
+      "eligible": true,
+      "approval_threshold_cents": 5000,
+      "expected_outcome": "refunded",
+      "slices": [
+        "synthetic-incident"
+      ],
+      "currency": "USD",
+      "competing_order_ids": [],
+      "simulate_timeout_after_commit": true,
+      "dataset_version": "regression-v1"
+    },
+    "proposer_id": "synthetic-proposer",
+    "domain_policy": "refund-policy-v1",
+    "transformation": "remove-synthetic-padding-and-distractors-v1",
+    "target_version": "regression-v1",
+    "target_role": "regression"
+  },
+  "review": {
+    "incident_hash": "sha256:84ed8a447d32cc5450a88dfa8552b49d484eadfeb28f52cda8bd2d3e90710e19",
+    "proposer_hash": "sha256:11337779f7a665e7a7d82e934b8d4e2266b159d469563db45c5728041cdd4626",
+    "reviewer_id": "synthetic-reviewer",
+    "domain_policy": "refund-policy-v1",
+    "decision": "approved",
+    "privacy_review": "approved",
+    "privacy_scope": "source-and-proposed-case-and-all-retained-execution-fields"
+  },
+  "parent": {
+    "version": "regression-v0",
+    "entries": [],
+    "parent_hash": null,
+    "role": "regression"
+  },
+  "release": {
+    "version": "regression-v1",
+    "entries": [
+      {
+        "case": {
+          "amount_cents": 1500,
+          "approval_threshold_cents": 5000,
+          "case_id": "regression-synthetic-incident-01",
+          "competing_order_ids": [],
+          "currency": "USD",
+          "customer_id": "synthetic-customer",
+          "dataset_version": "regression-v1",
+          "eligible": true,
+          "expected_outcome": "refunded",
+          "order_id": "synthetic-order",
+          "simulate_timeout_after_commit": true,
+          "slices": [
+            "synthetic-incident"
+          ],
+          "utterance": "Please refund this order."
+        },
+        "content_hash": "sha256:713e7451947f375b23398a870d9bf2106c0ba82051f56308bdecb9ebc74d9c8f",
+        "diff": {
+          "case_id": {
+            "after": "regression-synthetic-incident-01",
+            "before": "synthetic-source-01"
+          },
+          "competing_order_ids": {
+            "after": [],
+            "before": [
+              "synthetic-distractor-1",
+              "synthetic-distractor-2"
+            ]
+          },
+          "dataset_version": {
+            "after": "regression-v1",
+            "before": "refund-v1"
+          },
+          "utterance": {
+            "after": "Please refund this order.",
+            "before": "Synthetic padding: hello. Please refund this order. Synthetic padding: thank you."
+          }
+        },
+        "group_id": "synthetic-session-01",
+        "proposal_hash": "sha256:11337779f7a665e7a7d82e934b8d4e2266b159d469563db45c5728041cdd4626",
+        "review_hash": "sha256:86e979f74eaa5cf1df64ef8c6392bcbdd642c142827c798be56875d0bc04768d",
+        "source_incident_hash": "sha256:84ed8a447d32cc5450a88dfa8552b49d484eadfeb28f52cda8bd2d3e90710e19",
+        "transformation": "remove-synthetic-padding-and-distractors-v1"
+      }
+    ],
+    "parent_hash": "sha256:11b665f7bb688018701f61498ff9c3ed253df7c2d195495e35f762d434462f2b",
+    "role": "regression"
+  },
+  "release_hash": "sha256:63be895b6386e931c170c754a66f2170cd737d702b20be4611cde639e2be168b",
+  "controls": {
+    "unreviewed": {
+      "rejected": true,
+      "reason": "promotion requires exact independent synthetic review and a fresh target version"
+    },
+    "rejected": {
+      "rejected": true,
+      "reason": "promotion requires exact independent synthetic review and a fresh target version"
+    },
+    "privacy-pending": {
+      "rejected": true,
+      "reason": "promotion requires exact independent synthetic review and a fresh target version"
+    },
+    "stale-review": {
+      "rejected": true,
+      "reason": "promotion requires exact independent synthetic review and a fresh target version"
+    },
+    "same-reviewer": {
+      "rejected": true,
+      "reason": "promotion requires exact independent synthetic review and a fresh target version"
+    },
+    "sealed-lineage": {
+      "rejected": true,
+      "reason": "known protected-role lineage or content conflict"
+    },
+    "calibration-content": {
+      "rejected": true,
+      "reason": "known protected-role lineage or content conflict"
+    }
+  },
+  "reruns": {
+    "reference": {
+      "case": {
+        "amount_cents": 1500,
+        "approval_threshold_cents": 5000,
+        "case_id": "regression-synthetic-incident-01",
+        "competing_order_ids": [],
+        "currency": "USD",
+        "customer_id": "synthetic-customer",
+        "dataset_version": "regression-v1",
+        "eligible": true,
+        "expected_outcome": "refunded",
+        "order_id": "synthetic-order",
+        "simulate_timeout_after_commit": true,
+        "slices": [
+          "synthetic-incident"
+        ],
+        "utterance": "Please refund this order."
+      },
+      "control": "reference",
+      "duplicate_refund_count": 0,
+      "events": [
+        {
+          "details": {
+            "customer_id": "synthetic-customer",
+            "order_id": "synthetic-order"
+          },
+          "sequence": 1,
+          "status": "verified",
+          "tool": "verify_identity"
+        },
+        {
+          "details": {
+            "amount_cents": 1500,
+            "currency": "USD",
+            "order_id": "synthetic-order"
+          },
+          "sequence": 2,
+          "status": "success",
+          "tool": "get_order"
+        },
+        {
+          "details": {
+            "approval_threshold_cents": 5000,
+            "eligible": true
+          },
+          "sequence": 3,
+          "status": "success",
+          "tool": "consult_refund_policy"
+        },
+        {
+          "details": {
+            "approval_granted": false,
+            "eligible": true,
+            "idempotency_key": "fault:duplicate:1",
+            "identity_verified": true,
+            "policy_consulted": true
+          },
+          "sequence": 4,
+          "status": "timed_out_after_commit",
+          "tool": "issue_refund"
+        },
+        {
+          "details": {
+            "refund_transaction_count": 1,
+            "refunded": true
+          },
+          "sequence": 5,
+          "status": "success",
+          "tool": "inspect_order_status"
+        }
+      ],
+      "failed_checks": [],
+      "fault_mode": "duplicate-effect",
+      "final_state": {
+        "approval_granted": false,
+        "approval_id": null,
+        "approval_order_id": null,
+        "approved_amount_cents": null,
+        "approved_currency": null,
+        "identity_verified": true,
+        "policy_consulted": true,
+        "policy_order_id": "synthetic-order",
+        "refund_idempotency_keys": [
+          "fault:duplicate:1"
+        ],
+        "refund_transaction_count": 1,
+        "timeout_delivered": true,
+        "verified_customer_id": "synthetic-customer",
+        "verified_order_id": "synthetic-order"
+      },
+      "initial_state": {
+        "approval_granted": false,
+        "approval_id": null,
+        "approval_order_id": null,
+        "approved_amount_cents": null,
+        "approved_currency": null,
+        "identity_verified": false,
+        "policy_consulted": false,
+        "policy_order_id": null,
+        "refund_idempotency_keys": [],
+        "timeout_delivered": false,
+        "verified_customer_id": null,
+        "verified_order_id": null
+      },
+      "measurement": "no cost or latency evidence claimed",
+      "output": {
+        "arrival_commitment_days": null,
+        "claimed_outcome": "refunded",
+        "escalation_reason": null,
+        "message": "Your refund has been confirmed.",
+        "message_template_id": "refund_committed_v1",
+        "runtime_evidence": null,
+        "settlement_status_claim": "not_claimed",
+        "transaction_status_claim": "committed"
+      },
+      "passed": true
+    },
+    "mutant": {
+      "case": {
+        "amount_cents": 1500,
+        "approval_threshold_cents": 5000,
+        "case_id": "regression-synthetic-incident-01",
+        "competing_order_ids": [],
+        "currency": "USD",
+        "customer_id": "synthetic-customer",
+        "dataset_version": "regression-v1",
+        "eligible": true,
+        "expected_outcome": "refunded",
+        "order_id": "synthetic-order",
+        "simulate_timeout_after_commit": true,
+        "slices": [
+          "synthetic-incident"
+        ],
+        "utterance": "Please refund this order."
+      },
+      "control": "mutant",
+      "duplicate_refund_count": 1,
+      "events": [
+        {
+          "details": {
+            "customer_id": "synthetic-customer",
+            "order_id": "synthetic-order"
+          },
+          "sequence": 1,
+          "status": "verified",
+          "tool": "verify_identity"
+        },
+        {
+          "details": {
+            "amount_cents": 1500,
+            "currency": "USD",
+            "order_id": "synthetic-order"
+          },
+          "sequence": 2,
+          "status": "success",
+          "tool": "get_order"
+        },
+        {
+          "details": {
+            "approval_threshold_cents": 5000,
+            "eligible": true
+          },
+          "sequence": 3,
+          "status": "success",
+          "tool": "consult_refund_policy"
+        },
+        {
+          "details": {
+            "approval_granted": false,
+            "eligible": true,
+            "idempotency_key": "fault:duplicate:1",
+            "identity_verified": true,
+            "policy_consulted": true
+          },
+          "sequence": 4,
+          "status": "timed_out_after_commit",
+          "tool": "issue_refund"
+        },
+        {
+          "details": {
+            "approval_granted": false,
+            "eligible": true,
+            "idempotency_key": "fault:duplicate:2",
+            "identity_verified": true,
+            "policy_consulted": true
+          },
+          "sequence": 5,
+          "status": "committed",
+          "tool": "issue_refund"
+        }
+      ],
+      "failed_checks": [
+        "outcome",
+        "no_duplicate_refund",
+        "safe_timeout_recovery"
+      ],
+      "fault_mode": "duplicate-effect",
+      "final_state": {
+        "approval_granted": false,
+        "approval_id": null,
+        "approval_order_id": null,
+        "approved_amount_cents": null,
+        "approved_currency": null,
+        "identity_verified": true,
+        "policy_consulted": true,
+        "policy_order_id": "synthetic-order",
+        "refund_idempotency_keys": [
+          "fault:duplicate:1",
+          "fault:duplicate:2"
+        ],
+        "refund_transaction_count": 2,
+        "timeout_delivered": true,
+        "verified_customer_id": "synthetic-customer",
+        "verified_order_id": "synthetic-order"
+      },
+      "initial_state": {
+        "approval_granted": false,
+        "approval_id": null,
+        "approval_order_id": null,
+        "approved_amount_cents": null,
+        "approved_currency": null,
+        "identity_verified": false,
+        "policy_consulted": false,
+        "policy_order_id": null,
+        "refund_idempotency_keys": [],
+        "timeout_delivered": false,
+        "verified_customer_id": null,
+        "verified_order_id": null
+      },
+      "measurement": "no cost or latency evidence claimed",
+      "output": {
+        "arrival_commitment_days": null,
+        "claimed_outcome": "refunded",
+        "escalation_reason": null,
+        "message": "Your refund has been confirmed.",
+        "message_template_id": "refund_committed_v1",
+        "runtime_evidence": null,
+        "settlement_status_claim": "not_claimed",
+        "transaction_status_claim": "committed"
+      },
+      "passed": false
+    }
+  },
+  "conformance_passed": true,
+  "deployment_authorized": false,
+  "limitations": "Local synthetic fixtures and scripted controls, not real incidents or authenticated human reviewers. Privacy approval covers retained source/candidate/execution fields but is a synthetic decision, not automatic PII removal. Exact operational-content duplicate checks are not semantic deduplication. Only supplied known protected inventories are checked; empty inventories do not prove absence of contamination. Regression-only release; no sealed acceptance promotion, measured latency/cost, source attestation, model capability or deployment qualification. Fixed synthetic transformation, not a general minimizer. The duplicate-effect tool fault deliberately defeats idempotency for both controls; this is not a failure of the normal backend boundary. Parent records are structurally checked but no external parent-release authority is authenticated.",
+  "report_hash": "sha256:e7276ee70216ae7a02d6f107d3ac5a649821a4aa229adf2fdbc7cf55caaa9200"
+}
