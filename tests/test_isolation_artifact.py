@@ -1,8 +1,8 @@
 """Reconstruct book results from retained operations, not stored pass flags."""
 
 import json
-from pathlib import Path
 import unittest
+from pathlib import Path
 
 from cx_eval_lab.isolation_study import replay_study
 

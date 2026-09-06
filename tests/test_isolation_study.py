@@ -1,13 +1,13 @@
 """Observed synthetic cache leakage, scoped utility, and actual thread barriers."""
 
 import copy
-from dataclasses import replace
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
+from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
 
@@ -40,7 +40,7 @@ class IsolationStudyTests(unittest.TestCase):
         self.assertLess(responses['B-first']['read_sequence'], responses['A-repeat']['read_sequence'])
 
     def test_context_spoofs_invalid_ids_and_policy_overwrite_fail(self):
-        from cx_eval_lab.isolation_study import CacheStore, Worker, POLICY
+        from cx_eval_lab.isolation_study import POLICY, CacheStore, Worker
         with tempfile.TemporaryDirectory() as root:
             store = CacheStore(Path(root) / 'cache.sqlite', 'scoped')
             a, b = store.issue_context('run-A'), store.issue_context('run-B')

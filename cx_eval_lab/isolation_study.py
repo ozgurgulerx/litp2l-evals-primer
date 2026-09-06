@@ -1,15 +1,15 @@
 """Synthetic run-cache isolation with SQLite and explicitly ordered thread overlap."""
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor
-from contextlib import closing
-from dataclasses import dataclass, field
 import json
-from pathlib import Path
 import re
 import sqlite3
 import tempfile
 import threading
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
+from dataclasses import dataclass, field
+from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
 
