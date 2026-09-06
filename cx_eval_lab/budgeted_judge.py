@@ -64,6 +64,7 @@ class BudgetedSemanticJudge:
         try:
             runtime = judgment.runtime_evidence
             estimate = usd_to_micro(None if runtime is None else runtime.cost_usd)
+            json.dumps(None if runtime is None else asdict(runtime), allow_nan=False)
             valid_runtime = True
             receipt = self.ledger.finalize(request.invocation_id, estimate,
                 json.dumps(asdict(judgment), sort_keys=True, allow_nan=False))
