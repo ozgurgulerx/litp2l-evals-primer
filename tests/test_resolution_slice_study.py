@@ -2,12 +2,12 @@
 
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
-
+from pathlib import Path
+from unittest.mock import patch
 
 SOURCE = Path('docs/assets/native-resolution-semantic-v1.json')
 DIGEST = 'sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839'
@@ -30,6 +30,10 @@ class ResolutionSliceStudyTests(unittest.TestCase):
             self.assertNotIn('packet', comparison)
             self.assertEqual([], comparison['plan']['required_slices'])
         self.assertEqual(before, SOURCE.read_bytes())
+
+    def test_retained_report_rederives_exactly(self):
+        retained = json.loads(Path('docs/assets/resolution-slices-v1.json').read_bytes())
+        self.assertEqual(retained, self.derive())
 
     def test_missing_or_wrong_explicit_anchors_fail(self):
         for digest, trust in ((DIGEST, frozenset()), (DIGEST, frozenset({'sha256:' + '0'*64})),
@@ -65,11 +69,26 @@ class ResolutionSliceStudyTests(unittest.TestCase):
             path = Path(directory) / 'report.json'
             command = [sys.executable, '-m', 'cx_eval_lab.resolution_slice_study',
                        '--source', str(SOURCE), '--expected-source-sha256', DIGEST, '--output', str(path)]
-            self.assertNotEqual(0, subprocess.run(command, capture_output=True).returncode)
+            self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
             command += ['--trusted-calibration-hash', TRUST]
-            first = subprocess.run(command, capture_output=True, text=True)
+            first = subprocess.run(command, capture_output=True, text=True, check=False)
             self.assertEqual(0, first.returncode, first.stderr)
             before = path.read_bytes()
             self.assertEqual(self.derive(), json.loads(before))
-            self.assertNotEqual(0, subprocess.run(command, capture_output=True).returncode)
+            self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
             self.assertEqual(before, path.read_bytes())
+
+    def test_inprocess_cli_and_malformed_source(self):
+        from cx_eval_lab.resolution_slice_study import main
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'report.json'
+            argv = ['study', '--source', str(SOURCE), '--expected-source-sha256', DIGEST,
+                    '--trusted-calibration-hash', TRUST, '--output', str(path)]
+            with patch.object(sys, 'argv', argv):
+                main()
+                with self.assertRaises(SystemExit):
+                    main()
+            broken = Path(directory) / 'broken.json'
+            broken.write_text('{}')
+            with self.assertRaisesRegex(ValueError, 'malformed retained'):
+                self.derive(broken, 'sha256:' + hashlib.sha256(broken.read_bytes()).hexdigest())
