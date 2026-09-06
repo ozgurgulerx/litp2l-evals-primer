@@ -30,6 +30,7 @@ class CurrentReleaseStudyTests(unittest.TestCase):
         with patch('cx_eval_lab.release_now.verify_sources', side_effect=source_check_double):
             study = run_study()
         self.assertFalse(study['deployment_authorized'])
+        self.assertTrue(study['conformance_passed'])
         self.assertEqual(16, len(study['packet']['trial_artifacts']))
         self.assertEqual(16, len(study['transport']))
         self.assertEqual(4, len(study['calibration_transport']))
@@ -67,6 +68,7 @@ class CurrentReleaseStudyTests(unittest.TestCase):
         from cx_eval_lab.current_release_study import run_study
         with patch('cx_eval_lab.release_now.verify_sources', side_effect=ValueError('dirty source fixture')):
             study = run_study()
+        self.assertFalse(study['conformance_passed'])
         self.assertTrue(all(item['assessment']['action'] == 'block' for item in study['assessments']))
         self.assertTrue(all('source_verification_failed' in item['assessment']['issues']
                             for item in study['assessments']))
@@ -83,9 +85,10 @@ class CurrentReleaseStudyTests(unittest.TestCase):
             path = Path(temporary) / 'current.json'
             command = [sys.executable, '-m', 'cx_eval_lab.current_release_study', '--output', str(path)]
             result = subprocess.run(command, capture_output=True, text=True)
-            self.assertEqual(0, result.returncode, result.stderr)
             content = path.read_bytes()
-            self.assertFalse(json.loads(content)['deployment_authorized'])
+            report = json.loads(content)
+            self.assertEqual(0 if report['conformance_passed'] else 1, result.returncode, result.stderr)
+            self.assertFalse(report['deployment_authorized'])
             self.assertNotEqual(0, subprocess.run(command, capture_output=True).returncode)
             self.assertEqual(content, path.read_bytes())
 
