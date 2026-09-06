@@ -33,6 +33,8 @@ Sierra's [τ³ discussion](https://sierra.ai/blog/bench-advancing-agent-benchmar
 
 Do not call an end-to-end failure a RAG failure until the trace localizes it.
 
+The [Knowledge-to-Action Study](knowledge-action-study.md) extends these scorer fixtures into local retrieval, policy selection and mock backend execution. Katas 51–53 teach how to distinguish missing evidence, unresolved requests, wrong attempted arguments and successful enforcement. Its deterministic controls do not establish live-model performance or replace the broader four-interface protocol above.
+
 ## Skills and capability selection
 
 A reusable skill or procedure creates two independent questions:

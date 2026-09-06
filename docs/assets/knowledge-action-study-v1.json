@@ -1,0 +1,1637 @@
+{
+  "schema": "knowledge-action-study-v1",
+  "evidence_kind": "executed_deterministic_mock",
+  "deployment_authorized": false,
+  "inputs": {
+    "cases": [
+      {
+        "case_id": "case-01",
+        "query": "Refund blue backpack.",
+        "age_days": 10,
+        "amount_cents": 4000,
+        "currency": "USD",
+        "customer_id": "customer-1",
+        "order_id": "order-1",
+        "active_policy_version": "policy-v2"
+      },
+      {
+        "case_id": "case-02",
+        "query": "Refund blue backpack after 45 days.",
+        "age_days": 45,
+        "amount_cents": 4000,
+        "currency": "USD",
+        "customer_id": "customer-1",
+        "order_id": "order-1",
+        "active_policy_version": "policy-v2"
+      },
+      {
+        "case_id": "case-03",
+        "query": "Reimbursements for luggage purchases.",
+        "age_days": 10,
+        "amount_cents": 4000,
+        "currency": "USD",
+        "customer_id": "customer-1",
+        "order_id": "order-1",
+        "active_policy_version": "policy-v2"
+      }
+    ],
+    "documents": [
+      {
+        "document_id": "doc-a",
+        "policy_version": "policy-v1",
+        "text": "Refund blue backpack orders within 90 days.",
+        "refund_window_days": 90
+      },
+      {
+        "document_id": "doc-b",
+        "policy_version": "policy-v2",
+        "text": "Reimbursements for luggage purchases within 30 days.",
+        "refund_window_days": 30
+      }
+    ]
+  },
+  "protocol": {
+    "arms": [
+      "retrieval",
+      "oracle",
+      "full-context"
+    ],
+    "agents": [
+      "policy-control",
+      "wrong-amount-mutant"
+    ],
+    "retrieval": "unique-token-overlap-top1-id-tiebreak-v1",
+    "downstream": "active-version-structured-window-v1",
+    "source_provenance": "named local controls; no pinned source attestation"
+  },
+  "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+  "trials": [
+    {
+      "payload": {
+        "case_id": "case-01",
+        "arm": "retrieval",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 43,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            }
+          ]
+        },
+        "decision": {
+          "action": "abstain",
+          "selected_document_id": null,
+          "reason": "active_policy_unavailable"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": false,
+          "decision_correct": false,
+          "action_arguments_correct": true,
+          "final_state_correct": false,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:5f75c75266c9c2e9c790947eb50afcde074fe4b91d3786fd476a118e24baf656"
+    },
+    {
+      "payload": {
+        "case_id": "case-02",
+        "arm": "retrieval",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 43,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "days",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "days"
+            ],
+            "score": 1
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack after 45 days.",
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            }
+          ]
+        },
+        "decision": {
+          "action": "abstain",
+          "selected_document_id": null,
+          "reason": "active_policy_unavailable"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": false,
+          "decision_correct": false,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:eefb50bf5d8794bf0d52c3c76fef7e0386a0f50fddc2b495b6288ce055c72e2f"
+    },
+    {
+      "payload": {
+        "case_id": "case-03",
+        "arm": "retrieval",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "for",
+              "luggage",
+              "purchases",
+              "reimbursements"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-a",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Reimbursements for luggage purchases.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "accepted"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            }
+          ]
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:af24701612c8c9220657552fa3570a4337ada0ef481bd0b53a8d933be1433efe"
+    },
+    {
+      "payload": {
+        "case_id": "case-01",
+        "arm": "oracle",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "accepted"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            }
+          ]
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:f75d6d5789c22fe2641e10852a1e5e77d60f75ea09f82f55a154b85b036997f9"
+    },
+    {
+      "payload": {
+        "case_id": "case-02",
+        "arm": "oracle",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "days",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "days"
+            ],
+            "score": 1
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack after 45 days.",
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "deny",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": true,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:21644b42848a7a9de20031ca0038e714046697a50ab5e08132232b191251ea8e"
+    },
+    {
+      "payload": {
+        "case_id": "case-03",
+        "arm": "oracle",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "for",
+              "luggage",
+              "purchases",
+              "reimbursements"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-a",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Reimbursements for luggage purchases.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "accepted"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            }
+          ]
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:8616967782e4953d3526655f83be42cdcce7e20b2562b7edcc5536e0c92e005c"
+    },
+    {
+      "payload": {
+        "case_id": "case-01",
+        "arm": "full-context",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 2,
+        "context_character_count": 95,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            },
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "accepted"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            }
+          ]
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:73f299e2dde9798ab4f889d2c0d439f2f1dbe83a60986d4637180cb7a121506c"
+    },
+    {
+      "payload": {
+        "case_id": "case-02",
+        "arm": "full-context",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 2,
+        "context_character_count": 95,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "days",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "days"
+            ],
+            "score": 1
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack after 45 days.",
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            },
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "deny",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": true,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:d7350c6e240905d13e49f3c141f4f321704bc8c2cb051d89ed2a51eaddd23f1d"
+    },
+    {
+      "payload": {
+        "case_id": "case-03",
+        "arm": "full-context",
+        "agent": "policy-control",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 2,
+        "context_character_count": 95,
+        "rankings": [
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "for",
+              "luggage",
+              "purchases",
+              "reimbursements"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-a",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Reimbursements for luggage purchases.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            },
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "accepted"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4000,
+              "currency": "USD"
+            }
+          ]
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:510e2350fef638e0107c698d086716a8247f4879748ef38cf487dca358328c8a"
+    },
+    {
+      "payload": {
+        "case_id": "case-01",
+        "arm": "retrieval",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 43,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            }
+          ]
+        },
+        "decision": {
+          "action": "abstain",
+          "selected_document_id": null,
+          "reason": "active_policy_unavailable"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": false,
+          "decision_correct": false,
+          "action_arguments_correct": true,
+          "final_state_correct": false,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:c034a530a36bc391727ef68452bee1f4bda976214f99b0f196f29e96ad9b5e58"
+    },
+    {
+      "payload": {
+        "case_id": "case-02",
+        "arm": "retrieval",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 43,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "days",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "days"
+            ],
+            "score": 1
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack after 45 days.",
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            }
+          ]
+        },
+        "decision": {
+          "action": "abstain",
+          "selected_document_id": null,
+          "reason": "active_policy_unavailable"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": false,
+          "decision_correct": false,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:3df46520be497f56249472f4cf4d0685489910fab9230d4b2ba8b665870ef8e2"
+    },
+    {
+      "payload": {
+        "case_id": "case-03",
+        "arm": "retrieval",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "for",
+              "luggage",
+              "purchases",
+              "reimbursements"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-a",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Reimbursements for luggage purchases.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4001,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "arguments_mismatch"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": false,
+          "final_state_correct": false,
+          "blocked_attempts": 1,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:b271518e8c1b457318a4306a398d30270bf464ebac6c417621eb9c9797a60e30"
+    },
+    {
+      "payload": {
+        "case_id": "case-01",
+        "arm": "oracle",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4001,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "arguments_mismatch"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": false,
+          "final_state_correct": false,
+          "blocked_attempts": 1,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:f612d03558454f1fc6a41fc28a386ee25317f6f9a83f2067777b025f473a0473"
+    },
+    {
+      "payload": {
+        "case_id": "case-02",
+        "arm": "oracle",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "days",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "days"
+            ],
+            "score": 1
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack after 45 days.",
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "deny",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": true,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:be811417bb4442b5094e101bb8fdb6c61c94e4bd1e42b55e45a93efc49d02683"
+    },
+    {
+      "payload": {
+        "case_id": "case-03",
+        "arm": "oracle",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 1,
+        "context_character_count": 52,
+        "rankings": [
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "for",
+              "luggage",
+              "purchases",
+              "reimbursements"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-a",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Reimbursements for luggage purchases.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4001,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "arguments_mismatch"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": false,
+          "final_state_correct": false,
+          "blocked_attempts": 1,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:be39ec0a16d1e6fdc9f23320b174f1acb85d74957ad0556d5cd41df047d230d7"
+    },
+    {
+      "payload": {
+        "case_id": "case-01",
+        "arm": "full-context",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 2,
+        "context_character_count": 95,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            },
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4001,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "arguments_mismatch"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": false,
+          "final_state_correct": false,
+          "blocked_attempts": 1,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:656199f26b7439ba9067195d5081a9653a02f0e02f3b4ad7867f1114bb9fb3ce"
+    },
+    {
+      "payload": {
+        "case_id": "case-02",
+        "arm": "full-context",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 2,
+        "context_character_count": 95,
+        "rankings": [
+          {
+            "document_id": "doc-a",
+            "matched_terms": [
+              "backpack",
+              "blue",
+              "days",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "days"
+            ],
+            "score": 1
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Refund blue backpack after 45 days.",
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            },
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "deny",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": true,
+          "final_state_correct": true,
+          "blocked_attempts": 0,
+          "action_attempt_count": 0,
+          "completed_denial": true,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:6382396343a7442f79c1909d8059c18bf09791d785a91590889cb45e86f6a7d1"
+    },
+    {
+      "payload": {
+        "case_id": "case-03",
+        "arm": "full-context",
+        "agent": "wrong-amount-mutant",
+        "registration_hash": "sha256:063b1e47631e3876590def37945dd7080361385f8c3374421eddb66d88a2d0e9",
+        "context_document_count": 2,
+        "context_character_count": 95,
+        "rankings": [
+          {
+            "document_id": "doc-b",
+            "matched_terms": [
+              "for",
+              "luggage",
+              "purchases",
+              "reimbursements"
+            ],
+            "score": 4
+          },
+          {
+            "document_id": "doc-a",
+            "matched_terms": [],
+            "score": 0
+          }
+        ],
+        "agent_input": {
+          "request": {
+            "query": "Reimbursements for luggage purchases.",
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1",
+            "active_policy_version": "policy-v2"
+          },
+          "documents": [
+            {
+              "document_id": "doc-a",
+              "policy_version": "policy-v1",
+              "text": "Refund blue backpack orders within 90 days.",
+              "refund_window_days": 90
+            },
+            {
+              "document_id": "doc-b",
+              "policy_version": "policy-v2",
+              "text": "Reimbursements for luggage purchases within 30 days.",
+              "refund_window_days": 30
+            }
+          ]
+        },
+        "decision": {
+          "action": "refund",
+          "selected_document_id": "doc-b",
+          "reason": "structured_policy_rule"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-1",
+              "order_id": "order-1",
+              "amount_cents": 4001,
+              "currency": "USD"
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "arguments_mismatch"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "knowledge_in_corpus": true,
+          "knowledge_supplied": true,
+          "decision_correct": true,
+          "action_arguments_correct": false,
+          "final_state_correct": false,
+          "blocked_attempts": 1,
+          "action_attempt_count": 1,
+          "completed_denial": false,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:5c92056f80b5be1fb97ef4d4c56d0dedb1e73c14dad35ef15617d30e435c5fb3"
+    }
+  ],
+  "summary": [
+    {
+      "agent": "policy-control",
+      "arm": "retrieval",
+      "case_count": 3,
+      "knowledge_in_corpus_count": 3,
+      "knowledge_supplied_count": 1,
+      "knowledge_recall": 0.3333333333333333,
+      "decision_correct_count": 1,
+      "contract_passes": 1,
+      "contract_pass_rate": 0.3333333333333333,
+      "abstentions": 2,
+      "action_attempts": 1,
+      "completed_denials": 0,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "policy-control",
+      "arm": "oracle",
+      "case_count": 3,
+      "knowledge_in_corpus_count": 3,
+      "knowledge_supplied_count": 3,
+      "knowledge_recall": 1.0,
+      "decision_correct_count": 3,
+      "contract_passes": 3,
+      "contract_pass_rate": 1.0,
+      "abstentions": 0,
+      "action_attempts": 2,
+      "completed_denials": 1,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "policy-control",
+      "arm": "full-context",
+      "case_count": 3,
+      "knowledge_in_corpus_count": 3,
+      "knowledge_supplied_count": 3,
+      "knowledge_recall": 1.0,
+      "decision_correct_count": 3,
+      "contract_passes": 3,
+      "contract_pass_rate": 1.0,
+      "abstentions": 0,
+      "action_attempts": 2,
+      "completed_denials": 1,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "wrong-amount-mutant",
+      "arm": "retrieval",
+      "case_count": 3,
+      "knowledge_in_corpus_count": 3,
+      "knowledge_supplied_count": 1,
+      "knowledge_recall": 0.3333333333333333,
+      "decision_correct_count": 1,
+      "contract_passes": 0,
+      "contract_pass_rate": 0.0,
+      "abstentions": 2,
+      "action_attempts": 1,
+      "completed_denials": 0,
+      "blocked_attempts": 1
+    },
+    {
+      "agent": "wrong-amount-mutant",
+      "arm": "oracle",
+      "case_count": 3,
+      "knowledge_in_corpus_count": 3,
+      "knowledge_supplied_count": 3,
+      "knowledge_recall": 1.0,
+      "decision_correct_count": 3,
+      "contract_passes": 1,
+      "contract_pass_rate": 0.3333333333333333,
+      "abstentions": 0,
+      "action_attempts": 2,
+      "completed_denials": 1,
+      "blocked_attempts": 2
+    },
+    {
+      "agent": "wrong-amount-mutant",
+      "arm": "full-context",
+      "case_count": 3,
+      "knowledge_in_corpus_count": 3,
+      "knowledge_supplied_count": 3,
+      "knowledge_recall": 1.0,
+      "decision_correct_count": 3,
+      "contract_passes": 1,
+      "contract_pass_rate": 0.3333333333333333,
+      "abstentions": 0,
+      "action_attempts": 2,
+      "completed_denials": 1,
+      "blocked_attempts": 2
+    }
+  ],
+  "conformance_passed": true,
+  "limitations": "Three scripted cases share one customer; arms and mutants are interventions, not independent population samples. Knowledge recall is current required document supplied / case count, distinct from its presence in the corpus. Decisions use structured policy fields, not language understanding or hidden reasoning. Oracle is an evaluator-controlled evidence intervention, not deployable retrieval. Context character counts measure only document text, excluding request and metadata. Full context is not matched for token budget. Wrong-amount attempts are denied by the mock server: successful boundary control does not make the agent successful. No model, human, cost, latency or deployment claims. Replay re-executes registered local controls, not authenticated historical provenance.",
+  "study_hash": "sha256:2190172cf99ddbe1fbb6aacb70b933293cbc4564cafa44ffd5a7070c0589b3fb"
+}

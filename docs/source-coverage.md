@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Executed knowledge-to-action controls
+
+The [Knowledge-to-Action Study](knowledge-action-study.md) and Katas 51–53 add 18 local executions across lexical retrieval, oracle documents and full context, crossed with a correct structured-policy control and a wrong-amount mutant. The [retained packet](assets/knowledge-action-study-v1.json) supports re-execution of rankings, context, decisions, rejected/accepted mock writes and final-state grades. Correct-control completion is 1/3, 3/3 and 3/3; mutant completion is 0/3, 1/3 and 1/3. All cases share one customer and two invented policy documents. Natural-language policy interpretation, active-version discovery, realistic search scale, representative sampling, model runs and deployment qualification remain open; these results do not establish a production improvement.
+
 ### Current release evidence composition
 
 [Katas 49–50](evidence-spine.md#kata-49-matching-a-hash-is-not-validating-an-input) add explicit file/value source verification and a composed current-release assessment. The [retained study](assets/current-release-study-v1.json) verifies actual committed repository bytes, replays one sixteen-trial native packet and applies seven current-state controls: current diagnostic holds; revoked, expired, synthetic-disabled, wrong-revision, changed-case and unqualified-prerequisite controls block. Four separate calibration executions and all provider responses are synthetic. Historical grades survive revocation unchanged. This closes local source/current-calibration composition—not authoritative registry retrieval, human calibration, execution attestation, atomic exposure authorization or observed cloud CI.

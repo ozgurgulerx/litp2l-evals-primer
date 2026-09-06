@@ -4,6 +4,8 @@ A retrieval-augmented system can produce a correct answer for the wrong reason, 
 
 Research agents add time, browsing strategy, source authority, synthesis, and search-budget questions. Evaluate the pipeline and the final product.
 
+For state-changing tasks, follow this chapter with the [Knowledge-to-Action Study](knowledge-action-study.md): Katas 51–53 connect corpus coverage and supplied evidence to actual policy decisions, attempted tool arguments and mock ledger outcomes. A retrieval repair is not automatically an action repair.
+
 ## Decompose the system
 
 Use a causal map before selecting metrics:
