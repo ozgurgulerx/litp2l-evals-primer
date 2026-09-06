@@ -27,6 +27,7 @@ EXPECTED_CHAPTERS = (
     "docs/checklist.md",
     "docs/build-the-system.md",
     "docs/evidence-spine.md",
+    "docs/cx-evidence-walkthrough.md",
     "docs/references.md",
     "docs/courses.md",
     "docs/interview-drills.md",
