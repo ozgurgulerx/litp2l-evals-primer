@@ -231,12 +231,17 @@ def promote(parent, incident, proposal, review, inventories=()):
         raise ValueError('promotion requires exact independent synthetic review and a fresh target version')
     if not isinstance(inventories, tuple) or not all(isinstance(row, Inventory) for row in inventories):
         raise ValueError('operator inventory must be a tuple of validated protected inventories')
-    identities = {content_hash(incident.case), content_hash(proposal.case)}
+    existing = [_object(entry) for entry in parent.entries]
+    # Recheck all known carried-forward identities against today's inventories.
+    # Parent rows lack original source-case content; unknown lineage is not inferred.
+    identities = {content_hash(incident.case), content_hash(proposal.case),
+                  *(content_hash(RefundCase.from_dict(entry['case'])) for entry in existing)}
+    groups = {incident.group_id, *(entry['group_id'] for entry in existing)}
+    sources = {incident.digest, *(entry['source_incident_hash'] for entry in existing)}
     for inventory in inventories:
-        if (incident.group_id in inventory.groups or incident.digest in inventory.source_hashes
+        if (groups.intersection(inventory.groups) or sources.intersection(inventory.source_hashes)
                 or identities.intersection(inventory.content_hashes)):
             raise ValueError('known protected-role lineage or content conflict')
-    existing = [_object(entry) for entry in parent.entries]
     if any(entry['content_hash'] == content_hash(proposal.case)
            or entry['case']['case_id'] == proposal.case.case_id for entry in existing):
         raise ValueError('duplicate content or conflicting case identity')
