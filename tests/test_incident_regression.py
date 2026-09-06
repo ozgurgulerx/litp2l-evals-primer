@@ -138,3 +138,20 @@ class IncidentRegressionTests(unittest.TestCase):
         for entries in ((json.dumps(row),), ('{}',), child.entries * 2):
             with self.subTest(entries=entries), self.assertRaises(ValueError):
                 RegressionRelease('regression-v2', entries)
+
+    def test_current_protected_inventory_checks_carried_parent_entries(self):
+        from cx_eval_lab.incident_regression import content_hash, execute
+        parent = promote(self.parent, self.incident, self.proposal, self.review)
+        case = replace(self.incident.case, order_id='synthetic-next-order')
+        incident = replace(self.incident, incident_id='synthetic-next-incident', group_id='synthetic-next-group',
+                           case=case, execution_json=json.dumps(execute(case)))
+        proposal = propose_regression(incident, target_version='regression-v2')
+        review = replace(self.review, incident_hash=incident.digest, proposer_hash=proposal.digest)
+        self.assertEqual(2, len(promote(parent, incident, proposal, review).entries))
+        for role in ('sealed-acceptance', 'judge-calibration'):
+            inventories = [Inventory(role, groups=(self.incident.group_id,)),
+                           Inventory(role, source_hashes=(self.incident.digest,)),
+                           Inventory(role, content_hashes=(content_hash(self.proposal.case),))]
+            for inventory in inventories:
+                with self.subTest(inventory=inventory), self.assertRaises(ValueError):
+                    promote(parent, incident, proposal, review, (inventory,))
