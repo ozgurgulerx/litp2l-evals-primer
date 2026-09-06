@@ -31,7 +31,7 @@ class KnowledgeActionTests(unittest.TestCase):
         from cx_eval_lab.knowledge_action import execute_trial, example_cases, example_documents
         case, docs = example_cases()[1], example_documents()
         retrieved = execute_trial(case, docs, 'retrieval', 'policy-control')['payload']
-        self.assertFalse(retrieved['grade']['knowledge_available'])
+        self.assertFalse(retrieved['grade']['knowledge_supplied'])
         self.assertEqual('abstain', retrieved['decision']['action'])
         self.assertEqual([], retrieved['tool_events'])
         self.assertFalse(retrieved['grade']['contract_passed'])
@@ -44,7 +44,7 @@ class KnowledgeActionTests(unittest.TestCase):
         from cx_eval_lab.knowledge_action import execute_trial, example_cases, example_documents
         case, docs = example_cases()[2], example_documents()
         bad = execute_trial(case, docs, 'oracle', 'wrong-amount-mutant')['payload']
-        self.assertTrue(bad['grade']['knowledge_available'])
+        self.assertTrue(bad['grade']['knowledge_supplied'])
         self.assertTrue(bad['grade']['decision_correct'])
         self.assertEqual(case.amount_cents + 1, bad['tool_events'][0]['arguments']['amount_cents'])
         self.assertEqual('blocked', bad['tool_events'][0]['result']['status'])
@@ -66,6 +66,27 @@ class KnowledgeActionTests(unittest.TestCase):
                 self.assertEqual(normal[key], reverse[key])
             self.assertNotIn('required_document_id', json.dumps(normal['agent_input']))
             self.assertNotIn('expected_action', json.dumps(normal['agent_input']))
+
+    def test_registration_context_and_mechanism_counts_are_explicit(self):
+        from cx_eval_lab.knowledge_action import run_study
+        report = run_study()
+        registration = canonical_hash({'inputs': report['inputs'], 'protocol': report['protocol']})
+        self.assertEqual(registration, report['registration_hash'])
+        for artifact in report['trials']:
+            row = artifact['payload']
+            self.assertEqual(registration, row['registration_hash'])
+            context = row['agent_input']['documents']
+            self.assertEqual(len(context), row['context_document_count'])
+            self.assertEqual(sum(len(doc['text']) for doc in context), row['context_character_count'])
+            self.assertEqual([], row['initial_state']['refunds'])
+        for key, expected in (
+                ('knowledge_supplied_count', [1, 3, 3, 1, 3, 3]),
+                ('decision_correct_count', [1, 3, 3, 1, 3, 3]),
+                ('blocked_attempts', [0, 0, 0, 1, 2, 2]),
+                ('completed_denials', [0, 1, 1, 0, 1, 1]),
+                ('abstentions', [2, 0, 0, 2, 0, 0]),
+                ('action_attempts', [1, 2, 2, 1, 2, 2])):
+            self.assertEqual(expected, [row[key] for row in report['summary']])
 
     def test_replay_rejects_rehashed_execution_and_summary_tampering(self):
         from cx_eval_lab.knowledge_action import run_study, replay_study
