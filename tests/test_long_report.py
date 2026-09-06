@@ -162,6 +162,22 @@ class LongReportTests(unittest.TestCase):
             report['synthesis'] = [r for r in report['synthesis'] if r['synthesis_id'] != 'SY04']
         with self.assertRaises(ValueError):
             run_study(inputs)
+
+    def test_retained_artifact_matches_independent_expected_counts(self):
+        from cx_eval_lab.long_report import replay_study, run_study
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/long-report-study-v1.json'
+        artifact = json.loads(path.read_text())
+        self.assertEqual(run_study(), artifact)
+        self.assertEqual(artifact, replay_study(artifact))
+        original, repaired = artifact['reports']
+        self.assertEqual({'supported': 8, 'contradicted': 6, 'unsupported': 4, 'unknown': 0}, original['gold_status_counts'])
+        self.assertEqual((14, 18), (original['controls']['sentence']['atomic_recall']['numerator'],
+                                    original['controls']['sentence']['atomic_recall']['denominator']))
+        self.assertEqual(['C04', 'C05', 'C13', 'C14'], original['controls']['sentence']['omitted_claim_ids'])
+        self.assertEqual(['C16'], original['controls']['cited-only']['omitted_claim_ids'])
+        self.assertEqual({'numerator': 8, 'denominator': 17, 'rate': 8 / 17}, original['controls']['cited-only']['observed_support'])
+        self.assertEqual(20, repaired['controls']['clause']['atomic_recall']['numerator'])
+        self.assertEqual(4, repaired['underlying_unknown_count'])
         inputs = example_inputs()
         inputs['reports'][0]['synthesis'] = []
         with self.assertRaises(ValueError):
