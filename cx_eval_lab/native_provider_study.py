@@ -64,7 +64,8 @@ def _client(transport):
                   http_client=httpx2.Client(transport=httpx2.MockTransport(transport.handle)))
 
 
-def _control(name, config, record, *, rate_limited=False, max_admissions=20, reservation=500):
+def _control(name, config, record, *, rate_limited=False, max_admissions=20, reservation=500,
+             code_revision='working-tree-unpinned'):
     transport = MockTransportLog(config, rate_limited=rate_limited)
     clock_ms = int(NOW.timestamp() * 1000)
     policy = CampaignPolicy('native-' + name, 20_000, max_admissions, clock_ms + 60_000, reservation)
@@ -74,7 +75,8 @@ def _control(name, config, record, *, rate_limited=False, max_admissions=20, res
         stage = ResolutionSemanticStage(judge, CalibrationRegistry((record,)), record.content_hash,
                                         clock=lambda: NOW, allow_synthetic=True)
         cases, agent = example_cases(), DescriptiveResolver()
-        manifest = replace(make_manifest(cases, agent.name, agent.name, semantic_stage=stage),
+        manifest = replace(make_manifest(cases, agent.name, agent.name, semantic_stage=stage,
+                                         code_revision=code_revision),
                            experiment_id='native-provider-' + name)
         experiment = run_paired_resolution(cases=cases, baseline_agent=agent, candidate_agent=agent,
                                            manifest=manifest, semantic_stage=stage)

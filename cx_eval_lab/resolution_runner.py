@@ -23,14 +23,15 @@ def _campaign_inputs(stage):
             ('judge-config', stage.judge.configuration_hash))
 
 
-def make_manifest(cases, baseline_agent_id, candidate_agent_id, *, repetitions=2, semantic_stage=None):
+def make_manifest(cases, baseline_agent_id, candidate_agent_id, *, repetitions=2, semantic_stage=None,
+                  code_revision='working-tree-unpinned'):
     """A synthetic teaching registration, constructed before any agent runs."""
     from cx_eval_lab import resolution_semantic as ns
     semantic = None if semantic_stage is None else semantic_stage.registration
     registration = design(baseline_agent_id, candidate_agent_id, semantic)
     return ExperimentManifest(
         experiment_id='paired-order-resolution-v1', created_at='2026-09-06T00:00:00Z',
-        valid_until='2026-10-01T00:00:00Z', code_revision='working-tree-unpinned',
+        valid_until='2026-10-01T00:00:00Z', code_revision=code_revision,
         model_id='deterministic-controls-no-model', prompt_version='description-matching-control-v1',
         tool_version='multi-order-mock-v1', dataset_version=DATASET,
         evaluator_version=EVALUATOR if semantic is None else ns.EVALUATOR,
