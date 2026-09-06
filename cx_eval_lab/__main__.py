@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from cx_eval_lab.agents import MutantSupportAgent, ReferenceSupportAgent
+from cx_eval_lab.artifacts import replay_packet
 from cx_eval_lab.dataset import load_refund_cases
 from cx_eval_lab.evidence import (
     DeterministicTestReceipt,
@@ -37,6 +38,8 @@ DEFAULT_POLICY = REPOSITORY_ROOT / "evals/cx-support/policies/refund_gate_v1.jso
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the CX eval lab")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    replay_parser = subparsers.add_parser("replay", help="validate and re-grade retained trials offline")
+    replay_parser.add_argument("--input", type=Path, required=True)
     eval_parser = subparsers.add_parser("eval", help="run the refund slice and gate")
     eval_parser.add_argument(
         "--agent",
@@ -90,6 +93,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     arguments = build_parser().parse_args()
+    if arguments.command == "replay":
+        try:
+            packet = json.loads(arguments.input.read_text(encoding="utf-8"))
+            results = replay_packet(packet.get("experiment", packet))
+        except (OSError, ValueError, AttributeError) as error:
+            print(f"replay rejected: {error}")
+            return 2
+        print(f"replayed {len(results)} trials; authority: lab_only; no model calls")
+        return 0
     if arguments.command == "experiment":
         return _run_experiment(arguments)
     if arguments.command != "eval":

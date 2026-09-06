@@ -129,4 +129,11 @@ def _replay_packet(packet, trusted_calibration_hashes):
                      for case_id in case_ids for index in range(manifest.repetitions)}
     if keys != expected_keys:
         raise ValueError("incomplete registered repetitions or paired arms")
+    population = [artifacts[row["artifact_hash"]]["case"]
+                  for row in packet["baseline_trials"] if row["trial_index"] == 0]
+    population_digest = canonical_hash(
+        [[case["case_id"], case["customer_id"], case["slices"]] for case in population]
+    )
+    if population_digest != manifest.population_hash:
+        raise ValueError("registered population hash mismatch")
     return tuple(results)
