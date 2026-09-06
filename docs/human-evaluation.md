@@ -185,6 +185,103 @@ The small table is a teaching sample, not evidence for a release. It exposes use
 
 The next action is to split factual status from tone, refine anchors, and run a larger blinded pilot. It is not to average the labels and declare the rubric calibrated.
 
+### Executed annotation analysis: preserve the disagreement
+
+The table above gives R1 and R2 **75% raw agreement** and **κ = 25/41 ≈ 0.610**. Removing the cases where either reviewer says `unknown` increases raw agreement to **83.33%**, but leaves only six of eight cases. That change does not mean the reviewers improved.
+
+The [retained rater study](assets/rater-study-v1.json) analyzes the existing synthetic annotation fixture without replacing it. It preserves all 24 original labels and the four authored adjudication records, then adds pairwise calculations, resampling sensitivity and a separate reviewer-assignment counterexample. These are executable analyses of supplied teaching labels, not newly collected human ratings. The source has situation descriptions, not full conversation/tool evidence or individual reviewer rationales; absent evidence must not be invented.
+
+### Kata 72: did agreement improve, or did the denominator change?
+
+**Predict:** compute R1/R2 agreement with `unknown` as a third category. Then exclude cases containing `unknown`. Finally, change R1's H04 annotation to missing. Are these three analyses measuring the same thing?
+
+```bash
+uv run python -m cx_eval_lab.rater_study --output /tmp/rater-study.json
+uv run python -m unittest tests.test_rater_study -v
+```
+
+Use a new output path on subsequent runs. Start with the R1/R2 confusion table, with R1 on rows and R2 on columns. Neither axis is independent ground truth.
+
+| R1 label / R2 label | pass | fail | unknown | R1 total |
+| --- | --- | --- | --- | --- |
+| pass | 3 | 0 | 0 | 3 |
+| fail | 1 | 2 | 0 | 3 |
+| unknown | 1 | 0 | 1 | 2 |
+| R2 total | 5 | 2 | 1 | 8 |
+
+The diagonal contains six agreements. The marginal-frequency term is `(3×5 + 3×2 + 2×1)/8² = 23/64`. Therefore `κ = (48/64 − 23/64)/(1 − 23/64) = 25/41`. This is an unweighted nominal-category statistic: it does not impose an ordinal distance between `pass`, `fail` and `unknown`. The [scikit-learn statistical reference](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html) documents this definition and the possibility of undefined κ.
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.rater_study import pair_metrics, replay_study
+
+report = replay_study(json.loads(Path("docs/assets/rater-study-v1.json").read_text()))
+fixture = report["inputs"]["source_fixture"]
+labels = {(r["case_id"], r["reviewer"]): r["label"] for r in fixture["annotations"]}
+pairs = [{"item_id": item["case_id"],
+          "left": labels[item["case_id"], "R1"],
+          "right": labels[item["case_id"], "R2"]} for item in fixture["items"]]
+original = pair_metrics(pairs)
+assert original == report["pair_metrics"]["R1:R2"]
+assert original["full"]["kappa_exact"] == "25/41"
+assert original["binary_decidable"]["n"] == 6
+
+# A sensitivity check, not an edit to the source annotation archive.
+missing = [{**row, "left": None} if row["item_id"] == "H04" else dict(row)
+           for row in pairs]
+changed = pair_metrics(missing)
+assert changed["full"]["n"] == 7
+assert abs(changed["full"]["observed_agreement"] - 5/7) < 1e-12
+assert labels["H04", "R1"] == "unknown"
+print(original["full"]["observed_agreement"], changed["full"]["observed_agreement"])
+```
+
+??? success "Solution: distinguish an unknown judgment from an absent observation"
+    With all three categories, H04's `unknown/unknown` is an agreement. It means both reviewers declined to decide from the supplied evidence—not that the answer passed. H07's `unknown/pass` is a disagreement worth investigating. Keep unknown rates beside agreement; a reviewer who declines every item should not earn release authority for being consistent.
+
+    The binary-decidable projection removes H04 and H07 because at least one reviewer says `unknown`. It has five agreements among six items, or 83.33%, with κ = 2/3. Its coverage is 6/8. This describes agreement conditional on both reviewers making a binary judgment. It does not repair the two difficult cases or estimate agreement on all original items.
+
+    If R1's H04 annotation is missing (`null`), that pair has seven observed items and five agreements, or 5/7. The missing value is not an additional category and must not become a pass or fail. Other reviewer pairs remain analyzable when their own two observations are present. Report each pair's included IDs, exclusions and denominator; do not publish one unlabeled “agreement n.”
+
+    The four adjudications remain separate records linked to the original item, labels and rubric. H06's adjudicated failure does not erase R2's pass or solve the mixed factual/tone criterion. The adjudication may guide a rubric revision; it is not independent evidence of reviewer accuracy simply because it has a final-looking label. Preserve uncertainty, provenance and unresolved reasons when preparing judge-calibration data.
+
+**Uncertainty needs another explicit definition.** A binomial interval for the agreement indicator assumes independently sampled items under a stable annotation process; it is not an interval for κ. For six agreements in eight items, the 95% exact-binomial calculation gives approximately **34.91%–96.81%**. The report includes this assumption-labelled calculation, but eight fixed teaching items do not establish representative sampling. Rater dependence within an item is part of the agreement observation; dependence between sampled items or uncertainty from choosing a different reviewer pool needs a different analysis.
+
+The registered R1/R2 item-bootstrap resamples whole paired observations, never the two reviewer columns independently. Its five occupied pair cells have counts `3, 2, 1, 1, 1`. The implementation enumerates 495 cell-count configurations, weighted by their multinomial multiplicities, representing all `8⁸ = 16,777,216` ordered resamples. It is exact for this empirical resampling distribution—not exact inference about a human population.
+
+Some resamples contain only one agreeing category. Then `p_o = p_e = 1`, so κ is `0/0`, not zero or one. Their probability is `(3⁸ + 2⁸ + 1)/8⁸ = 3409/8388608`, about **0.04064%**. The report retains that undefined mass and labels its finite-value percentile range as **conditional on κ being defined**. It is descriptive sensitivity, not a coverage-qualified 95% κ confidence interval. Silently replacing undefined values or dropping them without reporting their mass changes the reported procedure.
+
+The conditional 2.5th and 97.5th percentiles here are `5/53 ≈ 0.09434` and `1`. The broad range is worth showing alongside the point value 0.610, but its endpoints do not qualify the reviewer pool. Small selected examples, a mixed criterion and an unrepresentative reviewer pool are not repaired by exact enumeration.
+
+**Interview answer criteria:** reconstruct the confusion table and marginals; distinguish agreement, acceptability and accuracy; report unknowns and missingness separately; state the projection's denominator; preserve item pairing and undefined resamples; explain why neither adjudication nor a κ threshold alone qualifies a judge.
+
+### Kata 73: a reviewer assignment creates a model advantage
+
+**Predict:** baseline and candidate have identical response content on four cases. A synthetic strict reviewer passes two cases; a synthetic lenient reviewer passes all four. What happens if baseline is assigned only to the strict reviewer and candidate only to the lenient reviewer?
+
+| Assignment | Baseline observed pass rate | Candidate observed pass rate | Apparent candidate gain |
+| --- | --- | --- | --- |
+| Confounded: strict → baseline; lenient → candidate | 50% | 100% | +50 points |
+| Crossed: both reviewers evaluate both arms | 75% | 75% | 0 points |
+
+These labels are authored controls, not observations of real strict or lenient people. The artifact retains matching case IDs and equal baseline/candidate content hashes, the full synthetic potential-rating table and the observations exposed by each assignment. Each reviewer gives identical labels to both arms on the same case. “Strict” and “lenient” name different **pass propensities on the same items**, not established reviewer error or a fitted latent-severity parameter.
+
+??? success "Solution: repair assignment before interpreting the arm difference"
+    The confounded comparison changes the reviewer at the same time as the model label. Its +50-point gap cannot be attributed to the candidate. The crossed design exposes both reviewers to both arms on every case. Their individual paired arm differences are zero, so the panel's paired difference is also zero. The two pass propensities remain different; balancing assignment reveals rather than eliminates that fact.
+
+    A real study cannot observe every person's counterfactual rating under every possible presentation. This constructed potential-rating table is a negative control showing that an analysis can report an advantage when arm content is held identical. It does not estimate how much a real reviewer pool is biased. Collect balanced overlap, hide model identity, randomize presentation order and retain assignments to test that empirically.
+
+    Crossing alone does not solve carryover: seeing one answer may influence a later judgment of its duplicate. Specify order, spacing and any between-reviewer assignment before collection. For larger incomplete panels, estimate reviewer effects only under a connected design with enough overlap and a suitable model. Two disconnected reviewer pools cannot be made comparable merely by subtracting their average scores.
+
+    Nor does zero gain prove acceptable outputs. Both variants may make the same mistake. Compare each against an independent factual or executable criterion where available, and retain `both_unacceptable` in preference tasks. Agreement and balanced assignment improve measurement design; neither creates an external correctness reference.
+
+**Before using the analysis on actual human labels:** freeze criterion and evidence access; identify the sampling unit; arrange reviewer expertise and conflicts; register overlap and blinding; preserve missingness and disagreements; adjudicate with provenance; and keep development, calibration and acceptance cases separate. Treat the earlier H06 mixed criterion as a design problem to repair before collection, not noise to average away. Revisions produce linked new labels or rubric versions, not rewritten original ratings.
+
+**Interview answer criteria:** identify assignment confounding; compare matched per-reviewer differences; explain why crossing differs from randomization and does not remove carryover; separate pass propensity from accuracy; specify what independent evidence would justify using these labels to qualify a model judge.
+
+**Evidence boundary:** local replay validates calculations, assignment joins and retained synthetic inputs. No actual humans or models were evaluated. The resampling range is not population qualification; hashes are not proof of independent adjudication; the original eight-item criterion remains deliberately imperfect. Next steps require a real blinded pilot and independent validation. [Katas 70–71](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) address sample selection; the [semantic grading lab](semantic-grading-lab.md) addresses how qualified evidence enters the judge lifecycle.
+
 ## Artifact: annotation specification
 
 ```yaml

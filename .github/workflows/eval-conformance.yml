@@ -66,6 +66,8 @@ jobs:
         run: uv run python -m cx_eval_lab.context_packing --output ci-evidence/context-packing.json
       - name: Enumerate finite-population sampling and uncertainty controls
         run: uv run python -m cx_eval_lab.sampling_study --output ci-evidence/sampling-study.json
+      - name: Recompute annotation agreement and reviewer-assignment controls
+        run: uv run python -m cx_eval_lab.rater_study --output ci-evidence/rater-study.json
       - name: Reconstruct mixed-trace error-analysis teaching views
         run: >-
           uv run python -m cx_eval_lab.error_analysis_workshop

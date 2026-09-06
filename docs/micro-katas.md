@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 72–73](human-evaluation.md#executed-annotation-analysis-preserve-the-disagreement) compute agreement from the existing synthetic annotation table, retain unknown/missing denominators and undefined bootstrap outcomes, and expose a false model advantage caused by reviewer assignment. Worked solutions separate reliability from correctness and actual human qualification.
+
 [Katas 70–71](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) derive inclusion probabilities and population estimates from a risk-enriched sample, then use exact finite-population uncertainty to distinguish a favorable point estimate from numerical clearance. Missing labels and unsupported strata cannot silently become passes.
 
 [Katas 68–69](rag-research-evals.md#executed-study-retrieved-evidence-that-never-reaches-the-agent) trace multi-passage evidence from lexical retrieval through byte-bounded packing and mock action. Diagnose duplicate coverage, stale sources and recency-driven eviction, then separate an evidence repair from a downstream decision repair.

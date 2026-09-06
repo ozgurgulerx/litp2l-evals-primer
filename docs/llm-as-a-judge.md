@@ -108,6 +108,8 @@ Separate:
 
 The same held-out labels should not tune the judge and then prove that it generalizes.
 
+[Katas 72–73](human-evaluation.md#executed-annotation-analysis-preserve-the-disagreement) show why human labels need their own audit: dropping unknown judgments can improve apparent agreement, and assigning different reviewers to different model arms can manufacture a gain. Preserve original annotations and adjudication provenance. The executable synthetic analysis is preparation for a human pilot, not independently reviewed calibration evidence.
+
 ## Qualification metrics
 
 For each criterion and important slice report:
