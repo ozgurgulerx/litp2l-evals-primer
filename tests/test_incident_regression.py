@@ -38,8 +38,8 @@ class IncidentRegressionTests(unittest.TestCase):
     def test_review_and_protected_inventory_fail_closed(self):
         variants = [None, replace(self.review, decision='rejected'),
                     replace(self.review, privacy_review='pending'),
-                    replace(self.review, proposer_hash='0' * 64),
-                    replace(self.review, incident_hash='0' * 64),
+                    replace(self.review, proposer_hash='sha256:' + '0' * 64),
+                    replace(self.review, incident_hash='sha256:' + '0' * 64),
                     replace(self.review, reviewer_id=self.proposal.proposer_id),
                     replace(self.review, domain_policy='other-policy')]
         for review in variants:
@@ -90,3 +90,51 @@ class IncidentRegressionTests(unittest.TestCase):
             saved = output.read_bytes()
             self.assertNotEqual(0, subprocess.run(args, capture_output=True, timeout=30).returncode)
             self.assertEqual(saved, output.read_bytes())
+
+    def test_protected_source_and_candidate_content_cannot_be_renamed_away(self):
+        from cx_eval_lab.incident_regression import content_hash
+        for role in ('sealed-acceptance', 'judge-calibration'):
+            inventories = [Inventory(role, source_hashes=(self.incident.digest,)),
+                           Inventory(role, content_hashes=(content_hash(self.incident.case),)),
+                           Inventory(role, content_hashes=(content_hash(self.proposal.case),))]
+            for inventory in inventories:
+                with self.subTest(inventory=inventory), self.assertRaises(ValueError):
+                    promote(self.parent, self.incident, self.proposal, self.review, (inventory,))
+        renamed = replace(self.proposal.case, case_id='renamed', dataset_version='other')
+        self.assertEqual(content_hash(self.proposal.case), content_hash(renamed))
+
+    def test_wrong_causal_precondition_and_target_review_are_rejected(self):
+        from cx_eval_lab.incident_regression import execute
+        case = replace(self.incident.case, simulate_timeout_after_commit=False)
+        incident = replace(self.incident, case=case, execution_json=json.dumps(execute(case)))
+        with self.assertRaises(ValueError):
+            propose_regression(incident)
+        changed_target = propose_regression(self.incident, target_version='regression-v2')
+        with self.assertRaises(ValueError):
+            promote(self.parent, self.incident, changed_target, self.review)
+
+    def test_populated_parent_is_preserved_and_all_cases_materialize(self):
+        from cx_eval_lab.incident_regression import execute
+        first = promote(self.parent, self.incident, self.proposal, self.review)
+        case = replace(self.incident.case, order_id='synthetic-other-order')
+        incident = replace(self.incident, incident_id='synthetic-incident-02', group_id='synthetic-session-02',
+                           case=case, execution_json=json.dumps(execute(case)))
+        proposal = propose_regression(incident, target_version='regression-v2')
+        review = replace(self.review, incident_hash=incident.digest, proposer_hash=proposal.digest)
+        second = promote(first, incident, proposal, review)
+        self.assertEqual(first.entries, second.entries[:1])
+        self.assertEqual(first.digest, second.parent_hash)
+        self.assertEqual(2, len(second.materialize()))
+        self.assertTrue(all(case.dataset_version == 'regression-v2' for case in second.materialize()))
+        duplicate = propose_regression(self.incident, target_version='regression-v3')
+        with self.assertRaisesRegex(ValueError, 'duplicate content'):
+            promote(second, self.incident, duplicate,
+                    replace(self.review, proposer_hash=duplicate.digest))
+
+    def test_parent_entry_hash_forgery_and_malformed_rows_are_rejected(self):
+        child = promote(self.parent, self.incident, self.proposal, self.review)
+        row = json.loads(child.entries[0])
+        row['content_hash'] = 'sha256:' + '0' * 64
+        for entries in ((json.dumps(row),), ('{}',), child.entries * 2):
+            with self.subTest(entries=entries), self.assertRaises(ValueError):
+                RegressionRelease('regression-v2', entries)
