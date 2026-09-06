@@ -1,0 +1,1918 @@
+{
+  "schema": "finite-stratified-sampling-v1",
+  "inputs": {
+    "frame": [
+      {
+        "unit_id": "routine-0",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-1",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-2",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-3",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-4",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-5",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-6",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-7",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-8",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-9",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-10",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "routine-11",
+        "stratum": "routine"
+      },
+      {
+        "unit_id": "risk-0",
+        "stratum": "risk"
+      },
+      {
+        "unit_id": "risk-1",
+        "stratum": "risk"
+      },
+      {
+        "unit_id": "risk-2",
+        "stratum": "risk"
+      },
+      {
+        "unit_id": "risk-3",
+        "stratum": "risk"
+      }
+    ],
+    "outcomes": {
+      "routine-0": true,
+      "routine-1": false,
+      "routine-2": false,
+      "routine-3": false,
+      "routine-4": false,
+      "routine-5": false,
+      "routine-6": false,
+      "routine-7": false,
+      "routine-8": false,
+      "routine-9": false,
+      "routine-10": false,
+      "routine-11": false,
+      "risk-0": true,
+      "risk-1": true,
+      "risk-2": true,
+      "risk-3": false
+    },
+    "allocations": {
+      "proportional": {
+        "routine": 6,
+        "risk": 2
+      },
+      "enriched": {
+        "routine": 4,
+        "risk": 4
+      }
+    },
+    "alpha": 0.05,
+    "thresholds": [
+      0.35,
+      0.2
+    ],
+    "worked_design": "enriched",
+    "worked_ids": [
+      "risk-0",
+      "risk-1",
+      "risk-2",
+      "risk-3",
+      "routine-1",
+      "routine-2",
+      "routine-3",
+      "routine-4"
+    ]
+  },
+  "protocol": {
+    "design": "independent stratified simple random sampling without replacement",
+    "estimand": "per-request fixed finite-frame failure fraction",
+    "label_semantics": "fixed boolean failure",
+    "interval": "inclusive hypergeometric inversion; exclude tails <= alpha/(2H)",
+    "point_rules": "illustrative only; no promotion authority",
+    "qualification": "all count populations at registered sizes"
+  },
+  "registration_hash": "sha256:5f8b6ec8c48be403248a9b085654093ee4449c02f83d5faa188c7e21279b0e3f",
+  "truth": 0.25,
+  "worked_example": {
+    "design": "enriched",
+    "rows": [
+      {
+        "unit_id": "risk-0",
+        "stratum": "risk",
+        "failure": true,
+        "pi": 1.0
+      },
+      {
+        "unit_id": "risk-1",
+        "stratum": "risk",
+        "failure": true,
+        "pi": 1.0
+      },
+      {
+        "unit_id": "risk-2",
+        "stratum": "risk",
+        "failure": true,
+        "pi": 1.0
+      },
+      {
+        "unit_id": "risk-3",
+        "stratum": "risk",
+        "failure": false,
+        "pi": 1.0
+      },
+      {
+        "unit_id": "routine-1",
+        "stratum": "routine",
+        "failure": false,
+        "pi": 0.3333333333333333
+      },
+      {
+        "unit_id": "routine-2",
+        "stratum": "routine",
+        "failure": false,
+        "pi": 0.3333333333333333
+      },
+      {
+        "unit_id": "routine-3",
+        "stratum": "routine",
+        "failure": false,
+        "pi": 0.3333333333333333
+      },
+      {
+        "unit_id": "routine-4",
+        "stratum": "routine",
+        "failure": false,
+        "pi": 0.3333333333333333
+      }
+    ],
+    "estimate": {
+      "raw_failure_rate": 0.375,
+      "ht_failure_rate": 0.1875,
+      "stratum_weighted_failure_rate": 0.1875,
+      "raw_exact": "3/8",
+      "ht_exact": "3/16",
+      "interval": {
+        "lower": 0.1875,
+        "upper": 0.5625,
+        "lower_exact": "3/16",
+        "upper_exact": "9/16",
+        "stratum_failure_count_bounds": {
+          "risk": [
+            3,
+            3
+          ],
+          "routine": [
+            0,
+            6
+          ]
+        },
+        "confidence_level": 0.95,
+        "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+        "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+      },
+      "threshold": 0.35,
+      "decisions": {
+        "raw_point": "illustrative_block",
+        "weighted_point": "illustrative_clear",
+        "interval": "hold"
+      },
+      "strata": {
+        "risk": {
+          "population_size": 4,
+          "sample_size": 4,
+          "sample_failures": 3,
+          "pi": 1.0,
+          "population_weight": 0.25
+        },
+        "routine": {
+          "population_size": 12,
+          "sample_size": 4,
+          "sample_failures": 0,
+          "pi": 0.3333333333333333,
+          "population_weight": 0.75
+        }
+      },
+      "row_weights": [
+        {
+          "unit_id": "risk-0",
+          "inverse_pi": 1.0,
+          "ht_contribution": 0.0625
+        },
+        {
+          "unit_id": "risk-1",
+          "inverse_pi": 1.0,
+          "ht_contribution": 0.0625
+        },
+        {
+          "unit_id": "risk-2",
+          "inverse_pi": 1.0,
+          "ht_contribution": 0.0625
+        },
+        {
+          "unit_id": "risk-3",
+          "inverse_pi": 1.0,
+          "ht_contribution": 0.0
+        },
+        {
+          "unit_id": "routine-1",
+          "inverse_pi": 3.0,
+          "ht_contribution": 0.0
+        },
+        {
+          "unit_id": "routine-2",
+          "inverse_pi": 3.0,
+          "ht_contribution": 0.0
+        },
+        {
+          "unit_id": "routine-3",
+          "inverse_pi": 3.0,
+          "ht_contribution": 0.0
+        },
+        {
+          "unit_id": "routine-4",
+          "inverse_pi": 3.0,
+          "ht_contribution": 0.0
+        }
+      ],
+      "estimand": "per-request failure fraction in this finite frame",
+      "deployment_authorized": false
+    },
+    "selection_kind": "hand-selected teaching realization, not a random draw"
+  },
+  "designs": {
+    "proportional": {
+      "sample_set_count": 5544,
+      "cells": [
+        {
+          "failures": {
+            "risk": 1,
+            "routine": 0
+          },
+          "multiplicity": 1386,
+          "probability": 0.25,
+          "probability_exact": "1/4",
+          "estimate": {
+            "raw_failure_rate": 0.125,
+            "ht_failure_rate": 0.125,
+            "stratum_weighted_failure_rate": 0.125,
+            "raw_exact": "1/8",
+            "ht_exact": "1/8",
+            "interval": {
+              "lower": 0.0625,
+              "upper": 0.4375,
+              "lower_exact": "1/16",
+              "upper_exact": "7/16",
+              "stratum_failure_count_bounds": {
+                "risk": [
+                  1,
+                  3
+                ],
+                "routine": [
+                  0,
+                  4
+                ]
+              },
+              "confidence_level": 0.95,
+              "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+              "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+            },
+            "threshold": 0.35,
+            "decisions": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "strata": {
+              "risk": {
+                "population_size": 4,
+                "sample_size": 2,
+                "sample_failures": 1,
+                "pi": 0.5,
+                "population_weight": 0.25
+              },
+              "routine": {
+                "population_size": 12,
+                "sample_size": 6,
+                "sample_failures": 0,
+                "pi": 0.5,
+                "population_weight": 0.75
+              }
+            }
+          },
+          "threshold_decisions": {
+            "0.35": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "0.2": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            }
+          }
+        },
+        {
+          "failures": {
+            "risk": 1,
+            "routine": 1
+          },
+          "multiplicity": 1386,
+          "probability": 0.25,
+          "probability_exact": "1/4",
+          "estimate": {
+            "raw_failure_rate": 0.25,
+            "ht_failure_rate": 0.25,
+            "stratum_weighted_failure_rate": 0.25,
+            "raw_exact": "1/4",
+            "ht_exact": "1/4",
+            "interval": {
+              "lower": 0.125,
+              "upper": 0.5625,
+              "lower_exact": "1/8",
+              "upper_exact": "9/16",
+              "stratum_failure_count_bounds": {
+                "risk": [
+                  1,
+                  3
+                ],
+                "routine": [
+                  1,
+                  6
+                ]
+              },
+              "confidence_level": 0.95,
+              "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+              "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+            },
+            "threshold": 0.35,
+            "decisions": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "strata": {
+              "risk": {
+                "population_size": 4,
+                "sample_size": 2,
+                "sample_failures": 1,
+                "pi": 0.5,
+                "population_weight": 0.25
+              },
+              "routine": {
+                "population_size": 12,
+                "sample_size": 6,
+                "sample_failures": 1,
+                "pi": 0.5,
+                "population_weight": 0.75
+              }
+            }
+          },
+          "threshold_decisions": {
+            "0.35": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "0.2": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            }
+          }
+        },
+        {
+          "failures": {
+            "risk": 2,
+            "routine": 0
+          },
+          "multiplicity": 1386,
+          "probability": 0.25,
+          "probability_exact": "1/4",
+          "estimate": {
+            "raw_failure_rate": 0.25,
+            "ht_failure_rate": 0.25,
+            "stratum_weighted_failure_rate": 0.25,
+            "raw_exact": "1/4",
+            "ht_exact": "1/4",
+            "interval": {
+              "lower": 0.125,
+              "upper": 0.5,
+              "lower_exact": "1/8",
+              "upper_exact": "1/2",
+              "stratum_failure_count_bounds": {
+                "risk": [
+                  2,
+                  4
+                ],
+                "routine": [
+                  0,
+                  4
+                ]
+              },
+              "confidence_level": 0.95,
+              "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+              "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+            },
+            "threshold": 0.35,
+            "decisions": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "strata": {
+              "risk": {
+                "population_size": 4,
+                "sample_size": 2,
+                "sample_failures": 2,
+                "pi": 0.5,
+                "population_weight": 0.25
+              },
+              "routine": {
+                "population_size": 12,
+                "sample_size": 6,
+                "sample_failures": 0,
+                "pi": 0.5,
+                "population_weight": 0.75
+              }
+            }
+          },
+          "threshold_decisions": {
+            "0.35": {
+              "raw_point": "illustrative_clear",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "0.2": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            }
+          }
+        },
+        {
+          "failures": {
+            "risk": 2,
+            "routine": 1
+          },
+          "multiplicity": 1386,
+          "probability": 0.25,
+          "probability_exact": "1/4",
+          "estimate": {
+            "raw_failure_rate": 0.375,
+            "ht_failure_rate": 0.375,
+            "stratum_weighted_failure_rate": 0.375,
+            "raw_exact": "3/8",
+            "ht_exact": "3/8",
+            "interval": {
+              "lower": 0.1875,
+              "upper": 0.625,
+              "lower_exact": "3/16",
+              "upper_exact": "5/8",
+              "stratum_failure_count_bounds": {
+                "risk": [
+                  2,
+                  4
+                ],
+                "routine": [
+                  1,
+                  6
+                ]
+              },
+              "confidence_level": 0.95,
+              "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+              "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+            },
+            "threshold": 0.35,
+            "decisions": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            },
+            "strata": {
+              "risk": {
+                "population_size": 4,
+                "sample_size": 2,
+                "sample_failures": 2,
+                "pi": 0.5,
+                "population_weight": 0.25
+              },
+              "routine": {
+                "population_size": 12,
+                "sample_size": 6,
+                "sample_failures": 1,
+                "pi": 0.5,
+                "population_weight": 0.75
+              }
+            }
+          },
+          "threshold_decisions": {
+            "0.35": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            },
+            "0.2": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            }
+          }
+        }
+      ],
+      "summary": {
+        "expected_raw_failure_rate": 0.25,
+        "expected_ht_failure_rate": 0.25,
+        "raw_mse": 0.0078125,
+        "ht_mse": 0.0078125,
+        "interval_coverage": 1.0,
+        "threshold_outcome_probabilities": {
+          "0.35": {
+            "raw_point": {
+              "illustrative_clear": 0.75,
+              "illustrative_block": 0.25
+            },
+            "weighted_point": {
+              "illustrative_clear": 0.75,
+              "illustrative_block": 0.25
+            },
+            "interval": {
+              "clear": 0.0,
+              "hold": 1.0,
+              "block": 0.0
+            }
+          },
+          "0.2": {
+            "raw_point": {
+              "illustrative_clear": 0.25,
+              "illustrative_block": 0.75
+            },
+            "weighted_point": {
+              "illustrative_clear": 0.25,
+              "illustrative_block": 0.75
+            },
+            "interval": {
+              "clear": 0.0,
+              "hold": 1.0,
+              "block": 0.0
+            }
+          }
+        },
+        "false_clear_probabilities": {
+          "0.35": {
+            "raw_point": null,
+            "weighted_point": null,
+            "interval": null
+          },
+          "0.2": {
+            "raw_point": 0.25,
+            "weighted_point": 0.25,
+            "interval": 0.0
+          }
+        }
+      },
+      "qualification": {
+        "population_count": 65,
+        "minimum_coverage": 0.9924242424242424,
+        "minimum_coverage_exact": "131/132",
+        "worst_populations": [
+          {
+            "risk": 0,
+            "routine": 5
+          },
+          {
+            "risk": 0,
+            "routine": 7
+          },
+          {
+            "risk": 4,
+            "routine": 5
+          },
+          {
+            "risk": 4,
+            "routine": 7
+          }
+        ],
+        "populations": [
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 4
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 5
+            },
+            "coverage": 0.9924242424242424,
+            "coverage_exact": "131/132"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 6
+            },
+            "coverage": 0.9989177489177489,
+            "coverage_exact": "923/924"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 7
+            },
+            "coverage": 0.9924242424242424,
+            "coverage_exact": "131/132"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 8
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 4
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 5
+            },
+            "coverage": 0.9962121212121212,
+            "coverage_exact": "263/264"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 6
+            },
+            "coverage": 0.9983766233766234,
+            "coverage_exact": "615/616"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 7
+            },
+            "coverage": 0.9962121212121212,
+            "coverage_exact": "263/264"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 8
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 4
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 5
+            },
+            "coverage": 0.9974747474747475,
+            "coverage_exact": "395/396"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 6
+            },
+            "coverage": 0.9981962481962482,
+            "coverage_exact": "2767/2772"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 7
+            },
+            "coverage": 0.9974747474747475,
+            "coverage_exact": "395/396"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 8
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 4
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 5
+            },
+            "coverage": 0.9962121212121212,
+            "coverage_exact": "263/264"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 6
+            },
+            "coverage": 0.9983766233766234,
+            "coverage_exact": "615/616"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 7
+            },
+            "coverage": 0.9962121212121212,
+            "coverage_exact": "263/264"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 8
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 4
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 5
+            },
+            "coverage": 0.9924242424242424,
+            "coverage_exact": "131/132"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 6
+            },
+            "coverage": 0.9989177489177489,
+            "coverage_exact": "923/924"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 7
+            },
+            "coverage": 0.9924242424242424,
+            "coverage_exact": "131/132"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 8
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          }
+        ],
+        "scope": "all binary count populations for these fixed sizes/allocation/alpha only"
+      }
+    },
+    "enriched": {
+      "sample_set_count": 495,
+      "cells": [
+        {
+          "failures": {
+            "risk": 3,
+            "routine": 0
+          },
+          "multiplicity": 330,
+          "probability": 0.6666666666666666,
+          "probability_exact": "2/3",
+          "estimate": {
+            "raw_failure_rate": 0.375,
+            "ht_failure_rate": 0.1875,
+            "stratum_weighted_failure_rate": 0.1875,
+            "raw_exact": "3/8",
+            "ht_exact": "3/16",
+            "interval": {
+              "lower": 0.1875,
+              "upper": 0.5625,
+              "lower_exact": "3/16",
+              "upper_exact": "9/16",
+              "stratum_failure_count_bounds": {
+                "risk": [
+                  3,
+                  3
+                ],
+                "routine": [
+                  0,
+                  6
+                ]
+              },
+              "confidence_level": 0.95,
+              "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+              "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+            },
+            "threshold": 0.35,
+            "decisions": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "strata": {
+              "risk": {
+                "population_size": 4,
+                "sample_size": 4,
+                "sample_failures": 3,
+                "pi": 1.0,
+                "population_weight": 0.25
+              },
+              "routine": {
+                "population_size": 12,
+                "sample_size": 4,
+                "sample_failures": 0,
+                "pi": 0.3333333333333333,
+                "population_weight": 0.75
+              }
+            }
+          },
+          "threshold_decisions": {
+            "0.35": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            },
+            "0.2": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_clear",
+              "interval": "hold"
+            }
+          }
+        },
+        {
+          "failures": {
+            "risk": 3,
+            "routine": 1
+          },
+          "multiplicity": 165,
+          "probability": 0.3333333333333333,
+          "probability_exact": "1/3",
+          "estimate": {
+            "raw_failure_rate": 0.5,
+            "ht_failure_rate": 0.375,
+            "stratum_weighted_failure_rate": 0.375,
+            "raw_exact": "1/2",
+            "ht_exact": "3/8",
+            "interval": {
+              "lower": 0.25,
+              "upper": 0.75,
+              "lower_exact": "1/4",
+              "upper_exact": "3/4",
+              "stratum_failure_count_bounds": {
+                "risk": [
+                  3,
+                  3
+                ],
+                "routine": [
+                  1,
+                  9
+                ]
+              },
+              "confidence_level": 0.95,
+              "method": "hypergeometric-inclusive-tail-inversion-bonferroni",
+              "tail_rule": "retain both inclusive tail probabilities strictly greater than alpha/(2H)"
+            },
+            "threshold": 0.35,
+            "decisions": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            },
+            "strata": {
+              "risk": {
+                "population_size": 4,
+                "sample_size": 4,
+                "sample_failures": 3,
+                "pi": 1.0,
+                "population_weight": 0.25
+              },
+              "routine": {
+                "population_size": 12,
+                "sample_size": 4,
+                "sample_failures": 1,
+                "pi": 0.3333333333333333,
+                "population_weight": 0.75
+              }
+            }
+          },
+          "threshold_decisions": {
+            "0.35": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "hold"
+            },
+            "0.2": {
+              "raw_point": "illustrative_block",
+              "weighted_point": "illustrative_block",
+              "interval": "block"
+            }
+          }
+        }
+      ],
+      "summary": {
+        "expected_raw_failure_rate": 0.4166666666666667,
+        "expected_ht_failure_rate": 0.25,
+        "raw_mse": 0.03125,
+        "ht_mse": 0.0078125,
+        "interval_coverage": 1.0,
+        "threshold_outcome_probabilities": {
+          "0.35": {
+            "raw_point": {
+              "illustrative_clear": 0.0,
+              "illustrative_block": 1.0
+            },
+            "weighted_point": {
+              "illustrative_clear": 0.6666666666666666,
+              "illustrative_block": 0.3333333333333333
+            },
+            "interval": {
+              "clear": 0.0,
+              "hold": 1.0,
+              "block": 0.0
+            }
+          },
+          "0.2": {
+            "raw_point": {
+              "illustrative_clear": 0.0,
+              "illustrative_block": 1.0
+            },
+            "weighted_point": {
+              "illustrative_clear": 0.6666666666666666,
+              "illustrative_block": 0.3333333333333333
+            },
+            "interval": {
+              "clear": 0.0,
+              "hold": 0.6666666666666666,
+              "block": 0.3333333333333333
+            }
+          }
+        },
+        "false_clear_probabilities": {
+          "0.35": {
+            "raw_point": null,
+            "weighted_point": null,
+            "interval": null
+          },
+          "0.2": {
+            "raw_point": 0.0,
+            "weighted_point": 0.6666666666666666,
+            "interval": 0.0
+          }
+        }
+      },
+      "qualification": {
+        "population_count": 65,
+        "minimum_coverage": 0.98989898989899,
+        "minimum_coverage_exact": "98/99",
+        "worst_populations": [
+          {
+            "risk": 0,
+            "routine": 5
+          },
+          {
+            "risk": 0,
+            "routine": 7
+          },
+          {
+            "risk": 1,
+            "routine": 5
+          },
+          {
+            "risk": 1,
+            "routine": 7
+          },
+          {
+            "risk": 2,
+            "routine": 5
+          },
+          {
+            "risk": 2,
+            "routine": 7
+          },
+          {
+            "risk": 3,
+            "routine": 5
+          },
+          {
+            "risk": 3,
+            "routine": 7
+          },
+          {
+            "risk": 4,
+            "routine": 5
+          },
+          {
+            "risk": 4,
+            "routine": 7
+          }
+        ],
+        "populations": [
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 4
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 5
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 6
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 7
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 8
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 0,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 4
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 5
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 6
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 7
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 8
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 1,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 4
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 5
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 6
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 7
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 8
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 2,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 4
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 5
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 6
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 7
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 8
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 3,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 0
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 1
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 2
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 3
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 4
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 5
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 6
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 7
+            },
+            "coverage": 0.98989898989899,
+            "coverage_exact": "98/99"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 8
+            },
+            "coverage": 0.997979797979798,
+            "coverage_exact": "494/495"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 9
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 10
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 11
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          },
+          {
+            "population_failures": {
+              "risk": 4,
+              "routine": 12
+            },
+            "coverage": 1.0,
+            "coverage_exact": "1"
+          }
+        ],
+        "scope": "all binary count populations for these fixed sizes/allocation/alpha only"
+      }
+    }
+  },
+  "deployment_authorized": false,
+  "limitations": "Finite fixed frame and fixed labels, not new agent observations or deployment authority. Compression enumerates sample sets by outcome multiplicity. Missing labels/probabilities fail closed. No adaptive sampling, noisy-label correction, model inference, human qualification, temporal transfer or population outside this frame. Overall weighting cannot override separate hard risk constraints. Local input binding and re-execution do not authenticate historical preregistration.",
+  "report_hash": "sha256:7cb8a3205557f222896715c51bba009a9ef97e6cef0ce693f6b26bde349c682b"
+}

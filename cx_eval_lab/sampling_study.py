@@ -90,6 +90,8 @@ def count_interval(sizes, allocation, failures, alpha=.05):
     total = sum(sizes.values())
     return {'lower': float(Fraction(sum(v[0] for v in bounds.values()), total)),
         'upper': float(Fraction(sum(v[1] for v in bounds.values()), total)),
+        'lower_exact': str(Fraction(sum(v[0] for v in bounds.values()), total)),
+        'upper_exact': str(Fraction(sum(v[1] for v in bounds.values()), total)),
         'stratum_failure_count_bounds': {h: list(v) for h, v in bounds.items()},
         'confidence_level': float(1 - level),
         'method': 'hypergeometric-inclusive-tail-inversion-bonferroni',
@@ -99,8 +101,8 @@ def count_interval(sizes, allocation, failures, alpha=.05):
 def _decision(raw, weighted, interval, threshold):
     return {'raw_point': 'illustrative_clear' if raw <= threshold else 'illustrative_block',
         'weighted_point': 'illustrative_clear' if weighted <= threshold else 'illustrative_block',
-        'interval': 'clear' if Fraction(str(interval['upper'])) <= threshold else
-                    'block' if Fraction(str(interval['lower'])) > threshold else 'hold'}
+        'interval': 'clear' if Fraction(interval['upper_exact']) <= threshold else
+                    'block' if Fraction(interval['lower_exact']) > threshold else 'hold'}
 
 
 def _estimate_counts(sizes, allocation, failures, alpha, threshold):
@@ -201,7 +203,8 @@ def _distribution(sizes, allocation, population, alpha, thresholds):
         return sum((Fraction(c['probability_exact']) * fn(c) for c in cells), Fraction())
     raw = expectation(lambda c: Fraction(c['estimate']['raw_exact']))
     weighted = expectation(lambda c: Fraction(c['estimate']['ht_exact']))
-    coverage = expectation(lambda c: int(c['estimate']['interval']['lower'] <= float(truth) <= c['estimate']['interval']['upper']))
+    coverage = expectation(lambda c: int(Fraction(c['estimate']['interval']['lower_exact']) <= truth
+                                          <= Fraction(c['estimate']['interval']['upper_exact'])))
     outcomes = {str(t): {metric: {state: float(expectation(lambda c: int(c['threshold_decisions'][str(t)][metric] == state)))
         for state in (('clear', 'hold', 'block') if metric == 'interval' else ('illustrative_clear', 'illustrative_block'))}
         for metric in ('raw_point', 'weighted_point', 'interval')} for t in thresholds}
