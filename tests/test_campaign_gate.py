@@ -128,6 +128,43 @@ class CampaignGateTests(unittest.TestCase):
         rehash_packet(report['packet'])
         self.assertEqual('block', self.assess(report).status)
 
+    def test_recorded_admission_must_say_it_reserved_capacity(self):
+        report = copy.deepcopy(self.report)
+        stage = report['packet']['trial_artifacts'][0]['payload']['semantic_stage']
+        audit = json.loads(stage['judgment']['campaign_audit_json'])
+        audit['admission']['reason'] = 'estimated_budget_exhausted'
+        stage['judgment']['campaign_audit_json'] = json.dumps(audit)
+        rehash_packet(report['packet'])
+        self.assertEqual('block', self.assess(report).status)
+
+    def test_judge_configuration_must_match_its_registration(self):
+        report = copy.deepcopy(self.report)
+        packet = report['packet']
+        packet['manifest']['input_hashes'] = [
+            [key, canonical_hash('different registered judge') if key == 'judge-config' else digest]
+            for key, digest in packet['manifest']['input_hashes']]
+        packet['manifest_hash'] = canonical_hash(packet['manifest'])
+        for artifact in packet['trial_artifacts']:
+            payload = artifact['payload']
+            identity, stage = payload['identity'], payload['semantic_stage']
+            identity['manifest_hash'] = packet['manifest_hash']
+            new_id = canonical_hash([identity['manifest_hash'], identity['case_id'],
+                                     identity['trial_index'], identity['arm']])
+            row = next(row for row in report['ledger']['invocations'] if row['id'] == stage['invocation_id'])
+            row['id'] = stage['invocation_id'] = new_id
+            receipt = json.loads(row['receipt_json'])
+            receipt['invocation_id'] = new_id
+            row['receipt_json'] = json.dumps(receipt)
+            audit = json.loads(stage['judgment']['campaign_audit_json'])
+            audit['receipt'] = receipt
+            audit['admission']['invocation_id'] = new_id
+            stage['judgment']['campaign_audit_json'] = json.dumps(audit)
+        for arm in ('baseline', 'candidate'):
+            for row in packet[f'{arm}_trials']:
+                row['manifest_hash'] = packet['manifest_hash']
+        rehash_packet(packet)
+        self.assertEqual('block', self.assess(report).status)
+
 
 if __name__ == '__main__':
     unittest.main()
