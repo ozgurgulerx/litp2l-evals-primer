@@ -100,3 +100,28 @@ class LongReportTests(unittest.TestCase):
             self.assertEqual('long-report-study-v1', json.loads(before)['schema'])
             self.assertNotEqual(0, subprocess.run(cmd, capture_output=True, check=False).returncode)
             self.assertEqual(before, target.read_bytes())
+
+    def test_duplicate_empty_and_whole_report_predictions_do_not_earn_atomic_credit(self):
+        from cx_eval_lab.long_report import score_extraction
+        text = 'Finding: Alpha applies [L1]; Beta fails.\n'
+        claims = [{'claim_id': 'A', 'span': {'start': 9, 'end': 22, 'quote': 'Alpha applies'}, 'status': 'supported'},
+                  {'claim_id': 'B', 'span': {'start': 29, 'end': 39, 'quote': 'Beta fails'}, 'status': 'unsupported'}]
+        # Author the exact Beta span separately from the extraction function.
+        claims[1]['span']['start'] = text.index('Beta fails')
+        claims[1]['span']['end'] = text.index('Beta fails') + len('Beta fails')
+        report = {'text': text, 'claims': claims}
+        prediction = {'unit_id': 'p1', 'span': dict(claims[0]['span']), 'citation_ids': ['L1']}
+        duplicate = {**copy.deepcopy(prediction), 'unit_id': 'p2'}
+        scored = score_extraction([prediction, duplicate], report)
+        self.assertEqual(2, scored['extracted_unit_count'])
+        self.assertEqual(.5, scored['atomic_recall']['rate'])
+        self.assertEqual(.5, scored['exact_unit_precision']['rate'])
+        self.assertEqual('p1', scored['units'][1]['duplicate_of'])
+        empty = score_extraction([], report)
+        self.assertEqual(0., empty['atomic_recall']['rate'])
+        self.assertIsNone(empty['observed_support']['rate'])
+        whole = score_extraction([{'unit_id': 'all', 'span': {'start': 0, 'end': len(text), 'quote': text},
+                                  'citation_ids': ['L1']}], report)
+        self.assertEqual(0., whole['atomic_recall']['rate'])
+        self.assertEqual(['A', 'B'], whole['units'][0]['contained_claim_ids'])
+        self.assertIsNone(whole['observed_support']['rate'])
