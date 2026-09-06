@@ -126,6 +126,14 @@ os._exit(17)
             with self.assertRaises(ValueError):
                 usd_to_micro(value)
 
+    def test_cost_rounding_is_independent_of_ambient_decimal_context(self):
+        from decimal import localcontext
+        from cx_eval_lab.campaign_budget import usd_to_micro
+        with localcontext() as context:
+            context.prec = 2
+            self.assertEqual(1235, usd_to_micro(0.0012345))
+            self.assertEqual(12345000000, usd_to_micro(12345.0))
+
 
 if __name__ == '__main__':
     unittest.main()
