@@ -133,3 +133,77 @@ class RaterStudyTests(unittest.TestCase):
             before = path.read_bytes()
             self.assertNotEqual(0, subprocess.run(cmd, capture_output=True, check=False).returncode)
             self.assertEqual(before, path.read_bytes())
+
+    def test_retained_artifact_exactly_reanalyzes(self):
+        from cx_eval_lab.rater_study import replay_study, run_study
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/rater-study-v1.json'
+        artifact = json.loads(path.read_text())
+        self.assertEqual(run_study(), artifact)
+        self.assertEqual(artifact, replay_study(artifact))
+
+    def test_missing_rater_only_changes_affected_pairs_and_preserves_originals(self):
+        from cx_eval_lab.evidence import canonical_hash
+        from cx_eval_lab.rater_study import example_inputs, run_study
+        inputs = example_inputs()
+        for annotation in inputs['source_fixture']['annotations']:
+            if annotation['case_id'] == 'H04' and annotation['reviewer'] == 'R1':
+                annotation['label'] = None
+        inputs['source']['content_hash'] = canonical_hash(inputs['source_fixture'])
+        original = copy.deepcopy(inputs)
+        report = run_study(inputs)
+        self.assertEqual(original, inputs)
+        self.assertEqual(original['source_fixture'], report['inputs']['source_fixture'])
+        self.assertEqual(7, report['pair_metrics']['R1:R2']['full']['n'])
+        self.assertEqual(5 / 7, report['pair_metrics']['R1:R2']['full']['observed_agreement'])
+        self.assertEqual(7, report['pair_metrics']['R1:R3']['full']['n'])
+        self.assertEqual(8, report['pair_metrics']['R2:R3']['full']['n'])
+        self.assertEqual(['H04'], report['registered_pair_bootstrap']['excluded_missing_item_ids'])
+        self.assertEqual(7 ** 7, report['registered_pair_bootstrap']['ordered_resample_count'])
+
+    def test_empty_and_single_category_agreement_interval_is_not_kappa_interval(self):
+        from cx_eval_lab.rater_study import pair_metrics
+        result = pair_metrics([])
+        self.assertIsNone(result['agreement_interval_iid_assumption'])
+        self.assertIsNone(result['full']['item_coverage'])
+        result = pair_metrics([{'item_id': 'one', 'left': 'pass', 'right': 'pass'}])
+        self.assertIsNone(result['full']['kappa'])
+        interval = result['agreement_interval_iid_assumption']
+        self.assertTrue(interval['fixture_does_not_establish_sampling'])
+        self.assertFalse(interval['coverage_qualified_for_fixture'])
+        self.assertAlmostEqual(.025, interval['lower'])
+        self.assertEqual(1., interval['upper'])
+
+    def test_source_annotation_join_and_registered_pair_fail_closed(self):
+        from cx_eval_lab.evidence import canonical_hash
+        from cx_eval_lab.rater_study import example_inputs, run_study
+        for mode in ('duplicate-annotation', 'missing-slot', 'unknown-case', 'unknown-reviewer',
+                     'unexpected-label', 'duplicate-item', 'duplicate-adjudication', 'missing-evidence',
+                     'same-pair', 'unknown-pair', 'nan-input', 'different-potential-rating'):
+            inputs = example_inputs()
+            source = inputs['source_fixture']
+            if mode == 'duplicate-annotation':
+                source['annotations'][0] = dict(source['annotations'][1])
+            elif mode == 'missing-slot':
+                source['annotations'].pop()
+            elif mode == 'unknown-case':
+                source['annotations'][0]['case_id'] = 'foreign'
+            elif mode == 'unknown-reviewer':
+                source['annotations'][0]['reviewer'] = 'foreign'
+            elif mode == 'unexpected-label':
+                source['annotations'][0]['label'] = False
+            elif mode == 'duplicate-item':
+                source['items'][0] = dict(source['items'][1])
+            elif mode == 'duplicate-adjudication':
+                source['adjudications'][0] = dict(source['adjudications'][1])
+            elif mode == 'missing-evidence':
+                inputs['item_evidence'].pop()
+            elif mode in ('same-pair', 'unknown-pair'):
+                inputs['bootstrap_pair'] = ['R1', 'R1' if mode == 'same-pair' else 'unknown']
+            elif mode == 'nan-input':
+                source['items'][0]['situation'] = float('nan')
+            else:
+                inputs['assignment_control'][0]['ratings']['strict']['candidate'] = 'fail'
+            if mode != 'nan-input':
+                inputs['source']['content_hash'] = canonical_hash(source)
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                run_study(inputs)
