@@ -43,6 +43,8 @@ class ReplayAuthorityTests(unittest.TestCase):
         self.assertEqual(4, result.semantic_trials)
         self.assertFalse(result.deployment_authorized)
         self.assertEqual(self.anchor, result.packet_hash)
+        self.assertTrue(result.synthetic_diagnostic)
+        self.assertEqual(canonical_hash([self.stage.calibration_hash]), result.historical_trust_hash)
         self.assertEqual([], list(result.issues))
 
     def test_revocation_does_not_rewrite_historical_grade(self):
@@ -79,6 +81,47 @@ class ReplayAuthorityTests(unittest.TestCase):
                        {'allow_synthetic': 'yes'}):
             with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
                 self.assess(**kwargs)
+
+    def test_replayable_audit_mismatch_is_not_current_authority(self):
+        from cx_eval_lab.artifacts import _regrade
+        for change, expected in (
+            (lambda p: p.update(semantic_stage=None), 'qualification_audit_missing'),
+            (lambda p: p['semantic_stage']['qualification'].update(
+                configuration_hash=canonical_hash('changed')), 'qualification_audit_mismatch'),
+            (lambda p: p['semantic_evaluation_receipt'].update(
+                evaluator_version='unregistered'), 'evaluator_configuration_mismatch'),
+        ):
+            with self.subTest(expected=expected):
+                packet = copy.deepcopy(self.packet)
+                for artifact in packet['trial_artifacts']:
+                    old = artifact['artifact_hash']
+                    payload = artifact['payload']
+                    change(payload)
+                    # Construct a historically self-consistent fixture, then anchor it.
+                    payload['evaluation'] = _regrade(
+                        payload, frozenset({self.stage.calibration_hash})).to_dict()
+                    artifact['artifact_hash'] = canonical_hash(payload)
+                    for row in packet['baseline_trials'] + packet['candidate_trials']:
+                        if row['artifact_hash'] == old:
+                            row['artifact_hash'] = artifact['artifact_hash']
+                from cx_eval_lab.replay_authority import assess_replay
+                result = assess_replay(
+                    packet, trusted_packet_hash=canonical_hash(packet),
+                    historical_calibration_hashes=frozenset({self.stage.calibration_hash}),
+                    registry=self.stage.registry, now=NOW, allow_synthetic=True)
+                self.assertEqual('not_current', result.calibration_status)
+                self.assertTrue(all(expected in issue for issue in result.issues))
+
+    def test_no_semantic_receipts_is_not_a_calibration_pass(self):
+        from tests.test_trial_replay import TrialReplayTests
+        from cx_eval_lab.replay_authority import assess_replay
+        packet = TrialReplayTests().packet()
+        result = assess_replay(
+            packet, trusted_packet_hash=canonical_hash(packet),
+            historical_calibration_hashes=frozenset(), registry=CalibrationRegistry(()), now=NOW)
+        self.assertEqual('not_applicable', result.calibration_status)
+        self.assertEqual(0, result.semantic_trials)
+        self.assertFalse(result.deployment_authorized)
 
 
 if __name__ == '__main__':
