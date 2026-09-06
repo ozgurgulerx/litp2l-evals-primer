@@ -238,6 +238,24 @@ class SyntheticBookExampleTests(unittest.TestCase):
         self.assertEqual(artifact["decision"]["action"], "rollback")
         self.assertIn("hard:duplicate_refund", artifact["decision"]["reasons"])
 
+    def test_paired_evidence_fixture_keeps_synthetic_authority_bounded(self) -> None:
+        artifact = load_example("paired-evidence-receipt-v1.json")
+        outcomes = artifact["outcomes"]
+        comparison = artifact["comparison"]
+
+        observed_difference = (
+            outcomes["candidate_passed"] - outcomes["baseline_passed"]
+        ) / artifact["pair_count"]
+
+        self.assertEqual(observed_difference, comparison["point_difference"])
+        self.assertGreaterEqual(
+            comparison["lower_bound"],
+            -comparison["margin"],
+        )
+        self.assertEqual("synthetic", artifact["measurement_kind"])
+        self.assertEqual("lab_pass", artifact["receipt"]["action"])
+        self.assertEqual("lab_only", artifact["receipt"]["authority_ceiling"])
+
 
 if __name__ == "__main__":
     unittest.main()

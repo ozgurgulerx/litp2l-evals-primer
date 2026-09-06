@@ -7,6 +7,7 @@ import time
 from typing import Protocol
 
 from cx_eval_lab.evaluators import evaluate_case
+from cx_eval_lab.evidence import ExperimentManifest, PairedExperiment
 from cx_eval_lab.models import (
     AgentOutput,
     EvaluationReport,
@@ -15,6 +16,7 @@ from cx_eval_lab.models import (
     RefundCase,
 )
 from cx_eval_lab.world import RefundTools, RefundWorld
+from cx_eval_lab.statistics import PairedTrial
 
 
 DEFAULT_MEASUREMENT_PROFILE = MeasurementProfile(
@@ -96,6 +98,87 @@ def evaluate_agent(
         unresolved_work_count=sum(
             result.unresolved_work_count for result in case_results
         ),
+    )
+
+
+def run_paired_experiment(
+    *,
+    baseline_agent: SupportAgent,
+    candidate_agent: SupportAgent,
+    cases: tuple[RefundCase, ...],
+    manifest: ExperimentManifest,
+    baseline_measurement_profile: MeasurementProfile | None,
+    candidate_measurement_profile: MeasurementProfile | None,
+) -> PairedExperiment:
+    """Run registered baseline/candidate repetitions on identical isolated cases."""
+
+    if not cases:
+        raise ValueError("at least one evaluation case is required")
+    if {case.dataset_version for case in cases} != {manifest.dataset_version}:
+        raise ValueError("manifest and case dataset versions must match")
+    for profile in (baseline_measurement_profile, candidate_measurement_profile):
+        observed_kind = "measured" if profile is None else profile.evidence_kind
+        if observed_kind != manifest.measurement_kind:
+            raise ValueError("measurement profile and manifest evidence kind must match")
+
+    baseline_trials: list[PairedTrial] = []
+    candidate_trials: list[PairedTrial] = []
+    for trial_index in range(manifest.repetitions):
+        for case in cases:
+            baseline_result = _evaluate_isolated(
+                baseline_agent,
+                case,
+                baseline_measurement_profile,
+                None,
+            )
+            candidate_result = _evaluate_isolated(
+                candidate_agent,
+                case,
+                candidate_measurement_profile,
+                None,
+            )
+            baseline_trials.append(
+                _to_paired_trial(
+                    baseline_result,
+                    case,
+                    trial_index,
+                    "baseline",
+                    manifest.content_hash,
+                )
+            )
+            candidate_trials.append(
+                _to_paired_trial(
+                    candidate_result,
+                    case,
+                    trial_index,
+                    "candidate",
+                    manifest.content_hash,
+                )
+            )
+    return PairedExperiment(
+        manifest=manifest,
+        baseline_trials=tuple(baseline_trials),
+        candidate_trials=tuple(candidate_trials),
+    )
+
+
+def _to_paired_trial(
+    result,
+    case: RefundCase,
+    trial_index: int,
+    arm: str,
+    manifest_hash: str,
+) -> PairedTrial:
+    return PairedTrial(
+        case_id=case.case_id,
+        trial_index=trial_index,
+        cluster_id=case.customer_id,
+        arm=arm,
+        passed=result.passed,
+        latency_ms=result.latency_ms,
+        cost_usd=result.cost_usd,
+        manifest_hash=manifest_hash,
+        failed_checks=tuple(check.name for check in result.checks if not check.passed),
     )
 
 

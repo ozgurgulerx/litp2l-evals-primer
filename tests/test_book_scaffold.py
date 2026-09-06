@@ -26,6 +26,7 @@ EXPECTED_CHAPTERS = (
     "docs/production-evals.md",
     "docs/checklist.md",
     "docs/build-the-system.md",
+    "docs/evidence-spine.md",
     "docs/references.md",
     "docs/courses.md",
     "docs/interview-drills.md",
@@ -127,6 +128,15 @@ DEPTH_CHAPTERS = {
         "What the evidence does not prove",
         "Worked example",
         "Artifact: practice-evidence ledger",
+        "Exercise",
+    ),
+    "docs/evidence-spine.md": (
+        "prerequisite graph",
+        "Statistical non-inferiority",
+        "Sample size and sequential looks",
+        "Noisy labels and judge-error propagation",
+        "Repeated holdout use",
+        "Artifact: paired evidence receipt",
         "Exercise",
     ),
     "docs/interview-drills.md": (
