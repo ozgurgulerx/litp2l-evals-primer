@@ -162,6 +162,10 @@ class LongReportTests(unittest.TestCase):
             report['synthesis'] = [r for r in report['synthesis'] if r['synthesis_id'] != 'SY04']
         with self.assertRaises(ValueError):
             run_study(inputs)
+        inputs = example_inputs()
+        inputs['reports'][0]['synthesis'] = []
+        with self.assertRaises(ValueError):
+            run_study(inputs)
 
     def test_retained_artifact_matches_independent_expected_counts(self):
         from cx_eval_lab.long_report import replay_study, run_study
@@ -178,7 +182,3 @@ class LongReportTests(unittest.TestCase):
         self.assertEqual({'numerator': 8, 'denominator': 17, 'rate': 8 / 17}, original['controls']['cited-only']['observed_support'])
         self.assertEqual(20, repaired['controls']['clause']['atomic_recall']['numerator'])
         self.assertEqual(4, repaired['underlying_unknown_count'])
-        inputs = example_inputs()
-        inputs['reports'][0]['synthesis'] = []
-        with self.assertRaises(ValueError):
-            run_study(inputs)

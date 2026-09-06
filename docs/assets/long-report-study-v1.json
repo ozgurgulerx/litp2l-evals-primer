@@ -1,0 +1,4441 @@
+{
+  "schema": "long-report-study-v1",
+  "inputs": {
+    "schema": "long-report-inputs-v1",
+    "task": {
+      "task_id": "aster-refund-decision-v1",
+      "as_of": "2026-09-07",
+      "scope": "aster-refunds-2026-09-07",
+      "questions": [
+        {
+          "question_id": "Q1",
+          "text": "What happened after the timeout, what recovery is permitted, and which conflicting policy governs the incident date?"
+        },
+        {
+          "question_id": "Q2",
+          "text": "What purchase and amount limits apply, and when must supervisor approval exist?"
+        },
+        {
+          "question_id": "Q3",
+          "text": "What can the customer be told about the refund and bank timing, and what must remain unknown?"
+        },
+        {
+          "question_id": "Q4",
+          "text": "What does the explanation pilot establish, and what can be concluded about other languages, channels, and transaction reliability?"
+        },
+        {
+          "question_id": "Q5",
+          "text": "Does proposed review demand fit the stated capacity, and what is known about incremental operating cost?"
+        },
+        {
+          "question_id": "Q6",
+          "text": "Who owns starting the supervised pilot, and which observed events require it to pause?"
+        }
+      ],
+      "required_synthesis_ids": [
+        "SY01",
+        "SY02",
+        "SY03",
+        "SY04"
+      ]
+    },
+    "rubric": {
+      "version": "authored-long-report-rubric-v1",
+      "text": "All documents, labels, dates, counts and review reasons are invented teaching data. Audit only the registered Finding clauses, not every assertion in the surrounding prose. A material factual finding needs scoped support; an inference must not outrun its premises; a recommendation must respect unresolved dependencies. Claim status judges the literal assertion. An accurate statement that evidence cannot determine an outcome is supported. The separate abstention_target_answerability field is unknown for an explicitly withheld target and null for other findings; null does not assert that an unsupported claim is answerable. Citation entailment, current factual validity, task completeness and synthesis are distinct. An archived passage may entail a quoted instruction while failing to justify its current use. The task is complete only when every registered subquestion is addressed or its evidence gap is explicitly and appropriately resolved as an abstention. Semantic labels and coverage/synthesis reviews are authored, not produced or qualified by a model or human study."
+    },
+    "sources": [
+      {
+        "source_id": "S01",
+        "title": "Current refund policy",
+        "text": "Automatic refunds are limited to GBP 50 and purchases made within 30 calendar days. Amounts above GBP 50 require a recorded supervisor approval before a refund action. Following a timeout, inspect the transaction ledger before attempting another refund. If the original transaction exists, reconcile that transaction and reuse its idempotency key for any permitted status reconciliation. Never create a fresh refund key merely because the response timed out. This policy replaces the August retry instruction on 1 September 2026. Eligibility and approval checks must be enforced by the service, not inferred from customer wording.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-01",
+        "effective_from": "2026-09-01",
+        "effective_until": null
+      },
+      {
+        "source_id": "S02",
+        "title": "Retired August retry instruction",
+        "text": "After a timeout, retry the refund request using a new request key. This temporary instruction applies to the August integration only. Its effective period ends on 1 September 2026, when the current refund policy replaces it. The document remains in the archive so incident reviewers can understand earlier operator behavior. Archival availability is not permission to use this instruction for September transactions.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-08-01",
+        "effective_from": "2026-08-01",
+        "effective_until": "2026-09-01"
+      },
+      {
+        "source_id": "S03",
+        "title": "Incident ledger extract",
+        "text": "At 09:14 UTC on 7 September 2026, request R17 created transaction T41 for a GBP 42 refund on order O8. The ledger records one committed refund transaction with idempotency key K17. The response channel then timed out. The bank settlement field is unknown. No second refund transaction is recorded in this extract. This extract proves the recorded transaction state, not whether the customer has received money in a bank account.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-07",
+        "effective_from": "2026-09-07",
+        "effective_until": null
+      },
+      {
+        "source_id": "S04",
+        "title": "Bank timing guidance",
+        "text": "The indicative bank processing window is three to five business days after a refund is submitted. This window is an estimate, not a promise about a particular account. The guidance does not guarantee settlement within 24 hours. A settlement claim requires a separate bank confirmation tied to the transaction. Staff should distinguish the merchant transaction being committed from the customer's bank balance changing.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-01",
+        "effective_from": "2026-09-01",
+        "effective_until": null
+      },
+      {
+        "source_id": "S05",
+        "title": "Frozen explanation pilot",
+        "text": "The pilot contains 24 invented English refund conversations. In 21 conversations the explanation accurately distinguishes the recorded transaction status from bank settlement. Three explanations incorrectly say that a pending bank transfer has settled. The pilot is a scripted teaching sample, not production traffic. It does not measure the frequency of duplicate transactions, fraud detection, or customer satisfaction. The counts describe these fixed explanations only, not future reliability.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-05",
+        "effective_from": "2026-09-05",
+        "effective_until": null
+      },
+      {
+        "source_id": "S06",
+        "title": "Language and channel inventory",
+        "text": "Only English text conversations are included in the frozen pilot. No Turkish conversation or voice interaction has been evaluated in this packet. There is no basis here for a Turkish or voice release claim. Missing evaluation does not establish that those channels are unsafe; it establishes that this packet cannot decide their readiness. Additional channel-specific evidence would require its own protocol and observations.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-05",
+        "effective_from": "2026-09-05",
+        "effective_until": null
+      },
+      {
+        "source_id": "S07",
+        "title": "Review capacity worksheet",
+        "text": "The planned review team can complete 40 cases per day under its current staffing assumption. The proposed pilot batch is expected to produce 52 reviews per day. The forecast is a planning assumption, not an observed arrival rate. A capacity decision must compare review demand with available review slots and preserve the assumptions behind both numbers. No extra reviewer or overtime allocation has been approved in this worksheet.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-06",
+        "effective_from": "2026-09-06",
+        "effective_until": null
+      },
+      {
+        "source_id": "S08",
+        "title": "Cost evidence boundary",
+        "text": "The packet contains no supplier invoice, measured token usage, or reviewer labor cost record. Incremental operating cost cannot be calculated from this packet. A future budget must account for model use, review labor, retries, and storage under declared pricing assumptions. Absence of an invoice is not evidence that the service is free. This note records an evidence gap rather than estimating a price.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-06",
+        "effective_from": "2026-09-06",
+        "effective_until": null
+      },
+      {
+        "source_id": "S09",
+        "title": "Supervised pilot and rollback contract",
+        "text": "The next permitted stage is a supervised English text pilot only. The release owner is the fictional role Support Operations Lead. That owner must confirm eligibility and approval enforcement, truthful customer wording, a feasible review allocation, and a cost estimate before starting. One observed duplicate refund or one unsupported settlement promise pauses the pilot and routes the affected case to review. Restart requires owner approval after the failure is reproduced and the repair is checked. This contract is an invented policy for the teaching case, not deployment authorization.",
+        "authority": "invented-policy-owner",
+        "scope": "aster-refunds-2026-09-07",
+        "published_at": "2026-09-07",
+        "effective_from": "2026-09-07",
+        "effective_until": null
+      }
+    ],
+    "reports": [
+      {
+        "report_id": "original",
+        "text": "Aster Goods refund recovery decision memo \u2014 original\n\nThis memo assesses the recovery and release proposal against the frozen packet, separating a transaction decision from customer wording and a broader rollout recommendation. Read the findings as the reviewable conclusions; the intervening paragraphs describe how to inspect and use them. The report is intentionally fictional and is not an instruction for handling real customer money.\n\nFinding: Request R17 produced one committed refund before its response channel timed out [L01].\n\nBegin the investigation with the recorded side effect, not the visible error banner. Keep the request, transaction, and idempotency identifiers together so an operator can reconcile the incident without treating an unfamiliar identifier as a new customer instruction.\n\nFinding: The timeout proves that the original request had no financial effect [L02].\n\nFor the recovery decision, use a single interpretation of the timeout throughout the handoff. Do not alternate between transport failure and transaction failure merely to make a proposed retry seem consistent with whichever paragraph the reader is currently consulting.\n\nFinding: The September recovery procedure requires a fresh request key and a second refund attempt [L03].\n\nKeep the archived instruction available beside the working procedure during incident review. Explain which instruction governs the transaction date, rather than allowing whichever search result appeared first to determine the operational response.\n\nFinding: Automatic refunds have a GBP 50 limit [L04]; The purchase must fall within the 30 calendar day window [L05].\n\nApply the amount and purchase-age conditions as separate checks. A clear customer description can help locate an order, but the final decision should use recorded order fields and leave an inspectable reason for any failed eligibility check.\n\nFinding: Refunds above GBP 50 require recorded supervisor approval before the action [L06].\n\nAn approval request should identify the exact order, amount, and proposed action. Keep that request separate from a customer's preference or an agent's confidence, and make the resulting approval available to the service that will enforce the decision.\n\nFinding: The refund will reach the customer bank account within 24 hours [L07].\n\nCustomer wording deserves its own review rather than inheriting a passing grade from the transaction check. Read the proposed sentence as a commitment a customer might rely on, and identify which record could establish each time-sensitive assertion.\n\nFinding: The supplied ledger cannot establish when the customer bank account will receive the money [L08].\n\nKeep this uncertainty visible in the proposed response. A useful explanation can acknowledge the verified action and distinguish an estimate from confirmation, leaving the unresolved bank event for an appropriate evidence source instead of inventing a reassuring date.\n\nFinding: Every one of the 24 pilot explanations accurately distinguished transaction status from settlement [L09].\n\nRetain the case-level explanation record when presenting the headline result. A reader should be able to inspect the counterexamples and the meaning of the scoring criterion before treating the number as evidence for a broader service decision.\n\nFinding: This explanation pilot establishes that duplicate refunds will not occur [L10].\n\nDo not compress different operational outcomes into an undifferentiated quality label. A transaction incident, an inaccurate explanation, and a delayed review require different evidence and repairs even when they appear within the same customer conversation.\n\nFinding: The packet establishes readiness for Turkish text conversations [L11].\n\nKeep language scope adjacent to any score in the release memo. A reader should not have to infer whether a language was measured, deliberately excluded, or simply absent from a convenient sample that became the headline evaluation.\n\nFinding: Voice readiness cannot be determined from the supplied evaluation packet [L12].\n\nTreat this as an unanswered evidence question. A follow-up evaluation should state the voice task, interruption conditions, action boundaries, and review criteria before asking whether a text result can transfer to that setting.\n\nFinding: The planned team has capacity for 40 reviews per day [L13]; The proposed batch is expected to generate 52 reviews per day [L14].\n\nPresent demand and capacity in the same unit and planning window. Keep forecast assumptions available for challenge, and avoid converting a neat spreadsheet result into a claim about how a queue will behave during a changing service day.\n\nFinding: The proposed batch fits within the stated daily review capacity [L15].\n\nDecide what action the workload calculation supports. If the proposal needs a smaller batch or another staffing decision, record that dependency rather than hiding unresolved work behind an average completion score or a general promise to monitor.\n\nFinding: The proposed service has zero incremental operating cost.\n\nBudget review should list the inputs needed for an estimate and identify who will supply them. Keep unknown cost distinct from an observed zero, and avoid letting a quality comparison stand in for an operating expense calculation.\n\nFinding: Both the archived and current policies support unrestricted fresh-key retrying [L16].\n\nPlace conflicting passages next to one another in the decision record. Explain whether the disagreement concerns dates, transaction state, or permitted actions, and preserve the losing interpretation so a reviewer can understand why it was not used.\n\nFinding: The combined packet supports immediate expansion to every language and channel [L17].\n\nA recommendation should state the evidence it depends on and the conditions that would change it. Keep the conclusion separate from its supporting observations so a reviewer can reject the proposed action without discarding every valid fact in the report.",
+        "claims": [
+          {
+            "claim_id": "C01",
+            "span": {
+              "start": 450,
+              "end": 529,
+              "quote": "Request R17 produced one committed refund before its response channel timed out"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L01",
+                "source_id": "S03",
+                "source_span": {
+                  "start": 103,
+                  "end": 217,
+                  "quote": "The ledger records one committed refund transaction with idempotency key K17. The response channel then timed out."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The ledger directly distinguishes committed state from response delivery.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C02",
+            "span": {
+              "start": 816,
+              "end": 884,
+              "quote": "The timeout proves that the original request had no financial effect"
+            },
+            "kind": "inference",
+            "status": "contradicted",
+            "links": [
+              {
+                "citation_id": "L02",
+                "source_id": "S03",
+                "source_span": {
+                  "start": 103,
+                  "end": 180,
+                  "quote": "The ledger records one committed refund transaction with idempotency key K17."
+                },
+                "relation": "contradicts"
+              }
+            ],
+            "reason": "The inference contradicts the explicit committed transaction.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C03",
+            "span": {
+              "start": 1173,
+              "end": 1262,
+              "quote": "The September recovery procedure requires a fresh request key and a second refund attempt"
+            },
+            "kind": "factual",
+            "status": "contradicted",
+            "links": [
+              {
+                "citation_id": "L03",
+                "source_id": "S02",
+                "source_span": {
+                  "start": 0,
+                  "end": 66,
+                  "quote": "After a timeout, retry the refund request using a new request key."
+                },
+                "relation": "insufficient"
+              }
+            ],
+            "reason": "The archived August instruction does not entail the explicitly September-scoped claim; S01 contradicts its current use.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C04",
+            "span": {
+              "start": 1529,
+              "end": 1566,
+              "quote": "Automatic refunds have a GBP 50 limit"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L04",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 0,
+                  "end": 83,
+                  "quote": "Automatic refunds are limited to GBP 50 and purchases made within 30 calendar days."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The current policy specifies the monetary ceiling.",
+            "question_ids": [
+              "Q2"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C05",
+            "span": {
+              "start": 1574,
+              "end": 1630,
+              "quote": "The purchase must fall within the 30 calendar day window"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L05",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 0,
+                  "end": 83,
+                  "quote": "Automatic refunds are limited to GBP 50 and purchases made within 30 calendar days."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The current policy independently specifies the age window.",
+            "question_ids": [
+              "Q2"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C06",
+            "span": {
+              "start": 1891,
+              "end": 1966,
+              "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L06",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 84,
+                  "end": 167,
+                  "quote": "Amounts above GBP 50 require a recorded supervisor approval before a refund action."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The approval requirement precedes action.",
+            "question_ids": [
+              "Q2"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C07",
+            "span": {
+              "start": 2238,
+              "end": 2301,
+              "quote": "The refund will reach the customer bank account within 24 hours"
+            },
+            "kind": "factual",
+            "status": "unsupported",
+            "links": [
+              {
+                "citation_id": "L07",
+                "source_id": "S04",
+                "source_span": {
+                  "start": 0,
+                  "end": 97,
+                  "quote": "The indicative bank processing window is three to five business days after a refund is submitted."
+                },
+                "relation": "insufficient"
+              }
+            ],
+            "reason": "A general indicative window cannot support a transaction-specific promise.",
+            "question_ids": [
+              "Q3"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C08",
+            "span": {
+              "start": 2570,
+              "end": 2660,
+              "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+            },
+            "kind": "abstention",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L08",
+                "source_id": "S03",
+                "source_span": {
+                  "start": 218,
+                  "end": 255,
+                  "quote": "The bank settlement field is unknown."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "A justified abstention: the account-specific settlement event remains unknown.",
+            "question_ids": [
+              "Q3"
+            ],
+            "abstention_target_answerability": "unknown"
+          },
+          {
+            "claim_id": "C09",
+            "span": {
+              "start": 2948,
+              "end": 3046,
+              "quote": "Every one of the 24 pilot explanations accurately distinguished transaction status from settlement"
+            },
+            "kind": "factual",
+            "status": "contradicted",
+            "links": [
+              {
+                "citation_id": "L09",
+                "source_id": "S05",
+                "source_span": {
+                  "start": 61,
+                  "end": 175,
+                  "quote": "In 21 conversations the explanation accurately distinguishes the recorded transaction status from bank settlement."
+                },
+                "relation": "contradicts"
+              }
+            ],
+            "reason": "The pilot reports 21, not 24, accurate explanations.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C10",
+            "span": {
+              "start": 3310,
+              "end": 3382,
+              "quote": "This explanation pilot establishes that duplicate refunds will not occur"
+            },
+            "kind": "inference",
+            "status": "unsupported",
+            "links": [
+              {
+                "citation_id": "L10",
+                "source_id": "S05",
+                "source_span": {
+                  "start": 318,
+                  "end": 421,
+                  "quote": "It does not measure the frequency of duplicate transactions, fraud detection, or customer satisfaction."
+                },
+                "relation": "contradicts"
+              }
+            ],
+            "reason": "Explanation correctness does not establish transaction reliability.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C11",
+            "span": {
+              "start": 3660,
+              "end": 3723,
+              "quote": "The packet establishes readiness for Turkish text conversations"
+            },
+            "kind": "factual",
+            "status": "contradicted",
+            "links": [
+              {
+                "citation_id": "L11",
+                "source_id": "S06",
+                "source_span": {
+                  "start": 66,
+                  "end": 145,
+                  "quote": "No Turkish conversation or voice interaction has been evaluated in this packet."
+                },
+                "relation": "contradicts"
+              }
+            ],
+            "reason": "There are no Turkish observations in the packet.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C12",
+            "span": {
+              "start": 3974,
+              "end": 4046,
+              "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+            },
+            "kind": "abstention",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L12",
+                "source_id": "S06",
+                "source_span": {
+                  "start": 66,
+                  "end": 145,
+                  "quote": "No Turkish conversation or voice interaction has been evaluated in this packet."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "A justified abstention, not an adverse capability verdict.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": "unknown"
+          },
+          {
+            "claim_id": "C13",
+            "span": {
+              "start": 4294,
+              "end": 4346,
+              "quote": "The planned team has capacity for 40 reviews per day"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L13",
+                "source_id": "S07",
+                "source_span": {
+                  "start": 0,
+                  "end": 92,
+                  "quote": "The planned review team can complete 40 cases per day under its current staffing assumption."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "This is a staffing assumption, not measured throughput.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C14",
+            "span": {
+              "start": 4354,
+              "end": 4415,
+              "quote": "The proposed batch is expected to generate 52 reviews per day"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L14",
+                "source_id": "S07",
+                "source_span": {
+                  "start": 93,
+                  "end": 160,
+                  "quote": "The proposed pilot batch is expected to produce 52 reviews per day."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "This is a planning forecast, not an observed arrival rate.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C15",
+            "span": {
+              "start": 4672,
+              "end": 4735,
+              "quote": "The proposed batch fits within the stated daily review capacity"
+            },
+            "kind": "inference",
+            "status": "contradicted",
+            "links": [
+              {
+                "citation_id": "L15",
+                "source_id": "S07",
+                "source_span": {
+                  "start": 0,
+                  "end": 160,
+                  "quote": "The planned review team can complete 40 cases per day under its current staffing assumption. The proposed pilot batch is expected to produce 52 reviews per day."
+                },
+                "relation": "contradicts"
+              }
+            ],
+            "reason": "Demand 52 exceeds capacity 40 by 12.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C16",
+            "span": {
+              "start": 5002,
+              "end": 5058,
+              "quote": "The proposed service has zero incremental operating cost"
+            },
+            "kind": "factual",
+            "status": "unsupported",
+            "links": [],
+            "reason": "The uncited cost claim is unsupported; S08 lacks the necessary records.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C17",
+            "span": {
+              "start": 5302,
+              "end": 5380,
+              "quote": "Both the archived and current policies support unrestricted fresh-key retrying"
+            },
+            "kind": "inference",
+            "status": "contradicted",
+            "links": [
+              {
+                "citation_id": "L16",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 388,
+                  "end": 458,
+                  "quote": "Never create a fresh refund key merely because the response timed out."
+                },
+                "relation": "contradicts"
+              }
+            ],
+            "reason": "This synthesis erases the explicit conflict and effective-date boundary.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C18",
+            "span": {
+              "start": 5649,
+              "end": 5727,
+              "quote": "The combined packet supports immediate expansion to every language and channel"
+            },
+            "kind": "recommendation",
+            "status": "unsupported",
+            "links": [
+              {
+                "citation_id": "L17",
+                "source_id": "S05",
+                "source_span": {
+                  "start": 253,
+                  "end": 317,
+                  "quote": "The pilot is a scripted teaching sample, not production traffic."
+                },
+                "relation": "insufficient"
+              }
+            ],
+            "reason": "The recommendation exceeds pilot scope and ignores unresolved constraints.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          }
+        ],
+        "coverage": [
+          {
+            "question_id": "Q1",
+            "status": "partially_answered",
+            "claim_ids": [
+              "C01",
+              "C02",
+              "C03",
+              "C17"
+            ],
+            "reason": "The incident is identified, but the retry recommendation and claimed policy agreement contradict current evidence."
+          },
+          {
+            "question_id": "Q2",
+            "status": "answered",
+            "claim_ids": [
+              "C04",
+              "C05",
+              "C06"
+            ],
+            "reason": "Both eligibility limits and the prior-approval requirement are identified."
+          },
+          {
+            "question_id": "Q3",
+            "status": "partially_answered",
+            "claim_ids": [
+              "C07",
+              "C08"
+            ],
+            "reason": "An appropriate abstention conflicts with an unsupported 24-hour promise."
+          },
+          {
+            "question_id": "Q4",
+            "status": "partially_answered",
+            "claim_ids": [
+              "C09",
+              "C10",
+              "C11",
+              "C12",
+              "C18"
+            ],
+            "reason": "The memo misstates the count and extends narrow evidence to duplicate-refund certainty and Turkish readiness."
+          },
+          {
+            "question_id": "Q5",
+            "status": "partially_answered",
+            "claim_ids": [
+              "C13",
+              "C14",
+              "C15",
+              "C16"
+            ],
+            "reason": "The underlying capacity assumptions are quoted, but their comparison is wrong and zero cost is invented."
+          },
+          {
+            "question_id": "Q6",
+            "status": "omitted",
+            "claim_ids": [],
+            "reason": "No finding states the accountable role or the pause trigger; a general expansion recommendation does not answer either."
+          }
+        ],
+        "synthesis": [
+          {
+            "synthesis_id": "SY01",
+            "claim_ids": [
+              "C17"
+            ],
+            "evidence_claim_ids": [
+              "C01",
+              "C03"
+            ],
+            "status": "contradicted",
+            "reason": "The sources disagree about fresh-key retries; the memo cannot reconcile them by asserting agreement."
+          },
+          {
+            "synthesis_id": "SY02",
+            "claim_ids": [
+              "C15"
+            ],
+            "evidence_claim_ids": [
+              "C13",
+              "C14"
+            ],
+            "status": "contradicted",
+            "reason": "The quoted figures show excess demand, not spare capacity."
+          },
+          {
+            "synthesis_id": "SY03",
+            "claim_ids": [
+              "C18"
+            ],
+            "evidence_claim_ids": [
+              "C09",
+              "C10",
+              "C11",
+              "C12",
+              "C15",
+              "C16"
+            ],
+            "status": "unsupported",
+            "reason": "The proposed expansion is stronger than its cited pilot and ignores missing channel and cost evidence and an unresolved workload shortfall."
+          },
+          {
+            "synthesis_id": "SY04",
+            "claim_ids": [
+              "C08"
+            ],
+            "evidence_claim_ids": [
+              "C01"
+            ],
+            "status": "supported",
+            "reason": "A committed merchant transaction does not fill the unknown bank-settlement field; the abstention is justified despite an established transaction."
+          }
+        ]
+      },
+      {
+        "report_id": "repaired",
+        "text": "Aster Goods refund recovery decision memo \u2014 repaired\n\nThis memo assesses the recovery and release proposal against the frozen packet, separating a transaction decision from customer wording and a broader rollout recommendation. Read the findings as the reviewable conclusions; the intervening paragraphs describe how to inspect and use them. The report is intentionally fictional and is not an instruction for handling real customer money.\n\nFinding: Request R17 produced one committed refund before its response channel timed out [L01].\n\nBegin the investigation with the recorded side effect, not the visible error banner. Keep the request, transaction, and idempotency identifiers together so an operator can reconcile the incident without treating an unfamiliar identifier as a new customer instruction.\n\nFinding: The transport timeout does not negate the committed transaction recorded in the ledger [L02].\n\nFor the recovery decision, use a single interpretation of the timeout throughout the handoff. Do not alternate between transport failure and transaction failure merely to make a proposed retry seem consistent with whichever paragraph the reader is currently consulting.\n\nFinding: September recovery requires ledger inspection and forbids a fresh refund key merely because the response timed out [L03].\n\nKeep the archived instruction available beside the working procedure during incident review. Explain which instruction governs the transaction date, rather than allowing whichever search result appeared first to determine the operational response.\n\nFinding: Automatic refunds have a GBP 50 limit [L04]; The purchase must fall within the 30 calendar day window [L05].\n\nApply the amount and purchase-age conditions as separate checks. A clear customer description can help locate an order, but the final decision should use recorded order fields and leave an inspectable reason for any failed eligibility check.\n\nFinding: Refunds above GBP 50 require recorded supervisor approval before the action [L06].\n\nAn approval request should identify the exact order, amount, and proposed action. Keep that request separate from a customer's preference or an agent's confidence, and make the resulting approval available to the service that will enforce the decision.\n\nFinding: The bank guidance offers a three to five business day estimate rather than an account-specific settlement promise [L07].\n\nCustomer wording deserves its own review rather than inheriting a passing grade from the transaction check. Read the proposed sentence as a commitment a customer might rely on, and identify which record could establish each time-sensitive assertion.\n\nFinding: The supplied ledger cannot establish when the customer bank account will receive the money [L08].\n\nKeep this uncertainty visible in the proposed response. A useful explanation can acknowledge the verified action and distinguish an estimate from confirmation, leaving the unresolved bank event for an appropriate evidence source instead of inventing a reassuring date.\n\nFinding: Twenty-one of the 24 invented English pilot explanations accurately distinguished transaction status from settlement [L09].\n\nRetain the case-level explanation record when presenting the headline result. A reader should be able to inspect the counterexamples and the meaning of the scoring criterion before treating the number as evidence for a broader service decision.\n\nFinding: The explanation pilot cannot establish the future frequency of duplicate refunds [L10].\n\nDo not compress different operational outcomes into an undifferentiated quality label. A transaction incident, an inaccurate explanation, and a delayed review require different evidence and repairs even when they appear within the same customer conversation.\n\nFinding: Turkish text readiness remains undetermined because the packet contains no Turkish evaluation [L11].\n\nKeep language scope adjacent to any score in the release memo. A reader should not have to infer whether a language was measured, deliberately excluded, or simply absent from a convenient sample that became the headline evaluation.\n\nFinding: Voice readiness cannot be determined from the supplied evaluation packet [L12].\n\nTreat this as an unanswered evidence question. A follow-up evaluation should state the voice task, interruption conditions, action boundaries, and review criteria before asking whether a text result can transfer to that setting.\n\nFinding: The planned team has capacity for 40 reviews per day [L13]; The proposed batch is expected to generate 52 reviews per day [L14].\n\nPresent demand and capacity in the same unit and planning window. Keep forecast assumptions available for challenge, and avoid converting a neat spreadsheet result into a claim about how a queue will behave during a changing service day.\n\nFinding: Under the stated assumptions the proposed batch exceeds daily review capacity by 12 cases [L15].\n\nDecide what action the workload calculation supports. If the proposal needs a smaller batch or another staffing decision, record that dependency rather than hiding unresolved work behind an average completion score or a general promise to monitor.\n\nFinding: Incremental operating cost cannot be determined from the supplied packet [L16].\n\nBudget review should list the inputs needed for an estimate and identify who will supply them. Keep unknown cost distinct from an observed zero, and avoid letting a quality comparison stand in for an operating expense calculation.\n\nFinding: The September policy supersedes the archived August fresh-key retry instruction for this incident [L17].\n\nPlace conflicting passages next to one another in the decision record. Explain whether the disagreement concerns dates, transaction state, or permitted actions, and preserve the losing interpretation so a reviewer can understand why it was not used.\n\nFinding: The next proposed stage should be limited to supervised English text after the stated prerequisites are satisfied [L18].\n\nA recommendation should state the evidence it depends on and the conditions that would change it. Keep the conclusion separate from its supporting observations so a reviewer can reject the proposed action without discarding every valid fact in the report.\n\nFinding: The Support Operations Lead owns the decision to start the supervised pilot [L19].\n\nName the accountable role in the handoff rather than addressing a generic team. The start decision should remain pending until its evidence is assembled; identifying an owner does not by itself satisfy the prerequisites or approve an expansion.\n\nFinding: One observed duplicate refund or unsupported settlement promise must pause the pilot and route the affected case to review [L20].\n\nKeep the pause decision connected to an inspectable incident and its repair. The escalation record should carry the affected transaction, the explanation, and the evidence needed for the owner to decide whether a restart is warranted.",
+        "claims": [
+          {
+            "claim_id": "C01",
+            "span": {
+              "start": 450,
+              "end": 529,
+              "quote": "Request R17 produced one committed refund before its response channel timed out"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L01",
+                "source_id": "S03",
+                "source_span": {
+                  "start": 103,
+                  "end": 217,
+                  "quote": "The ledger records one committed refund transaction with idempotency key K17. The response channel then timed out."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The ledger directly distinguishes committed state from response delivery.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C02",
+            "span": {
+              "start": 816,
+              "end": 902,
+              "quote": "The transport timeout does not negate the committed transaction recorded in the ledger"
+            },
+            "kind": "inference",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L02",
+                "source_id": "S03",
+                "source_span": {
+                  "start": 103,
+                  "end": 217,
+                  "quote": "The ledger records one committed refund transaction with idempotency key K17. The response channel then timed out."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The transport observation and committed state can both hold; neither erases the other.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C03",
+            "span": {
+              "start": 1191,
+              "end": 1305,
+              "quote": "September recovery requires ledger inspection and forbids a fresh refund key merely because the response timed out"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L03",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 168,
+                  "end": 458,
+                  "quote": "Following a timeout, inspect the transaction ledger before attempting another refund. If the original transaction exists, reconcile that transaction and reuse its idempotency key for any permitted status reconciliation. Never create a fresh refund key merely because the response timed out."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "Current policy governs recovery; an existing transaction must be reconciled rather than duplicated.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C04",
+            "span": {
+              "start": 1572,
+              "end": 1609,
+              "quote": "Automatic refunds have a GBP 50 limit"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L04",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 0,
+                  "end": 83,
+                  "quote": "Automatic refunds are limited to GBP 50 and purchases made within 30 calendar days."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The current policy specifies the monetary ceiling.",
+            "question_ids": [
+              "Q2"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C05",
+            "span": {
+              "start": 1617,
+              "end": 1673,
+              "quote": "The purchase must fall within the 30 calendar day window"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L05",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 0,
+                  "end": 83,
+                  "quote": "Automatic refunds are limited to GBP 50 and purchases made within 30 calendar days."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The current policy independently specifies the age window.",
+            "question_ids": [
+              "Q2"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C06",
+            "span": {
+              "start": 1934,
+              "end": 2009,
+              "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L06",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 84,
+                  "end": 167,
+                  "quote": "Amounts above GBP 50 require a recorded supervisor approval before a refund action."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The approval requirement precedes action.",
+            "question_ids": [
+              "Q2"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C07",
+            "span": {
+              "start": 2281,
+              "end": 2394,
+              "quote": "The bank guidance offers a three to five business day estimate rather than an account-specific settlement promise"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L07",
+                "source_id": "S04",
+                "source_span": {
+                  "start": 0,
+                  "end": 167,
+                  "quote": "The indicative bank processing window is three to five business days after a refund is submitted. This window is an estimate, not a promise about a particular account."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The statement preserves both the estimate and its limitation.",
+            "question_ids": [
+              "Q3"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C08",
+            "span": {
+              "start": 2663,
+              "end": 2753,
+              "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+            },
+            "kind": "abstention",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L08",
+                "source_id": "S03",
+                "source_span": {
+                  "start": 218,
+                  "end": 255,
+                  "quote": "The bank settlement field is unknown."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "A justified abstention: the account-specific settlement event remains unknown.",
+            "question_ids": [
+              "Q3"
+            ],
+            "abstention_target_answerability": "unknown"
+          },
+          {
+            "claim_id": "C09",
+            "span": {
+              "start": 3041,
+              "end": 3157,
+              "quote": "Twenty-one of the 24 invented English pilot explanations accurately distinguished transaction status from settlement"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L09",
+                "source_id": "S05",
+                "source_span": {
+                  "start": 0,
+                  "end": 175,
+                  "quote": "The pilot contains 24 invented English refund conversations. In 21 conversations the explanation accurately distinguishes the recorded transaction status from bank settlement."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The count, language and invented sample scope are retained.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C10",
+            "span": {
+              "start": 3421,
+              "end": 3501,
+              "quote": "The explanation pilot cannot establish the future frequency of duplicate refunds"
+            },
+            "kind": "inference",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L10",
+                "source_id": "S05",
+                "source_span": {
+                  "start": 318,
+                  "end": 421,
+                  "quote": "It does not measure the frequency of duplicate transactions, fraud detection, or customer satisfaction."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The conclusion respects the difference between explanation scoring and transaction outcomes.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C11",
+            "span": {
+              "start": 3779,
+              "end": 3872,
+              "quote": "Turkish text readiness remains undetermined because the packet contains no Turkish evaluation"
+            },
+            "kind": "abstention",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L11",
+                "source_id": "S06",
+                "source_span": {
+                  "start": 66,
+                  "end": 145,
+                  "quote": "No Turkish conversation or voice interaction has been evaluated in this packet."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "Appropriate abstention about readiness, rather than an unsupported release claim.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": "unknown"
+          },
+          {
+            "claim_id": "C12",
+            "span": {
+              "start": 4123,
+              "end": 4195,
+              "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+            },
+            "kind": "abstention",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L12",
+                "source_id": "S06",
+                "source_span": {
+                  "start": 66,
+                  "end": 145,
+                  "quote": "No Turkish conversation or voice interaction has been evaluated in this packet."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "A justified abstention, not an adverse capability verdict.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": "unknown"
+          },
+          {
+            "claim_id": "C13",
+            "span": {
+              "start": 4443,
+              "end": 4495,
+              "quote": "The planned team has capacity for 40 reviews per day"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L13",
+                "source_id": "S07",
+                "source_span": {
+                  "start": 0,
+                  "end": 92,
+                  "quote": "The planned review team can complete 40 cases per day under its current staffing assumption."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "This is a staffing assumption, not measured throughput.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C14",
+            "span": {
+              "start": 4503,
+              "end": 4564,
+              "quote": "The proposed batch is expected to generate 52 reviews per day"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L14",
+                "source_id": "S07",
+                "source_span": {
+                  "start": 93,
+                  "end": 160,
+                  "quote": "The proposed pilot batch is expected to produce 52 reviews per day."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "This is a planning forecast, not an observed arrival rate.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C15",
+            "span": {
+              "start": 4821,
+              "end": 4910,
+              "quote": "Under the stated assumptions the proposed batch exceeds daily review capacity by 12 cases"
+            },
+            "kind": "inference",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L15",
+                "source_id": "S07",
+                "source_span": {
+                  "start": 0,
+                  "end": 160,
+                  "quote": "The planned review team can complete 40 cases per day under its current staffing assumption. The proposed pilot batch is expected to produce 52 reviews per day."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "52 minus 40 is 12; the inference remains conditional on planning assumptions.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C16",
+            "span": {
+              "start": 5177,
+              "end": 5249,
+              "quote": "Incremental operating cost cannot be determined from the supplied packet"
+            },
+            "kind": "abstention",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L16",
+                "source_id": "S08",
+                "source_span": {
+                  "start": 0,
+                  "end": 159,
+                  "quote": "The packet contains no supplier invoice, measured token usage, or reviewer labor cost record. Incremental operating cost cannot be calculated from this packet."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "Missing price and usage evidence cannot establish zero cost.",
+            "question_ids": [
+              "Q5"
+            ],
+            "abstention_target_answerability": "unknown"
+          },
+          {
+            "claim_id": "C17",
+            "span": {
+              "start": 5499,
+              "end": 5596,
+              "quote": "The September policy supersedes the archived August fresh-key retry instruction for this incident"
+            },
+            "kind": "inference",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L17",
+                "source_id": "S01",
+                "source_span": {
+                  "start": 459,
+                  "end": 529,
+                  "quote": "This policy replaces the August retry instruction on 1 September 2026."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The incident date is after the explicit replacement date; archival presence does not imply authority.",
+            "question_ids": [
+              "Q1"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C18",
+            "span": {
+              "start": 5865,
+              "end": 5978,
+              "quote": "The next proposed stage should be limited to supervised English text after the stated prerequisites are satisfied"
+            },
+            "kind": "recommendation",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L18",
+                "source_id": "S09",
+                "source_span": {
+                  "start": 0,
+                  "end": 286,
+                  "quote": "The next permitted stage is a supervised English text pilot only. The release owner is the fictional role Support Operations Lead. That owner must confirm eligibility and approval enforcement, truthful customer wording, a feasible review allocation, and a cost estimate before starting."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "This recommendation stays within the invented contract and does not claim the prerequisites are already satisfied.",
+            "question_ids": [
+              "Q4"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C19",
+            "span": {
+              "start": 6253,
+              "end": 6328,
+              "quote": "The Support Operations Lead owns the decision to start the supervised pilot"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L19",
+                "source_id": "S09",
+                "source_span": {
+                  "start": 66,
+                  "end": 286,
+                  "quote": "The release owner is the fictional role Support Operations Lead. That owner must confirm eligibility and approval enforcement, truthful customer wording, a feasible review allocation, and a cost estimate before starting."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The owner is an invented role, not a real authorization.",
+            "question_ids": [
+              "Q6"
+            ],
+            "abstention_target_answerability": null
+          },
+          {
+            "claim_id": "C20",
+            "span": {
+              "start": 6592,
+              "end": 6714,
+              "quote": "One observed duplicate refund or unsupported settlement promise must pause the pilot and route the affected case to review"
+            },
+            "kind": "factual",
+            "status": "supported",
+            "links": [
+              {
+                "citation_id": "L20",
+                "source_id": "S09",
+                "source_span": {
+                  "start": 287,
+                  "end": 411,
+                  "quote": "One observed duplicate refund or one unsupported settlement promise pauses the pilot and routes the affected case to review."
+                },
+                "relation": "entails"
+              }
+            ],
+            "reason": "The pause trigger is explicit and operates on either named failure.",
+            "question_ids": [
+              "Q6"
+            ],
+            "abstention_target_answerability": null
+          }
+        ],
+        "coverage": [
+          {
+            "question_id": "Q1",
+            "status": "answered",
+            "claim_ids": [
+              "C01",
+              "C02",
+              "C03",
+              "C17"
+            ],
+            "reason": "The memo reconciles committed state, the transport failure, and the effective-date conflict."
+          },
+          {
+            "question_id": "Q2",
+            "status": "answered",
+            "claim_ids": [
+              "C04",
+              "C05",
+              "C06"
+            ],
+            "reason": "Both eligibility limits and the prior-approval requirement are identified."
+          },
+          {
+            "question_id": "Q3",
+            "status": "answered",
+            "claim_ids": [
+              "C07",
+              "C08"
+            ],
+            "reason": "The estimate is qualified and the missing account-specific settlement event is explicitly left unknown."
+          },
+          {
+            "question_id": "Q4",
+            "status": "answered",
+            "claim_ids": [
+              "C09",
+              "C10",
+              "C11",
+              "C12",
+              "C18"
+            ],
+            "reason": "The pilot count and scope are preserved; Turkish and voice readiness are not inferred from English explanations."
+          },
+          {
+            "question_id": "Q5",
+            "status": "answered",
+            "claim_ids": [
+              "C13",
+              "C14",
+              "C15",
+              "C16"
+            ],
+            "reason": "The conditional shortfall is calculated and cost remains unknown pending evidence."
+          },
+          {
+            "question_id": "Q6",
+            "status": "answered",
+            "claim_ids": [
+              "C19",
+              "C20"
+            ],
+            "reason": "The report identifies the accountable role and the event-based pause condition."
+          }
+        ],
+        "synthesis": [
+          {
+            "synthesis_id": "SY01",
+            "claim_ids": [
+              "C17"
+            ],
+            "evidence_claim_ids": [
+              "C01",
+              "C03"
+            ],
+            "status": "supported",
+            "reason": "The incident date and governing current procedure support superseding the archived retry rule."
+          },
+          {
+            "synthesis_id": "SY02",
+            "claim_ids": [
+              "C15"
+            ],
+            "evidence_claim_ids": [
+              "C13",
+              "C14"
+            ],
+            "status": "supported",
+            "reason": "The 12-case excess follows from 52 planned arrivals minus 40 available slots; it remains a planning result."
+          },
+          {
+            "synthesis_id": "SY03",
+            "claim_ids": [
+              "C18"
+            ],
+            "evidence_claim_ids": [
+              "C09",
+              "C10",
+              "C11",
+              "C12",
+              "C15",
+              "C16"
+            ],
+            "status": "supported",
+            "reason": "A conditional supervised English-only proposal respects the narrow pilot, unknown channels, staffing shortfall, and missing cost; it is not approval to start."
+          },
+          {
+            "synthesis_id": "SY04",
+            "claim_ids": [
+              "C08"
+            ],
+            "evidence_claim_ids": [
+              "C01"
+            ],
+            "status": "supported",
+            "reason": "A committed merchant transaction does not fill the unknown bank-settlement field; the abstention is justified despite an established transaction."
+          }
+        ]
+      }
+    ]
+  },
+  "protocol": {
+    "controls": [
+      "sentence",
+      "clause",
+      "cited-only"
+    ],
+    "extraction_scope": "registered single-line Finding paragraphs only; not surrounding prose or general NLP material-claim discovery",
+    "span_unit": "Unicode code points, end exclusive; exclude Finding prefix, final punctuation and citation trailers",
+    "atomic_match": "exact span identity only; enclosing compounds are one-to-many coverage, not atomic recovery",
+    "semantic_authority": "all status, question mapping and synthesis judgments supplied by the authored casebook",
+    "abstention": "assertion support is separate from unknown underlying target; nonabstention target answerability is not assessed",
+    "gold_format": "declared nonoverlapping Finding atoms; format compliance and casebook review, not general extraction qualification",
+    "denominators": "registered atomic inventory and required questions remain fixed under extraction omission"
+  },
+  "registration_hash": "sha256:461a5e8353547e53d810e64fd569622138b945806613288f7b7a8ebdd5fc0db6",
+  "shared_context_hash": "sha256:483b94d0985b9db885502ba58909ee759b435ca29017af3482b94af65720e913",
+  "reports": [
+    {
+      "report_id": "original",
+      "report_hash": "sha256:0415038df29d8f7fe8d6e9624a02457f111fc2443bda9386c4f066257cf26e32",
+      "shared_context_hash": "sha256:483b94d0985b9db885502ba58909ee759b435ca29017af3482b94af65720e913",
+      "word_count": 878,
+      "gold_claim_count": 18,
+      "controls": {
+        "sentence": {
+          "units": [
+            {
+              "unit_id": "unit-001",
+              "span": {
+                "start": 450,
+                "end": 529,
+                "quote": "Request R17 produced one committed refund before its response channel timed out"
+              },
+              "citation_ids": [
+                "L01"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C01"
+              ],
+              "contained_claim_ids": [
+                "C01"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d3383a0fb4d176dbb8f722d70fee5cf833640d56b076930378d9ea0c88cbfe6b"
+            },
+            {
+              "unit_id": "unit-002",
+              "span": {
+                "start": 816,
+                "end": 884,
+                "quote": "The timeout proves that the original request had no financial effect"
+              },
+              "citation_ids": [
+                "L02"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C02"
+              ],
+              "contained_claim_ids": [
+                "C02"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:83f7c94e0e62fc1b77f19ff7154e419248f17d3a1eb7cd03b6d7dc86ce84f6ca"
+            },
+            {
+              "unit_id": "unit-003",
+              "span": {
+                "start": 1173,
+                "end": 1262,
+                "quote": "The September recovery procedure requires a fresh request key and a second refund attempt"
+              },
+              "citation_ids": [
+                "L03"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C03"
+              ],
+              "contained_claim_ids": [
+                "C03"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:27d059d5b1208d47a90538e7e18578b2193d28983e544366766623b809ca01fa"
+            },
+            {
+              "unit_id": "unit-004",
+              "span": {
+                "start": 1529,
+                "end": 1630,
+                "quote": "Automatic refunds have a GBP 50 limit [L04]; The purchase must fall within the 30 calendar day window"
+              },
+              "citation_ids": [
+                "L04",
+                "L05"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [],
+              "contained_claim_ids": [
+                "C04",
+                "C05"
+              ],
+              "status": "unscored_nonatomic_or_unmatched",
+              "semantic_binding_hash": null
+            },
+            {
+              "unit_id": "unit-005",
+              "span": {
+                "start": 1891,
+                "end": 1966,
+                "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+              },
+              "citation_ids": [
+                "L06"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C06"
+              ],
+              "contained_claim_ids": [
+                "C06"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4df41074dfc4be8936988742e31d1e34db93cb68a00cfd504a51cff7f7edf199"
+            },
+            {
+              "unit_id": "unit-006",
+              "span": {
+                "start": 2238,
+                "end": 2301,
+                "quote": "The refund will reach the customer bank account within 24 hours"
+              },
+              "citation_ids": [
+                "L07"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C07"
+              ],
+              "contained_claim_ids": [
+                "C07"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:3dc5d5495e71e8b7caf19b889ed71b92bd35f81e7cf06e6bc1a50cf9e17276f8"
+            },
+            {
+              "unit_id": "unit-007",
+              "span": {
+                "start": 2570,
+                "end": 2660,
+                "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+              },
+              "citation_ids": [
+                "L08"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C08"
+              ],
+              "contained_claim_ids": [
+                "C08"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:ccfc5e508b5f59aa2843d4fcf0c9919573fcabb5c2485ab03ae7b693eb669186"
+            },
+            {
+              "unit_id": "unit-008",
+              "span": {
+                "start": 2948,
+                "end": 3046,
+                "quote": "Every one of the 24 pilot explanations accurately distinguished transaction status from settlement"
+              },
+              "citation_ids": [
+                "L09"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C09"
+              ],
+              "contained_claim_ids": [
+                "C09"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:067028d5ae5309e54df9a27b2cfb37aec1f5607d2d5666d4939e66402df9a1b5"
+            },
+            {
+              "unit_id": "unit-009",
+              "span": {
+                "start": 3310,
+                "end": 3382,
+                "quote": "This explanation pilot establishes that duplicate refunds will not occur"
+              },
+              "citation_ids": [
+                "L10"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C10"
+              ],
+              "contained_claim_ids": [
+                "C10"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:448788e2f53c78a1c3d60e7b7d7f1a1188299121dfa39e3d1b53b0914d4b1be4"
+            },
+            {
+              "unit_id": "unit-010",
+              "span": {
+                "start": 3660,
+                "end": 3723,
+                "quote": "The packet establishes readiness for Turkish text conversations"
+              },
+              "citation_ids": [
+                "L11"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C11"
+              ],
+              "contained_claim_ids": [
+                "C11"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:d755318bb310b5aac2a2878e31830c954d1bd78815cde206b1f3c3f8cf24b361"
+            },
+            {
+              "unit_id": "unit-011",
+              "span": {
+                "start": 3974,
+                "end": 4046,
+                "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+              },
+              "citation_ids": [
+                "L12"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C12"
+              ],
+              "contained_claim_ids": [
+                "C12"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3fe1fabd8ae9ebf12c956324b5e5ba3bb318b1cb6e130a63092b9fab4dd52ece"
+            },
+            {
+              "unit_id": "unit-012",
+              "span": {
+                "start": 4294,
+                "end": 4415,
+                "quote": "The planned team has capacity for 40 reviews per day [L13]; The proposed batch is expected to generate 52 reviews per day"
+              },
+              "citation_ids": [
+                "L13",
+                "L14"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [],
+              "contained_claim_ids": [
+                "C13",
+                "C14"
+              ],
+              "status": "unscored_nonatomic_or_unmatched",
+              "semantic_binding_hash": null
+            },
+            {
+              "unit_id": "unit-013",
+              "span": {
+                "start": 4672,
+                "end": 4735,
+                "quote": "The proposed batch fits within the stated daily review capacity"
+              },
+              "citation_ids": [
+                "L15"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C15"
+              ],
+              "contained_claim_ids": [
+                "C15"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:17054059eabaa4f6b76018620853cd21cebec303bd2c7cd896c78ac251515f10"
+            },
+            {
+              "unit_id": "unit-014",
+              "span": {
+                "start": 5002,
+                "end": 5058,
+                "quote": "The proposed service has zero incremental operating cost"
+              },
+              "citation_ids": [],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C16"
+              ],
+              "contained_claim_ids": [
+                "C16"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:a6eb66e0c8bb0440f313b42d78956956c4609281625794ab62298702441cc0af"
+            },
+            {
+              "unit_id": "unit-015",
+              "span": {
+                "start": 5302,
+                "end": 5380,
+                "quote": "Both the archived and current policies support unrestricted fresh-key retrying"
+              },
+              "citation_ids": [
+                "L16"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C17"
+              ],
+              "contained_claim_ids": [
+                "C17"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:bebe2bb805a8fc17697c4ccc7404f392dcd550269e9f00daca6bc9e21a38be37"
+            },
+            {
+              "unit_id": "unit-016",
+              "span": {
+                "start": 5649,
+                "end": 5727,
+                "quote": "The combined packet supports immediate expansion to every language and channel"
+              },
+              "citation_ids": [
+                "L17"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C18"
+              ],
+              "contained_claim_ids": [
+                "C18"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:c554ecc115154e76a5e7938c530a0a013737abea2ecbffbe2077d44f9073326d"
+            }
+          ],
+          "extracted_unit_count": 16,
+          "atomic_recall": {
+            "numerator": 14,
+            "denominator": 18,
+            "rate": 0.7777777777777778
+          },
+          "exact_unit_precision": {
+            "numerator": 14,
+            "denominator": 16,
+            "rate": 0.875
+          },
+          "duplicate_unit_count": 0,
+          "unscored_unit_count": 2,
+          "omitted_claim_ids": [
+            "C04",
+            "C05",
+            "C13",
+            "C14"
+          ],
+          "compound_groups": [
+            [
+              "C04",
+              "C05"
+            ],
+            [
+              "C13",
+              "C14"
+            ]
+          ],
+          "compound_fully_recovered": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "observed_support": {
+            "numerator": 4,
+            "denominator": 14,
+            "rate": 0.2857142857142857
+          },
+          "full_inventory_support": {
+            "numerator": 8,
+            "denominator": 18,
+            "rate": 0.4444444444444444
+          },
+          "unknown_recovered_count": 0,
+          "abstention_target_unknown_recovered_count": 2,
+          "score_scope": "observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator"
+        },
+        "clause": {
+          "units": [
+            {
+              "unit_id": "unit-001",
+              "span": {
+                "start": 450,
+                "end": 529,
+                "quote": "Request R17 produced one committed refund before its response channel timed out"
+              },
+              "citation_ids": [
+                "L01"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C01"
+              ],
+              "contained_claim_ids": [
+                "C01"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d3383a0fb4d176dbb8f722d70fee5cf833640d56b076930378d9ea0c88cbfe6b"
+            },
+            {
+              "unit_id": "unit-002",
+              "span": {
+                "start": 816,
+                "end": 884,
+                "quote": "The timeout proves that the original request had no financial effect"
+              },
+              "citation_ids": [
+                "L02"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C02"
+              ],
+              "contained_claim_ids": [
+                "C02"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:83f7c94e0e62fc1b77f19ff7154e419248f17d3a1eb7cd03b6d7dc86ce84f6ca"
+            },
+            {
+              "unit_id": "unit-003",
+              "span": {
+                "start": 1173,
+                "end": 1262,
+                "quote": "The September recovery procedure requires a fresh request key and a second refund attempt"
+              },
+              "citation_ids": [
+                "L03"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C03"
+              ],
+              "contained_claim_ids": [
+                "C03"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:27d059d5b1208d47a90538e7e18578b2193d28983e544366766623b809ca01fa"
+            },
+            {
+              "unit_id": "unit-004",
+              "span": {
+                "start": 1529,
+                "end": 1566,
+                "quote": "Automatic refunds have a GBP 50 limit"
+              },
+              "citation_ids": [
+                "L04"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C04"
+              ],
+              "contained_claim_ids": [
+                "C04"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3c0c11f86ea462c2618fb00e5282b5469b5535a8306dfacaf109495cd302221a"
+            },
+            {
+              "unit_id": "unit-005",
+              "span": {
+                "start": 1574,
+                "end": 1630,
+                "quote": "The purchase must fall within the 30 calendar day window"
+              },
+              "citation_ids": [
+                "L05"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C05"
+              ],
+              "contained_claim_ids": [
+                "C05"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d5b395d23c08d086ef5a21a8c0ad42327b103db4008bdbdda687dd9d28f96a90"
+            },
+            {
+              "unit_id": "unit-006",
+              "span": {
+                "start": 1891,
+                "end": 1966,
+                "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+              },
+              "citation_ids": [
+                "L06"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C06"
+              ],
+              "contained_claim_ids": [
+                "C06"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4df41074dfc4be8936988742e31d1e34db93cb68a00cfd504a51cff7f7edf199"
+            },
+            {
+              "unit_id": "unit-007",
+              "span": {
+                "start": 2238,
+                "end": 2301,
+                "quote": "The refund will reach the customer bank account within 24 hours"
+              },
+              "citation_ids": [
+                "L07"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C07"
+              ],
+              "contained_claim_ids": [
+                "C07"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:3dc5d5495e71e8b7caf19b889ed71b92bd35f81e7cf06e6bc1a50cf9e17276f8"
+            },
+            {
+              "unit_id": "unit-008",
+              "span": {
+                "start": 2570,
+                "end": 2660,
+                "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+              },
+              "citation_ids": [
+                "L08"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C08"
+              ],
+              "contained_claim_ids": [
+                "C08"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:ccfc5e508b5f59aa2843d4fcf0c9919573fcabb5c2485ab03ae7b693eb669186"
+            },
+            {
+              "unit_id": "unit-009",
+              "span": {
+                "start": 2948,
+                "end": 3046,
+                "quote": "Every one of the 24 pilot explanations accurately distinguished transaction status from settlement"
+              },
+              "citation_ids": [
+                "L09"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C09"
+              ],
+              "contained_claim_ids": [
+                "C09"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:067028d5ae5309e54df9a27b2cfb37aec1f5607d2d5666d4939e66402df9a1b5"
+            },
+            {
+              "unit_id": "unit-010",
+              "span": {
+                "start": 3310,
+                "end": 3382,
+                "quote": "This explanation pilot establishes that duplicate refunds will not occur"
+              },
+              "citation_ids": [
+                "L10"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C10"
+              ],
+              "contained_claim_ids": [
+                "C10"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:448788e2f53c78a1c3d60e7b7d7f1a1188299121dfa39e3d1b53b0914d4b1be4"
+            },
+            {
+              "unit_id": "unit-011",
+              "span": {
+                "start": 3660,
+                "end": 3723,
+                "quote": "The packet establishes readiness for Turkish text conversations"
+              },
+              "citation_ids": [
+                "L11"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C11"
+              ],
+              "contained_claim_ids": [
+                "C11"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:d755318bb310b5aac2a2878e31830c954d1bd78815cde206b1f3c3f8cf24b361"
+            },
+            {
+              "unit_id": "unit-012",
+              "span": {
+                "start": 3974,
+                "end": 4046,
+                "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+              },
+              "citation_ids": [
+                "L12"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C12"
+              ],
+              "contained_claim_ids": [
+                "C12"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3fe1fabd8ae9ebf12c956324b5e5ba3bb318b1cb6e130a63092b9fab4dd52ece"
+            },
+            {
+              "unit_id": "unit-013",
+              "span": {
+                "start": 4294,
+                "end": 4346,
+                "quote": "The planned team has capacity for 40 reviews per day"
+              },
+              "citation_ids": [
+                "L13"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C13"
+              ],
+              "contained_claim_ids": [
+                "C13"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:cd7868fc707999745466419158b8452f28262d8efd18711f59cf4cf157550b84"
+            },
+            {
+              "unit_id": "unit-014",
+              "span": {
+                "start": 4354,
+                "end": 4415,
+                "quote": "The proposed batch is expected to generate 52 reviews per day"
+              },
+              "citation_ids": [
+                "L14"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C14"
+              ],
+              "contained_claim_ids": [
+                "C14"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:cd91d9c546f9ab867ec527374ca3c5ab8314533e1616541c88c1d267621cf74c"
+            },
+            {
+              "unit_id": "unit-015",
+              "span": {
+                "start": 4672,
+                "end": 4735,
+                "quote": "The proposed batch fits within the stated daily review capacity"
+              },
+              "citation_ids": [
+                "L15"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C15"
+              ],
+              "contained_claim_ids": [
+                "C15"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:17054059eabaa4f6b76018620853cd21cebec303bd2c7cd896c78ac251515f10"
+            },
+            {
+              "unit_id": "unit-016",
+              "span": {
+                "start": 5002,
+                "end": 5058,
+                "quote": "The proposed service has zero incremental operating cost"
+              },
+              "citation_ids": [],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C16"
+              ],
+              "contained_claim_ids": [
+                "C16"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:a6eb66e0c8bb0440f313b42d78956956c4609281625794ab62298702441cc0af"
+            },
+            {
+              "unit_id": "unit-017",
+              "span": {
+                "start": 5302,
+                "end": 5380,
+                "quote": "Both the archived and current policies support unrestricted fresh-key retrying"
+              },
+              "citation_ids": [
+                "L16"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C17"
+              ],
+              "contained_claim_ids": [
+                "C17"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:bebe2bb805a8fc17697c4ccc7404f392dcd550269e9f00daca6bc9e21a38be37"
+            },
+            {
+              "unit_id": "unit-018",
+              "span": {
+                "start": 5649,
+                "end": 5727,
+                "quote": "The combined packet supports immediate expansion to every language and channel"
+              },
+              "citation_ids": [
+                "L17"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C18"
+              ],
+              "contained_claim_ids": [
+                "C18"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:c554ecc115154e76a5e7938c530a0a013737abea2ecbffbe2077d44f9073326d"
+            }
+          ],
+          "extracted_unit_count": 18,
+          "atomic_recall": {
+            "numerator": 18,
+            "denominator": 18,
+            "rate": 1.0
+          },
+          "exact_unit_precision": {
+            "numerator": 18,
+            "denominator": 18,
+            "rate": 1.0
+          },
+          "duplicate_unit_count": 0,
+          "unscored_unit_count": 0,
+          "omitted_claim_ids": [],
+          "compound_groups": [
+            [
+              "C04",
+              "C05"
+            ],
+            [
+              "C13",
+              "C14"
+            ]
+          ],
+          "compound_fully_recovered": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "observed_support": {
+            "numerator": 8,
+            "denominator": 18,
+            "rate": 0.4444444444444444
+          },
+          "full_inventory_support": {
+            "numerator": 8,
+            "denominator": 18,
+            "rate": 0.4444444444444444
+          },
+          "unknown_recovered_count": 0,
+          "abstention_target_unknown_recovered_count": 2,
+          "score_scope": "observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator"
+        },
+        "cited-only": {
+          "units": [
+            {
+              "unit_id": "unit-001",
+              "span": {
+                "start": 450,
+                "end": 529,
+                "quote": "Request R17 produced one committed refund before its response channel timed out"
+              },
+              "citation_ids": [
+                "L01"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C01"
+              ],
+              "contained_claim_ids": [
+                "C01"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d3383a0fb4d176dbb8f722d70fee5cf833640d56b076930378d9ea0c88cbfe6b"
+            },
+            {
+              "unit_id": "unit-002",
+              "span": {
+                "start": 816,
+                "end": 884,
+                "quote": "The timeout proves that the original request had no financial effect"
+              },
+              "citation_ids": [
+                "L02"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C02"
+              ],
+              "contained_claim_ids": [
+                "C02"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:83f7c94e0e62fc1b77f19ff7154e419248f17d3a1eb7cd03b6d7dc86ce84f6ca"
+            },
+            {
+              "unit_id": "unit-003",
+              "span": {
+                "start": 1173,
+                "end": 1262,
+                "quote": "The September recovery procedure requires a fresh request key and a second refund attempt"
+              },
+              "citation_ids": [
+                "L03"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C03"
+              ],
+              "contained_claim_ids": [
+                "C03"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:27d059d5b1208d47a90538e7e18578b2193d28983e544366766623b809ca01fa"
+            },
+            {
+              "unit_id": "unit-004",
+              "span": {
+                "start": 1529,
+                "end": 1566,
+                "quote": "Automatic refunds have a GBP 50 limit"
+              },
+              "citation_ids": [
+                "L04"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C04"
+              ],
+              "contained_claim_ids": [
+                "C04"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3c0c11f86ea462c2618fb00e5282b5469b5535a8306dfacaf109495cd302221a"
+            },
+            {
+              "unit_id": "unit-005",
+              "span": {
+                "start": 1574,
+                "end": 1630,
+                "quote": "The purchase must fall within the 30 calendar day window"
+              },
+              "citation_ids": [
+                "L05"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C05"
+              ],
+              "contained_claim_ids": [
+                "C05"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d5b395d23c08d086ef5a21a8c0ad42327b103db4008bdbdda687dd9d28f96a90"
+            },
+            {
+              "unit_id": "unit-006",
+              "span": {
+                "start": 1891,
+                "end": 1966,
+                "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+              },
+              "citation_ids": [
+                "L06"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C06"
+              ],
+              "contained_claim_ids": [
+                "C06"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4df41074dfc4be8936988742e31d1e34db93cb68a00cfd504a51cff7f7edf199"
+            },
+            {
+              "unit_id": "unit-007",
+              "span": {
+                "start": 2238,
+                "end": 2301,
+                "quote": "The refund will reach the customer bank account within 24 hours"
+              },
+              "citation_ids": [
+                "L07"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C07"
+              ],
+              "contained_claim_ids": [
+                "C07"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:3dc5d5495e71e8b7caf19b889ed71b92bd35f81e7cf06e6bc1a50cf9e17276f8"
+            },
+            {
+              "unit_id": "unit-008",
+              "span": {
+                "start": 2570,
+                "end": 2660,
+                "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+              },
+              "citation_ids": [
+                "L08"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C08"
+              ],
+              "contained_claim_ids": [
+                "C08"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:ccfc5e508b5f59aa2843d4fcf0c9919573fcabb5c2485ab03ae7b693eb669186"
+            },
+            {
+              "unit_id": "unit-009",
+              "span": {
+                "start": 2948,
+                "end": 3046,
+                "quote": "Every one of the 24 pilot explanations accurately distinguished transaction status from settlement"
+              },
+              "citation_ids": [
+                "L09"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C09"
+              ],
+              "contained_claim_ids": [
+                "C09"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:067028d5ae5309e54df9a27b2cfb37aec1f5607d2d5666d4939e66402df9a1b5"
+            },
+            {
+              "unit_id": "unit-010",
+              "span": {
+                "start": 3310,
+                "end": 3382,
+                "quote": "This explanation pilot establishes that duplicate refunds will not occur"
+              },
+              "citation_ids": [
+                "L10"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C10"
+              ],
+              "contained_claim_ids": [
+                "C10"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:448788e2f53c78a1c3d60e7b7d7f1a1188299121dfa39e3d1b53b0914d4b1be4"
+            },
+            {
+              "unit_id": "unit-011",
+              "span": {
+                "start": 3660,
+                "end": 3723,
+                "quote": "The packet establishes readiness for Turkish text conversations"
+              },
+              "citation_ids": [
+                "L11"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C11"
+              ],
+              "contained_claim_ids": [
+                "C11"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:d755318bb310b5aac2a2878e31830c954d1bd78815cde206b1f3c3f8cf24b361"
+            },
+            {
+              "unit_id": "unit-012",
+              "span": {
+                "start": 3974,
+                "end": 4046,
+                "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+              },
+              "citation_ids": [
+                "L12"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C12"
+              ],
+              "contained_claim_ids": [
+                "C12"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3fe1fabd8ae9ebf12c956324b5e5ba3bb318b1cb6e130a63092b9fab4dd52ece"
+            },
+            {
+              "unit_id": "unit-013",
+              "span": {
+                "start": 4294,
+                "end": 4346,
+                "quote": "The planned team has capacity for 40 reviews per day"
+              },
+              "citation_ids": [
+                "L13"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C13"
+              ],
+              "contained_claim_ids": [
+                "C13"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:cd7868fc707999745466419158b8452f28262d8efd18711f59cf4cf157550b84"
+            },
+            {
+              "unit_id": "unit-014",
+              "span": {
+                "start": 4354,
+                "end": 4415,
+                "quote": "The proposed batch is expected to generate 52 reviews per day"
+              },
+              "citation_ids": [
+                "L14"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C14"
+              ],
+              "contained_claim_ids": [
+                "C14"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:cd91d9c546f9ab867ec527374ca3c5ab8314533e1616541c88c1d267621cf74c"
+            },
+            {
+              "unit_id": "unit-015",
+              "span": {
+                "start": 4672,
+                "end": 4735,
+                "quote": "The proposed batch fits within the stated daily review capacity"
+              },
+              "citation_ids": [
+                "L15"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C15"
+              ],
+              "contained_claim_ids": [
+                "C15"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:17054059eabaa4f6b76018620853cd21cebec303bd2c7cd896c78ac251515f10"
+            },
+            {
+              "unit_id": "unit-016",
+              "span": {
+                "start": 5302,
+                "end": 5380,
+                "quote": "Both the archived and current policies support unrestricted fresh-key retrying"
+              },
+              "citation_ids": [
+                "L16"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C17"
+              ],
+              "contained_claim_ids": [
+                "C17"
+              ],
+              "status": "contradicted",
+              "semantic_binding_hash": "sha256:bebe2bb805a8fc17697c4ccc7404f392dcd550269e9f00daca6bc9e21a38be37"
+            },
+            {
+              "unit_id": "unit-017",
+              "span": {
+                "start": 5649,
+                "end": 5727,
+                "quote": "The combined packet supports immediate expansion to every language and channel"
+              },
+              "citation_ids": [
+                "L17"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C18"
+              ],
+              "contained_claim_ids": [
+                "C18"
+              ],
+              "status": "unsupported",
+              "semantic_binding_hash": "sha256:c554ecc115154e76a5e7938c530a0a013737abea2ecbffbe2077d44f9073326d"
+            }
+          ],
+          "extracted_unit_count": 17,
+          "atomic_recall": {
+            "numerator": 17,
+            "denominator": 18,
+            "rate": 0.9444444444444444
+          },
+          "exact_unit_precision": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "duplicate_unit_count": 0,
+          "unscored_unit_count": 0,
+          "omitted_claim_ids": [
+            "C16"
+          ],
+          "compound_groups": [
+            [
+              "C04",
+              "C05"
+            ],
+            [
+              "C13",
+              "C14"
+            ]
+          ],
+          "compound_fully_recovered": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "observed_support": {
+            "numerator": 8,
+            "denominator": 17,
+            "rate": 0.47058823529411764
+          },
+          "full_inventory_support": {
+            "numerator": 8,
+            "denominator": 18,
+            "rate": 0.4444444444444444
+          },
+          "unknown_recovered_count": 0,
+          "abstention_target_unknown_recovered_count": 2,
+          "score_scope": "observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator"
+        }
+      },
+      "gold_status_counts": {
+        "supported": 8,
+        "contradicted": 6,
+        "unsupported": 4,
+        "unknown": 0
+      },
+      "underlying_unknown_count": 2,
+      "source_bindings": [
+        {
+          "claim_id": "C01",
+          "citation_id": "L01",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:8c4316b302c3f7032f5772468bd62d97101c1ec434dcf02772db8213d45f8641"
+        },
+        {
+          "claim_id": "C02",
+          "citation_id": "L02",
+          "relation": "contradicts",
+          "current": true,
+          "binding_hash": "sha256:05cbd6c46431061adb6d408cdfbba7aee71c1fcef85185ad7bfbce0178abb5b7"
+        },
+        {
+          "claim_id": "C03",
+          "citation_id": "L03",
+          "relation": "insufficient",
+          "current": false,
+          "binding_hash": "sha256:e7b014d177eef211a1268a098b877e5ab42e98eab6d6ae9aac245588484407af"
+        },
+        {
+          "claim_id": "C04",
+          "citation_id": "L04",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:9fba4e13784310886a8021b3260c5cd9d0abe2796c3d38e117257d4e094c22ef"
+        },
+        {
+          "claim_id": "C05",
+          "citation_id": "L05",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:ff5dc7020003a171fb00df6468c77fc81757c8c1570c75bfad30cfde038aeae7"
+        },
+        {
+          "claim_id": "C06",
+          "citation_id": "L06",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:c300a2a19efa5a0d0a30a70eeb51a5a99004053e961d18e14811dad42bdc1ecc"
+        },
+        {
+          "claim_id": "C07",
+          "citation_id": "L07",
+          "relation": "insufficient",
+          "current": true,
+          "binding_hash": "sha256:8dbc8d37178fac009d615f7d6177e127f15c91dea444a66aee3b4c0fdcd1619e"
+        },
+        {
+          "claim_id": "C08",
+          "citation_id": "L08",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:9748e20aac5ca3d10d5f922d52caffd89d195b530f2b6f1792f9ee74da6791ae"
+        },
+        {
+          "claim_id": "C09",
+          "citation_id": "L09",
+          "relation": "contradicts",
+          "current": true,
+          "binding_hash": "sha256:4c9ad5cdef1cc9fb659b2d3e4063117fe3a7e7dadc7247edf5ef9a900b38df37"
+        },
+        {
+          "claim_id": "C10",
+          "citation_id": "L10",
+          "relation": "contradicts",
+          "current": true,
+          "binding_hash": "sha256:e8dc5288a40b696af31b38539b8810fb197b9618e7be29c7492a910ebd4ec355"
+        },
+        {
+          "claim_id": "C11",
+          "citation_id": "L11",
+          "relation": "contradicts",
+          "current": true,
+          "binding_hash": "sha256:d78e23f73ee81031cec2694dafa433b226e69e8da6389a9a9be195a5c90271c2"
+        },
+        {
+          "claim_id": "C12",
+          "citation_id": "L12",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:9e016ad122e1ac0839ed28554520c100c535db1d619c30863f9d06a10873464c"
+        },
+        {
+          "claim_id": "C13",
+          "citation_id": "L13",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:1fe27653f78485d646c5b72703fdd954cafe2c470c83a5af4d4399f3422fadff"
+        },
+        {
+          "claim_id": "C14",
+          "citation_id": "L14",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:82aa510ba4b0284543c1b4de138c8649defd773b63f9b501fc1b18b602f83a87"
+        },
+        {
+          "claim_id": "C15",
+          "citation_id": "L15",
+          "relation": "contradicts",
+          "current": true,
+          "binding_hash": "sha256:db207789f5f55e5c59fd25e4c1beeecdfe805c36e58907567695fd30048f035e"
+        },
+        {
+          "claim_id": "C17",
+          "citation_id": "L16",
+          "relation": "contradicts",
+          "current": true,
+          "binding_hash": "sha256:e4ea76f3071e8ff0e7bb10f613cea25d2610f2b9864bfcdd5c6016d6f340bf9a"
+        },
+        {
+          "claim_id": "C18",
+          "citation_id": "L17",
+          "relation": "insufficient",
+          "current": true,
+          "binding_hash": "sha256:c3d1d2fd443e6cd2783d566c016ddaf2c2b7cb9bb123878758634b2cf8f1207d"
+        }
+      ],
+      "question_coverage": [
+        {
+          "question_id": "Q1",
+          "status": "partially_answered",
+          "claim_ids": [
+            "C01",
+            "C02",
+            "C03",
+            "C17"
+          ],
+          "reason": "The incident is identified, but the retry recommendation and claimed policy agreement contradict current evidence."
+        },
+        {
+          "question_id": "Q2",
+          "status": "answered",
+          "claim_ids": [
+            "C04",
+            "C05",
+            "C06"
+          ],
+          "reason": "Both eligibility limits and the prior-approval requirement are identified."
+        },
+        {
+          "question_id": "Q3",
+          "status": "partially_answered",
+          "claim_ids": [
+            "C07",
+            "C08"
+          ],
+          "reason": "An appropriate abstention conflicts with an unsupported 24-hour promise."
+        },
+        {
+          "question_id": "Q4",
+          "status": "partially_answered",
+          "claim_ids": [
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "C18"
+          ],
+          "reason": "The memo misstates the count and extends narrow evidence to duplicate-refund certainty and Turkish readiness."
+        },
+        {
+          "question_id": "Q5",
+          "status": "partially_answered",
+          "claim_ids": [
+            "C13",
+            "C14",
+            "C15",
+            "C16"
+          ],
+          "reason": "The underlying capacity assumptions are quoted, but their comparison is wrong and zero cost is invented."
+        },
+        {
+          "question_id": "Q6",
+          "status": "omitted",
+          "claim_ids": [],
+          "reason": "No finding states the accountable role or the pause trigger; a general expansion recommendation does not answer either."
+        }
+      ],
+      "synthesis": [
+        {
+          "synthesis_id": "SY01",
+          "claim_ids": [
+            "C17"
+          ],
+          "evidence_claim_ids": [
+            "C01",
+            "C03"
+          ],
+          "status": "contradicted",
+          "reason": "The sources disagree about fresh-key retries; the memo cannot reconcile them by asserting agreement.",
+          "binding_hash": "sha256:a78adb7ce4fac3c6dbef310d1e30cd3827f36213663346a45c7cb644a3652be0"
+        },
+        {
+          "synthesis_id": "SY02",
+          "claim_ids": [
+            "C15"
+          ],
+          "evidence_claim_ids": [
+            "C13",
+            "C14"
+          ],
+          "status": "contradicted",
+          "reason": "The quoted figures show excess demand, not spare capacity.",
+          "binding_hash": "sha256:40afb3318acc086a67d4024dd716ef8e899cfbc57d13d18c1bf466a0560b639e"
+        },
+        {
+          "synthesis_id": "SY03",
+          "claim_ids": [
+            "C18"
+          ],
+          "evidence_claim_ids": [
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "C15",
+            "C16"
+          ],
+          "status": "unsupported",
+          "reason": "The proposed expansion is stronger than its cited pilot and ignores missing channel and cost evidence and an unresolved workload shortfall.",
+          "binding_hash": "sha256:f8adb0ec10340252caf99ba237c553aeaa77f5b59381e1022bc9e0d297fe537d"
+        },
+        {
+          "synthesis_id": "SY04",
+          "claim_ids": [
+            "C08"
+          ],
+          "evidence_claim_ids": [
+            "C01"
+          ],
+          "status": "supported",
+          "reason": "A committed merchant transaction does not fill the unknown bank-settlement field; the abstention is justified despite an established transaction.",
+          "binding_hash": "sha256:80d3647a4cfab2c2eb4a393d9cefee0ccba7e64e77c3754c13eaea313ed70aac"
+        }
+      ],
+      "coverage_counts": {
+        "partially_answered": 4,
+        "answered": 1,
+        "omitted": 1
+      },
+      "synthesis_counts": {
+        "contradicted": 2,
+        "unsupported": 1,
+        "supported": 1
+      }
+    },
+    {
+      "report_id": "repaired",
+      "report_hash": "sha256:04c1dc41f717c77c0d7ea4f84754ffe49ff3773981b2cd24b6b9d44d4000988c",
+      "shared_context_hash": "sha256:483b94d0985b9db885502ba58909ee759b435ca29017af3482b94af65720e913",
+      "word_count": 1020,
+      "gold_claim_count": 20,
+      "controls": {
+        "sentence": {
+          "units": [
+            {
+              "unit_id": "unit-001",
+              "span": {
+                "start": 450,
+                "end": 529,
+                "quote": "Request R17 produced one committed refund before its response channel timed out"
+              },
+              "citation_ids": [
+                "L01"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C01"
+              ],
+              "contained_claim_ids": [
+                "C01"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d3383a0fb4d176dbb8f722d70fee5cf833640d56b076930378d9ea0c88cbfe6b"
+            },
+            {
+              "unit_id": "unit-002",
+              "span": {
+                "start": 816,
+                "end": 902,
+                "quote": "The transport timeout does not negate the committed transaction recorded in the ledger"
+              },
+              "citation_ids": [
+                "L02"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C02"
+              ],
+              "contained_claim_ids": [
+                "C02"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:0f555597e1a2f664feee423edb4d1bdac44353c2c7a593de3cbd836fb475d4c6"
+            },
+            {
+              "unit_id": "unit-003",
+              "span": {
+                "start": 1191,
+                "end": 1305,
+                "quote": "September recovery requires ledger inspection and forbids a fresh refund key merely because the response timed out"
+              },
+              "citation_ids": [
+                "L03"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C03"
+              ],
+              "contained_claim_ids": [
+                "C03"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7695f4289ff84a77b55022ae35a2153330c8ce72726fc0ce31a199182751244a"
+            },
+            {
+              "unit_id": "unit-004",
+              "span": {
+                "start": 1572,
+                "end": 1673,
+                "quote": "Automatic refunds have a GBP 50 limit [L04]; The purchase must fall within the 30 calendar day window"
+              },
+              "citation_ids": [
+                "L04",
+                "L05"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [],
+              "contained_claim_ids": [
+                "C04",
+                "C05"
+              ],
+              "status": "unscored_nonatomic_or_unmatched",
+              "semantic_binding_hash": null
+            },
+            {
+              "unit_id": "unit-005",
+              "span": {
+                "start": 1934,
+                "end": 2009,
+                "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+              },
+              "citation_ids": [
+                "L06"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C06"
+              ],
+              "contained_claim_ids": [
+                "C06"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:73ff8312e2d5206169ba848ca7ff4a3be99f91aa7745667d9f7f0eea8e48ec27"
+            },
+            {
+              "unit_id": "unit-006",
+              "span": {
+                "start": 2281,
+                "end": 2394,
+                "quote": "The bank guidance offers a three to five business day estimate rather than an account-specific settlement promise"
+              },
+              "citation_ids": [
+                "L07"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C07"
+              ],
+              "contained_claim_ids": [
+                "C07"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:029e457a9002364c8371502192752e75549853940add08846a491713a86970cd"
+            },
+            {
+              "unit_id": "unit-007",
+              "span": {
+                "start": 2663,
+                "end": 2753,
+                "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+              },
+              "citation_ids": [
+                "L08"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C08"
+              ],
+              "contained_claim_ids": [
+                "C08"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:71c42d300dc0a7e2437323030ba276a02a1791127829d5adde738940c1f3fa80"
+            },
+            {
+              "unit_id": "unit-008",
+              "span": {
+                "start": 3041,
+                "end": 3157,
+                "quote": "Twenty-one of the 24 invented English pilot explanations accurately distinguished transaction status from settlement"
+              },
+              "citation_ids": [
+                "L09"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C09"
+              ],
+              "contained_claim_ids": [
+                "C09"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:53036651468864405a4db2201d8ef22470275bd2c94173fd10d458a8dea70d9a"
+            },
+            {
+              "unit_id": "unit-009",
+              "span": {
+                "start": 3421,
+                "end": 3501,
+                "quote": "The explanation pilot cannot establish the future frequency of duplicate refunds"
+              },
+              "citation_ids": [
+                "L10"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C10"
+              ],
+              "contained_claim_ids": [
+                "C10"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3122793bdd7fea214d313ba32c70e2c6373ce00d7531ba95936997ba78d6bd6f"
+            },
+            {
+              "unit_id": "unit-010",
+              "span": {
+                "start": 3779,
+                "end": 3872,
+                "quote": "Turkish text readiness remains undetermined because the packet contains no Turkish evaluation"
+              },
+              "citation_ids": [
+                "L11"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C11"
+              ],
+              "contained_claim_ids": [
+                "C11"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:00866ce7da334fbecaae31f726597330a6f2979d1176f5416688da23553da972"
+            },
+            {
+              "unit_id": "unit-011",
+              "span": {
+                "start": 4123,
+                "end": 4195,
+                "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+              },
+              "citation_ids": [
+                "L12"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C12"
+              ],
+              "contained_claim_ids": [
+                "C12"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:50950be9cf931f19a6007fed2f9380c86a8bf0821a9e5e98c5ae6c2ef605f3c5"
+            },
+            {
+              "unit_id": "unit-012",
+              "span": {
+                "start": 4443,
+                "end": 4564,
+                "quote": "The planned team has capacity for 40 reviews per day [L13]; The proposed batch is expected to generate 52 reviews per day"
+              },
+              "citation_ids": [
+                "L13",
+                "L14"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [],
+              "contained_claim_ids": [
+                "C13",
+                "C14"
+              ],
+              "status": "unscored_nonatomic_or_unmatched",
+              "semantic_binding_hash": null
+            },
+            {
+              "unit_id": "unit-013",
+              "span": {
+                "start": 4821,
+                "end": 4910,
+                "quote": "Under the stated assumptions the proposed batch exceeds daily review capacity by 12 cases"
+              },
+              "citation_ids": [
+                "L15"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C15"
+              ],
+              "contained_claim_ids": [
+                "C15"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:78682b03e4f8efe59672fddb66a6bfa8148db43257e6886a4a12b967eb907f09"
+            },
+            {
+              "unit_id": "unit-014",
+              "span": {
+                "start": 5177,
+                "end": 5249,
+                "quote": "Incremental operating cost cannot be determined from the supplied packet"
+              },
+              "citation_ids": [
+                "L16"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C16"
+              ],
+              "contained_claim_ids": [
+                "C16"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:0a271e7ba3352af36fe981e09000e1eb68a18c3ac540bd763647f2f9c903717b"
+            },
+            {
+              "unit_id": "unit-015",
+              "span": {
+                "start": 5499,
+                "end": 5596,
+                "quote": "The September policy supersedes the archived August fresh-key retry instruction for this incident"
+              },
+              "citation_ids": [
+                "L17"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C17"
+              ],
+              "contained_claim_ids": [
+                "C17"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:8ff0858ca1b03fb8f91a044f0e65adc1bf8f59d86f11e91168856f6ea0c4da56"
+            },
+            {
+              "unit_id": "unit-016",
+              "span": {
+                "start": 5865,
+                "end": 5978,
+                "quote": "The next proposed stage should be limited to supervised English text after the stated prerequisites are satisfied"
+              },
+              "citation_ids": [
+                "L18"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C18"
+              ],
+              "contained_claim_ids": [
+                "C18"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:e99fa029ee0de38ce605d2b57b94520decaee7d134002a6ca9659ae5cc606898"
+            },
+            {
+              "unit_id": "unit-017",
+              "span": {
+                "start": 6253,
+                "end": 6328,
+                "quote": "The Support Operations Lead owns the decision to start the supervised pilot"
+              },
+              "citation_ids": [
+                "L19"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C19"
+              ],
+              "contained_claim_ids": [
+                "C19"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:f7f299ef1c779b96d40a5a324807d04a2f5c0c9b2b39b0b63091ea874ac37241"
+            },
+            {
+              "unit_id": "unit-018",
+              "span": {
+                "start": 6592,
+                "end": 6714,
+                "quote": "One observed duplicate refund or unsupported settlement promise must pause the pilot and route the affected case to review"
+              },
+              "citation_ids": [
+                "L20"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C20"
+              ],
+              "contained_claim_ids": [
+                "C20"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:e7f5903317bfa23a2fce20be79c7def72644269907ff293965af8000fbb95278"
+            }
+          ],
+          "extracted_unit_count": 18,
+          "atomic_recall": {
+            "numerator": 16,
+            "denominator": 20,
+            "rate": 0.8
+          },
+          "exact_unit_precision": {
+            "numerator": 16,
+            "denominator": 18,
+            "rate": 0.8888888888888888
+          },
+          "duplicate_unit_count": 0,
+          "unscored_unit_count": 2,
+          "omitted_claim_ids": [
+            "C04",
+            "C05",
+            "C13",
+            "C14"
+          ],
+          "compound_groups": [
+            [
+              "C04",
+              "C05"
+            ],
+            [
+              "C13",
+              "C14"
+            ]
+          ],
+          "compound_fully_recovered": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "observed_support": {
+            "numerator": 16,
+            "denominator": 16,
+            "rate": 1.0
+          },
+          "full_inventory_support": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "unknown_recovered_count": 0,
+          "abstention_target_unknown_recovered_count": 4,
+          "score_scope": "observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator"
+        },
+        "clause": {
+          "units": [
+            {
+              "unit_id": "unit-001",
+              "span": {
+                "start": 450,
+                "end": 529,
+                "quote": "Request R17 produced one committed refund before its response channel timed out"
+              },
+              "citation_ids": [
+                "L01"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C01"
+              ],
+              "contained_claim_ids": [
+                "C01"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d3383a0fb4d176dbb8f722d70fee5cf833640d56b076930378d9ea0c88cbfe6b"
+            },
+            {
+              "unit_id": "unit-002",
+              "span": {
+                "start": 816,
+                "end": 902,
+                "quote": "The transport timeout does not negate the committed transaction recorded in the ledger"
+              },
+              "citation_ids": [
+                "L02"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C02"
+              ],
+              "contained_claim_ids": [
+                "C02"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:0f555597e1a2f664feee423edb4d1bdac44353c2c7a593de3cbd836fb475d4c6"
+            },
+            {
+              "unit_id": "unit-003",
+              "span": {
+                "start": 1191,
+                "end": 1305,
+                "quote": "September recovery requires ledger inspection and forbids a fresh refund key merely because the response timed out"
+              },
+              "citation_ids": [
+                "L03"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C03"
+              ],
+              "contained_claim_ids": [
+                "C03"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7695f4289ff84a77b55022ae35a2153330c8ce72726fc0ce31a199182751244a"
+            },
+            {
+              "unit_id": "unit-004",
+              "span": {
+                "start": 1572,
+                "end": 1609,
+                "quote": "Automatic refunds have a GBP 50 limit"
+              },
+              "citation_ids": [
+                "L04"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C04"
+              ],
+              "contained_claim_ids": [
+                "C04"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4151e33610fc94e6b45fa53695823250b554bdb01fb9ded7c18a88c08c2b1d82"
+            },
+            {
+              "unit_id": "unit-005",
+              "span": {
+                "start": 1617,
+                "end": 1673,
+                "quote": "The purchase must fall within the 30 calendar day window"
+              },
+              "citation_ids": [
+                "L05"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C05"
+              ],
+              "contained_claim_ids": [
+                "C05"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7893f935b60cb9c75f1dceb4964ecba4ae0fa15f0efad193304c9562ec4b68d7"
+            },
+            {
+              "unit_id": "unit-006",
+              "span": {
+                "start": 1934,
+                "end": 2009,
+                "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+              },
+              "citation_ids": [
+                "L06"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C06"
+              ],
+              "contained_claim_ids": [
+                "C06"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:73ff8312e2d5206169ba848ca7ff4a3be99f91aa7745667d9f7f0eea8e48ec27"
+            },
+            {
+              "unit_id": "unit-007",
+              "span": {
+                "start": 2281,
+                "end": 2394,
+                "quote": "The bank guidance offers a three to five business day estimate rather than an account-specific settlement promise"
+              },
+              "citation_ids": [
+                "L07"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C07"
+              ],
+              "contained_claim_ids": [
+                "C07"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:029e457a9002364c8371502192752e75549853940add08846a491713a86970cd"
+            },
+            {
+              "unit_id": "unit-008",
+              "span": {
+                "start": 2663,
+                "end": 2753,
+                "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+              },
+              "citation_ids": [
+                "L08"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C08"
+              ],
+              "contained_claim_ids": [
+                "C08"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:71c42d300dc0a7e2437323030ba276a02a1791127829d5adde738940c1f3fa80"
+            },
+            {
+              "unit_id": "unit-009",
+              "span": {
+                "start": 3041,
+                "end": 3157,
+                "quote": "Twenty-one of the 24 invented English pilot explanations accurately distinguished transaction status from settlement"
+              },
+              "citation_ids": [
+                "L09"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C09"
+              ],
+              "contained_claim_ids": [
+                "C09"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:53036651468864405a4db2201d8ef22470275bd2c94173fd10d458a8dea70d9a"
+            },
+            {
+              "unit_id": "unit-010",
+              "span": {
+                "start": 3421,
+                "end": 3501,
+                "quote": "The explanation pilot cannot establish the future frequency of duplicate refunds"
+              },
+              "citation_ids": [
+                "L10"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C10"
+              ],
+              "contained_claim_ids": [
+                "C10"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3122793bdd7fea214d313ba32c70e2c6373ce00d7531ba95936997ba78d6bd6f"
+            },
+            {
+              "unit_id": "unit-011",
+              "span": {
+                "start": 3779,
+                "end": 3872,
+                "quote": "Turkish text readiness remains undetermined because the packet contains no Turkish evaluation"
+              },
+              "citation_ids": [
+                "L11"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C11"
+              ],
+              "contained_claim_ids": [
+                "C11"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:00866ce7da334fbecaae31f726597330a6f2979d1176f5416688da23553da972"
+            },
+            {
+              "unit_id": "unit-012",
+              "span": {
+                "start": 4123,
+                "end": 4195,
+                "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+              },
+              "citation_ids": [
+                "L12"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C12"
+              ],
+              "contained_claim_ids": [
+                "C12"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:50950be9cf931f19a6007fed2f9380c86a8bf0821a9e5e98c5ae6c2ef605f3c5"
+            },
+            {
+              "unit_id": "unit-013",
+              "span": {
+                "start": 4443,
+                "end": 4495,
+                "quote": "The planned team has capacity for 40 reviews per day"
+              },
+              "citation_ids": [
+                "L13"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C13"
+              ],
+              "contained_claim_ids": [
+                "C13"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4791c60381dff13c16f8d5779d75653b80152ed2749d478f7afa2faf0a4ad5a9"
+            },
+            {
+              "unit_id": "unit-014",
+              "span": {
+                "start": 4503,
+                "end": 4564,
+                "quote": "The proposed batch is expected to generate 52 reviews per day"
+              },
+              "citation_ids": [
+                "L14"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C14"
+              ],
+              "contained_claim_ids": [
+                "C14"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7e7ed9840e80f50001f838c72239b1014587e43d5f30d85176de8cc7498abf6c"
+            },
+            {
+              "unit_id": "unit-015",
+              "span": {
+                "start": 4821,
+                "end": 4910,
+                "quote": "Under the stated assumptions the proposed batch exceeds daily review capacity by 12 cases"
+              },
+              "citation_ids": [
+                "L15"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C15"
+              ],
+              "contained_claim_ids": [
+                "C15"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:78682b03e4f8efe59672fddb66a6bfa8148db43257e6886a4a12b967eb907f09"
+            },
+            {
+              "unit_id": "unit-016",
+              "span": {
+                "start": 5177,
+                "end": 5249,
+                "quote": "Incremental operating cost cannot be determined from the supplied packet"
+              },
+              "citation_ids": [
+                "L16"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C16"
+              ],
+              "contained_claim_ids": [
+                "C16"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:0a271e7ba3352af36fe981e09000e1eb68a18c3ac540bd763647f2f9c903717b"
+            },
+            {
+              "unit_id": "unit-017",
+              "span": {
+                "start": 5499,
+                "end": 5596,
+                "quote": "The September policy supersedes the archived August fresh-key retry instruction for this incident"
+              },
+              "citation_ids": [
+                "L17"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C17"
+              ],
+              "contained_claim_ids": [
+                "C17"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:8ff0858ca1b03fb8f91a044f0e65adc1bf8f59d86f11e91168856f6ea0c4da56"
+            },
+            {
+              "unit_id": "unit-018",
+              "span": {
+                "start": 5865,
+                "end": 5978,
+                "quote": "The next proposed stage should be limited to supervised English text after the stated prerequisites are satisfied"
+              },
+              "citation_ids": [
+                "L18"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C18"
+              ],
+              "contained_claim_ids": [
+                "C18"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:e99fa029ee0de38ce605d2b57b94520decaee7d134002a6ca9659ae5cc606898"
+            },
+            {
+              "unit_id": "unit-019",
+              "span": {
+                "start": 6253,
+                "end": 6328,
+                "quote": "The Support Operations Lead owns the decision to start the supervised pilot"
+              },
+              "citation_ids": [
+                "L19"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C19"
+              ],
+              "contained_claim_ids": [
+                "C19"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:f7f299ef1c779b96d40a5a324807d04a2f5c0c9b2b39b0b63091ea874ac37241"
+            },
+            {
+              "unit_id": "unit-020",
+              "span": {
+                "start": 6592,
+                "end": 6714,
+                "quote": "One observed duplicate refund or unsupported settlement promise must pause the pilot and route the affected case to review"
+              },
+              "citation_ids": [
+                "L20"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C20"
+              ],
+              "contained_claim_ids": [
+                "C20"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:e7f5903317bfa23a2fce20be79c7def72644269907ff293965af8000fbb95278"
+            }
+          ],
+          "extracted_unit_count": 20,
+          "atomic_recall": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "exact_unit_precision": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "duplicate_unit_count": 0,
+          "unscored_unit_count": 0,
+          "omitted_claim_ids": [],
+          "compound_groups": [
+            [
+              "C04",
+              "C05"
+            ],
+            [
+              "C13",
+              "C14"
+            ]
+          ],
+          "compound_fully_recovered": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "observed_support": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "full_inventory_support": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "unknown_recovered_count": 0,
+          "abstention_target_unknown_recovered_count": 4,
+          "score_scope": "observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator"
+        },
+        "cited-only": {
+          "units": [
+            {
+              "unit_id": "unit-001",
+              "span": {
+                "start": 450,
+                "end": 529,
+                "quote": "Request R17 produced one committed refund before its response channel timed out"
+              },
+              "citation_ids": [
+                "L01"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C01"
+              ],
+              "contained_claim_ids": [
+                "C01"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:d3383a0fb4d176dbb8f722d70fee5cf833640d56b076930378d9ea0c88cbfe6b"
+            },
+            {
+              "unit_id": "unit-002",
+              "span": {
+                "start": 816,
+                "end": 902,
+                "quote": "The transport timeout does not negate the committed transaction recorded in the ledger"
+              },
+              "citation_ids": [
+                "L02"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C02"
+              ],
+              "contained_claim_ids": [
+                "C02"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:0f555597e1a2f664feee423edb4d1bdac44353c2c7a593de3cbd836fb475d4c6"
+            },
+            {
+              "unit_id": "unit-003",
+              "span": {
+                "start": 1191,
+                "end": 1305,
+                "quote": "September recovery requires ledger inspection and forbids a fresh refund key merely because the response timed out"
+              },
+              "citation_ids": [
+                "L03"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C03"
+              ],
+              "contained_claim_ids": [
+                "C03"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7695f4289ff84a77b55022ae35a2153330c8ce72726fc0ce31a199182751244a"
+            },
+            {
+              "unit_id": "unit-004",
+              "span": {
+                "start": 1572,
+                "end": 1609,
+                "quote": "Automatic refunds have a GBP 50 limit"
+              },
+              "citation_ids": [
+                "L04"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C04"
+              ],
+              "contained_claim_ids": [
+                "C04"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4151e33610fc94e6b45fa53695823250b554bdb01fb9ded7c18a88c08c2b1d82"
+            },
+            {
+              "unit_id": "unit-005",
+              "span": {
+                "start": 1617,
+                "end": 1673,
+                "quote": "The purchase must fall within the 30 calendar day window"
+              },
+              "citation_ids": [
+                "L05"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C05"
+              ],
+              "contained_claim_ids": [
+                "C05"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7893f935b60cb9c75f1dceb4964ecba4ae0fa15f0efad193304c9562ec4b68d7"
+            },
+            {
+              "unit_id": "unit-006",
+              "span": {
+                "start": 1934,
+                "end": 2009,
+                "quote": "Refunds above GBP 50 require recorded supervisor approval before the action"
+              },
+              "citation_ids": [
+                "L06"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C06"
+              ],
+              "contained_claim_ids": [
+                "C06"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:73ff8312e2d5206169ba848ca7ff4a3be99f91aa7745667d9f7f0eea8e48ec27"
+            },
+            {
+              "unit_id": "unit-007",
+              "span": {
+                "start": 2281,
+                "end": 2394,
+                "quote": "The bank guidance offers a three to five business day estimate rather than an account-specific settlement promise"
+              },
+              "citation_ids": [
+                "L07"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C07"
+              ],
+              "contained_claim_ids": [
+                "C07"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:029e457a9002364c8371502192752e75549853940add08846a491713a86970cd"
+            },
+            {
+              "unit_id": "unit-008",
+              "span": {
+                "start": 2663,
+                "end": 2753,
+                "quote": "The supplied ledger cannot establish when the customer bank account will receive the money"
+              },
+              "citation_ids": [
+                "L08"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C08"
+              ],
+              "contained_claim_ids": [
+                "C08"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:71c42d300dc0a7e2437323030ba276a02a1791127829d5adde738940c1f3fa80"
+            },
+            {
+              "unit_id": "unit-009",
+              "span": {
+                "start": 3041,
+                "end": 3157,
+                "quote": "Twenty-one of the 24 invented English pilot explanations accurately distinguished transaction status from settlement"
+              },
+              "citation_ids": [
+                "L09"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C09"
+              ],
+              "contained_claim_ids": [
+                "C09"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:53036651468864405a4db2201d8ef22470275bd2c94173fd10d458a8dea70d9a"
+            },
+            {
+              "unit_id": "unit-010",
+              "span": {
+                "start": 3421,
+                "end": 3501,
+                "quote": "The explanation pilot cannot establish the future frequency of duplicate refunds"
+              },
+              "citation_ids": [
+                "L10"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C10"
+              ],
+              "contained_claim_ids": [
+                "C10"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:3122793bdd7fea214d313ba32c70e2c6373ce00d7531ba95936997ba78d6bd6f"
+            },
+            {
+              "unit_id": "unit-011",
+              "span": {
+                "start": 3779,
+                "end": 3872,
+                "quote": "Turkish text readiness remains undetermined because the packet contains no Turkish evaluation"
+              },
+              "citation_ids": [
+                "L11"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C11"
+              ],
+              "contained_claim_ids": [
+                "C11"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:00866ce7da334fbecaae31f726597330a6f2979d1176f5416688da23553da972"
+            },
+            {
+              "unit_id": "unit-012",
+              "span": {
+                "start": 4123,
+                "end": 4195,
+                "quote": "Voice readiness cannot be determined from the supplied evaluation packet"
+              },
+              "citation_ids": [
+                "L12"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C12"
+              ],
+              "contained_claim_ids": [
+                "C12"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:50950be9cf931f19a6007fed2f9380c86a8bf0821a9e5e98c5ae6c2ef605f3c5"
+            },
+            {
+              "unit_id": "unit-013",
+              "span": {
+                "start": 4443,
+                "end": 4495,
+                "quote": "The planned team has capacity for 40 reviews per day"
+              },
+              "citation_ids": [
+                "L13"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C13"
+              ],
+              "contained_claim_ids": [
+                "C13"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:4791c60381dff13c16f8d5779d75653b80152ed2749d478f7afa2faf0a4ad5a9"
+            },
+            {
+              "unit_id": "unit-014",
+              "span": {
+                "start": 4503,
+                "end": 4564,
+                "quote": "The proposed batch is expected to generate 52 reviews per day"
+              },
+              "citation_ids": [
+                "L14"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C14"
+              ],
+              "contained_claim_ids": [
+                "C14"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:7e7ed9840e80f50001f838c72239b1014587e43d5f30d85176de8cc7498abf6c"
+            },
+            {
+              "unit_id": "unit-015",
+              "span": {
+                "start": 4821,
+                "end": 4910,
+                "quote": "Under the stated assumptions the proposed batch exceeds daily review capacity by 12 cases"
+              },
+              "citation_ids": [
+                "L15"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C15"
+              ],
+              "contained_claim_ids": [
+                "C15"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:78682b03e4f8efe59672fddb66a6bfa8148db43257e6886a4a12b967eb907f09"
+            },
+            {
+              "unit_id": "unit-016",
+              "span": {
+                "start": 5177,
+                "end": 5249,
+                "quote": "Incremental operating cost cannot be determined from the supplied packet"
+              },
+              "citation_ids": [
+                "L16"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C16"
+              ],
+              "contained_claim_ids": [
+                "C16"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:0a271e7ba3352af36fe981e09000e1eb68a18c3ac540bd763647f2f9c903717b"
+            },
+            {
+              "unit_id": "unit-017",
+              "span": {
+                "start": 5499,
+                "end": 5596,
+                "quote": "The September policy supersedes the archived August fresh-key retry instruction for this incident"
+              },
+              "citation_ids": [
+                "L17"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C17"
+              ],
+              "contained_claim_ids": [
+                "C17"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:8ff0858ca1b03fb8f91a044f0e65adc1bf8f59d86f11e91168856f6ea0c4da56"
+            },
+            {
+              "unit_id": "unit-018",
+              "span": {
+                "start": 5865,
+                "end": 5978,
+                "quote": "The next proposed stage should be limited to supervised English text after the stated prerequisites are satisfied"
+              },
+              "citation_ids": [
+                "L18"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C18"
+              ],
+              "contained_claim_ids": [
+                "C18"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:e99fa029ee0de38ce605d2b57b94520decaee7d134002a6ca9659ae5cc606898"
+            },
+            {
+              "unit_id": "unit-019",
+              "span": {
+                "start": 6253,
+                "end": 6328,
+                "quote": "The Support Operations Lead owns the decision to start the supervised pilot"
+              },
+              "citation_ids": [
+                "L19"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C19"
+              ],
+              "contained_claim_ids": [
+                "C19"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:f7f299ef1c779b96d40a5a324807d04a2f5c0c9b2b39b0b63091ea874ac37241"
+            },
+            {
+              "unit_id": "unit-020",
+              "span": {
+                "start": 6592,
+                "end": 6714,
+                "quote": "One observed duplicate refund or unsupported settlement promise must pause the pilot and route the affected case to review"
+              },
+              "citation_ids": [
+                "L20"
+              ],
+              "duplicate_of": null,
+              "exact_claim_ids": [
+                "C20"
+              ],
+              "contained_claim_ids": [
+                "C20"
+              ],
+              "status": "supported",
+              "semantic_binding_hash": "sha256:e7f5903317bfa23a2fce20be79c7def72644269907ff293965af8000fbb95278"
+            }
+          ],
+          "extracted_unit_count": 20,
+          "atomic_recall": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "exact_unit_precision": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "duplicate_unit_count": 0,
+          "unscored_unit_count": 0,
+          "omitted_claim_ids": [],
+          "compound_groups": [
+            [
+              "C04",
+              "C05"
+            ],
+            [
+              "C13",
+              "C14"
+            ]
+          ],
+          "compound_fully_recovered": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "observed_support": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "full_inventory_support": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "unknown_recovered_count": 0,
+          "abstention_target_unknown_recovered_count": 4,
+          "score_scope": "observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator"
+        }
+      },
+      "gold_status_counts": {
+        "supported": 20,
+        "contradicted": 0,
+        "unsupported": 0,
+        "unknown": 0
+      },
+      "underlying_unknown_count": 4,
+      "source_bindings": [
+        {
+          "claim_id": "C01",
+          "citation_id": "L01",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:8c4316b302c3f7032f5772468bd62d97101c1ec434dcf02772db8213d45f8641"
+        },
+        {
+          "claim_id": "C02",
+          "citation_id": "L02",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:3250f4d96a9213427489cf8c5aa163186cedc4d8b495dc89051c660d1d174130"
+        },
+        {
+          "claim_id": "C03",
+          "citation_id": "L03",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:2c4ba384c541f3dd7283fb58be33b8b51f6841f5ccb64e75c563ed81e2845a8b"
+        },
+        {
+          "claim_id": "C04",
+          "citation_id": "L04",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:16e3279d595ed5812ba8d9a4dee952d499af49d5cc3ceb67933f6e28ca709948"
+        },
+        {
+          "claim_id": "C05",
+          "citation_id": "L05",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:8f492a878e0192dd5900450ebc20bcd33ab205355a9d7deda96bc6866a4083fe"
+        },
+        {
+          "claim_id": "C06",
+          "citation_id": "L06",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:7514ffa352bb323015e0815f83bd11cfa6010a92d6dcdbb42db074117e5723bc"
+        },
+        {
+          "claim_id": "C07",
+          "citation_id": "L07",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:ccceab45f04bab3807f4037f9db2b1070de37ac8982c5afb66a93d4426a2695f"
+        },
+        {
+          "claim_id": "C08",
+          "citation_id": "L08",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:4e522591b0c438896e97a8fe540c933f7df784e60f2024b2d801e2f9bfcdba4e"
+        },
+        {
+          "claim_id": "C09",
+          "citation_id": "L09",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:ecb6b72c4a2a07876141789fc6cc10757979798914e24aac90dc07d622209a48"
+        },
+        {
+          "claim_id": "C10",
+          "citation_id": "L10",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:615f190ffce2a74155f6dffca7d07cd2e519cb7b12f26ee5f00df53536dc44d1"
+        },
+        {
+          "claim_id": "C11",
+          "citation_id": "L11",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:d313b13d24bdce5c09c4c04f8ffd8d8f312e9a9280936153548e196f4bfbdc4a"
+        },
+        {
+          "claim_id": "C12",
+          "citation_id": "L12",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:502b3855d2ccaaaf794721cea2d8daa9773abbc217d9134f8a452e5c60372876"
+        },
+        {
+          "claim_id": "C13",
+          "citation_id": "L13",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:c04047ccbf2696b11a1562e518f408e975bf5a6df75565807db70a15d40e3df6"
+        },
+        {
+          "claim_id": "C14",
+          "citation_id": "L14",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:938b4e4c7a1b39390a97114c1c63a154cbf5e325460a7760a3a4325482a2d11d"
+        },
+        {
+          "claim_id": "C15",
+          "citation_id": "L15",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:5b331d4b135da0c411c2bf603832a09f885b17ddf8e825cfc5803cf3839248c4"
+        },
+        {
+          "claim_id": "C16",
+          "citation_id": "L16",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:5c0ae259566ac495a220453ddaf0c869de995cd6f95247be9e033a9afd879b4c"
+        },
+        {
+          "claim_id": "C17",
+          "citation_id": "L17",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:65c478a9952acbb8b1f216bc6d5219570cb5ab0607e6dfd3f73ad10a878881b1"
+        },
+        {
+          "claim_id": "C18",
+          "citation_id": "L18",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:123d5f2db9f6ab379bef5794f422dc25852fcdcb8ba466369d794540882f2d85"
+        },
+        {
+          "claim_id": "C19",
+          "citation_id": "L19",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:b7f621d8a1885c83e39bb48f2c257c65d611851821703bf1bcabb72e118f080e"
+        },
+        {
+          "claim_id": "C20",
+          "citation_id": "L20",
+          "relation": "entails",
+          "current": true,
+          "binding_hash": "sha256:f84db3bc63324a224fe5c2a329a9dcd992d18d59f80c378040ce5817d0e8ab6b"
+        }
+      ],
+      "question_coverage": [
+        {
+          "question_id": "Q1",
+          "status": "answered",
+          "claim_ids": [
+            "C01",
+            "C02",
+            "C03",
+            "C17"
+          ],
+          "reason": "The memo reconciles committed state, the transport failure, and the effective-date conflict."
+        },
+        {
+          "question_id": "Q2",
+          "status": "answered",
+          "claim_ids": [
+            "C04",
+            "C05",
+            "C06"
+          ],
+          "reason": "Both eligibility limits and the prior-approval requirement are identified."
+        },
+        {
+          "question_id": "Q3",
+          "status": "answered",
+          "claim_ids": [
+            "C07",
+            "C08"
+          ],
+          "reason": "The estimate is qualified and the missing account-specific settlement event is explicitly left unknown."
+        },
+        {
+          "question_id": "Q4",
+          "status": "answered",
+          "claim_ids": [
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "C18"
+          ],
+          "reason": "The pilot count and scope are preserved; Turkish and voice readiness are not inferred from English explanations."
+        },
+        {
+          "question_id": "Q5",
+          "status": "answered",
+          "claim_ids": [
+            "C13",
+            "C14",
+            "C15",
+            "C16"
+          ],
+          "reason": "The conditional shortfall is calculated and cost remains unknown pending evidence."
+        },
+        {
+          "question_id": "Q6",
+          "status": "answered",
+          "claim_ids": [
+            "C19",
+            "C20"
+          ],
+          "reason": "The report identifies the accountable role and the event-based pause condition."
+        }
+      ],
+      "synthesis": [
+        {
+          "synthesis_id": "SY01",
+          "claim_ids": [
+            "C17"
+          ],
+          "evidence_claim_ids": [
+            "C01",
+            "C03"
+          ],
+          "status": "supported",
+          "reason": "The incident date and governing current procedure support superseding the archived retry rule.",
+          "binding_hash": "sha256:84639670f34d5dbf595172f6b7920408e743e68bc826c90639f4835005ecf763"
+        },
+        {
+          "synthesis_id": "SY02",
+          "claim_ids": [
+            "C15"
+          ],
+          "evidence_claim_ids": [
+            "C13",
+            "C14"
+          ],
+          "status": "supported",
+          "reason": "The 12-case excess follows from 52 planned arrivals minus 40 available slots; it remains a planning result.",
+          "binding_hash": "sha256:f08961e6f8b5558e17c12cf32a80e515b1a20ba5358aa90efd16a7811670f1e6"
+        },
+        {
+          "synthesis_id": "SY03",
+          "claim_ids": [
+            "C18"
+          ],
+          "evidence_claim_ids": [
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "C15",
+            "C16"
+          ],
+          "status": "supported",
+          "reason": "A conditional supervised English-only proposal respects the narrow pilot, unknown channels, staffing shortfall, and missing cost; it is not approval to start.",
+          "binding_hash": "sha256:15920b325dcf6c562a4576a735c152fc1056a6b3bfc1dd365d25ef753bec5d20"
+        },
+        {
+          "synthesis_id": "SY04",
+          "claim_ids": [
+            "C08"
+          ],
+          "evidence_claim_ids": [
+            "C01"
+          ],
+          "status": "supported",
+          "reason": "A committed merchant transaction does not fill the unknown bank-settlement field; the abstention is justified despite an established transaction.",
+          "binding_hash": "sha256:6e0c5bd82e5bfdbc846894f7269994d6792ecb1593848f9725439f0a2bf1f06c"
+        }
+      ],
+      "coverage_counts": {
+        "answered": 6
+      },
+      "synthesis_counts": {
+        "supported": 4
+      }
+    }
+  ],
+  "comparison": {
+    "original_report_id": "original",
+    "repaired_report_id": "repaired",
+    "same_frozen_task_corpus_rubric": true,
+    "support_rate_change_on_registered_atoms": 0.5555555555555556
+  },
+  "deployment_authorized": false,
+  "evidence_kind": "executed_format_bound_extraction_with_authored_semantics",
+  "limitations": "Complete reports provide context, but recovery metrics apply only to registered Finding atoms. Narrative prose and synthesis reviews are not automatically discovered or semantically judged. Original and repaired outputs are authored, not generated by models. Extraction executes on text alone; support, contradiction, unknown, question coverage and synthesis labels are supplied evidence, not NLP understanding. No population inference or deployment authority. Hashes establish local bindings, not authenticated sources, human independence or historical execution.",
+  "report_hash": "sha256:3dacdb1cb9d89d493890527c7811c99d28ee928d649a6e4c14a1601d6a12767a"
+}
