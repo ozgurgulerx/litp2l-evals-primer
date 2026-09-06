@@ -134,6 +134,12 @@ class ResolutionEvidenceTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 replay_packet(packet)
 
+    def test_boolean_row_index_is_not_an_integer_trial_identity(self):
+        packet = packet_for()
+        packet['baseline_trials'][0]['trial_index'] = False
+        with self.assertRaises(ValueError):
+            replay_packet(packet)
+
 
 if __name__ == '__main__':
     unittest.main()
