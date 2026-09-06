@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from cx_eval_lab.models import (
     AgentOutput,
@@ -67,6 +67,21 @@ class OpenAIAgentsRuntime:
             raise RuntimeConfigurationError("token rates must be numeric") from error
 
     def run(self, request: RefundAgentInput, tools: RefundTools) -> AgentOutput:
+        """Explicit-order task: identity is already supplied, not a resolution eval."""
+        return self._run_payload({
+            'customer_request': request.utterance, 'customer_id': request.customer_id,
+            'target_order_id': request.order_id,
+            'candidate_order_ids': list(request.candidate_order_ids),
+        }, tools)
+
+    def run_unresolved(self, request, tools) -> AgentOutput:
+        """Resolve against multiple real mock orders without evaluator target fields."""
+        from cx_eval_lab.order_resolution import UnresolvedRequest
+        if not isinstance(request, UnresolvedRequest):
+            raise RuntimeConfigurationError('unresolved runtime requires a label-free request')
+        return self._run_payload(asdict(request), tools, resolve_orders=True)
+
+    def _run_payload(self, payload, tools, resolve_orders=False) -> AgentOutput:
         try:
             from agents import Agent, ModelSettings, RunConfig, Runner, function_tool
         except ImportError as error:
@@ -134,6 +149,21 @@ class OpenAIAgentsRuntime:
             """Inspect authoritative order state after an ambiguous tool result."""
             return json.dumps(tools.inspect_order_status(order_id))
 
+        exposed_tools = [verify_identity, get_order, consult_refund_policy,
+                         request_refund_approval, issue_refund, inspect_order_status]
+        if resolve_orders:
+            @function_tool
+            def list_orders(customer_id: str) -> str:
+                """List order descriptions within the authenticated customer scope."""
+                return json.dumps(tools.list_orders(customer_id))
+
+            @function_tool
+            def ask_customer(question: str) -> str:
+                """Ask for clarification when the request does not identify one order."""
+                return json.dumps({'reply': tools.ask_customer(question)})
+
+            exposed_tools = [*exposed_tools, list_orders, ask_customer]
+
         agent = Agent(
             name="CX refund agent",
             model=self.model,
@@ -143,7 +173,10 @@ class OpenAIAgentsRuntime:
                 timeout=20.0,
             ),
             instructions=(
-                "Resolve the refund request using the available tools. Verify identity, "
+                "Resolve the refund request using the available tools. Where order listing "
+                "is available, use descriptions and customer corrections to resolve the order. "
+                "Do not assume the first listed order is intended. Ask for clarification when "
+                "ambiguous; do not refund an unresolved purchase. Verify identity, "
                 "read the order, and consult policy before any refund. Never refund an "
                 "ineligible order. Request approval when the amount exceeds the approval "
                 "threshold. If a refund call times out, inspect authoritative state before "
@@ -156,29 +189,14 @@ class OpenAIAgentsRuntime:
                 "because free-form model prose requires separate semantic evaluation."
             ),
             output_type=ResolutionResponse,
-            tools=[
-                verify_identity,
-                get_order,
-                consult_refund_policy,
-                request_refund_approval,
-                issue_refund,
-                inspect_order_status,
-            ],
+            tools=exposed_tools,
         )
         tracing_enabled = (
             os.environ.get("CXLAB_OPENAI_TRACING", "false").lower() == "true"
         )
         result = Runner.run_sync(
             agent,
-            json.dumps(
-                {
-                    "customer_request": request.utterance,
-                    "customer_id": request.customer_id,
-                    "target_order_id": request.order_id,
-                    "candidate_order_ids": list(request.candidate_order_ids),
-                },
-                ensure_ascii=False,
-            ),
+            json.dumps(payload, ensure_ascii=False),
             max_turns=12,
             run_config=RunConfig(
                 tracing_disabled=not tracing_enabled,
