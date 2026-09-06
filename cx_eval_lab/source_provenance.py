@@ -28,7 +28,7 @@ def _read(path):
 
 def _git(root, *arguments):
     try:
-        return subprocess.run(['git', '-C', str(root), *arguments], check=True,
+        return subprocess.run(['git', '--no-replace-objects', '-C', str(root), *arguments], check=True,
                               capture_output=True, timeout=15).stdout
     except (OSError, subprocess.SubprocessError) as error:
         raise ValueError('cannot verify local git source identity') from error
