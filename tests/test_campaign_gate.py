@@ -1,0 +1,94 @@
+"""Pinned campaign evidence must agree before it can clear its own gate."""
+
+import copy
+import json
+import unittest
+
+from cx_eval_lab.campaign_budget import CampaignPolicy
+from cx_eval_lab.campaign_study import run_study
+from cx_eval_lab.evidence import canonical_hash
+
+
+def rehash_packet(packet):
+    replacements = {}
+    for artifact in packet['trial_artifacts']:
+        payload = artifact['payload']
+        payload['evaluation']['semantic_stage'] = copy.deepcopy(payload['semantic_stage'])
+        old = artifact['artifact_hash']
+        artifact['artifact_hash'] = canonical_hash(payload)
+        replacements[old] = artifact['artifact_hash']
+    for arm in ('baseline', 'candidate'):
+        for row in packet[f'{arm}_trials']:
+            row['artifact_hash'] = replacements[row['artifact_hash']]
+
+
+class CampaignGateTests(unittest.TestCase):
+    def setUp(self):
+        self.report = run_study(unknown_second=False, budget_micro_usd=2000)
+        self.policy = CampaignPolicy(**self.report['ledger']['policy'])
+
+    def assess(self, report=None, **changes):
+        from cx_eval_lab.campaign_gate import assess_campaign
+        report = report or self.report
+        arguments = dict(expected_policy=self.policy,
+            trusted_packet_hash=canonical_hash(report['packet']),
+            trusted_snapshot_hash=canonical_hash(report['ledger']),
+            trusted_calibration_hashes=frozenset({report['synthetic_calibration_hash']}))
+        return assess_campaign(report['packet'], report['ledger'], **{**arguments, **changes})
+
+    def test_complete_consistent_campaign_clears_only_its_own_check(self):
+        result = self.assess()
+        self.assertEqual('clear', result.status)
+        self.assertEqual(4, result.matched_invocations)
+        self.assertEqual(1440, result.known_estimate_micro_usd)
+        self.assertFalse(result.deployment_authorized)
+        self.assertEqual((), result.issues)
+
+    def test_unknown_and_denied_judgments_hold(self):
+        report = run_study()
+        result = self.assess(report, expected_policy=CampaignPolicy(**report['ledger']['policy']))
+        self.assertEqual('hold', result.status)
+        self.assertIn('unknown_or_pending_cost', result.issues)
+        self.assertIn('judge_admission_denied', result.issues)
+
+    def test_external_anchors_are_required_and_not_read_from_the_report(self):
+        for changes in ({'trusted_packet_hash': canonical_hash('wrong')},
+                        {'trusted_snapshot_hash': canonical_hash('wrong')},
+                        {'trusted_snapshot_hash': None}):
+            with self.subTest(changes=changes):
+                self.assertEqual('block', self.assess(**changes).status)
+
+    def test_recomputed_anchor_cannot_hide_false_summary_or_missing_rows(self):
+        for mutate in (lambda ledger: ledger.update(known_estimate_micro_usd=0),
+                       lambda ledger: ledger['invocations'].pop(),
+                       lambda ledger: ledger['invocations'].append(copy.deepcopy(ledger['invocations'][0])),
+                       lambda ledger: ledger.update(admissions=True),
+                       lambda ledger: ledger['policy'].update(max_admissions=100)):
+            report = copy.deepcopy(self.report)
+            mutate(report['ledger'])
+            self.assertEqual('block', self.assess(report).status)
+
+    def test_row_receipt_and_inner_judgment_cannot_disagree(self):
+        for field, value in (('estimate_micro', 1), ('reserved_micro', 500),
+                             ('request_hash', canonical_hash('different evidence')),
+                             ('judgment_json', '{"verdict":"fail"}')):
+            report = copy.deepcopy(self.report)
+            report['ledger']['invocations'][0][field] = value
+            self.assertEqual('block', self.assess(report).status)
+
+    def test_packet_to_ledger_join_is_checked_beyond_ordinary_replay(self):
+        for field, value in (('invocation_id', 'wrong-id'), ('request', {'different': 'evidence'})):
+            report = copy.deepcopy(self.report)
+            report['packet']['trial_artifacts'][0]['payload']['semantic_stage'][field] = value
+            rehash_packet(report['packet'])
+            self.assertEqual('block', self.assess(report).status)
+
+    def test_actual_reservation_overrun_blocks(self):
+        report = run_study(reservation_micro_usd=300)
+        result = self.assess(report, expected_policy=CampaignPolicy(**report['ledger']['policy']))
+        self.assertEqual('block', result.status)
+        self.assertIn('reservation_overrun', result.issues)
+
+
+if __name__ == '__main__':
+    unittest.main()
