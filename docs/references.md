@@ -37,8 +37,12 @@ This is the starting collection, not the finished bibliography.
 | OpenAI agent evaluation | [Agent evals](https://developers.openai.com/api/docs/guides/agent-evals) | Reproducible agent-quality measurement and trace-oriented evaluation |
 | Anthropic eval design | [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) | Tasks, trials, graders, transcripts, outcomes, and evaluation workflow |
 | Anthropic agent design | [Building effective agents](https://www.anthropic.com/research/building-effective-agents) | Choosing workflow complexity and keeping orchestration understandable |
+| Long-running agent harnesses | [Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) | Checkpoints, progress preservation, restart/resume evaluation, and durable-state limits |
+| Multi-agent production architecture | [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system) | Delegation, coordination, shared context, parallel work, synthesis, and matched-budget evaluation |
+| Skill evaluation | [OpenAI skill evals](https://developers.openai.com/blog/eval-skills) | Explicit, implicit, competing, stale, and incorrect activation; selection versus execution errors |
 | Tool-agent benchmark | [τ-bench](https://arxiv.org/abs/2406.12045) and its [reference implementation](https://github.com/sierra-research/tau-bench) | Stateful tool interaction, policy adherence, and end-state evaluation |
 | Multi-turn benchmark | [τ²-bench](https://arxiv.org/abs/2506.07982) | Multi-turn, dual-control interaction and stateful evaluation |
+| Knowledge and voice agent benchmarking | [Sierra τ³ and τ-Voice](https://sierra.ai/blog/bench-advancing-agent-benchmarking-to-knowledge-and-voice) | Knowledge-to-action ablations, oracle-context limits, audio timelines, interruptions, and matched text/voice tasks |
 | Dynamic broad behavioral auditing | [Anthropic Petri](https://www.anthropic.com/research/petri-open-source-auditing) and its [2026 stewardship update](https://www.anthropic.com/research/donating-open-source-petri) | Simulated users/tools, auditor/judge roles, broad exploration, and lifecycle verification |
 | Targeted behavioral suite generation | [Anthropic Bloom](https://www.anthropic.com/research/bloom) | Behavior-to-scenario generation, diverse rollouts, judgment, seeds, and validation limits |
 | Adaptive multi-turn application tests | [Giskard multi-turn testing](https://docs.giskard.ai/oss/checks/tutorials/multi-turn) | Dynamic simulated users, shared traces, stateful goals, and simulator caveats |
@@ -138,6 +142,7 @@ A source remains only if it changes the explanation, implementation, experiment,
 | Stateful policy/tool agents | [τ-bench](https://arxiv.org/abs/2406.12045) | Tools, policy, environment state, and outcomes |
 | Multi-turn dual-control agents | [τ²-bench](https://arxiv.org/abs/2506.07982) | Stateful user-agent interaction and session evaluation |
 | Interactive agent breadth | [AgentBench](https://arxiv.org/abs/2308.03688) | Multiple agent environments and scaffolding effects |
+| Factuality suite by evidence mode | [Google DeepMind FACTS](https://deepmind.google/blog/facts-benchmark-suite-systematically-evaluating-the-factuality-of-large-language-models/) | Parametric, search, grounding, and visual factuality as distinct constructs |
 | Repository coding agents | [SWE-bench](https://arxiv.org/abs/2310.06770) | Real repository tasks, executable outcomes, and environment validity |
 | Long-term conversational memory | [LongMemEval](https://github.com/xiaowu0162/longmemeval) | Multi-session extraction, updates, temporal reasoning, abstention, and benchmark-to-product limits |
 | Long-context retrieval without lexical cues | [NoLiMa](https://proceedings.mlr.press/v267/modarressi25a.html) | Latent-association retrieval under long context and stress-test boundaries |
@@ -164,6 +169,10 @@ A source remains only if it changes the explanation, implementation, experiment,
 | Operational automated auditing | [Anthropic Petri operational update](https://www.anthropic.com/research/donating-open-source-petri) | Named pre-deployment/model-assessment use, external adoption, and remaining realism limits |
 | Realtime audio deployment | [GPT-4o system card](https://openai.com/index/gpt-4o-system-card/) and [generally available Realtime API](https://openai.com/index/introducing-gpt-realtime/) | Audio-specific pre-deployment evals, live safeguards, and the incomplete end-to-end quality boundary |
 | Evaluation-system validity | [OpenAI trustworthy third-party evaluations](https://openai.com/index/trustworthy-third-party-evaluations-foundations/) | Environment, harness, contamination, budget, and claim disclosure |
+| Model failover | [Sierra model failover](https://sierra.ai/blog/model-failover) | Prevalidated alternatives, failure injection, switching boundaries, and fallback-path evaluation |
+| Online coding-agent evaluation | [CursorBench](https://cursor.com/blog/cursorbench) | Online outcomes, human workload, and failures missed by offline correctness graders |
+| Benchmark integrity investigation | [Cursor reward hacking investigation](https://cursor.com/blog/reward-hacking-coding-benchmarks) | Permitted information access, known-fix contamination, and score-integrity controls |
+| Deep-agent evaluation operations | [How LangChain builds evals for Deep Agents](https://www.langchain.com/blog/how-we-build-evals-for-deep-agents) | Separating software health from model capability, artifacts, reruns, and operational eval service concerns |
 | Trace semantics | [OpenTelemetry GenAI conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) | Portable telemetry and sensitive-field boundaries |
 | Canary control | [Google SRE Workbook: Canarying releases](https://sre.google/workbook/canarying-releases/) | Control-relative rollout, analysis, and rollback |
 | AI risk-management profile | [NIST AI 600-1 Generative AI Profile](https://doi.org/10.6028/NIST.AI.600-1) | Risk-to-measurement traceability and lifecycle controls |

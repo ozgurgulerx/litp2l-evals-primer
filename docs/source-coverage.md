@@ -51,6 +51,12 @@ The supplied reports remain the coverage baseline. This dated addendum captures 
 | Stateful personalization and memory | Research-to-Practice Evidence and RAG & Research Evals define reset/persist, counter-user, and preference-update arms | Field evidence proves an offline gap, not a universal production evaluation recipe |
 | Evaluator-of-evaluators and judge correction | Research-to-Practice Evidence and LLM as a Judge cover AgentRewardBench and bias-corrected reporting | Meta-benchmarks screen candidates; representative local human evidence qualifies them |
 | Monitorability and realtime voice | Research-to-Practice Evidence and Robustness/System Studies record disclosed operational use and its limits | Operational use is scoped to the named system, control, and source; it does not establish a complete safety or quality stack |
+| Long-running and resumable agents | Long-Running & Serving Failures adds four-arm persistence, approval, exactly-once, and restart protocols | The executable checks consume synthetic observations; process-level and production restart evidence remains absent |
+| Knowledge-to-action systems | Modern Agent Architectures compares retrieval, oracle documents, full context, and alternative search interfaces | Supplying the right document removes one failure source but does not qualify reasoning, action, or final state |
+| Skill selection | Modern Agent Architectures separates activation, instruction freshness, and execution | Local protocol logic is tested; no live skill-loader trial has been run |
+| Multi-agent coordination | Modern Agent Architectures adds delegation, coverage, duplication, handoff, merge, contention, effect, and matched-budget criteria | Synthetic protocol evidence does not establish superiority of a multi-agent design |
+| Serving-failure behavior | Long-Running & Serving Failures covers throttling, partial streams, ambiguous commits, fallback, and degraded tools | Fallback must satisfy the same product contract; no live provider fault experiment has been run |
+| Evaluation-service integrity | Eval Operations & Integrity adds resumable fragments, conflict detection, contamination probes, factorial attribution, and simulator backtesting | These controls are executable locally but have not operated a distributed production evaluation service |
 
 This addendum does not replace the source-by-source audit. It extends the book while keeping the same rule: an emerging technique becomes operational evidence only after its construct, data, evaluator, environment, and authority are qualified.
 
@@ -240,6 +246,8 @@ The prose examples also have repository-local JSON companions. They are syntheti
 | Production canary | `evals/cx-support/examples/production-canary-v1.json` | A duplicate-refund hard invariant forces rollback despite better averages |
 | Probability calibration | `evals/cx-support/examples/probability-calibration-v1.json` | Row-level predictions recompute Brier, NLL, binned ECE, and selective thresholds |
 | Research-to-practice evidence | `evals/cx-support/examples/practice-evidence-v1.json` | Every maturity claim retains primary sources, an explicit non-claim, local adoption rule, and bounded authority |
+| Paired evidence receipt | `evals/cx-support/examples/paired-evidence-receipt-v1.json` | Point difference, lower-bound decision, independent-cluster count, and synthetic authority ceiling remain consistent |
+| Advanced agent protocols | `evals/cx-support/examples/advanced-protocols-v1.json` | Factorial effects and simulator error recompute; persistence, serving, skills, knowledge/action, voice, multi-agent, and integrity failures remain explicit |
 
 `tests/test_book_examples.py` validates these internal relations. The artifacts make the examples inspectable; they do not turn a synthetic study into an empirical result.
 
@@ -249,10 +257,12 @@ The prose examples also have repository-local JSON companions. They are syntheti
 | --- | --- | --- |
 | Concept explanation | Covered across Part I | Maintain the source audit as the field evolves |
 | Bite-sized synthetic examples | Covered in each deep chapter | Maintain visual/readability checks |
-| Templates and inspectable artifacts | Covered in Markdown plus seven tested JSON companions | Promote more examples only when they add teaching value |
+| Templates and inspectable artifacts | Covered in Markdown plus nine tested JSON companions | Promote more examples only when they add teaching value |
 | Existing deterministic CX slice | Running | Preserve and reverify |
 | Human annotation and judge calibration execution | Full design plus consistency-tested synthetic artifacts | Real reviewers/model runs are required before an empirical claim |
-| RAG and multi-turn agent execution | Full treatment plus a tested atomic-claim artifact | Extend the running runtime before claiming executable RAG/multi-turn coverage |
+| RAG and multi-turn agent execution | Atomic-claim, persistence, recovery, and knowledge/action protocol logic is executable on synthetic observations | Run actual retrieval, compaction, restart, and multi-turn model trials before claiming system-level qualification |
+| Statistical release evidence | Manifest, repeated paired runner, clustered teaching interval, minimum-evidence hold, and immutable receipt are executable | Replace teaching samples with a registered independent measured population and method appropriate to the release estimand |
+| Modern agent architectures | Skills, voice, multi-agent, serving, factorial, integrity, and simulator protocols have tested synthetic examples | Live architecture comparisons and field validation remain required |
 | Shadow/canary production control | Full design plus a tested synthetic rollback artifact | Implement a controller before claiming operational deployment capability |
 
 This ledger distinguishes a comprehensive book from a fully implemented production platform. The book can explain and demonstrate synthetic artifacts before every platform feature is executable, but it must state that boundary honestly.
