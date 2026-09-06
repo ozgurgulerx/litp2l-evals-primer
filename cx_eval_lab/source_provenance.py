@@ -3,7 +3,7 @@
 import hashlib
 import re
 import subprocess
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 
@@ -108,3 +108,30 @@ def verify_sources(manifest, *, root, input_files, expected_revision, expected_e
         raise ValueError('registered input hash differs from operator file bytes')
     return SourceVerification(expected_revision, expected_evaluator_version,
                               tuple(sorted((*current.items(), *observed_inputs))))
+
+
+def verify_packet_inputs(packet, *, dataset_path, policy_path):
+    """Bind complete case and agent input records; call after file-hash verification.
+
+    This is not reconstruction of an outer release decision or executed state.
+    """
+    from cx_eval_lab.dataset import load_refund_cases
+    from cx_eval_lab.evidence import canonical_hash
+    from cx_eval_lab.gate import load_gate_policy
+    cases = {case.case_id: case for case in load_refund_cases(dataset_path)}
+    if not cases or packet['manifest']['dataset_version'] != next(iter(cases.values())).dataset_version:
+        raise ValueError('dataset version differs from manifest')
+    if packet['manifest']['policy_version'] != load_gate_policy(policy_path).policy_version:
+        raise ValueError('release policy version differs from manifest')
+    seen = set()
+    for artifact in packet['trial_artifacts']:
+        payload = artifact['payload']
+        case_id = payload['case']['case_id']
+        if case_id not in cases or canonical_hash(payload['case']) != canonical_hash(cases[case_id].to_dict()):
+            raise ValueError('retained dataset case differs from operator dataset')
+        if canonical_hash(payload['agent_input']) != canonical_hash(asdict(cases[case_id].agent_input)):
+            raise ValueError('retained agent input differs from operator dataset')
+        seen.add(case_id)
+    if seen != set(cases):
+        raise ValueError('retained case membership differs from operator dataset')
+    return len(cases)

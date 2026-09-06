@@ -40,6 +40,12 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     replay_parser = subparsers.add_parser("replay", help="validate and re-grade retained trials offline")
     replay_parser.add_argument("--input", type=Path, required=True)
+    replay_parser.add_argument("--verify-source", action="store_true")
+    replay_parser.add_argument("--expected-code-revision")
+    replay_parser.add_argument("--expected-evaluator-version")
+    replay_parser.add_argument("--trusted-packet-hash")
+    replay_parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
+    replay_parser.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
     eval_parser = subparsers.add_parser("eval", help="run the refund slice and gate")
     eval_parser.add_argument(
         "--agent",
@@ -96,8 +102,11 @@ def main() -> int:
     if arguments.command == "replay":
         try:
             packet = json.loads(arguments.input.read_text(encoding="utf-8"))
-            results = replay_packet(packet.get("experiment", packet))
-        except (OSError, ValueError, AttributeError) as error:
+            experiment = packet.get("experiment", packet)
+            if arguments.verify_source:
+                _verify_replay_source(experiment, arguments)
+            results = replay_packet(experiment)
+        except (OSError, ValueError, AttributeError, KeyError, TypeError) as error:
             print(f"replay rejected: {error}")
             return 2
         print(f"replayed {len(results)} trials; authority: lab_only; no model calls")
@@ -137,9 +146,15 @@ def main() -> int:
 
 
 def _run_experiment(arguments: argparse.Namespace) -> int:
+    from cx_eval_lab.source_provenance import capture_source_inputs, local_revision
     cases = load_refund_cases(arguments.dataset)
     created_at = datetime.now(timezone.utc)
-    code_revision = os.environ.get("CXLAB_CODE_REVISION", "working-tree-unpinned")
+    code_revision = os.environ.get("CXLAB_CODE_REVISION")
+    if code_revision is None:
+        try:
+            code_revision = local_revision(REPOSITORY_ROOT)
+        except ValueError:
+            code_revision = "working-tree-unpinned"
     manifest = ExperimentManifest(
         experiment_id=arguments.experiment_id,
         created_at=created_at.isoformat(),
@@ -168,6 +183,7 @@ def _run_experiment(arguments: argparse.Namespace) -> int:
         input_hashes=(
             ("dataset", _hash_file(arguments.dataset)),
             ("policy", _hash_file(arguments.policy)),
+            *capture_source_inputs(REPOSITORY_ROOT),
         ),
         invalidation_rules=(
             "model_or_prompt_change",
@@ -240,6 +256,23 @@ def _run_experiment(arguments: argparse.Namespace) -> int:
 
 def _hash_file(path: Path) -> str:
     return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+
+
+def _verify_replay_source(packet, arguments):
+    from cx_eval_lab.source_provenance import verify_packet_inputs, verify_sources
+    if not all((arguments.expected_code_revision, arguments.expected_evaluator_version,
+                arguments.trusted_packet_hash)):
+        raise ValueError('source verification requires independent revision, evaluator and packet identities')
+    if canonical_hash(packet) != arguments.trusted_packet_hash:
+        raise ValueError('packet differs from independently trusted packet hash')
+    verification = verify_sources(
+        ExperimentManifest(**packet['manifest']), root=REPOSITORY_ROOT,
+        input_files={'dataset': arguments.dataset, 'policy': arguments.policy},
+        expected_revision=arguments.expected_code_revision,
+        expected_evaluator_version=arguments.expected_evaluator_version)
+    count = verify_packet_inputs(packet, dataset_path=arguments.dataset, policy_path=arguments.policy)
+    print(f'source/input consistency verified: {len(verification.verified_hashes)} files; '
+          f'{count} dataset cases; not execution attestation')
 
 
 def _write_json_immutable(path: Path, value: dict) -> None:
