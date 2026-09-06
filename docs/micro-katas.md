@@ -88,6 +88,40 @@ uv run python -m unittest tests.test_illustrative_gain tests.test_trust_repair -
 
 **Interview answer to know:** “I distinguish a point estimate from a statistical claim. I register the estimand, acceptable degradation, independent sampling unit, and stopping rule before seeing candidate results. Inconclusive evidence can justify holding exposure.”
 
+## Kata 04: recompute a grade, not just an average
+
+**Know first:** retaining `passed=True` lets you recompute a success rate, but not determine whether the original grader was correct. Independent re-grading needs the input, response, tool evidence, state, and grading configuration.
+
+**Situation:** a report contains twenty paired trial summaries. Someone changes a customer message, drops a failed case from both arms, or copies a passing summary onto a different execution.
+
+**Predict:** which changes would a row-count check detect? Which require a registered population hash? Why is checking an artifact hash insufficient if the editor can also change the hash?
+
+**Task:** retain an immutable execution artifact for each trial; reference its digest from the summary. Validate identity links and reconstruct the deterministic evaluation. Calibration authority must be independently supplied, not asserted inside the packet.
+
+```bash
+uv run python -m unittest tests.test_trial_replay -v
+uv run python -m cx_eval_lab experiment \
+  --minimum-independent-clusters 5 \
+  --output artifacts/runs/replay-kata-04.json
+uv run python -m cx_eval_lab replay \
+  --input artifacts/runs/replay-kata-04.json
+```
+
+Use a new output filename if it already exists: experiment artifacts cannot be overwritten. Five clusters here deliberately exercise a **synthetic lab pass**, not a statistically qualified promotion. Replay prints `replayed 20 trials; authority: lab_only; no model calls`.
+
+??? success "Solution and reasoning"
+    `TrialArtifact` in `cx_eval_lab/artifacts.py` stores canonical JSON. The runner retains the case, agent-visible input, initial/final state, ordered tool events, complete output including runtime evidence when available, measurements and provenance, execution error, semantic receipt slot, domain policy version, and original evaluation. Each artifact binds the arm, case, repetition, and manifest hash.
+
+    `replay_packet` verifies hashes and identity links, rejects duplicate or missing references, reconstructs `evaluate_case` inputs, and compares the retained evaluation and summary with the recomputed result. It checks population membership against the manifest and requires both arms and all repetitions. It does not accept calibration authority merely because a packet lists a hash.
+
+    Tests change messages, remove artifacts or whole cases, change summaries and manifest bindings, duplicate records, and attempt self-authorization. A fresh-process CLI test verifies portability and malformed-JSON rejection. Another test changes the message **and recomputes its hash**: replay still detects disagreement with the retained grade.
+
+**Extend:** change the grader while retaining an old packet. Design a separate reassessment artifact referencing the original digest, old/new grader revisions, and changed checks. This version-migration workflow remains a next implementation step; never overwrite historical grades.
+
+**Interview answer to know:** “I retain execution evidence separately from grader decisions. Replay validates references and recomputes grades under a pinned implementation. A digest detects changes relative to a trusted reference; it is not proof that a run happened, that world state was true, or that release is safe.”
+
+**Evidence limits:** this is deterministic re-grading of retained mock-world executions, not agent re-execution or production attestation. The CLI uses the installed grader; it does not download or enforce its revision. Population validation covers case/customer/slice membership, not independent verification of every source-file hash. The runner still has no connected semantic judge, so receipts are null here. A party able to rewrite all evidence and trusted references can fabricate a self-consistent packet; external provenance and storage controls remain necessary.
+
 ## What comes next
 
-The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas cover artifact replay, dataset improvement, human annotation, judge calibration, statistical coverage, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those exercises are pending until their runnable checks and worked solutions exist.
+The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas cover dataset improvement, human annotation, judge calibration, statistical coverage, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those exercises are pending until their runnable checks and worked solutions exist.

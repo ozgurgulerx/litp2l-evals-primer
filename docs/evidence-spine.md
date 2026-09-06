@@ -60,6 +60,18 @@ manifest = ExperimentManifest(
 
 The canonical JSON content hash identifies this exact manifest. The estimand, method, margin, confidence level, minimum independent clusters, stopping policy, population, and validity window are decision inputs—not post-run arguments. Changing a relevant prompt, model, tool, dataset, evaluator, policy, population, or statistical plan changes the hash. A friendly experiment name never substitutes for a reconstruction record. Measured evidence also requires a pinned code revision; `working-tree-unpinned` is rejected.
 
+## Independent replay of retained executions
+
+Paired summaries now reference complete, content-addressed trial artifacts. These preserve the original case, agent input, initial/final state, tool events, output, available runtime usage, measurement provenance, execution error, semantic receipt slot, and original grading result. `cx_eval_lab/artifacts.py` reconstructs the deterministic evaluation instead of trusting its saved pass/fail label.
+
+After generating an experiment packet, run:
+
+```bash
+uv run python -m cx_eval_lab replay --input artifacts/runs/paired-reference.json
+```
+
+Replay rejects changed artifact hashes, missing or duplicated evidence, incorrect identity links, inconsistent summaries, missing paired repetitions, and population membership that differs from the manifest. It returns `lab_only` even when every grade matches. It does not authenticate execution provenance, enforce the installed code revision, verify source files against all manifest hashes, or qualify the statistical method. Old summary-only packets remain useful for aggregate exercises but cannot pass full replay. See [Kata 04](micro-katas.md#kata-04-recompute-a-grade-not-just-an-average) for the worked solution and mutation tests.
+
 ## Repeated trials are not new cases
 
 `run_paired_experiment` resets the world for every candidate and baseline trial and emits stable keys `(case_id, trial_index)`. Repeating one customer situation measures stochastic reliability; it does not create more independent customer situations. Each trial therefore also carries `cluster_id`, normally the customer or session sampled from the target population.
