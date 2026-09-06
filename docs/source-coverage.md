@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Executed coding-patch outcome controls
+
+[Katas 87–89](coding-patch-study.md) add a second executable domain: five authored patch controls, two visible and eight public acceptance cases, actual subprocess results, candidate diffs, protected-file checks and parent-verified outputs/input changes. The original and overfit controls both pass visible cases but differ on acceptance; the test-edit control is blocked before execution. The [retained study](assets/coding-patch-study-v1.json) binds local built-ins, harness/test definitions and interpreter; replay never executes its stored source. This establishes local patch-evaluation mechanics, not model-generated coding performance, sealed acceptance, independent test validity or an OS sandbox. The benchmark chapter also incorporates the dated OpenAI coding-task audit and Anthropic resource-enforcement study.
+
 ### Incomplete CI evidence and integrated decision defense
 
 [Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) exercise failed-run diagnostics, including a real harmless child-process timeout after two completed local controls. They separate expected candidate rejection from missing or invalid experiment evidence, and local writes from confirmed artifact storage. The [capstone](capstone.md) joins the learner's decision argument to three retained studies through 29 exact fields, with worked revocation, missingness and completed-side-effect variants. These additions deepen the operating and interview paths; they do not establish cloud workflow execution, crash-durable storage, independent human calibration or real application exposure.

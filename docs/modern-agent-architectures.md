@@ -134,6 +134,8 @@ Anthropic's [multi-agent research-system account](https://www.anthropic.com/engi
 
 The refund workflow cannot carry the whole field. Reuse the evidence spine, but change the authoritative outcome source:
 
+The [Coding Patch Evaluation Study](coding-patch-study.md) now supplies a second executed outcome domain: fixed authored Python patches, visible and separate acceptance tests, caller-state preservation and protected-file integrity. Katas 87–89 distinguish incomplete fixes, integrity blocks and incorrect test expectations. This is not yet an actual coding-agent benchmark.
+
 | Agent family | Authoritative outcome | Architecture-specific evidence |
 | --- | --- | --- |
 | Coding | clean checkout, tests, static analysis, diff | repository state, command logs, hidden tests, patch minimality, forbidden-file access |
@@ -151,6 +153,8 @@ Google DeepMind's [FACTS suite](https://deepmind.google/blog/facts-benchmark-sui
 - **Artifacts:** typed fixture inputs and derived summaries in `advanced-protocols-v1.json`; these are not captured runtime traces.
 - **Limitations:** no live audio, model, skill-loader, browser, or distributed-agent run was executed.
 - **Authority:** `lab_only`.
+
+The separate [coding-patch study](coding-patch-study.md) now adds actual local execution evidence beyond these typed observation fixtures. Its patches and tests are authored controls; the broader model/voice/skill/delegation limitations above remain in force.
 
 ## Exercise: matched-budget comparison
 

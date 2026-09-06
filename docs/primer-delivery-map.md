@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Executed coding-patch evaluation checkpoint — 7 September 2026
+
+[Katas 87–89](coding-patch-study.md) add a second outcome domain with actual Python subprocess execution. Five authored patch controls distinguish visible-example overfitting, an unknown-outcome denominator bug, caller-state mutation and a protected-test edit. Four controls execute two suites each, totaling forty registered checks; the fifth is blocked before execution. Full code/diffs, input/output/exception records, test definitions and file inventories remain inspectable in the [retained study](assets/coding-patch-study-v1.json). Replay runs current built-ins only, never source supplied by an artifact.
+
+Review strengthened three boundaries: expected negative controls must complete with their intended failure pattern rather than time out; parent grading must derive results from retained outputs and input changes; semantic numeric equality must accept valid rates without accepting boolean counts. The book now also connects dated OpenAI coding-task validity findings and Anthropic resource-enforcement findings to the local lesson. Those external studies are not reproduced here.
+
+RED checkpoints `71c984b` and `d7f20b1`; GREEN implementation/artifact `feab2cd`. A fresh branch-inclusive run passes all 563 repository tests: 90% overall coverage and 91% across the two new modules. Targeted Ruff/Pyright and the installed-environment dependency audit pass. The documented fresh CLI, published replay snippet and retained-artifact replay pass; strict book build and three expanded worked solutions at a 1152-pixel desktop viewport pass. Current-release composition remains one HOLD and six BLOCK controls, with deployment authorization false. The conformance workflow includes the new local command; no cloud execution or publication is claimed.
+
+This closes a bounded second-domain evaluation-mechanics gap, not actual coding-agent performance, protected acceptance access, independent test validity or secure execution of arbitrary patches. Actual model-backed transfer and the wider curriculum and operational qualification requirements remain open.
+
 ### Failed-run CI evidence checkpoint — 7 September 2026
 
 [Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) repair a concrete operating gap: timeouts previously bypassed command diagnostics, and failed conformance runs had no structured partial-run summary. The implementation now retains verified prior checks and a separate failure record, preserves the original failure, distinguishes launch/timeout/packet/replay errors, and never fabricates a candidate verdict or continues later controls. The lesson executes two ordinary local controls followed by a real harmless child-process timeout. It also explains why identical exit integers from different commands have different meanings, and why upload eligibility is not confirmed durable storage.

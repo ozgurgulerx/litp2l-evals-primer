@@ -45,6 +45,18 @@ Do not memorize benchmark names as answers. Explain the construct, protocol, sco
 
 ## Freeze the task definition
 
+### Dated coding-benchmark corrections: tests are evidence, not infallible truth
+
+OpenAI's 8 July 2026 audit of SWE-Bench Pro distinguishes overly strict tests, underspecified prompts, inadequate test coverage and misleading prompts. It combines automated triage, deeper agent-assisted investigation and human review; reviewers inspect the task, tests and reference patch before using pipeline commentary as supporting material. The report retracts OpenAI's earlier recommendation to adopt SWE-Bench Pro. Treat that as a dated correction to a recommendation, not a proof that every task is invalid or that an arbitrary replacement is sound. [OpenAI coding-evaluation audit](https://openai.com/index/separating-signal-from-noise-coding-evaluations/)
+
+The operational response is a task-quality ledger: preserve the original task and grades, record the disputed requirement and counterexample, independently review the proposed correction, version the measuring instrument, then recompute affected comparisons. A patch failing a bad test is not necessarily a failed capability. A patch passing weak tests is not necessarily a complete solution.
+
+Anthropic's 5 February 2026 study holds the model and harness fixed while varying resource configurations. It shows that memory headroom and enforcement can affect both infrastructure failures and the strategies an agent can execute. Record guaranteed resources, hard limits and enforcement behavior separately. Do not silently discard resource failures or compare a memory-limited run with an uncapped one as though only the model changed. [Anthropic infrastructure-noise study](https://www.anthropic.com/engineering/infrastructure-noise)
+
+The [Coding Patch Evaluation Study](coding-patch-study.md) provides a small executed teaching counterpart: separate visible tests, broader acceptance checks and protected-file integrity, then audit an incorrect test expectation. Its authored candidates are not a reproduction of either company's model experiments.
+
+### Versioned experiment inputs
+
 Version:
 
 - canonical input and target;

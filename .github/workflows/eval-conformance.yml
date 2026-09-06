@@ -76,6 +76,8 @@ jobs:
         run: uv run python -m cx_eval_lab.report_citations --output ci-evidence/report-citations.json
       - name: Execute long-report extraction and synthesis review controls
         run: uv run python -m cx_eval_lab.long_report --output ci-evidence/long-report-study.json
+      - name: Execute fixed coding patches and protected-test integrity controls
+        run: uv run python -m cx_eval_lab.coding_patch_study --output ci-evidence/coding-patch-study.json
       - name: Reconstruct mixed-trace error-analysis teaching views
         run: >-
           uv run python -m cx_eval_lab.error_analysis_workshop

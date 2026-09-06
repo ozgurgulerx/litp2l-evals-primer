@@ -1,5 +1,11 @@
 # Reference library
 
+## Coding-evaluation methodology updates — checked 7 September 2026
+
+- [OpenAI: Separating signal from noise in coding evaluations](https://openai.com/index/separating-signal-from-noise-coding-evaluations/) — July 2026 benchmark-quality audit and changed recommendation; use for task/test validity and independent review, not a blanket replacement-benchmark endorsement.
+- [Anthropic: Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise) — resource allocation and enforcement as experimental variables.
+- [Anthropic: Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) — outcome tests, regression protection and complementary trajectory review. The [local coding study](coding-patch-study.md) implements only a bounded authored-patch exercise.
+
 The primer treats references as part of the evaluation system. A source should tell us more than “where an idea came from.” It should identify the claim it supports, the artifact it changes, how fresh it is, and what would make us revisit it.
 
 ## Primary-source rule

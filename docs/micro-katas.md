@@ -6,6 +6,8 @@ Each kata asks you to predict a result, run a small experiment, explain the fail
 
 These first three katas exercise real defects found in the refund grader. They use synthetic customers and local code; no model key is needed. Run commands from the repository root after `uv sync --group dev`.
 
+[Katas 87–89](coding-patch-study.md) add a second outcome domain: run authored Python patch controls against visible and separate acceptance tests, inspect caller-state changes and protected-test edits, then diagnose an incorrect acceptance assertion. Real subprocess execution does not turn authored patches into model-performance evidence.
+
 [Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) follow a real child-process timeout through partial evidence retention and distinguish candidate verdicts, conformance failure, upload eligibility and confirmed artifact storage. They do not authorize production deployment or claim durable recovery after runner loss.
 
 ## Kata 01: a trusted sentence that lies
