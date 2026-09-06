@@ -53,6 +53,13 @@ jobs:
         run: uv run python -m cx_eval_lab.incident_regression --output ci-evidence/incident-regression.json
       - name: Derive paired slice changes from replayed legacy executions
         run: uv run python -m cx_eval_lab.paired_slices --output ci-evidence/paired-slices.json
+      - name: Replay native slice diagnostics with explicit synthetic fixture anchors
+        run: >-
+          uv run python -m cx_eval_lab.resolution_slice_study
+          --source docs/assets/native-resolution-semantic-v1.json
+          --expected-source-sha256 sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839
+          --trusted-calibration-hash sha256:454a18e2f18782f37ecfb2c7832a259aead13455be9cacfe94a7464e0d54730b
+          --output ci-evidence/resolution-slices.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure

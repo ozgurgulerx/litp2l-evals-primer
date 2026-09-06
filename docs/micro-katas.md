@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 64–65](order-resolution-study.md#native-paired-diagnostics-separate-the-action-from-the-explanation) derive native structural and joint changes from retained multi-order executions. Distinguish a qualified semantic failure from abstention, locate clarification and ordering failures, and reject retrospective promotion of exploratory feature slices to required gates.
+
 [Katas 62–63](metrics.md#executed-paired-slice-comparison) reconstruct fixed and regressed pairs from full legacy executions, compare trial and customer weighting, and hold missing or unqualified required-slice evidence. The retained study improves overall while regressing its required slice; its teaching intervals do not authorize release.
 
 [Katas 60–61](dataset-design.md#from-incident-evidence-to-a-versioned-regression) turn incident evidence into a reviewed regression: preserve the causal failure during minimization, bind review to exact content and policy, check known protected-set overlaps, and publish a new version without erasing the parent. The lessons distinguish synthetic workflow controls from actual human adjudication or automatic de-identification.

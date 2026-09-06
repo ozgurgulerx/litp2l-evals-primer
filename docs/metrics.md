@@ -519,7 +519,7 @@ else:
 
 **Extend:** propose an untouched follow-up population for the failed slice, a method justified for its sampling design, and an independent check on semantic-label error. Explain why “collect 30 customers” is only a sample-count rule—not qualification of an interval method. Use the [statistical counterexamples](statistical-method-study.md) before assigning statistical authority.
 
-**Evidence boundary:** the retained artifact and tests exercise actual local mock-tool executions and replay-derived slice diagnostics. The cases, controls and measurement profile are synthetic. They do not establish real customer performance, current judge validity, authenticated execution history or deployment permission. The next implementation step is the same joined diagnostic for native multi-order evidence, followed by representative, independently qualified observations.
+**Evidence boundary:** the retained artifact and tests exercise actual local mock-tool executions and replay-derived slice diagnostics. The cases, controls and measurement profile are synthetic. They do not establish real customer performance, current judge validity, authenticated execution history or deployment permission. [Katas 64–65](order-resolution-study.md#native-paired-diagnostics-separate-the-action-from-the-explanation) extend the diagnostic to native multi-order evidence, keeping structural projections separate from qualified joint outcomes. Representative, independently qualified observations remain required.
 
 ## Verification checklist
 

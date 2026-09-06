@@ -254,3 +254,105 @@ The native audit also checks rejected grading paths. A pre-dispatch rejection ca
 **Extend:** replace the literal control with a frozen, independently calibrated rubric. [Katas 47–48](semantic-grading-lab.md#kata-47-a-new-evidence-domain-needs-a-new-qualification-scope) now test the native provider adapter and direct budget wrapper through the installed SDK with in-memory HTTP; they do not supply that empirical calibration. Account for agent and judge usage separately before combining selected costs; unknown judge usage is not free. A single-order adapter or campaign gate must not be assumed to support a new criterion without its own integration tests.
 
 **Interview answer:** “I require structural and semantic success together, preserve the full evidence for re-grading, and separate historical reproduction from current qualification. A revoked judge can explain an old result without remaining eligible for a new decision. A successful local control still needs representative evidence and release prerequisites.”
+
+## Native paired diagnostics: separate the action from the explanation
+
+The false-settlement candidate passes **8/8 structural contracts and 0/8 joint contracts**. The first-record candidate passes **2/8 of each**. Those results need different repairs: one candidate's explanation is false; the other selects or acts on orders incorrectly.
+
+The [native slice report](assets/resolution-slices-v1.json) derives these diagnostics from the [already-retained semantic study](assets/native-resolution-semantic-v1.json). It replays mock tool histories and reconstructs grades, but does not run new agents or collect new model observations. The original executions and release receipts remain unchanged. Across three comparisons it inspects 48 retained trials: 24 pairs formed from four cases repeated twice per comparison. Every case belongs to the same synthetic customer.
+
+| Candidate versus descriptive baseline | Structural pass | Joint pass | Structural regressions | Joint regressions |
+| --- | --- | --- | --- | --- |
+| False settlement | 8/8 | 0/8 | 0 | 8 |
+| First record | 2/8 | 2/8 | 6 | 6 |
+| Descriptive control | 8/8 | 8/8 | 0 | 0 |
+
+The baseline passes all eight structural and joint contracts in each comparison. *Joint* means the structural contract passes and an eligible semantic judgment passes. These are criterion-specific fixture results under explicit synthetic calibration trust—not empirical semantic accuracy.
+
+### Kata 64: the same failed-check name can mean different evidence
+
+**Predict:** why must the false-settlement pairs count as regressions rather than unknowns? Why would a qualified judge's abstention require a different classification? Can a favorable prose grade repair a wrong-order transaction?
+
+Reproduce the derived report from the repository root. The expected source hash below hashes **file bytes**, whereas packet and plan hashes identify canonical JSON values:
+
+```bash
+uv run python -m cx_eval_lab.resolution_slice_study \
+  --source docs/assets/native-resolution-semantic-v1.json \
+  --expected-source-sha256 sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839 \
+  --trusted-calibration-hash sha256:454a18e2f18782f37ecfb2c7832a259aead13455be9cacfe94a7464e0d54730b \
+  --output /tmp/native-resolution-slices.json
+uv run python -m unittest tests.test_resolution_slices tests.test_resolution_slice_study -v
+```
+
+Use a new output path on a subsequent run. The calibration hash is an explicit exercise trust choice for this synthetic fixture. Do not replace it with “trust every hash the input supplies.” Recompiling its annotations checks consistency; it neither authenticates invented reviewers nor qualifies the judge for production. A changed source file requires investigation and a separately anchored derivation, not automatic adoption of its new hash.
+
+??? success "Solution: classify semantic status, not a generic failure flag"
+    In the false-settlement comparison, both arms' judgments are eligible under the deliberately permissive fixture policy. The baseline judgment passes and the candidate judgment fails. Each pair is therefore a **known joint regression**, even though its structural contract is unchanged and passing. Calling these eight pairs “unqualified” would hide negative evidence supplied by the chosen instrument.
+
+    Abstention is different: the instrument did not supply a pass/fail determination. Missing qualification is different again: the judgment lacks required eligibility. Neither earns a positive joint outcome. Preserve semantic status and reason alongside structural checks rather than interpreting the generic `qualified_multi_order_message` check name as an uncertainty label. The reporting adapter conservatively marks a joint pair unknown when either arm lacks an eligible, non-abstaining semantic determination; any known structural failures remain separately visible.
+
+    The first-record candidate's literal prose judge can pass because one refund was committed, even when it was the wrong refund. The structural grader evaluates intended order and required clarification independently. A semantic pass cannot compensate for those failures. Joint success is a conjunction, not an average of grades.
+
+    A structural-only `resolution-trial-v1` packet has no native semantic qualification. Its structural changes remain inspectable, but its joint-quality comparison is unknown. A `resolution-trial-v2` packet adds semantic evidence; the version label alone is insufficient—the report must replay and validate the receipt and audit against caller-supplied trust.
+
+**Interview answer criteria:** distinguish qualified failure, abstention and missing qualification; show which structural evidence remains usable in each situation; explain why known failure must not disappear into an unknown counter. Name the evidence needed before combining grader criteria into one success claim.
+
+### Kata 65: a useful retrospective slice is not a registered release requirement
+
+**Predict:** split the first-record comparison by whether the case requires clarification. Which failures does the aggregate hide? May that slice become a release requirement by editing the archived manifest?
+
+The derived plan assigns feature labels from retained case definitions, not from pass/fail outcomes:
+
+| Feature slice | Cases | Pairs | Baseline joint pass | First-record joint pass |
+| --- | ---: | ---: | --- | --- |
+| Clarification required | 2 | 4 | 4/4 | 0/4 |
+| Clarification not required | 2 | 4 | 4/4 | 2/4 |
+| Target known to evaluator | 3 | 6 | 6/6 | 2/6 |
+| Unresolved intent | 1 | 2 | 2/2 | 0/2 |
+
+“Target known” describes the evaluator's reference, not information revealed to the agent. These two partitions overlap: the unresolved case also requires clarification. Summing all four denominators would count each pair twice.
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.resolution_slice_study import derive_study
+from cx_eval_lab.resolution_slices import derive_resolution_slice_report
+
+source = Path("docs/assets/native-resolution-semantic-v1.json")
+trust = frozenset({"sha256:454a18e2f18782f37ecfb2c7832a259aead13455be9cacfe94a7464e0d54730b"})
+derived = derive_study(source,
+    expected_source_sha256="sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839",
+    trusted_calibration_hashes=trust)
+assert derived == json.loads(Path("docs/assets/resolution-slices-v1.json").read_text())
+control = next(c for c in derived["comparisons"] if c["candidate"] == "first-record-mutant")
+joint = control["report"]["joint"]
+required_feature = next(r for r in joint["slices"] if r["slice"] == "clarification:required")
+assert required_feature["pair_count"] == 4
+assert required_feature["candidate_rate"] == 0
+assert required_feature["membership"] == "exploratory"
+assert joint["overall"]["customer_count"] == 1
+assert joint["overall"]["comparison"] is None
+
+packet = next(c["packet"] for c in json.loads(source.read_text())["comparisons"]
+              if c["candidate"] == "first-record-mutant")
+changed_plan = {**control["plan"], "required_slices": ["clarification:required"]}
+try:
+    derive_resolution_slice_report(packet, changed_plan, trusted_calibration_hashes=trust)
+except ValueError:
+    print("Retrospective feature labels cannot silently become required gates.")
+else:
+    raise AssertionError("Unregistered required slice was accepted")
+```
+
+??? success "Solution: preserve the archive and register the follow-up"
+    All four clarification-required pairs regress. Without required clarification, `customer-correction` passes only repetition 0, while `explicit-description` passes only repetition 1. Changed listing order exposes the first-record heuristic. A single aggregate of 2/8 cannot show either concentration or order sensitivity.
+
+    These labels were assigned during a new analysis of an existing archive. They are explicitly **exploratory**. Every plan must cover exactly the packet's case IDs; omissions, extra IDs and malformed labels are rejected. A plan with required slices is accepted only when its exact content hash matches registration already present in the packet's manifest. These archived comparisons lack that registration, so retrospectively assigning required status is rejected.
+
+    For a follow-up experiment, choose slice definitions and required coverage before executing agents; bind the complete plan to the new manifest; then retain new evidence under that identity. Do not rewrite the old packet to simulate preregistration. A self-consistent hash is not an independently authenticated timestamp or approval.
+
+    All cases share one customer. No row has enough independent support for a population interval, regardless of permutations or labels. The structural projection is descriptive rather than an alternative registered primary endpoint. Joint diagnostics remain restricted, and original release receipts still block. A new report does not confer new authority on old evidence.
+
+**Extend:** design a follow-up population varying customers, ambiguous descriptions, correction styles and competing orders. Keep clarification burden and unresolved work separate from safe contract handling: the descriptive control's unresolved cases pass their safe-handling contract without completing a refund. A dashboard equating “contract passed” with “customer task completed” conceals that distinction.
+
+**Evidence limit:** this addition validates native replay-to-report integration. It does not add independent customers, new agent executions, real reviewer labels, a general semantic judge, qualified interval methods, current registry authority or an application rollout. Those remain distinct requirements in the [delivery map](primer-delivery-map.md).
