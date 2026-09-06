@@ -6,6 +6,9 @@ import unittest
 
 
 class SequentialStudyTests(unittest.TestCase):
+    def test_log_evidence_handles_extreme_valid_probabilities_without_ratio_underflow(self):
+        from cx_eval_lab.sequential_study import log_evidence
+        self.assertTrue(math.isfinite(log_evidence(1, 1, margin=0.9, alternative=5e-324)))
     def test_log_likelihood_ratio_and_null_expectation(self):
         from cx_eval_lab.sequential_study import log_evidence
         p0, p1, n = 0.3, 0.1, 5
