@@ -154,6 +154,14 @@ class LongReportTests(unittest.TestCase):
                 row['claim_ids'].append('nested')
         with self.assertRaises(ValueError):
             run_study(inputs)
+
+    def test_both_reports_cannot_drop_a_registered_synthesis_requirement(self):
+        from cx_eval_lab.long_report import example_inputs, run_study
+        inputs = example_inputs()
+        for report in inputs['reports']:
+            report['synthesis'] = [r for r in report['synthesis'] if r['synthesis_id'] != 'SY04']
+        with self.assertRaises(ValueError):
+            run_study(inputs)
         inputs = example_inputs()
         inputs['reports'][0]['synthesis'] = []
         with self.assertRaises(ValueError):
