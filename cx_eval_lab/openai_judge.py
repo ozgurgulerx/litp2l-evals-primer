@@ -33,6 +33,13 @@ def _schema():
         'required': ['verdict', 'explanation'], 'additionalProperties': False}
 
 
+def _finite_number(value):
+    try:
+        return type(value) in (int, float) and math.isfinite(value)
+    except OverflowError:
+        return False
+
+
 @dataclass(frozen=True)
 class JudgeConfig:
     model: str
@@ -49,8 +56,7 @@ class JudgeConfig:
         for value in (self.model, self.rubric, self.price_version):
             if not isinstance(value, str) or not value.strip():
                 raise ValueError('model, rubric and price version must be explicit')
-        if (type(self.timeout_seconds) not in (int, float)
-                or not math.isfinite(self.timeout_seconds) or not 0 < self.timeout_seconds <= 300):
+        if (not _finite_number(self.timeout_seconds) or not 0 < self.timeout_seconds <= 300):
             raise ValueError('transport timeout must be finite and within (0, 300] seconds')
         for value, ceiling in ((self.max_output_tokens, 100_000), (self.max_input_bytes, 2_000_000),
                                (self.max_response_bytes, 2_000_000)):
@@ -59,7 +65,7 @@ class JudgeConfig:
         rates = (self.input_usd_per_million, self.output_usd_per_million)
         if (rates[0] is None) != (rates[1] is None):
             raise ValueError('both token rates are required for an estimate')
-        if any(r is not None and (type(r) not in (int, float) or not math.isfinite(r) or r < 0)
+        if any(r is not None and (not _finite_number(r) or r < 0)
                for r in rates):
             raise ValueError('token rates must be finite nonnegative numbers')
 
@@ -89,8 +95,8 @@ def _meter(data, config):
         tokens = (None, None, None)
     cost = None
     if valid and data.get('model') == config.model and config.input_usd_per_million is not None:
-        estimate = (tokens[0] * config.input_usd_per_million
-                    + tokens[1] * config.output_usd_per_million) / 1_000_000
+        estimate = (tokens[0] * float(config.input_usd_per_million)
+                    + tokens[1] * float(config.output_usd_per_million)) / 1_000_000
         cost = estimate if math.isfinite(estimate) else None
     identity = data.get('id')
     model = data.get('model')
