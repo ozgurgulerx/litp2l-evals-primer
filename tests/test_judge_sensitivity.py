@@ -1,7 +1,6 @@
 """Matched presentations distinguish scoring correctness from judge sensitivity."""
 
 import copy
-import json
 import subprocess
 import sys
 import tempfile
