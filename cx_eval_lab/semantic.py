@@ -148,6 +148,7 @@ class SemanticJudgment:
     verdict: str
     explanation: str
     runtime_evidence: RuntimeEvidence | None = None
+    provider_audit_json: str | None = None
 
     def __post_init__(self):
         if self.verdict not in {"pass", "fail", "abstain"} or not self.explanation:
