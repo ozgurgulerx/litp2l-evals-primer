@@ -123,6 +123,30 @@ class ReplayAuthorityTests(unittest.TestCase):
         self.assertEqual(0, result.semantic_trials)
         self.assertFalse(result.deployment_authorized)
 
+    def test_current_calibration_does_not_hide_invalid_receipts_or_failed_grades(self):
+        from cx_eval_lab.artifacts import _regrade
+        from cx_eval_lab.replay_authority import assess_replay
+        packet = copy.deepcopy(self.packet)
+        for artifact in packet['trial_artifacts']:
+            old = artifact['artifact_hash']
+            payload = artifact['payload']
+            payload['semantic_evaluation_receipt']['evidence_context_hash'] = canonical_hash('wrong')
+            result = _regrade(payload, frozenset({self.stage.calibration_hash}))
+            payload['evaluation'] = result.to_dict()
+            artifact['artifact_hash'] = canonical_hash(payload)
+            for row in packet['baseline_trials'] + packet['candidate_trials']:
+                if row['artifact_hash'] == old:
+                    row.update(artifact_hash=artifact['artifact_hash'], passed=result.passed,
+                               failed_checks=[c.name for c in result.checks if not c.passed])
+        assessment = assess_replay(
+            packet, trusted_packet_hash=canonical_hash(packet),
+            historical_calibration_hashes=frozenset({self.stage.calibration_hash}),
+            registry=self.stage.registry, now=NOW, allow_synthetic=True)
+        self.assertEqual('current', assessment.calibration_status)
+        self.assertEqual(4, assessment.failed_trials)
+        self.assertEqual(4, assessment.unqualified_message_trials)
+        self.assertFalse(assessment.deployment_authorized)
+
 
 if __name__ == '__main__':
     unittest.main()
