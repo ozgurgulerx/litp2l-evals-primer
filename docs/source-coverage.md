@@ -45,6 +45,8 @@ Excluding a volatile ranking, price, star count, or copied quick-start is intent
 
 ## Recent capability addendum
 
+The [Order Resolution Study](order-resolution-study.md) adds 16 executed deterministic trials with independent mock order ledgers, label-free unresolved inputs, customer corrections, scripted clarification and counterbalanced ordering. Katas 21–23 distinguish authorized wrong-object actions, retrospective clarification and rejected attempts hidden by later success. The live SDK path is contract-tested with a fake runner; live-model accuracy, question quality and qualified semantic grading remain unmeasured.
+
 The [CI Gate Lab](ci-gate-lab.md) adds locally executed pass/hold/block controls with full replayable packets and a configured read-only GitHub Actions workflow. Katas 16–17 separate conformance from candidate qualification and deployment. Cloud execution, branch-protection enforcement, and application canary control are not yet demonstrated.
 
 The [Frontier Risk Decisions chapter](frontier-risk-decisions.md) addresses the audit's risk-decision gaps using six rechecked primary sources: Anthropic's RSP v3 discussion, DeepMind's Frontier Safety Framework update and human-participant research, OpenAI's safeguards disclosure, and METR's incident investigation and task-horizon limitations. Katas 13–15 are worked reasoning/calculation exercises. Monitoring, isolation, and participant-study protocols are proposed—not locally executed or deployment-qualified.

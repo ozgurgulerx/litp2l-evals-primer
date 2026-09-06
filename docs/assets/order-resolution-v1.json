@@ -1,0 +1,3856 @@
+{
+  "study": "order-resolution-v1",
+  "evidence_kind": "executed_deterministic_mock",
+  "source_hashes": {
+    "order_resolution.py": "sha256:feea9b7cea36c705d0a29f5e21d20a7b017a66f1d21a3a6d2f6a4802eb57ef7a",
+    "world.py": "sha256:3f23837ad8cebff65932a1f9c37128ce3557f669c814a379d5800ef96a87a3cd",
+    "agents.py": "sha256:5f351698eed35d16f278d485dc8f5fb6fec2af76cea43480e1cd0f92b0300d92"
+  },
+  "trials": [
+    {
+      "case": {
+        "case_id": "explicit-description",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-b",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "descriptive-control",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-b",
+            "policy_consulted": true,
+            "policy_order_id": "order-b",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-b"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4500,
+                "currency": "EUR",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-b",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-b"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "order_id": "order-b",
+            "amount_cents": 4500,
+            "currency": "EUR"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-b",
+            4500,
+            "EUR",
+            null,
+            "refund:order-b"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.11179200373589993,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "explicit-description",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-b",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "descriptive-control",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-b",
+            "policy_consulted": true,
+            "policy_order_id": "order-b",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-b"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4500,
+                "currency": "EUR",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-b",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-b"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "order_id": "order-b",
+            "amount_cents": 4500,
+            "currency": "EUR"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-b",
+            4500,
+            "EUR",
+            null,
+            "refund:order-b"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.06862502777948976,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "explicit-description",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-b",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "first-record-mutant",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05745800444856286,
+      "wrong_order_commits": 1,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": false,
+      "passed": false,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "explicit-description",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-b",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "first-record-mutant",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-b",
+            "policy_consulted": true,
+            "policy_order_id": "order-b",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-b"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4500,
+                "currency": "EUR",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-b",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-b"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "order_id": "order-b",
+            "amount_cents": 4500,
+            "currency": "EUR"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-b",
+            4500,
+            "EUR",
+            null,
+            "refund:order-b"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05195802077651024,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "ambiguous-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": "The blue backpack bought on 2026-08-01.",
+        "required_clarifications": 1
+      },
+      "agent": "descriptive-control",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "ask_customer",
+          "arguments": [
+            "Which item and purchase date do you mean?"
+          ],
+          "result": "The blue backpack bought on 2026-08-01."
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.061583006754517555,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "ambiguous-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": "The blue backpack bought on 2026-08-01.",
+        "required_clarifications": 1
+      },
+      "agent": "descriptive-control",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "ask_customer",
+          "arguments": [
+            "Which item and purchase date do you mean?"
+          ],
+          "result": "The blue backpack bought on 2026-08-01."
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05841598613187671,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "ambiguous-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": "The blue backpack bought on 2026-08-01.",
+        "required_clarifications": 1
+      },
+      "agent": "first-record-mutant",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05883403355255723,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 1,
+      "denied_attempts": 0,
+      "premature_action_attempts": 1,
+      "task_completed": true,
+      "passed": false,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "ambiguous-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": "The blue backpack bought on 2026-08-01.",
+        "required_clarifications": 1
+      },
+      "agent": "first-record-mutant",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-b",
+            "policy_consulted": true,
+            "policy_order_id": "order-b",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-b"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4500,
+                "currency": "EUR",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-b",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-b"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "order_id": "order-b",
+            "amount_cents": 4500,
+            "currency": "EUR"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-b",
+            4500,
+            "EUR",
+            null,
+            "refund:order-b"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.055958982557058334,
+      "wrong_order_commits": 1,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 1,
+      "denied_attempts": 0,
+      "premature_action_attempts": 1,
+      "task_completed": false,
+      "passed": false,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "customer-correction",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "descriptive-control",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.09866699110716581,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "customer-correction",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "descriptive-control",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.04779204027727246,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "customer-correction",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "first-record-mutant",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05154201062396169,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": true,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "customer-correction",
+        "request": {
+          "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": "order-a",
+        "clarification_reply": null,
+        "required_clarifications": 0
+      },
+      "agent": "first-record-mutant",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund the blue backpack bought on 2026-08-02. Correction: the blue backpack bought on 2026-08-01.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-b",
+            "policy_consulted": true,
+            "policy_order_id": "order-b",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-b"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4500,
+                "currency": "EUR",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-b",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-b"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "order_id": "order-b",
+            "amount_cents": 4500,
+            "currency": "EUR"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-b",
+            4500,
+            "EUR",
+            null,
+            "refund:order-b"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.04841695772483945,
+      "wrong_order_commits": 1,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": false,
+      "passed": false,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "unresolved-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": null,
+        "clarification_reply": null,
+        "required_clarifications": 1
+      },
+      "agent": "descriptive-control",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "ask_customer",
+          "arguments": [
+            "Which item and purchase date do you mean?"
+          ],
+          "result": null
+        }
+      ],
+      "output": {
+        "message": "Please clarify which purchase you mean.",
+        "claimed_outcome": "needs_review",
+        "runtime_evidence": null,
+        "transaction_status_claim": "unknown",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": null,
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.028082984499633312,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": false,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "unresolved-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": null,
+        "clarification_reply": null,
+        "required_clarifications": 1
+      },
+      "agent": "descriptive-control",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "ask_customer",
+          "arguments": [
+            "Which item and purchase date do you mean?"
+          ],
+          "result": null
+        }
+      ],
+      "output": {
+        "message": "Please clarify which purchase you mean.",
+        "claimed_outcome": "needs_review",
+        "runtime_evidence": null,
+        "transaction_status_claim": "unknown",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": null,
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.025291985366493464,
+      "wrong_order_commits": 0,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 0,
+      "denied_attempts": 0,
+      "premature_action_attempts": 0,
+      "task_completed": false,
+      "passed": true,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "unresolved-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": null,
+        "clarification_reply": null,
+        "required_clarifications": 1
+      },
+      "agent": "first-record-mutant",
+      "reverse": false,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-a",
+            "policy_consulted": true,
+            "policy_order_id": "order-a",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-a"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4000,
+                "currency": "USD",
+                "order_id": "order-a"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-a",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            },
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-a"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "order_id": "order-a",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-a"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-a",
+            4000,
+            "USD",
+            null,
+            "refund:order-a"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05079101538285613,
+      "wrong_order_commits": 1,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 1,
+      "denied_attempts": 0,
+      "premature_action_attempts": 1,
+      "task_completed": false,
+      "passed": false,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    },
+    {
+      "case": {
+        "case_id": "unresolved-description",
+        "request": {
+          "utterance": "Refund my blue backpack.",
+          "customer_id": "customer-1"
+        },
+        "orders": [
+          {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          }
+        ],
+        "expected_order_id": null,
+        "clarification_reply": null,
+        "required_clarifications": 1
+      },
+      "agent": "first-record-mutant",
+      "reverse": true,
+      "agent_input": {
+        "utterance": "Refund my blue backpack.",
+        "customer_id": "customer-1"
+      },
+      "orders": [
+        {
+          "order": {
+            "order_id": "order-c",
+            "customer_id": "customer-other",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        },
+        {
+          "order": {
+            "order_id": "order-b",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-02",
+            "amount_cents": 4500,
+            "currency": "EUR",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": true,
+            "verified_customer_id": "customer-1",
+            "verified_order_id": "order-b",
+            "policy_consulted": true,
+            "policy_order_id": "order-b",
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [
+              "refund:order-b"
+            ],
+            "timeout_delivered": false,
+            "refund_transaction_count": 1
+          },
+          "events": [
+            {
+              "sequence": 1,
+              "tool": "verify_identity",
+              "status": "verified",
+              "details": {
+                "customer_id": "customer-1",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 2,
+              "tool": "get_order",
+              "status": "success",
+              "details": {
+                "amount_cents": 4500,
+                "currency": "EUR",
+                "order_id": "order-b"
+              }
+            },
+            {
+              "sequence": 3,
+              "tool": "consult_refund_policy",
+              "status": "success",
+              "details": {
+                "approval_threshold_cents": 10000,
+                "eligible": true
+              }
+            },
+            {
+              "sequence": 4,
+              "tool": "issue_refund",
+              "status": "committed",
+              "details": {
+                "approval_granted": false,
+                "eligible": true,
+                "idempotency_key": "refund:order-b",
+                "identity_verified": true,
+                "policy_consulted": true
+              }
+            }
+          ]
+        },
+        {
+          "order": {
+            "order_id": "order-a",
+            "customer_id": "customer-1",
+            "description": "blue backpack bought on 2026-08-01",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "eligible": true
+          },
+          "state": {
+            "identity_verified": false,
+            "verified_customer_id": null,
+            "verified_order_id": null,
+            "policy_consulted": false,
+            "policy_order_id": null,
+            "approval_granted": false,
+            "approval_id": null,
+            "approval_order_id": null,
+            "approved_amount_cents": null,
+            "approved_currency": null,
+            "refund_idempotency_keys": [],
+            "timeout_delivered": false,
+            "refund_transaction_count": 0
+          },
+          "events": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "list_orders",
+          "arguments": [
+            "customer-1"
+          ],
+          "result": [
+            {
+              "order_id": "order-b",
+              "description": "blue backpack bought on 2026-08-02"
+            },
+            {
+              "order_id": "order-a",
+              "description": "blue backpack bought on 2026-08-01"
+            }
+          ]
+        },
+        {
+          "tool": "verify_identity",
+          "arguments": [
+            "customer-1",
+            "order-b"
+          ],
+          "result": true
+        },
+        {
+          "tool": "get_order",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "order_id": "order-b",
+            "amount_cents": 4500,
+            "currency": "EUR"
+          }
+        },
+        {
+          "tool": "consult_refund_policy",
+          "arguments": [
+            "order-b"
+          ],
+          "result": {
+            "eligible": true,
+            "approval_threshold_cents": 10000
+          }
+        },
+        {
+          "tool": "issue_refund",
+          "arguments": [
+            "order-b",
+            4500,
+            "EUR",
+            null,
+            "refund:order-b"
+          ],
+          "result": {
+            "status": "committed"
+          }
+        }
+      ],
+      "output": {
+        "message": "Your refund has been confirmed.",
+        "claimed_outcome": "refunded",
+        "runtime_evidence": null,
+        "transaction_status_claim": "committed",
+        "settlement_status_claim": "not_claimed",
+        "arrival_commitment_days": null,
+        "message_template_id": "refund_committed_v1",
+        "escalation_reason": null
+      },
+      "execution_error": null,
+      "elapsed_ms": 0.05004199920222163,
+      "wrong_order_commits": 1,
+      "unnecessary_clarifications": 0,
+      "missing_clarifications": 1,
+      "denied_attempts": 0,
+      "premature_action_attempts": 1,
+      "task_completed": false,
+      "passed": false,
+      "semantic_message_qualified": false,
+      "authority": "lab_only"
+    }
+  ],
+  "trial_hashes": [
+    "sha256:627567a0fac7c5e938ada8c73e281576241ef052e36b6570eaf95e459ed4528d",
+    "sha256:b246536bdbaedb7f7a6745e58a22c4ab7885a25deda28d3243986151edc4baa5",
+    "sha256:d1843043808e0e69eeb705d9ee509f91e69b4ca3f52a9e9c7eff01258b5a364b",
+    "sha256:a6ec6db329b38d467fb5abbeb7576732b966562f0a0cac9f21ef3a93ef25b310",
+    "sha256:9b1b451493fe2d6761957a2f2d153c287c960b53b08652b1e13b11c1ee466401",
+    "sha256:9dd797cddc484982320322b3b175b167666f417b802082aba61f91d3d7d2d94b",
+    "sha256:8695ef007ea4a3a0e76827200656c40c8ec6535c4607a1dfad2961de4db70aa1",
+    "sha256:ad69fbfc9d87a6d8ea7ff27493258859c24bc239a7f56b2615525bb8d4a5547f",
+    "sha256:215fc0c0156b925f68be20bfccd56e28afe75e1b3a59688dbbb2d80cea6c127e",
+    "sha256:b46bf3a3915366730a693e659ca2e75898d8a6c84a8b76189b149df38942fb4a",
+    "sha256:38a291dc09172f68ea199fb13444b3d066fb63fdd9c2379c1fa1077fe378f9ac",
+    "sha256:18284facaebd52463ae13023d5c4d0121fcb381af1415e1284e77054e8d24c4f",
+    "sha256:8e21252f5f054ad3231fda4ae0340b3146e39f46260281b6c2de99b4095dd827",
+    "sha256:45a601d4ef80e0a3a9a417095b874ebc5000333e53d066f8a1471ab2b1aa32db",
+    "sha256:d3383aa75eaf054e7fd84f59c3e82dfeb33c34b4becaeafabf92cea06de6c0c1",
+    "sha256:6032bebb734bc50151534175526b8808dca637b778dea4a650a0f78d8b2535c1"
+  ],
+  "deployment_authorized": false
+}

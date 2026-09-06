@@ -1,6 +1,6 @@
 """Execute competing-order tasks without evaluator labels in model inputs."""
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import json
 from pathlib import Path
 import sys
@@ -135,6 +135,72 @@ class OrderResolutionTests(unittest.TestCase):
         result = run_case(example_cases()[0], BadApproval())
         self.assertFalse(result['passed'])
         self.assertEqual(1, result['denied_attempts'])
+
+    def test_invalid_order_and_case_configuration_fail_closed(self):
+        from cx_eval_lab.order_resolution import OrderRecord, example_cases
+        for values in (('', 'c', 'item'), ('o', 'c', 'item', True),
+                       ('o', 'c', 'item', 10, 'invalid')):
+            with self.assertRaises(ValueError):
+                OrderRecord(*values)
+        case = example_cases()[0]
+        for changes in ({'orders': (case.orders[0], case.orders[0])},
+                        {'expected_order_id': 'order-c'}, {'required_clarifications': 2}):
+            with self.assertRaises(ValueError):
+                replace(case, **changes)
+
+    def test_existing_approval_and_status_guards_are_preserved(self):
+        from cx_eval_lab.order_resolution import example_cases, MultiOrderWorld
+        world = MultiOrderWorld(example_cases()[0])
+        tools = world.tools()
+        with self.assertRaises(PermissionError):
+            tools.consult_refund_policy('order-b')
+        self.assertTrue(tools.verify_identity('customer-1', 'order-b'))
+        tools.consult_refund_policy('order-b')
+        approval = tools.request_refund_approval('order-b', 4500, 'EUR')
+        self.assertTrue(approval['approved'])
+        self.assertFalse(tools.inspect_order_status('order-b')['refunded'])
+        with self.assertRaises(ValueError):
+            tools.ask_customer('')
+        self.assertIsNone(tools.ask_customer('No response scripted?'))
+        self.assertIsNone(tools.ask_customer('Again?'))
+
+    def test_execution_errors_never_pass(self):
+        from cx_eval_lab.order_resolution import example_cases, run_case
+        class Broken:
+            name = 'broken'
+            def run(self, request, tools):
+                raise RuntimeError('must not retain raw failure text')
+        result = run_case(example_cases()[0], Broken())
+        self.assertFalse(result['passed'])
+        self.assertEqual('RuntimeError', result['execution_error'])
+        self.assertNotIn('must not retain', json.dumps(result))
+
+    def test_cli_preserves_full_study_and_refuses_overwrite(self):
+        from cx_eval_lab.order_resolution import main
+        from cx_eval_lab.evidence import canonical_hash
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'study.json'
+            with patch.object(sys, 'argv', ['study', '--output', str(output)]):
+                main()
+                with self.assertRaises(FileExistsError):
+                    main()
+            report = json.loads(output.read_text())
+            self.assertEqual(16, len(report['trials']))
+            self.assertEqual([canonical_hash(trial) for trial in report['trials']], report['trial_hashes'])
+            self.assertFalse(report['deployment_authorized'])
+
+    def test_published_results_reproduce_except_wall_clock_measurement(self):
+        from cx_eval_lab.order_resolution import example_cases, run_case, DescriptiveResolver, FirstRecordResolver
+        from cx_eval_lab.evidence import canonical_hash
+        report = json.loads(Path('docs/assets/order-resolution-v1.json').read_text())
+        cases = {case.case_id: case for case in example_cases()}
+        agents = {agent.name: agent for agent in (DescriptiveResolver(), FirstRecordResolver())}
+        for trial, digest in zip(report['trials'], report['trial_hashes'], strict=True):
+            self.assertEqual(canonical_hash(trial), digest)
+            actual = run_case(cases[trial['case']['case_id']], agents[trial['agent']], reverse=trial['reverse'])
+            actual = json.loads(json.dumps(actual))
+            self.assertEqual({key: value for key, value in actual.items() if key != 'elapsed_ms'},
+                             {key: value for key, value in trial.items() if key != 'elapsed_ms'})
 
 
 if __name__ == '__main__':

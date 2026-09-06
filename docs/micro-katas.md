@@ -124,6 +124,8 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 21–23](order-resolution-study.md) execute real competing-order refunds, reject clarification after action and preserve rejected attempts. Their 16-trial study uses deterministic agents and scripted customers, not live-model qualification.
+
 [Katas 18–20](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) reconstruct calibration counts from retained rows, preserve adjudication, reject declared split leakage and connect incident learning to independent requalification. The executed four-row example is synthetic and remains unqualified.
 
 [Katas 16–17](ci-gate-lab.md) exercise expected rejection in CI and the distinction between software conformance, candidate qualification, and application deployment. The command is verified locally; cloud execution and canary control remain separate milestones.
