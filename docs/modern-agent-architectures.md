@@ -2,7 +2,7 @@
 
 Agent architecture changes what can fail. A retrieval system can find the correct policy and still execute the wrong action; a voice system can finish the task after acting before the customer finished speaking; a multi-agent system can cover more work while duplicating a side effect. Evaluate each architecture with evidence that matches its causal structure.
 
-This chapter contributes completed synthetic protocol comparisons through `cx_eval_lab/advanced.py` and `evals/cx-support/examples/advanced-protocols-v1.json`. The examples validate measurement logic. They are not model leaderboards or deployment proof.
+This chapter contributes buildable scorer fixtures through `cx_eval_lab/advanced.py` and `evals/cx-support/examples/advanced-protocols-v1.json`. The functions evaluate hand-authored observations and validate scorer logic. They do not run live models, audio, skill loaders, browsers, or distributed agents, so they are neither completed architecture comparisons nor deployment proof.
 
 ## Knowledge-to-action systems
 
@@ -126,7 +126,7 @@ Measure:
 | Effect safety | Two agents issue the same refund |
 | Efficiency | Higher success comes only from exceeding the matched budget |
 
-Anthropic's [multi-agent research-system account](https://www.anthropic.com/engineering/multi-agent-research-system) offers concrete production-oriented coordination patterns. The local synthetic mutant assigns policy twice, omits the customer message, loses one fact, produces a merge conflict, repeats a refund, and exceeds the matched single-agent budget. Each failure remains visible instead of collapsing into one “agent score.”
+Anthropic's [multi-agent research-system account](https://www.anthropic.com/engineering/multi-agent-research-system) offers concrete production-oriented coordination patterns. The local hand-authored observation assigns policy twice, omits the customer message, loses one fact, reports a merge conflict, repeats a refund key, and exceeds the matched single-agent budget. The scorer exposes each declared failure instead of collapsing them into one “agent score”; a trace-emitting runner must still prove that these observations can be derived from real executions.
 
 ## Agent-family-specific evidence
 
@@ -144,9 +144,9 @@ Google DeepMind's [FACTS suite](https://deepmind.google/blog/facts-benchmark-sui
 
 ## Evidence added in this chapter
 
-- **Executable evaluators:** knowledge-to-action, skill, voice-timeline, and multi-agent protocols.
-- **Observed synthetic results:** oracle knowledge can still fail at action; a correct voice outcome can fail timing; a multi-agent run can lose coverage and duplicate effects.
-- **Artifacts:** row-level protocol inputs and derived summaries in `advanced-protocols-v1.json`.
+- **Executable scorer fixtures:** knowledge-to-action, skill, voice-timeline, and multi-agent checks over typed observations.
+- **Demonstrated scorer behavior:** hand-authored oracle, voice, and multi-agent observations trigger the intended stage-specific failures.
+- **Artifacts:** typed fixture inputs and derived summaries in `advanced-protocols-v1.json`; these are not captured runtime traces.
 - **Limitations:** no live audio, model, skill-loader, browser, or distributed-agent run was executed.
 - **Authority:** `lab_only`.
 

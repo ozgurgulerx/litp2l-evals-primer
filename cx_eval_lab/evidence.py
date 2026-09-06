@@ -21,6 +21,9 @@ _METHOD_AUTHORITY_CEILINGS = {
     # This small-sample teaching implementation is not a production release test.
     "clustered_normal_interval": "lab_only",
 }
+_REQUIRED_PREREQUISITES = frozenset(
+    {"typed_tool_boundary", "semantic_state_grading"}
+)
 
 
 def canonical_hash(value: Any) -> str:
@@ -323,8 +326,13 @@ def build_evidence_receipt(
     hard_failure_count = sum(
         bool(trial.failed_checks) for trial in experiment.candidate_trials
     )
-    prerequisites_qualified = all(
-        item.state == "qualified" for item in prerequisite_receipts
+    prerequisite_ids = {item.prerequisite_id for item in prerequisite_receipts}
+    prerequisites_qualified = _REQUIRED_PREREQUISITES.issubset(
+        prerequisite_ids
+    ) and all(
+        item.state == "qualified"
+        for item in prerequisite_receipts
+        if item.prerequisite_id in _REQUIRED_PREREQUISITES
     )
     authority = _METHOD_AUTHORITY_CEILINGS[manifest.statistical_method]
 
@@ -341,7 +349,18 @@ def build_evidence_receipt(
         state, action = "evidence_ready", "lab_pass"
 
     component_hashes = tuple(
-        sorted((*manifest.input_hashes, ("population", manifest.population_hash)))
+        sorted(
+            (
+                *manifest.input_hashes,
+                ("manifest", manifest.content_hash),
+                ("population", manifest.population_hash),
+                ("test_receipt", deterministic_test_receipt.receipt_hash),
+                *(
+                    (f"prerequisite:{item.prerequisite_id}", item.content_hash)
+                    for item in prerequisite_receipts
+                ),
+            )
+        )
     )
     return EvidenceReceipt(
         experiment_id=manifest.experiment_id,

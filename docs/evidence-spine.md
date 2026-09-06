@@ -15,7 +15,7 @@ Evidence moves through five states:
 | `locked` | A prerequisite contract or control is absent | Do not run for authority |
 | `buildable` | The protocol is specified, but evidence is incomplete | Engineering only |
 | `evidence_ready` | Raw artifacts and checks exist, but evidence is synthetic, inconclusive, or not transfer-qualified | `lab_pass`, `hold`, or `block` |
-| `qualified` | Registered measured evidence supports the claim and all hard rules pass | Bounded eligibility such as `canary_eligible` |
+| `qualified` | An externally governed method and every prerequisite support bounded transfer | Reserved; no current local method emits this state |
 | `expired` | A relevant component or population changed | Requalify before reuse |
 
 This is not learner gamification. It is an authority state machine. Reading a chapter or running a command does not unlock deployment authority.
@@ -28,15 +28,24 @@ This is not learner gamification. It is an authority state machine. Reading a ch
 manifest = ExperimentManifest(
     experiment_id="cx-rc4-vs-shipping-v3",
     created_at="2026-09-06T12:00:00Z",
+    valid_until="2026-10-06T12:00:00Z",
     code_revision="<git revision>",
     model_id="<resolved model or deterministic implementation>",
     prompt_version="refund-system-v6",
     tool_version="typed-refund-tools-v1",
-    dataset_version="refund-v0",
+    dataset_version="refund-v1",
     evaluator_version="refund-evaluators-v1",
-    policy_version="refund-gate-v0",
+    policy_version="refund-gate-v1",
+    environment_version="python-3.12-container-v4",
+    population_hash="sha256:<population digest>",
     repetitions=3,
     measurement_kind="synthetic",
+    estimand="candidate_minus_baseline_verified_task_success",
+    statistical_method="clustered_normal_interval",
+    non_inferiority_margin=0.03,
+    confidence_level=0.95,
+    minimum_independent_clusters=30,
+    sequential_policy="fixed_sample_no_interim_looks",
     input_hashes=(("dataset", "sha256:…"), ("policy", "sha256:…")),
     invalidation_rules=(
         "model_or_prompt_change",
@@ -46,7 +55,7 @@ manifest = ExperimentManifest(
 )
 ```
 
-The canonical JSON content hash identifies this exact manifest. Changing a relevant prompt, model, tool, dataset, evaluator, or policy changes the hash. A friendly experiment name never substitutes for a reconstruction record.
+The canonical JSON content hash identifies this exact manifest. The estimand, method, margin, confidence level, minimum independent clusters, stopping policy, population, and validity window are decision inputs—not post-run arguments. Changing a relevant prompt, model, tool, dataset, evaluator, policy, population, or statistical plan changes the hash. A friendly experiment name never substitutes for a reconstruction record. Measured evidence also requires a pinned code revision; `working-tree-unpinned` is rejected.
 
 ## Repeated trials are not new cases
 
@@ -75,7 +84,7 @@ uv run python -m cx_eval_lab experiment \
   --output artifacts/runs/paired-reference.json
 ```
 
-The default five-case dataset produces ten records per arm because the registered default is two repetitions. With a thirty-cluster minimum, the command exits with `hold`: ten repeated trials still represent only five independent customer clusters. Passing `--minimum-independent-clusters 5` exercises a synthetic `lab_pass` for teaching, but it does not turn five customers into adequate production evidence. The output packet contains the manifest and its hash, every raw trial, the comparison, raw-artifact hash, prerequisite IDs, invalidation rules, and authority receipt.
+The default five-case dataset produces ten records per arm because the registered default is two repetitions. With a thirty-cluster minimum, the command exits with `hold`: ten repeated trials still represent only five independent customer clusters. Passing `--minimum-independent-clusters 5` exercises a synthetic `lab_pass` for teaching, but it does not turn five customers into adequate production evidence. The output packet contains the manifest and its hash, every raw trial, the recomputed comparison, raw-artifact hash, content-addressed prerequisite and test receipts, component hashes, issue/expiry times, invalidation rules, and authority receipt. The command refuses to overwrite an existing packet path.
 
 ## Statistical non-inferiority
 
@@ -135,19 +144,23 @@ A sealed set becomes optimisation data once results repeatedly shape development
 
 ## Evidence receipt and authority ceiling
 
-`build_evidence_receipt` combines the manifest, paired comparison, hard failures, raw-artifact hash, and deterministic test status. Its decisions are deliberately asymmetric:
+`build_evidence_receipt` accepts the full paired experiment and content-addressed test/prerequisite receipts. It does **not** accept a caller-supplied comparison, hard-failure count, or raw-artifact hash. It verifies every trial's manifest hash, recomputes the paired comparison using the registered plan, counts candidate hard failures, and hashes the raw experiment itself. Its decisions are deliberately asymmetric:
 
-- missing evidence or failed deterministic tests → `block`;
+- missing or unqualified prerequisites → `locked` and `block`;
+- failed deterministic checks → `buildable` and `block`;
 - insufficient independent evidence → `hold`;
 - statistical failure or any hard failure → `block`;
-- passing synthetic evidence → `lab_pass`, authority `lab_only`;
-- passing measured evidence → `canary_eligible`, authority `bounded_canary`.
+- a passing result under the current teaching method → `lab_pass`, authority `lab_only`, whether its runtime fields are synthetic or measured.
 
-Even `canary_eligible` is not a deployment. A release owner still needs a blast limit, monitoring, rollback target, mature outcome definition, and permission to expose real traffic.
+The current registry contains no method capable of returning `canary_eligible`. Adding one requires a separately qualified statistical implementation, trusted qualification provenance, a production transfer study, a blast limit, monitoring, rollback, mature outcomes, and accountable permission to expose real traffic.
+
+`resolve_evidence_authority` compares the receipt with current component hashes and its validity window. A dataset, policy, or population mismatch—or passing the expiry time—returns `expired`, `block`, and authority `none`. Re-running the resolver with unchanged inputs is idempotent.
+
+Content addressing detects mutation and binds components; it does not authenticate who produced a receipt. A production service should verify issuer identity or signatures and store receipts in an access-controlled append-only system. The local lab therefore never promotes its content-addressed receipts above `lab_only`.
 
 ## Artifact: paired evidence receipt
 
-The inspectable fixture `evals/cx-support/examples/paired-evidence-receipt-v1.json` contains thirty paired independent synthetic cases with a zero difference. Its aggregate recomputes from the row-level outcomes, and its authority remains `lab_only` despite passing the illustrative statistical rule.
+The inspectable fixture `evals/cx-support/examples/paired-evidence-receipt-v1.json` is a compact summary of thirty paired independent synthetic cases with a zero difference. The runnable CLI emits the complete row-level packet and recomputes its aggregate. Both remain `lab_only` despite passing the teaching rule.
 
 ## Failure-injection checklist
 
@@ -160,7 +173,10 @@ Before trusting the spine, prove it rejects:
 - fabricated cost provenance;
 - too few independent clusters disguised as many repeated trials;
 - a hard failure hidden by a favourable average;
-- synthetic measurements requesting canary authority.
+- synthetic or measured runs attempting to obtain canary authority from the teaching method;
+- forged caller-supplied comparisons, hard-failure counts, or raw hashes;
+- expired receipts and current-component drift;
+- test receipts from a different code revision.
 
 ## Exercise: diagnose the receipt
 

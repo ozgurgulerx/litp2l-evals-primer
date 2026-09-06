@@ -1,5 +1,6 @@
 {
-  "artifact_type": "synthetic_paired_evidence_receipt",
+  "artifact_type": "synthetic_paired_evidence_receipt_summary",
+  "schema_status": "compact_teaching_summary_not_full_cli_packet",
   "experiment_id": "cx-paired-teaching-v1",
   "pair_count": 30,
   "independent_cluster_count": 30,

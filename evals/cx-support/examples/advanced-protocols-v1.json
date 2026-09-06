@@ -1,5 +1,7 @@
 {
-  "artifact_type": "completed_synthetic_advanced_protocol_suite",
+  "artifact_type": "buildable_synthetic_scorer_fixtures",
+  "input_provenance": "hand_authored_typed_observations",
+  "runtime_trace_status": "not_produced",
   "suite_version": "advanced-protocols-v1",
   "measurement_kind": "synthetic",
   "authority_ceiling": "lab_only",
@@ -87,6 +89,7 @@
   },
   "limitations": [
     "The suite validates evaluator logic against synthetic observations, not live-model capability.",
+    "No trace-producing runner generated these hand-authored observations.",
     "The scenarios are compact teaching instruments rather than representative production samples.",
     "No result grants deployment authority."
   ]

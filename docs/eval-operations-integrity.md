@@ -33,7 +33,7 @@ evidence receipt ─────────────── authority ceiling
 
 A run fragment is keyed by `run_id`, `case_id`, and `trial_index` and bound to one manifest hash. Resuming with an identical fragment is idempotent. Resuming with different content for the same key is a conflict: quarantine it and stop aggregation.
 
-`resume_run` in `cx_eval_lab/advanced.py` demonstrates this rule without mutable global state. A production store also needs atomic writes, checksums, lifecycle states, access control, retention, and deletion enforcement.
+`resume_run` in `cx_eval_lab/advanced.py` demonstrates the merge rule over supplied fragments without mutable global state. It is not a scheduler, persistent store, or trace-producing runner. A production store also needs atomic writes, checksums, lifecycle states, access control, retention, and deletion enforcement.
 
 ### Run lifecycle
 
@@ -70,7 +70,7 @@ Leaderboards often attribute a system score to the model even though tools, budg
 3. Use the same cases, trial pairs, budgets, and graders.
 4. Estimate model, harness, and interaction effects.
 
-The executable four-cell example is:
+The scorer's four-cell hand-authored fixture is:
 
 | Model | Harness 1 | Harness 2 |
 | --- | ---: | ---: |
@@ -129,7 +129,7 @@ A simulator is another model. Before using it to predict a release:
 - inspect differential validity across language, risk, and task slices;
 - compare pre-release predictions with mature post-release outcomes.
 
-The executable backtest computes decision accuracy and Brier score from registered probabilities. In the four-row synthetic example, accuracy is `0.50` and Brier score is `0.375`; a confident simulator can sound realistic while predicting poorly. OpenAI's [deployment-simulation work](https://openai.com/index/deployment-simulation/) provides a first-party operational comparison pattern. Its reported results do not establish transfer to this CX environment.
+The executable scoring function computes decision accuracy and Brier score from supplied probabilities and outcomes. In the four-row hand-authored fixture, accuracy is `0.50` and Brier score is `0.375`; it demonstrates the calculation but does not qualify a simulator. OpenAI's [deployment-simulation work](https://openai.com/index/deployment-simulation/) provides a first-party operational comparison pattern. Its reported results do not establish transfer to this CX environment.
 
 ## Offline-to-live validity
 
@@ -156,9 +156,9 @@ A release can fail because the agent changed, because traffic shifted, or becaus
 
 ## Evidence added in this chapter
 
-- **Executable operations:** idempotent resume with conflict rejection, factorial attribution, integrity evaluation, and simulator backtesting.
-- **Observed synthetic results:** separate model and harness effects; development-judge improvement rejected by independent regression; contaminated scores rejected.
-- **Artifact:** `advanced-protocols-v1.json`.
+- **Executable scorer/merge fixtures:** idempotent fragment merge with conflict rejection, factorial attribution, integrity checks, and simulator scoring.
+- **Demonstrated fixture behavior:** hand-authored inputs expose separate model/harness effects, reject development-judge divergence, and reject declared contamination.
+- **Artifact:** `advanced-protocols-v1.json`, containing fixture inputs and expected derived values rather than captured service traces.
 - **Limitations:** no distributed worker pool, live quota exhaustion, persistent artifact store, or production simulator backtest was run.
 - **Authority:** `lab_only`.
 

@@ -2,7 +2,7 @@
 
 A long-running agent is not merely a longer prompt. Its correctness depends on what survives compaction, which effects survive process failure, whether approvals remain valid, and how the system behaves when providers or tools degrade. Evaluate those transitions directly.
 
-The executable protocol in `cx_eval_lab/advanced.py` compares uninterrupted, compacted, restarted, and resumed observations. It is intentionally provider-neutral: the contract concerns preserved state and effects, not a particular memory product.
+The buildable scorer protocol in `cx_eval_lab/advanced.py` compares typed uninterrupted, compacted, restarted, and resumed observations supplied to it. It is intentionally provider-neutral: the contract concerns preserved state and effects, not a particular memory product. A process-level runner that produces those observations is still required.
 
 ## Define the durable state
 
@@ -63,7 +63,7 @@ The central invariant is not “the agent remembers the conversation.” It is:
 - Resume the same run identifier with a different manifest.
 - Replay an already committed action with a new idempotency key.
 
-The artifact `evals/cx-support/examples/advanced-protocols-v1.json` includes a safe resume and a broken compacted resume. The latter loses approval and unfinished-work state and repeats the transaction. It is a completed synthetic protocol test, not a live reliability estimate.
+The artifact `evals/cx-support/examples/advanced-protocols-v1.json` includes a safe-resume fixture and a broken compacted-resume fixture. The latter declares lost approval, lost unfinished-work state, and a repeated transaction; the scorer rejects it. This validates the scorer contract, not an agent's persistence behavior or a live reliability estimate.
 
 ## Human approval is state, not a conversational phrase
 
@@ -125,9 +125,9 @@ Report results by path. A strong normal-path average cannot compensate for an un
 
 ## Evidence added in this chapter
 
-- **Executable evaluator:** persistence and serving-failure protocols in `cx_eval_lab/advanced.py`.
-- **Caught mutants:** lost approval, lost unfinished work, duplicate effect, blind retry, and fallback after stream start.
-- **Measured result:** deterministic pass/fail and counts on synthetic observations.
+- **Executable scorer fixtures:** persistence and serving-failure protocols in `cx_eval_lab/advanced.py`.
+- **Caught fixture mutations:** lost approval, lost unfinished work, duplicate effect, blind retry, and fallback after stream start.
+- **Demonstrated scorer behavior:** deterministic pass/fail and counts over hand-authored observations; no runtime measurement was made.
 - **Limitation:** no process-level crash harness, live provider fault injection, timed human study, or production transfer evidence yet.
 - **Authority:** `lab_only`.
 

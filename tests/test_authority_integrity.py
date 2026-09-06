@@ -127,6 +127,23 @@ class AuthorityIntegrityTests(unittest.TestCase):
         self.assertEqual("locked", receipt.state)
         self.assertEqual("block", receipt.action)
 
+    def test_unrelated_prerequisite_cannot_substitute_for_required_receipts(self) -> None:
+        receipt = build_evidence_receipt(
+            experiment=experiment(),
+            deterministic_test_receipt=test_receipt(),
+            prerequisite_receipts=(
+                PrerequisiteReceipt(
+                    "unrelated_check",
+                    (("passed", True),),
+                    "sha256:" + "8" * 64,
+                ),
+            ),
+            issued_at="2026-09-06T13:00:00Z",
+        )
+
+        self.assertEqual("locked", receipt.state)
+        self.assertEqual("none", receipt.authority_ceiling)
+
     def test_receipt_expires_on_time_or_component_drift(self) -> None:
         receipt = build_evidence_receipt(
             experiment=experiment(),

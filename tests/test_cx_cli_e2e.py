@@ -104,6 +104,12 @@ class CxEvalCliTests(unittest.TestCase):
         self.assertEqual("pass", artifact["comparison"]["status"])
         self.assertIn("manifest_hash", artifact["experiment"])
         self.assertIn("raw_artifact_hash", artifact["receipt"])
+        self.assertEqual(
+            "fixed_sample_no_interim_looks",
+            artifact["experiment"]["manifest"]["sequential_policy"],
+        )
+        self.assertIn("deterministic_test_receipt", artifact["receipt"])
+        self.assertEqual(2, len(artifact["receipt"]["prerequisite_receipts"]))
 
     def test_paired_experiment_holds_when_independent_evidence_is_insufficient(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -125,6 +131,24 @@ class CxEvalCliTests(unittest.TestCase):
         self.assertEqual(3, result.returncode, result.stderr)
         self.assertEqual("hold", artifact["receipt"]["action"])
         self.assertEqual("inconclusive", artifact["comparison"]["status"])
+
+    def test_cli_refuses_to_overwrite_an_existing_evidence_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output_path = Path(temporary_directory) / "immutable-packet.json"
+            arguments = (
+                "experiment",
+                "--minimum-independent-clusters",
+                "5",
+                "--output",
+                str(output_path),
+            )
+
+            first = self.run_cli(*arguments)
+            second = self.run_cli(*arguments)
+
+        self.assertEqual(0, first.returncode, first.stderr)
+        self.assertNotEqual(0, second.returncode)
+        self.assertIn("refusing to overwrite", second.stderr)
 
 
 if __name__ == "__main__":

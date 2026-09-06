@@ -1,4 +1,4 @@
-"""Small executable protocols for advanced agent-evaluation failure modes."""
+"""Typed scorer fixtures for advanced agent-evaluation failure modes."""
 
 from __future__ import annotations
 
