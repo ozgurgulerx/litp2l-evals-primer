@@ -2,7 +2,7 @@
 
 A long-running agent is not merely a longer prompt. Its correctness depends on what survives compaction, which effects survive process failure, whether approvals remain valid, and how the system behaves when providers or tools degrade. Evaluate those transitions directly.
 
-The buildable scorer protocol in `cx_eval_lab/advanced.py` compares typed uninterrupted, compacted, restarted, and resumed observations supplied to it. It is intentionally provider-neutral: the contract concerns preserved state and effects, not a particular memory product. A process-level runner that produces those observations is still required.
+The buildable scorer protocol in `cx_eval_lab/advanced.py` compares typed uninterrupted, compacted, restarted, and resumed observations supplied to it. It is intentionally provider-neutral: the contract concerns preserved state and effects, not a particular memory product. The [executed process-recovery study](process-recovery-study.md) now adds real child-process crashes, a durable mock ledger, an uninterrupted control, and a duplicate-producing mutant. It demonstrates the restart/commit boundary; agent context compaction and the full four-ledger protocol remain separate implementation work.
 
 ## Define the durable state
 

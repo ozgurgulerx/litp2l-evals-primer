@@ -21,7 +21,7 @@ For executable work, completion requires an inspectable chain from input through
 | Semantic stage in runner | Optional evaluator-owned stage connected to single and paired runs; fixture tests cover abstention, errors, usage and scoped registry | Live model adapter, metered run configuration and independently reviewed calibration study; no live semantic qualification claimed |
 | Realistic object resolution | Explicit-ID argument tasks exist | Ambiguous descriptions, real competing records, corrections, clarification and counterbalanced order |
 | Statistical qualification | Executed exact enumeration: sparse discordance, coverage, false promotion, power and biased labels; unequal-cluster estimand kata | General clustered interval coverage, sequential looks, calibration-error propagation and repeated-holdout controls |
-| Process recovery experiment | Typed scorer fixtures exist | Actual subprocess interruption and durable ledger recovery before/after commit |
+| Process recovery experiment | Executed 21-trial child-process/SQLite study: commit/checkpoint crashes, revocation, uninterrupted control and duplicate-producing mutant | Transfer to actual agent tool execution, compaction, concurrency, full approval lifecycle and notification recovery |
 | Architecture experiments | Hand-authored scorer fixtures exist | Executed retrieval/oracle/full-context arms; delegation/merge traces; matched budgets |
 | Voice validity | Timeline scorer fixture exists | Recorded audio, synchronized action events and independent timing annotations |
 | Second domain | Domain comparison prose exists | Coding or artifact task with independent authoritative outcome and reproducible failure |

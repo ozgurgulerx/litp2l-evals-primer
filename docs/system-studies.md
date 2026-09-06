@@ -39,6 +39,8 @@ The [statistical method study](statistical-method-study.md) enumerates interval 
 
 ## Initial study programme
 
+The [process-recovery study](process-recovery-study.md) also has retained execution evidence: twenty-one local trials compare uninterrupted execution, three crash boundaries, a new-key retry mutant, and approval revocation. It closes the gap between declared failure observations and actual process-level effects for this narrow mock-payment workflow; persistent-model and distributed-system transfer remain unproven.
+
 | Study | Central question | Candidate CX experiment |
 | --- | --- | --- |
 | OpenAI Agents SDK and agent evals | How much runtime tracing and evaluation plumbing should the SDK own? | Run the same five cases through deterministic and OpenAI runtimes, then normalize both traces |

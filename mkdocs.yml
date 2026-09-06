@@ -68,6 +68,7 @@ nav:
   - Part IV · Comparative system studies:
       - System Studies: system-studies.md
       - Statistical Method Study: statistical-method-study.md
+      - Process Recovery Study: process-recovery-study.md
       - Research-to-Practice Evidence: research-to-practice.md
       - Long-Running & Serving Failures: long-running-serving.md
       - Modern Agent Architectures: modern-agent-architectures.md

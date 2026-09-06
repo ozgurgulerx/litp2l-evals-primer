@@ -1,0 +1,1329 @@
+{
+  "schema": "process-recovery-study-v1",
+  "authority": "lab_only",
+  "evidence_kind": "executed_posix_process_faults_with_mock_payment_ledger",
+  "manifest": {
+    "python_version": "3.12.7",
+    "platform": "Darwin",
+    "sqlite_version": "3.45.3",
+    "repetitions": 3,
+    "worker_sha256": "87a4da856afdf16a9a5a124699dc62994df2575c7622584fdbd8f88435af3547",
+    "study_sha256": "8b7c27b3682e33e43a7c91e6572a93219424e472460039a6df6a99590b336d60",
+    "crash_mechanism": "Popen.kill after an observed synchronization marker"
+  },
+  "reference_contract_passes": 18,
+  "mutants_detected": 3,
+  "trials": [
+    {
+      "repetition": 0,
+      "boundary": "uninterrupted",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": null,
+      "interrupted_returncode": null,
+      "boundary_marker": null,
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54874,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54874,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 55.888,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 0,
+      "boundary": "before_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54875,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "before_commit",
+        "pid": 54875
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54876,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54876,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.44,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 0,
+      "boundary": "after_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54877,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54877
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54878,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54878,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 50.389,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 0,
+      "boundary": "after_checkpoint",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54879,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_checkpoint",
+        "pid": 54879
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "resumed_pid": 54880,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54880,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 49.871,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 0,
+      "boundary": "after_commit",
+      "mode": "new-key-retry",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54881,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54881
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54882,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54882,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.126,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          },
+          {
+            "idempotency_key": "refund:order-recovery-001:retry",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 1,
+      "passed": false
+    },
+    {
+      "repetition": 0,
+      "boundary": "before_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": true,
+      "interrupted_pid": 54883,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "before_commit",
+        "pid": 54883
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54884,
+      "resumed_returncode": 2,
+      "resumed_output": {
+        "pid": 54884,
+        "error_type": "PermissionError",
+        "error": "no current approval for the requested action"
+      },
+      "recovery_elapsed_ms": 52.361,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 0
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "expected_effect_count": 0,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 0,
+      "boundary": "after_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": true,
+      "interrupted_pid": 54885,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54885
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54886,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54886,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.093,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 0
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 1,
+      "boundary": "uninterrupted",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": null,
+      "interrupted_returncode": null,
+      "boundary_marker": null,
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54887,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54887,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.94,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 1,
+      "boundary": "before_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54888,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "before_commit",
+        "pid": 54888
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54889,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54889,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 52.687,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 1,
+      "boundary": "after_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54890,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54890
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54891,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54891,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.166,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 1,
+      "boundary": "after_checkpoint",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54892,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_checkpoint",
+        "pid": 54892
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "resumed_pid": 54893,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54893,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 50.481,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 1,
+      "boundary": "after_commit",
+      "mode": "new-key-retry",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54894,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54894
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54895,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54895,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.165,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          },
+          {
+            "idempotency_key": "refund:order-recovery-001:retry",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 1,
+      "passed": false
+    },
+    {
+      "repetition": 1,
+      "boundary": "before_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": true,
+      "interrupted_pid": 54896,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "before_commit",
+        "pid": 54896
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54897,
+      "resumed_returncode": 2,
+      "resumed_output": {
+        "pid": 54897,
+        "error_type": "PermissionError",
+        "error": "no current approval for the requested action"
+      },
+      "recovery_elapsed_ms": 50.448,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 0
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "expected_effect_count": 0,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 1,
+      "boundary": "after_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": true,
+      "interrupted_pid": 54898,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54898
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54899,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54899,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.516,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 0
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 2,
+      "boundary": "uninterrupted",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": null,
+      "interrupted_returncode": null,
+      "boundary_marker": null,
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54900,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54900,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.827,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 2,
+      "boundary": "before_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54901,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "before_commit",
+        "pid": 54901
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54902,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54902,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 50.92,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 2,
+      "boundary": "after_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54903,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54903
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54904,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54904,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 50.573,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 2,
+      "boundary": "after_checkpoint",
+      "mode": "reference",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54905,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_checkpoint",
+        "pid": 54905
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "resumed_pid": 54906,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54906,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 50.482,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 2,
+      "boundary": "after_commit",
+      "mode": "new-key-retry",
+      "approval_revoked_before_resume": false,
+      "interrupted_pid": 54907,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54907
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54908,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54908,
+        "payment_outcome": "committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 51.685,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          },
+          {
+            "idempotency_key": "refund:order-recovery-001:retry",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 1,
+      "passed": false
+    },
+    {
+      "repetition": 2,
+      "boundary": "before_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": true,
+      "interrupted_pid": 54909,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "before_commit",
+        "pid": 54909
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "resumed_pid": 54910,
+      "resumed_returncode": 2,
+      "resumed_output": {
+        "pid": 54910,
+        "error_type": "PermissionError",
+        "error": "no current approval for the requested action"
+      },
+      "recovery_elapsed_ms": 50.666,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 0
+          }
+        ],
+        "payments": [],
+        "checkpoints": []
+      },
+      "expected_effect_count": 0,
+      "duplicate_effects": 0,
+      "passed": true
+    },
+    {
+      "repetition": 2,
+      "boundary": "after_commit",
+      "mode": "reference",
+      "approval_revoked_before_resume": true,
+      "interrupted_pid": 54911,
+      "interrupted_returncode": -9,
+      "boundary_marker": {
+        "boundary": "after_commit",
+        "pid": 54911
+      },
+      "state_at_interruption": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 1
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": []
+      },
+      "resumed_pid": 54912,
+      "resumed_returncode": 0,
+      "resumed_output": {
+        "pid": 54912,
+        "payment_outcome": "already_committed",
+        "checkpoint": "complete"
+      },
+      "recovery_elapsed_ms": 52.175,
+      "final_state": {
+        "approvals": [
+          {
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD",
+            "granted": 0
+          }
+        ],
+        "payments": [
+          {
+            "idempotency_key": "refund:order-recovery-001",
+            "order_id": "order-recovery-001",
+            "amount_cents": 4000,
+            "currency": "USD"
+          }
+        ],
+        "checkpoints": [
+          {
+            "operation": "refund:order-recovery-001",
+            "status": "complete"
+          }
+        ]
+      },
+      "expected_effect_count": 1,
+      "duplicate_effects": 0,
+      "passed": true
+    }
+  ]
+}

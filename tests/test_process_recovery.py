@@ -6,6 +6,9 @@ import tempfile
 import subprocess
 import sys
 import json
+from unittest.mock import patch
+from contextlib import redirect_stdout
+from io import StringIO
 
 
 class ProcessRecoveryTests(unittest.TestCase):
@@ -82,6 +85,70 @@ class ProcessRecoveryTests(unittest.TestCase):
                 with self.subTest(changed=changed), self.assertRaises(ValueError):
                     issue_payment(database, OPERATION, **changed)
             self.assertEqual(1, len(snapshot(database)['payments']))
+
+    def test_direct_boundary_revalidation_and_checkpoint_reconciliation(self):
+        from cx_eval_lab.recovery_worker import initialize, execute, issue_payment, revoke, snapshot
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / 'ledger.sqlite'
+            initialize(database)
+            self.assertEqual('committed', execute(database)['payment_outcome'])
+            revoke(database)
+            self.assertEqual('already_committed', execute(database)['payment_outcome'])
+            self.assertEqual('already_committed', execute(database, mode='new-key-retry')['payment_outcome'])
+            with self.assertRaises(PermissionError):
+                issue_payment(database, 'fresh-key')
+            with self.assertRaises(ValueError):
+                initialize(database)
+            with self.assertRaises(ValueError):
+                issue_payment(database, '', amount=-1)
+            with self.assertRaises(ValueError):
+                execute(database, mode='unsupported')
+            self.assertEqual(1, len(snapshot(database)['payments']))
+
+    def test_worker_cli_emits_success_and_structured_denial(self):
+        from cx_eval_lab.recovery_worker import initialize, revoke, main
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / 'ledger.sqlite'
+            initialize(database)
+            with patch.object(sys, 'argv', ['worker', '--database', str(database)]), redirect_stdout(StringIO()) as output:
+                self.assertEqual(0, main())
+            self.assertEqual('committed', json.loads(output.getvalue())['payment_outcome'])
+            other = Path(directory) / 'revoked.sqlite'
+            initialize(other)
+            revoke(other)
+            with patch.object(sys, 'argv', ['worker', '--database', str(other)]), redirect_stdout(StringIO()) as output:
+                self.assertEqual(2, main())
+            self.assertEqual('PermissionError', json.loads(output.getvalue())['error_type'])
+
+    def test_timeout_cleans_up_only_its_owned_worker(self):
+        from cx_eval_lab.recovery_study import _interrupt
+        from cx_eval_lab.recovery_worker import initialize
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / 'ledger.sqlite'
+            initialize(database)
+            command = [sys.executable, '-m', 'cx_eval_lab.recovery_worker', '--database', str(database)]
+            children = []
+            original_popen = subprocess.Popen
+            def capture(*args, **kwargs):
+                child = original_popen(*args, **kwargs)
+                children.append(child)
+                return child
+            with patch('cx_eval_lab.recovery_study.subprocess.Popen', side_effect=capture), \
+                 patch('cx_eval_lab.recovery_study.select.select', return_value=([], [], [])):
+                with self.assertRaises(TimeoutError):
+                    _interrupt(command, 'after_commit')
+            self.assertIsNotNone(children[0].poll())
+            self.assertTrue(children[0].stdout.closed)
+
+    def test_study_rejects_invalid_scope_before_launching_workers(self):
+        from cx_eval_lab.recovery_study import run_study, run_recovery_trial
+        for count in (0, 21, True):
+            with self.assertRaises(ValueError):
+                run_study(count)
+        with tempfile.TemporaryDirectory() as directory:
+            for arguments in ({'boundary': 'unknown'}, {'mode': 'unknown'}):
+                with self.assertRaises(ValueError):
+                    run_recovery_trial(Path(directory), **arguments)
 
 
 if __name__ == '__main__':
