@@ -155,6 +155,48 @@ class ResolutionSemanticTests(unittest.TestCase):
             self.assertEqual(0, result.failed_trials)
             self.assertFalse(result.deployment_authorized)
 
+    def test_qualified_audit_requires_valid_judgment_metering_and_authority(self):
+        stage = setup_stage()
+        original = packet_for(stage)
+        for change in ('explanation', 'runtime', 'latency', 'authority'):
+            packet = copy.deepcopy(original)
+            audit = packet['trial_artifacts'][0]['payload']['semantic_stage']
+            if change == 'explanation':
+                audit['judgment']['explanation'] = ''
+            elif change == 'runtime':
+                audit['judgment']['runtime_evidence'] = {'cost_usd': -1}
+            elif change == 'latency':
+                audit['judge_latency_ms'] = -4
+            else:
+                audit['authority'] = 'deployment_qualified'
+            rehash(packet)
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                replay_packet(packet, trusted_calibration_hashes={stage.calibration_hash})
+
+    def test_predispatch_rejection_cannot_acquire_fabricated_dispatch_costs(self):
+        stage = setup_stage()
+        stage = replace(stage, registry=CalibrationRegistry(()))
+        packet = packet_for(stage)
+        audit = packet['trial_artifacts'][0]['payload']['semantic_stage']
+        audit.update(judgment={'verdict':'pass', 'runtime_evidence':{'cost_usd':999}},
+                     request={'false':'evidence'}, request_hash='not a hash', completed_at='not a date')
+        rehash(packet)
+        with self.assertRaises(ValueError):
+            replay_packet(packet)
+
+    def test_expired_postdispatch_evidence_is_still_joined_to_execution(self):
+        from itertools import cycle
+        times = cycle((NOW, datetime(2026, 11, 1, tzinfo=timezone.utc)))
+        stage = replace(setup_stage(), clock=lambda: next(times))
+        packet = packet_for(stage)
+        self.assertTrue(all(not r.passed for r in replay_packet(packet)))
+        audit = packet['trial_artifacts'][0]['payload']['semantic_stage']
+        audit['request']['customer_request']['utterance'] = 'Wrong context'
+        audit['request_hash'] = canonical_hash(audit['request'])
+        rehash(packet)
+        with self.assertRaises(ValueError):
+            replay_packet(packet)
+
 
 if __name__ == '__main__':
     unittest.main()
