@@ -109,3 +109,20 @@ class ReportCitationTests(unittest.TestCase):
             self.assertEqual('report-citations-v1', json.loads(before)['schema'])
             self.assertNotEqual(0, subprocess.run(cmd, capture_output=True, check=False).returncode)
             self.assertEqual(before, path.read_bytes())
+
+    def test_unapproved_second_truth_change_cannot_hide_in_reassessment(self):
+        from cx_eval_lab.evidence import canonical_hash
+        from cx_eval_lab.report_citations import example_inputs, run_study
+        inputs = example_inputs()
+        inputs['references'][1]['judgments'][1]['correct'] = False
+        if 'correction_review' in inputs:
+            inputs['correction_review']['updated_reference_hash'] = canonical_hash(inputs['references'][1])
+        with self.assertRaises(ValueError):
+            run_study(inputs)
+
+    def test_retained_artifact_exact_reassessment(self):
+        from cx_eval_lab.report_citations import replay_study, run_study
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/report-citations-v1.json'
+        artifact = json.loads(path.read_text())
+        self.assertEqual(run_study(), artifact)
+        self.assertEqual(artifact, replay_study(artifact))
