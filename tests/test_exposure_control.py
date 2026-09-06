@@ -76,6 +76,32 @@ class ExposureControlTests(unittest.TestCase):
         state = ExposureState('candidate-v1', 'baseline-v1', stage='rolled_back', percent=0)
         self.assertEqual(state, transition(state, window(state), now=10, resume=True).state)
 
+    def test_router_deadline_stops_candidate_without_a_new_window(self):
+        from cx_eval_lab.exposure_control import ExposureState, route
+        state = ExposureState('candidate-v1', 'baseline-v1', stage='canary', percent=5, last_end=10)
+        self.assertEqual({'baseline'}, {route(state, f'user-{i}', now=41) for i in range(1000)})
+
+    def test_simulation_decision_cannot_claim_deployment_authority(self):
+        from cx_eval_lab.exposure_control import ExposureState, ExposureDecision
+        with self.assertRaises(TypeError):
+            ExposureDecision(ExposureState('c', 'b'), 'test', deployment_authorized=True)
+
+    def test_executed_study_routes_cloned_worlds_and_reaches_all_stages(self):
+        from cx_eval_lab.exposure_study import run_study
+        study = run_study()
+        self.assertEqual(['canary', 'expanded', 'restricted', 'restricted', 'canary',
+                          'rolled_back', 'rolled_back'],
+                         [window['decision']['state']['stage'] for window in study['windows']])
+        self.assertFalse(study['deployment_authorized'])
+        self.assertEqual(0, study['windows'][0]['served_candidate'])
+        self.assertGreater(study['windows'][1]['served_candidate'], 0)
+        self.assertEqual(0, study['windows'][-1]['served_candidate'])
+        for window in study['windows']:
+            for artifact in window['artifacts']:
+                self.assertIn('orders', artifact['baseline'])
+                if artifact['candidate'] is not None:
+                    self.assertIn('orders', artifact['candidate'])
+
 
 if __name__ == '__main__':
     unittest.main()
