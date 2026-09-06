@@ -324,6 +324,99 @@ The review produces:
 
 One incident creates several linked protections instead of one brittle transcript: environment fault, trajectory rule, final-state invariant, Turkish explanation case, and a dataset release receipt.
 
+## From incident evidence to a versioned regression
+
+A failure is an observation. A regression case is a reviewed specification of what must not recur. Copying the failed conversation into a test file skips the important decisions: whether the incident is reproducible, what behavior was actually wrong, which preconditions matter, whether the data is safe to retain, and where the case may be used.
+
+The local exercise below makes those decisions explicit. It uses synthetic refund data and a controlled failure agent; it does not ingest customer logs or establish that a real reviewer approved the labels. The earlier partial-refund story remains a design illustration. The executable control uses the existing lab's refund contract, whose scope must not be silently expanded to partial refunds.
+
+From the repository root:
+
+```bash
+uv run python -m unittest tests.test_incident_regression tests.test_incident_artifact -v
+uv run python -m cx_eval_lab.incident_regression \
+  --output /tmp/primer-incident-regression-my-first-run.json
+```
+
+Use a fresh output filename; the CLI refuses to overwrite evidence. The registered transformation removes synthetic greeting padding and distractor order IDs from this constructed case. It is not a general-purpose minimizer or privacy scrubber. The failure control uses the lab's deliberately faulty duplicate-effect tool mode; observing its duplicate does not demonstrate that the protected production tool facade permits the same action.
+
+### Observed promotion and rejection controls
+
+The [retained study packet](assets/incident-regression-v1.json) starts with an executed synthetic incident: the refund commits, the response times out, and the blind-retry mutant creates a second transaction. The new `regression-v1` release contains one minimized case linked to the unchanged empty `regression-v0` parent. Its diff changes the case ID, dataset version, greeting padding and distractor IDs; the timeout precondition remains.
+
+| Check | Observed result | What it supports |
+| --- | --- | --- |
+| Source failure | Two transactions; case fails | The incident contains an executed duplicate-after-timeout failure |
+| Released-case reference rerun | One transaction; case passes | The case still permits the registered correct recovery |
+| Released-case mutant rerun | Two transactions; fails outcome, duplicate and recovery checks | Minimization and serialization preserve the protected failure |
+| Missing or rejected review | Promotion rejected | A failure alone cannot authorize a dataset addition |
+| Pending privacy review | Promotion rejected | Behavior approval cannot replace the separate retention decision |
+| Stale proposal digest | Promotion rejected | A review does not float across case or target changes |
+| Reviewer equals proposer | Promotion rejected | The local distinct-identity constraint is enforced |
+| Known sealed lineage or calibration-content overlap | Promotion rejected | Supplied protected-role conflicts cannot be ignored |
+
+The seven negative controls are attempted promotions, not seven independent incidents. `conformance_passed` means these rejections and the reference/mutant contrast reproduced as registered. It does not mean the dataset is representative, human-reviewed, free of all sensitive data or eligible for acceptance testing.
+
+`RegressionRelease.materialize()` reconstructs every retained case for the CX runner under the new release version. Stored parent entries remain unchanged. A separate populated-parent regression test adds a second case, checks preservation of the first entry and rejects re-adding duplicate operational content under a newer version. Parent entry validation recomputes content identity from the parsed case rather than trusting its supplied `content_hash`.
+
+Current protected-inventory checks include the added incident/case **and carried-forward parent entries**. Tests reproduce a previously missed conflict where an old case becomes reserved for sealed acceptance or calibration while the new case is unrelated. The release is now rejected when any available parent group, source-incident digest or recomputed case-content digest conflicts. Original source content that was not retained in a parent entry cannot be inferred from its digest; complete lineage resolution still needs the operator's protected evidence store.
+
+Run this from the repository root to re-execute the deterministic study and compare the complete retained result, rather than accepting its stored pass flags:
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.incident_regression import replay_study
+
+report = json.loads(Path("docs/assets/incident-regression-v1.json").read_text())
+assert replay_study(report)
+assert report["reruns"]["reference"]["final_state"]["refund_transaction_count"] == 1
+assert report["reruns"]["mutant"]["final_state"]["refund_transaction_count"] == 2
+assert all(control["rejected"] for control in report["controls"].values())
+```
+
+This replay is a deterministic re-execution comparison, not an authenticated history of a production incident. The receipt's `proposer_hash` field names the **full proposal digest**, not a hash of the proposer identity. It includes the proposed case, source binding, transformation, policy and target version/role. Keep these meanings explicit when adapting the schema. Reviewer authorization, trusted parent-release retrieval, full lineage inventories and actual privacy assessment remain operator responsibilities beyond this local fixture.
+
+### Kata 60: an approved review of the wrong case
+
+**Know:** review is bound to content and policy, not just a familiar case ID or a person-shaped string.
+
+**Task:** reproduce a timeout-after-commit failure, prepare a minimal regression, and obtain a review of that exact proposal. Then change a causal precondition while leaving the case ID and approval text unchanged. Should the new dataset release accept it?
+
+??? success "Solution: bind review to the case that will actually run"
+    No. Bind the decision to the source incident, full proposed case and applicable domain policy. If the proposal changes, the old approval no longer covers it. A timeout flag, expected outcome, amount or permission boundary can change the mechanism even when the request text is unchanged.
+
+    The incident must retain the observed execution. For an ambiguous commit, inspect the first committed effect, the timeout and the next write or state-inspection action. A supplied `failure=true` flag is not the evidence. Run the reference and controlled failure on the proposed case to check that the reproduction still distinguishes the behavior being protected. Then reconstruct the case from the released dataset and rerun: testing only the in-memory proposal would miss a serialization or publication error.
+
+    Keep the source artifact unchanged. A privacy-reviewed minimized reproduction is a new artifact linked to the source; it is not a redacted file that silently replaces the original evidence. The original may need restricted storage and its own retention policy. A public learning repository should contain synthetic reproductions, not customer transcripts.
+
+    Review has several independent questions: Is the expected behavior correct under the policy? Does the minimized case preserve the mechanism? Is the retained data appropriate for the intended audience? Is the reviewer authorized and independent of the proposer? Passing one question cannot substitute for the others. A checked privacy-review field does not prove that automatic anonymization occurred.
+
+    In this local exercise, distinct synthetic reviewer/proposer IDs and content-bound receipts test the workflow. They do not authenticate people, prove expertise or certify de-identification. A production service needs independently controlled identity, reviewer assignments and protected source evidence in addition to these checks.
+
+**Extend:** the policy changes so that escalation becomes mandatory rather than optional. Preserve the historical release and produce a new review/release under the new policy. Compare old and new grades explicitly; do not rewrite yesterday's labels and report the new trend as if the measurement never changed.
+
+**Interview answer:** “I promote a reviewed reproduction, not a transcript. The approval binds the source, proposed case and policy. I preserve lineage, test the causal failure and require new review when the case changes.”
+
+### Kata 61: a new case ID does not make a fresh holdout
+
+**Know:** independence follows origin and exposure, not filenames. Regression usefulness and acceptance independence are different properties.
+
+**Task:** a failure family has already been used to tune the system. Someone paraphrases it, changes its case ID and proposes it for sealed acceptance. Another proposal belongs to a customer/session group already reserved for judge calibration. What should the dataset service check before assigning a role?
+
+??? success "Solution: separate regression protection from independent acceptance"
+    Keep known development failures useful as regression cases, with their lineage visible. Do not call their derivatives untouched acceptance data. Compare operator-held lineage and grouping assignments across roles, not only exact prompt hashes or new IDs. A customer/session group reserved for an independent measurement cannot be made independent by renaming its rows.
+
+    A role-conflict check is only as complete as its operator-supplied inventory and lineage/group assignments. It cannot prove the absence of previously unrecorded exposure or discover every semantic paraphrase. In this exercise, known overlaps with sealed-acceptance or judge-calibration groups block automatic regression promotion and require a deliberate split decision. That is a conservative workflow policy, not a universal ban on every form of cross-role reuse. Never clear the conflict by silently deleting the protected inventory entry. A reviewed migration must record how exposure changes what the old set can justify.
+
+    Exact duplicate checks solve a different problem: they prevent identical cases from inflating a version diff and apparent coverage. They do not discover paraphrases, shared causal mechanisms or every hidden relationship. Conversely, identical wording in different policies or world states may be a valuable boundary pair. Record both semantic review and exact identity without conflating them.
+
+    Publish a new regression version linked to its parent, with the added case, source lineage, review binding and explicit diff. Keep the previous release available. Returning new records without modifying parent bytes preserves history in this workflow; it does not make a local writable JSON file tamper-proof. Rerun reference and failure controls on the released cases. A case-count increase is not success if the mutant now passes because the minimized fixture lost its timeout.
+
+**Extend:** an acceptance failure has been disclosed to builders. It may now be valuable regression evidence, but that exposure has changed its acceptance status. Record retirement or reassignment through a reviewed transition, and obtain new independent acceptance evidence. Do not move the same case back into a sealed directory and call it unseen.
+
+**Interview answer:** “A new ID does not reset exposure. I track lineage and grouping, keep regression separate from acceptance, reject known split conflicts, and version changes without erasing the original measurement.”
+
 ## Artifact: dataset review report
 
 ```json

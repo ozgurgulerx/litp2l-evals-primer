@@ -298,6 +298,8 @@ The implementation now covers the Stage 2 evidence spine: typed tool arguments, 
 
 ## The Living regression set
 
+The [incident-to-regression katas](dataset-design.md#from-incident-evidence-to-a-versioned-regression) make the review and versioning boundaries concrete. A discovered failure must retain its mechanism after minimization; approval for an earlier proposal cannot authorize changed content, and a new case ID cannot erase protected-set lineage.
+
 The golden set is not frozen forever, and it is not a bag of every example we can invent. It evolves through a governed loop:
 
 1. Sample traces from development, canaries, and production-shaped tests.

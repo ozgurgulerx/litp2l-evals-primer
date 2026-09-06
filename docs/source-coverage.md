@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Executed incident-to-regression controls
+
+[Katas 60–61](dataset-design.md#from-incident-evidence-to-a-versioned-regression) now reproduce a synthetic timeout-after-commit incident, apply a fixed minimization, bind a scripted review to exact proposal/source/policy identities, and publish a new regression-only version. The [retained packet](assets/incident-regression-v1.json) shows a passing reference and failing duplicate-producing mutant reconstructed from the released case, plus seven rejected promotion controls. Tests cover populated-parent preservation, recomputed content identity, exact duplicate rejection and known protected-role conflicts. This implements local promotion mechanics—not real incident ingestion, independent reviewer authentication, automatic de-identification, semantic deduplication, complete exposure history or sealed acceptance qualification.
+
 ### Integrated CX evidence walkthrough
 
 [Katas 58–59](cx-evidence-walkthrough.md) connect the existing native multi-order, semantic, campaign and release implementations through one retained v2 packet. The Python inspection blocks were executed; a separate clean local clone at `4ed96a7` with a newly installed locked environment reproduced the current study's diagnostic hold and six blocks. This strengthens the reproducible learner path, not model-quality evidence: the agent, judge responses, calibration, clocks, prices and prerequisite assertions remain synthetic. No independent human qualification or application exposure was performed.

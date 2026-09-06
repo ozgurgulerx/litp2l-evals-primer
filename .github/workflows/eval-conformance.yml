@@ -49,6 +49,8 @@ jobs:
         run: uv run python -m cx_eval_lab.containment_study --output ci-evidence/containment.json
       - name: Exercise cross-run cache isolation and permitted sharing
         run: uv run python -m cx_eval_lab.isolation_study --output ci-evidence/isolation.json
+      - name: Exercise reviewed incident promotion and regression reruns
+        run: uv run python -m cx_eval_lab.incident_regression --output ci-evidence/incident-regression.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure

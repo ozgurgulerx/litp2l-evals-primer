@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 60–61](dataset-design.md#from-incident-evidence-to-a-versioned-regression) turn incident evidence into a reviewed regression: preserve the causal failure during minimization, bind review to exact content and policy, check known protected-set overlaps, and publish a new version without erasing the parent. The lessons distinguish synthetic workflow controls from actual human adjudication or automatic de-identification.
+
 [Katas 58–59](cx-evidence-walkthrough.md) follow one complete local CX evidence path. Join an ambiguous refund's paired row to its full execution, inspect clarification and all order ledgers, and distinguish a passing grade from qualified population evidence and current deployment authority.
 
 [Katas 56–57](cross-run-isolation-study.md) test forbidden private-cache reuse across runs while preserving same-run cache hits and shared read-only policy access. The lessons distinguish worker lifetime from resource isolation, trusted run context from query text, and application-level checks from hostile-code containment.
