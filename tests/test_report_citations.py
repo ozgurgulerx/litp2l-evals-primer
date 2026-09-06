@@ -10,6 +10,15 @@ from pathlib import Path
 
 
 class ReportCitationTests(unittest.TestCase):
+    def rebind_references(self, inputs):
+        from cx_eval_lab.evidence import canonical_hash
+        context = canonical_hash({k: v for k, v in inputs.items() if k not in ('references', 'correction_review')})
+        for ref in inputs['references']:
+            ref['context_hash'] = context
+        inputs['references'][1]['supersedes_hash'] = canonical_hash(inputs['references'][0])
+        inputs['correction_review']['previous_reference_hash'] = canonical_hash(inputs['references'][0])
+        inputs['correction_review']['updated_reference_hash'] = canonical_hash(inputs['references'][1])
+
     def test_dimensions_have_explicit_different_denominators(self):
         from cx_eval_lab.report_citations import run_study
         report = run_study()
@@ -126,3 +135,13 @@ class ReportCitationTests(unittest.TestCase):
         artifact = json.loads(path.read_text())
         self.assertEqual(run_study(), artifact)
         self.assertEqual(artifact, replay_study(artifact))
+
+    def test_literal_unresolved_citation_cannot_be_dropped_from_denominator(self):
+        from cx_eval_lab.report_citations import example_inputs, run_study
+        inputs = example_inputs()
+        inputs['citations'] = [c for c in inputs['citations'] if c['citation_id'] != 'L4']
+        inputs['link_adjudications'] = [c for c in inputs['link_adjudications'] if c['citation_id'] != 'L4']
+        self.rebind_references(inputs)
+        self.assertIn('[L4]', inputs['report']['text'])
+        with self.assertRaises(ValueError):
+            run_study(inputs)

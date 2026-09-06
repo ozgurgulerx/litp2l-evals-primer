@@ -115,11 +115,14 @@ def example_inputs():
                 'reason': 'Authored truth adjudication against this source for the fixed report date.'}
                 for i, (sid, quote) in enumerate(evidence)]}
         refs.append(reference)
-    return {**base, 'references': refs}
+    return {**base, 'references': refs, 'correction_review': {
+        'approved_changed_claim_ids': ['C1'], 'previous_reference_hash': canonical_hash(refs[0]),
+        'updated_reference_hash': canonical_hash(refs[1]), 'reviewed_on': refs[1]['reviewed_on'],
+        'reason': 'Authored correction review: the old 30-day answer was obsolete as of September 7.'}}
 
 
 def _validate(inputs):
-    _fields(inputs, ('report', 'sources', 'required_questions', 'claims', 'citations', 'link_adjudications', 'references'))
+    _fields(inputs, ('report', 'sources', 'required_questions', 'claims', 'citations', 'link_adjudications', 'references', 'correction_review'))
     report = inputs['report']
     _fields(report, ('report_id', 'as_of', 'scope', 'text', 'sections'))
     _id(report['report_id'])
@@ -171,7 +174,7 @@ def _validate(inputs):
         citation = citations[key]
         _require(isinstance(row['entailed'], bool) if citation['source_id'] is not None else row['entailed'] is None, 'invalid entailment judgment')
         _require(row['binding_hash'] == _link_binding(claims[citation['claim_id']], citation, sources), 'semantic adjudication binding mismatch')
-    context = canonical_hash({k: v for k, v in inputs.items() if k != 'references'})
+    context = canonical_hash({k: v for k, v in inputs.items() if k not in ('references', 'correction_review')})
     refs = inputs['references']
     _require(isinstance(refs, list) and len(refs) == 2, 'original and corrected reference snapshots required')
     for i, ref in enumerate(refs):
@@ -192,6 +195,17 @@ def _validate(inputs):
             if i == 1:
                 _require(_current(sources[judgment['source_id']], ref['as_of']), 'corrected reference requires dated in-scope evidence')
     _require(refs[0]['reference_id'] != refs[1]['reference_id'] and _date(refs[1]['reviewed_on']) > _date(refs[0]['reviewed_on']), 'new dated reference identity required')
+    review = inputs['correction_review']
+    _fields(review, ('approved_changed_claim_ids', 'previous_reference_hash', 'updated_reference_hash', 'reviewed_on', 'reason'))
+    _text(review['reason'])
+    approved = review['approved_changed_claim_ids']
+    _require(isinstance(approved, list) and all(isinstance(c, str) for c in approved)
+             and len(set(approved)) == len(approved) and set(approved).issubset(claims), 'explicit unique correction approvals required')
+    old = {r['claim_id']: r for r in refs[0]['judgments']}
+    new = {r['claim_id']: r for r in refs[1]['judgments']}
+    _require(set(approved) == {key for key in old if old[key] != new[key]}, 'unapproved or undeclared judgment change')
+    _require(review['previous_reference_hash'] == canonical_hash(refs[0]) and review['updated_reference_hash'] == canonical_hash(refs[1])
+        and review['reviewed_on'] == refs[1]['reviewed_on'], 'correction review/reference binding mismatch')
     return claims, citations, sources, adjudications, context
 
 
@@ -239,6 +253,7 @@ def run_study(inputs=None):
     analysis = _citation_analysis(owned, claims, citations, sources, adjudications)
     original, updated = [_grade(owned, ref, analysis, context) for ref in owned['references']]
     correction = {'previous_reference_hash': original['reference_hash'], 'updated_reference_hash': updated['reference_hash'],
+        'authored_review': owned['correction_review'], 'review_hash': canonical_hash(owned['correction_review']),
         'original_grade_hash': original['grade_hash'], 'reassessed_grade_hash': updated['grade_hash'],
         'changed_claim_ids': [a['claim_id'] for a, b in zip(original['claims'], updated['claims'], strict=True) if a['correct'] != b['correct']],
         'reviewed_on': owned['references'][1]['reviewed_on'],

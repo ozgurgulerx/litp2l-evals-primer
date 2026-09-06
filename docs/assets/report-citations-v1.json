@@ -1,0 +1,836 @@
+{
+  "schema": "report-citations-v1",
+  "inputs": {
+    "report": {
+      "report_id": "brief-v1",
+      "as_of": "2026-09-07",
+      "scope": "northport-consumer-returns",
+      "text": "# Northport parcel-policy brief\n\nAs-of: 2026-09-07. Invented classroom report.\n\n## Returns\nThe return window is 30 days. [L1] Opened items are always refundable. [L3]\n\n## Refund timing\nRefunds settle within 5 business days. [L2]\n\n## Shipping\nReturn shipping is free. [L4]\n\n## Scope\nThe policy covers Northport purchases.\n\n",
+      "sections": [
+        {
+          "section_id": "returns",
+          "span": {
+            "start": 80,
+            "end": 168,
+            "quote": "## Returns\nThe return window is 30 days. [L1] Opened items are always refundable. [L3]\n\n"
+          }
+        },
+        {
+          "section_id": "timing",
+          "span": {
+            "start": 168,
+            "end": 230,
+            "quote": "## Refund timing\nRefunds settle within 5 business days. [L2]\n\n"
+          }
+        },
+        {
+          "section_id": "shipping",
+          "span": {
+            "start": 230,
+            "end": 273,
+            "quote": "## Shipping\nReturn shipping is free. [L4]\n\n"
+          }
+        },
+        {
+          "section_id": "scope",
+          "span": {
+            "start": 273,
+            "end": 322,
+            "quote": "## Scope\nThe policy covers Northport purchases.\n\n"
+          }
+        }
+      ]
+    },
+    "sources": [
+      {
+        "source_id": "policy-old",
+        "authority": "invented-policy-owner",
+        "scope": "northport-consumer-returns",
+        "published_at": "2026-08-01",
+        "effective_from": "2026-08-01",
+        "effective_until": "2026-09-01",
+        "text": "The return window is 30 days."
+      },
+      {
+        "source_id": "policy-current",
+        "authority": "invented-policy-owner",
+        "scope": "northport-consumer-returns",
+        "published_at": "2026-09-01",
+        "effective_from": "2026-09-01",
+        "effective_until": null,
+        "text": "The return window is 14 days. Opened items are not refundable. The policy covers Northport purchases."
+      },
+      {
+        "source_id": "payments",
+        "authority": "invented-policy-owner",
+        "scope": "northport-consumer-returns",
+        "published_at": "2026-08-01",
+        "effective_from": "2026-08-01",
+        "effective_until": null,
+        "text": "Refunds settle within 5 business days."
+      },
+      {
+        "source_id": "shipping",
+        "authority": "invented-policy-owner",
+        "scope": "northport-consumer-returns",
+        "published_at": "2026-08-01",
+        "effective_from": "2026-08-01",
+        "effective_until": null,
+        "text": "Return shipping is free."
+      }
+    ],
+    "required_questions": [
+      {
+        "question_id": "returns",
+        "text": "What return window and opened-item rule apply?"
+      },
+      {
+        "question_id": "timing",
+        "text": "How long does settlement take?"
+      },
+      {
+        "question_id": "shipping",
+        "text": "Who pays return shipping?"
+      },
+      {
+        "question_id": "scope",
+        "text": "Where does the policy apply?"
+      },
+      {
+        "question_id": "warranty",
+        "text": "What warranty period applies?"
+      }
+    ],
+    "claims": [
+      {
+        "claim_id": "C1",
+        "question_id": "returns",
+        "section_id": "returns",
+        "span": {
+          "start": 91,
+          "end": 120,
+          "quote": "The return window is 30 days."
+        }
+      },
+      {
+        "claim_id": "C2",
+        "question_id": "timing",
+        "section_id": "timing",
+        "span": {
+          "start": 185,
+          "end": 223,
+          "quote": "Refunds settle within 5 business days."
+        }
+      },
+      {
+        "claim_id": "C3",
+        "question_id": "returns",
+        "section_id": "returns",
+        "span": {
+          "start": 126,
+          "end": 161,
+          "quote": "Opened items are always refundable."
+        }
+      },
+      {
+        "claim_id": "C4",
+        "question_id": "shipping",
+        "section_id": "shipping",
+        "span": {
+          "start": 242,
+          "end": 266,
+          "quote": "Return shipping is free."
+        }
+      },
+      {
+        "claim_id": "C5",
+        "question_id": "scope",
+        "section_id": "scope",
+        "span": {
+          "start": 282,
+          "end": 320,
+          "quote": "The policy covers Northport purchases."
+        }
+      }
+    ],
+    "citations": [
+      {
+        "citation_id": "L1",
+        "claim_id": "C1",
+        "source_id": "policy-old",
+        "locator_span": {
+          "start": 121,
+          "end": 125,
+          "quote": "[L1]"
+        },
+        "source_span": {
+          "start": 0,
+          "end": 29,
+          "quote": "The return window is 30 days."
+        }
+      },
+      {
+        "citation_id": "L2",
+        "claim_id": "C2",
+        "source_id": "payments",
+        "locator_span": {
+          "start": 224,
+          "end": 228,
+          "quote": "[L2]"
+        },
+        "source_span": {
+          "start": 0,
+          "end": 38,
+          "quote": "Refunds settle within 5 business days."
+        }
+      },
+      {
+        "citation_id": "L3",
+        "claim_id": "C3",
+        "source_id": "payments",
+        "locator_span": {
+          "start": 162,
+          "end": 166,
+          "quote": "[L3]"
+        },
+        "source_span": {
+          "start": 0,
+          "end": 38,
+          "quote": "Refunds settle within 5 business days."
+        }
+      },
+      {
+        "citation_id": "L4",
+        "claim_id": "C4",
+        "source_id": null,
+        "locator_span": {
+          "start": 267,
+          "end": 271,
+          "quote": "[L4]"
+        },
+        "source_span": null
+      }
+    ],
+    "link_adjudications": [
+      {
+        "citation_id": "L1",
+        "entailed": true,
+        "reason": "Authored sentence-level relation; not inferred by code.",
+        "binding_hash": "sha256:6c5e38804349c77aa9a4ba4a553eb5f5618fe9e76fbf14bdc3ca2c689c4aad1e"
+      },
+      {
+        "citation_id": "L2",
+        "entailed": true,
+        "reason": "Authored sentence-level relation; not inferred by code.",
+        "binding_hash": "sha256:636408ed107098e8116ca15800dbbf8c29250006f1e77c0cc0f1ed3d1fdffe2e"
+      },
+      {
+        "citation_id": "L3",
+        "entailed": false,
+        "reason": "Authored sentence-level relation; not inferred by code.",
+        "binding_hash": "sha256:690abbe4581e24ae6a239240f5fd66e50a54e1e32434926acf9a9aa85c7488dd"
+      },
+      {
+        "citation_id": "L4",
+        "entailed": null,
+        "reason": "Authored sentence-level relation; not inferred by code.",
+        "binding_hash": "sha256:1f69e787857d67a7be63a117cc5333e3086aa2e6e1e6e77159adbdf4670ee0c7"
+      }
+    ],
+    "references": [
+      {
+        "reference_id": "reference-v1",
+        "authority": "authored-review-panel",
+        "scope": "northport-consumer-returns",
+        "as_of": "2026-09-07",
+        "reviewed_on": "2026-09-07",
+        "mode": "historical-unqualified",
+        "context_hash": "sha256:5e56962f1466388d1d7e8e5e5c30fcf97035d834a663515e338feedeb35269a4",
+        "supersedes_hash": null,
+        "judgments": [
+          {
+            "claim_id": "C1",
+            "correct": true,
+            "source_id": "policy-old",
+            "source_span": {
+              "start": 0,
+              "end": 29,
+              "quote": "The return window is 30 days."
+            },
+            "claim_binding_hash": "sha256:61e61bffe1a91bb6299922f059bf463e5906b7102762f6c5c3b18a206f72cb6f",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C2",
+            "correct": true,
+            "source_id": "payments",
+            "source_span": {
+              "start": 0,
+              "end": 38,
+              "quote": "Refunds settle within 5 business days."
+            },
+            "claim_binding_hash": "sha256:82f7d56457843cbabe7fe23e3c28df44fac29b2c95c27cbbd7e3ea17c93abcf2",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C3",
+            "correct": false,
+            "source_id": "policy-current",
+            "source_span": {
+              "start": 30,
+              "end": 62,
+              "quote": "Opened items are not refundable."
+            },
+            "claim_binding_hash": "sha256:b27626399a09ba38bf29ad25009bf8cb92b47d5ea216a775db56ea656a12e448",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C4",
+            "correct": true,
+            "source_id": "shipping",
+            "source_span": {
+              "start": 0,
+              "end": 24,
+              "quote": "Return shipping is free."
+            },
+            "claim_binding_hash": "sha256:c318e5e8b46cfd6d552cd20f214b4b8779a5b988f960bdae53662ee8f79b43b4",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C5",
+            "correct": true,
+            "source_id": "policy-current",
+            "source_span": {
+              "start": 63,
+              "end": 101,
+              "quote": "The policy covers Northport purchases."
+            },
+            "claim_binding_hash": "sha256:bb1a776fa1e5cf1e0582d3ac9990e828c2d8cff4e181230170e15874949df7d0",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          }
+        ]
+      },
+      {
+        "reference_id": "reference-v2",
+        "authority": "authored-review-panel",
+        "scope": "northport-consumer-returns",
+        "as_of": "2026-09-07",
+        "reviewed_on": "2026-09-08",
+        "mode": "dated-reviewed",
+        "context_hash": "sha256:5e56962f1466388d1d7e8e5e5c30fcf97035d834a663515e338feedeb35269a4",
+        "supersedes_hash": "sha256:cdd9266767830cf70a9d2ae867e42dcd32a80e4a3548c318f32b6a14b47ff3e9",
+        "judgments": [
+          {
+            "claim_id": "C1",
+            "correct": false,
+            "source_id": "policy-current",
+            "source_span": {
+              "start": 0,
+              "end": 29,
+              "quote": "The return window is 14 days."
+            },
+            "claim_binding_hash": "sha256:61e61bffe1a91bb6299922f059bf463e5906b7102762f6c5c3b18a206f72cb6f",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C2",
+            "correct": true,
+            "source_id": "payments",
+            "source_span": {
+              "start": 0,
+              "end": 38,
+              "quote": "Refunds settle within 5 business days."
+            },
+            "claim_binding_hash": "sha256:82f7d56457843cbabe7fe23e3c28df44fac29b2c95c27cbbd7e3ea17c93abcf2",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C3",
+            "correct": false,
+            "source_id": "policy-current",
+            "source_span": {
+              "start": 30,
+              "end": 62,
+              "quote": "Opened items are not refundable."
+            },
+            "claim_binding_hash": "sha256:b27626399a09ba38bf29ad25009bf8cb92b47d5ea216a775db56ea656a12e448",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C4",
+            "correct": true,
+            "source_id": "shipping",
+            "source_span": {
+              "start": 0,
+              "end": 24,
+              "quote": "Return shipping is free."
+            },
+            "claim_binding_hash": "sha256:c318e5e8b46cfd6d552cd20f214b4b8779a5b988f960bdae53662ee8f79b43b4",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          },
+          {
+            "claim_id": "C5",
+            "correct": true,
+            "source_id": "policy-current",
+            "source_span": {
+              "start": 63,
+              "end": 101,
+              "quote": "The policy covers Northport purchases."
+            },
+            "claim_binding_hash": "sha256:bb1a776fa1e5cf1e0582d3ac9990e828c2d8cff4e181230170e15874949df7d0",
+            "reason": "Authored truth adjudication against this source for the fixed report date."
+          }
+        ]
+      }
+    ],
+    "correction_review": {
+      "approved_changed_claim_ids": [
+        "C1"
+      ],
+      "previous_reference_hash": "sha256:cdd9266767830cf70a9d2ae867e42dcd32a80e4a3548c318f32b6a14b47ff3e9",
+      "updated_reference_hash": "sha256:1a4203ed613316eaeb7dd8088c90e99a91561815da92f3cfd9c168ab3f61e9bb",
+      "reviewed_on": "2026-09-08",
+      "reason": "Authored correction review: the old 30-day answer was obsolete as of September 7."
+    }
+  },
+  "protocol": {
+    "span_unit": "Python Unicode code-point offsets; end exclusive",
+    "material_claims": "supplied atomic claim inventory, not extraction",
+    "semantic_annotations": "authored source-span entailment, question mapping and truth judgments, not automatic understanding",
+    "dates": "as_of and source effective intervals govern current support; review date records later correction",
+    "abstention": "no registered claim is an abstention; omitted questions are not justified abstentions"
+  },
+  "registration_hash": "sha256:9b01d976b1a3e485a30078f51071848a459cedaa064d8392ddccbe5234de7406",
+  "citation_analysis": {
+    "links": [
+      {
+        "citation_id": "L1",
+        "claim_id": "C1",
+        "source_id": "policy-old",
+        "resolved": true,
+        "entailed": true,
+        "current": false,
+        "adjudication_hash": "sha256:2a95f80e025313f14f2af1b2a3bb8a0733d629ca944f15a9cfb0953d313ebb2c"
+      },
+      {
+        "citation_id": "L2",
+        "claim_id": "C2",
+        "source_id": "payments",
+        "resolved": true,
+        "entailed": true,
+        "current": true,
+        "adjudication_hash": "sha256:974d3abad2e99d80916c96a82f6c9034953ba0159a34d30f67fbcef868e0a151"
+      },
+      {
+        "citation_id": "L3",
+        "claim_id": "C3",
+        "source_id": "payments",
+        "resolved": true,
+        "entailed": false,
+        "current": true,
+        "adjudication_hash": "sha256:a3a436ea13975fec54de511e543b31080f157fe11d9b17153ab5028e992ea8da"
+      },
+      {
+        "citation_id": "L4",
+        "claim_id": "C4",
+        "source_id": null,
+        "resolved": false,
+        "entailed": null,
+        "current": null,
+        "adjudication_hash": "sha256:473bd4f94c2ecf5a2ad4c945513c2a550089e95b8d84fdd97d7fe19c8d12a194"
+      }
+    ],
+    "unique_resolved_source_count": 2,
+    "metrics": {
+      "resolved_links": {
+        "numerator": 3,
+        "denominator": 4,
+        "rate": 0.75
+      },
+      "entailed_all_attempted_links": {
+        "numerator": 2,
+        "denominator": 4,
+        "rate": 0.5
+      },
+      "entailed_resolved_links": {
+        "numerator": 2,
+        "denominator": 3,
+        "rate": 0.6666666666666666
+      },
+      "claims_with_resolved_citation": {
+        "numerator": 3,
+        "denominator": 5,
+        "rate": 0.6
+      },
+      "claims_supported_by_citations": {
+        "numerator": 2,
+        "denominator": 5,
+        "rate": 0.4
+      },
+      "claims_supported_by_current_citations": {
+        "numerator": 1,
+        "denominator": 5,
+        "rate": 0.2
+      }
+    }
+  },
+  "original_grade": {
+    "reference": {
+      "reference_id": "reference-v1",
+      "authority": "authored-review-panel",
+      "scope": "northport-consumer-returns",
+      "as_of": "2026-09-07",
+      "reviewed_on": "2026-09-07",
+      "mode": "historical-unqualified",
+      "context_hash": "sha256:5e56962f1466388d1d7e8e5e5c30fcf97035d834a663515e338feedeb35269a4",
+      "supersedes_hash": null,
+      "judgments": [
+        {
+          "claim_id": "C1",
+          "correct": true,
+          "source_id": "policy-old",
+          "source_span": {
+            "start": 0,
+            "end": 29,
+            "quote": "The return window is 30 days."
+          },
+          "claim_binding_hash": "sha256:61e61bffe1a91bb6299922f059bf463e5906b7102762f6c5c3b18a206f72cb6f",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C2",
+          "correct": true,
+          "source_id": "payments",
+          "source_span": {
+            "start": 0,
+            "end": 38,
+            "quote": "Refunds settle within 5 business days."
+          },
+          "claim_binding_hash": "sha256:82f7d56457843cbabe7fe23e3c28df44fac29b2c95c27cbbd7e3ea17c93abcf2",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C3",
+          "correct": false,
+          "source_id": "policy-current",
+          "source_span": {
+            "start": 30,
+            "end": 62,
+            "quote": "Opened items are not refundable."
+          },
+          "claim_binding_hash": "sha256:b27626399a09ba38bf29ad25009bf8cb92b47d5ea216a775db56ea656a12e448",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C4",
+          "correct": true,
+          "source_id": "shipping",
+          "source_span": {
+            "start": 0,
+            "end": 24,
+            "quote": "Return shipping is free."
+          },
+          "claim_binding_hash": "sha256:c318e5e8b46cfd6d552cd20f214b4b8779a5b988f960bdae53662ee8f79b43b4",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C5",
+          "correct": true,
+          "source_id": "policy-current",
+          "source_span": {
+            "start": 63,
+            "end": 101,
+            "quote": "The policy covers Northport purchases."
+          },
+          "claim_binding_hash": "sha256:bb1a776fa1e5cf1e0582d3ac9990e828c2d8cff4e181230170e15874949df7d0",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        }
+      ]
+    },
+    "reference_hash": "sha256:cdd9266767830cf70a9d2ae867e42dcd32a80e4a3548c318f32b6a14b47ff3e9",
+    "context_hash": "sha256:5e56962f1466388d1d7e8e5e5c30fcf97035d834a663515e338feedeb35269a4",
+    "claims": [
+      {
+        "claim_id": "C1",
+        "question_id": "returns",
+        "correct": true,
+        "citation_supported": true
+      },
+      {
+        "claim_id": "C2",
+        "question_id": "timing",
+        "correct": true,
+        "citation_supported": true
+      },
+      {
+        "claim_id": "C3",
+        "question_id": "returns",
+        "correct": false,
+        "citation_supported": false
+      },
+      {
+        "claim_id": "C4",
+        "question_id": "shipping",
+        "correct": true,
+        "citation_supported": false
+      },
+      {
+        "claim_id": "C5",
+        "question_id": "scope",
+        "correct": true,
+        "citation_supported": false
+      }
+    ],
+    "factual_correctness": {
+      "numerator": 4,
+      "denominator": 5,
+      "rate": 0.8
+    },
+    "required_questions": {
+      "rows": [
+        {
+          "question_id": "returns",
+          "claim_ids": [
+            "C1",
+            "C3"
+          ],
+          "status": "addressed_incorrectly"
+        },
+        {
+          "question_id": "timing",
+          "claim_ids": [
+            "C2"
+          ],
+          "status": "correctly_answered"
+        },
+        {
+          "question_id": "shipping",
+          "claim_ids": [
+            "C4"
+          ],
+          "status": "correctly_answered"
+        },
+        {
+          "question_id": "scope",
+          "claim_ids": [
+            "C5"
+          ],
+          "status": "correctly_answered"
+        },
+        {
+          "question_id": "warranty",
+          "claim_ids": [],
+          "status": "omitted"
+        }
+      ],
+      "addressed": {
+        "numerator": 4,
+        "denominator": 5,
+        "rate": 0.8
+      },
+      "correctly_answered": {
+        "numerator": 3,
+        "denominator": 5,
+        "rate": 0.6
+      },
+      "justified_abstention": {
+        "numerator": 0,
+        "denominator": 5,
+        "rate": 0.0
+      }
+    },
+    "grade_hash": "sha256:06fccc702f5a642f27de19cfe3db60f81d365eff0345f4a5c5ca1ebc16d0585a"
+  },
+  "reassessed_grade": {
+    "reference": {
+      "reference_id": "reference-v2",
+      "authority": "authored-review-panel",
+      "scope": "northport-consumer-returns",
+      "as_of": "2026-09-07",
+      "reviewed_on": "2026-09-08",
+      "mode": "dated-reviewed",
+      "context_hash": "sha256:5e56962f1466388d1d7e8e5e5c30fcf97035d834a663515e338feedeb35269a4",
+      "supersedes_hash": "sha256:cdd9266767830cf70a9d2ae867e42dcd32a80e4a3548c318f32b6a14b47ff3e9",
+      "judgments": [
+        {
+          "claim_id": "C1",
+          "correct": false,
+          "source_id": "policy-current",
+          "source_span": {
+            "start": 0,
+            "end": 29,
+            "quote": "The return window is 14 days."
+          },
+          "claim_binding_hash": "sha256:61e61bffe1a91bb6299922f059bf463e5906b7102762f6c5c3b18a206f72cb6f",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C2",
+          "correct": true,
+          "source_id": "payments",
+          "source_span": {
+            "start": 0,
+            "end": 38,
+            "quote": "Refunds settle within 5 business days."
+          },
+          "claim_binding_hash": "sha256:82f7d56457843cbabe7fe23e3c28df44fac29b2c95c27cbbd7e3ea17c93abcf2",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C3",
+          "correct": false,
+          "source_id": "policy-current",
+          "source_span": {
+            "start": 30,
+            "end": 62,
+            "quote": "Opened items are not refundable."
+          },
+          "claim_binding_hash": "sha256:b27626399a09ba38bf29ad25009bf8cb92b47d5ea216a775db56ea656a12e448",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C4",
+          "correct": true,
+          "source_id": "shipping",
+          "source_span": {
+            "start": 0,
+            "end": 24,
+            "quote": "Return shipping is free."
+          },
+          "claim_binding_hash": "sha256:c318e5e8b46cfd6d552cd20f214b4b8779a5b988f960bdae53662ee8f79b43b4",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        },
+        {
+          "claim_id": "C5",
+          "correct": true,
+          "source_id": "policy-current",
+          "source_span": {
+            "start": 63,
+            "end": 101,
+            "quote": "The policy covers Northport purchases."
+          },
+          "claim_binding_hash": "sha256:bb1a776fa1e5cf1e0582d3ac9990e828c2d8cff4e181230170e15874949df7d0",
+          "reason": "Authored truth adjudication against this source for the fixed report date."
+        }
+      ]
+    },
+    "reference_hash": "sha256:1a4203ed613316eaeb7dd8088c90e99a91561815da92f3cfd9c168ab3f61e9bb",
+    "context_hash": "sha256:5e56962f1466388d1d7e8e5e5c30fcf97035d834a663515e338feedeb35269a4",
+    "claims": [
+      {
+        "claim_id": "C1",
+        "question_id": "returns",
+        "correct": false,
+        "citation_supported": true
+      },
+      {
+        "claim_id": "C2",
+        "question_id": "timing",
+        "correct": true,
+        "citation_supported": true
+      },
+      {
+        "claim_id": "C3",
+        "question_id": "returns",
+        "correct": false,
+        "citation_supported": false
+      },
+      {
+        "claim_id": "C4",
+        "question_id": "shipping",
+        "correct": true,
+        "citation_supported": false
+      },
+      {
+        "claim_id": "C5",
+        "question_id": "scope",
+        "correct": true,
+        "citation_supported": false
+      }
+    ],
+    "factual_correctness": {
+      "numerator": 3,
+      "denominator": 5,
+      "rate": 0.6
+    },
+    "required_questions": {
+      "rows": [
+        {
+          "question_id": "returns",
+          "claim_ids": [
+            "C1",
+            "C3"
+          ],
+          "status": "addressed_incorrectly"
+        },
+        {
+          "question_id": "timing",
+          "claim_ids": [
+            "C2"
+          ],
+          "status": "correctly_answered"
+        },
+        {
+          "question_id": "shipping",
+          "claim_ids": [
+            "C4"
+          ],
+          "status": "correctly_answered"
+        },
+        {
+          "question_id": "scope",
+          "claim_ids": [
+            "C5"
+          ],
+          "status": "correctly_answered"
+        },
+        {
+          "question_id": "warranty",
+          "claim_ids": [],
+          "status": "omitted"
+        }
+      ],
+      "addressed": {
+        "numerator": 4,
+        "denominator": 5,
+        "rate": 0.8
+      },
+      "correctly_answered": {
+        "numerator": 3,
+        "denominator": 5,
+        "rate": 0.6
+      },
+      "justified_abstention": {
+        "numerator": 0,
+        "denominator": 5,
+        "rate": 0.0
+      }
+    },
+    "grade_hash": "sha256:af8523e6c53bdc7539b5bbfc569a8cc1f5d92871573ea23dc7213598c3e27e6f"
+  },
+  "correction": {
+    "previous_reference_hash": "sha256:cdd9266767830cf70a9d2ae867e42dcd32a80e4a3548c318f32b6a14b47ff3e9",
+    "updated_reference_hash": "sha256:1a4203ed613316eaeb7dd8088c90e99a91561815da92f3cfd9c168ab3f61e9bb",
+    "authored_review": {
+      "approved_changed_claim_ids": [
+        "C1"
+      ],
+      "previous_reference_hash": "sha256:cdd9266767830cf70a9d2ae867e42dcd32a80e4a3548c318f32b6a14b47ff3e9",
+      "updated_reference_hash": "sha256:1a4203ed613316eaeb7dd8088c90e99a91561815da92f3cfd9c168ab3f61e9bb",
+      "reviewed_on": "2026-09-08",
+      "reason": "Authored correction review: the old 30-day answer was obsolete as of September 7."
+    },
+    "review_hash": "sha256:f07e98d7ca357156ccf7c717330eaaf3507a5c96cae13fdad8accac5e5bcee5a",
+    "original_grade_hash": "sha256:06fccc702f5a642f27de19cfe3db60f81d365eff0345f4a5c5ca1ebc16d0585a",
+    "reassessed_grade_hash": "sha256:af8523e6c53bdc7539b5bbfc569a8cc1f5d92871573ea23dc7213598c3e27e6f",
+    "changed_claim_ids": [
+      "C1"
+    ],
+    "reviewed_on": "2026-09-08",
+    "review_note": "Authored correction exposes a false pass in the old reference; the report and corpus did not change."
+  },
+  "deployment_authorized": false,
+  "evidence_kind": "synthetic_authored_report_analysis",
+  "limitations": "Entire corpus, report and reviews are invented. Computation verifies spans, bindings, dates and aggregates supplied semantic judgments; it does not discover entailment, factual truth or all material claims. Required-question completeness is relative to the registered authored mapping. No actual long-report/model performance, human review or deployment qualification is established. The historical reference is deliberately wrong for one claim. Reassessment changes the instrument, not the report. Hashes preserve local consistency, not authenticated authority or execution history.",
+  "report_hash": "sha256:33c80b3bb019f107a382a185c13787272f0d332d8880d1af7316d528c0807cc1"
+}
