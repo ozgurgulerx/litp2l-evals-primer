@@ -32,6 +32,9 @@ class ReplayAssessment:
 
 
 def _current_rejection(payload, registry, now, allow_synthetic):
+    if payload['schema'] == 'resolution-trial-v2':
+        from cx_eval_lab.resolution_semantic_replay import current_rejection
+        return current_rejection(payload, registry, now, allow_synthetic)
     receipt = payload['semantic_evaluation_receipt']
     record = registry.lookup(receipt['calibration_receipt_hash'])
     if record is None:

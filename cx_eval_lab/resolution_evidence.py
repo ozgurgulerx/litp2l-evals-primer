@@ -38,21 +38,32 @@ def population_entry(case):
     return [case.case_id, case.request.customer_id, list(SLICES)]
 
 
-def design(baseline, candidate):
+def design(baseline, candidate, semantic_registration=None):
     return {'baseline_agent': baseline, 'candidate_agent': candidate,
             'order_permutation': 'reverse_on_odd_repetitions',
             'arm_order': 'alternate_by_case_and_repetition',
-            'criterion': EVALUATOR, 'semantic_qualification': 'not_implemented'}
+            'criterion': EVALUATOR, 'semantic_qualification':
+                'not_implemented' if semantic_registration is None else semantic_registration}
 
 
 def validate_registration(manifest, cases, registered_design):
     _require(cases and len({c.case_id for c in cases}) == len(cases), 'unique resolution cases required')
     _require(type(manifest.repetitions) is int and manifest.repetitions >= 2
              and manifest.repetitions % 2 == 0, 'balanced resolution repetitions require a positive even count')
-    _require(manifest.dataset_version == DATASET and manifest.evaluator_version == EVALUATOR
-             and manifest.estimand == ESTIMAND, 'resolution manifest scope mismatch')
+    semantic = registered_design['semantic_qualification']
+    native = isinstance(semantic, dict)
+    evaluator, estimand = EVALUATOR, ESTIMAND
+    if native:
+        from cx_eval_lab import resolution_semantic as ns
+        ns.validate_registration(semantic)
+        evaluator, estimand = ns.EVALUATOR, ns.ESTIMAND
+        _require(dict(manifest.input_hashes).get('native-semantic-registration') == canonical_hash(semantic),
+                 'native semantic registration is not bound to manifest')
+    _require(manifest.dataset_version == DATASET and manifest.evaluator_version == evaluator
+             and manifest.estimand == estimand, 'resolution manifest scope mismatch')
     _require(registered_design == design(registered_design['baseline_agent'],
-                                        registered_design['candidate_agent']), 'unsupported resolution design')
+                                        registered_design['candidate_agent'], semantic if native else None),
+             'unsupported resolution design')
     hashes = dict(manifest.input_hashes)
     _require(hashes.get('resolution-cases') == canonical_hash([asdict(c) for c in cases]),
              'registered resolution cases mismatch')
@@ -64,7 +75,9 @@ def validate_registration(manifest, cases, registered_design):
 
 def validate_packet(packet, manifest):
     artifacts = packet['trial_artifacts']
-    _require(artifacts and all(a['payload']['schema'] == SCHEMA for a in artifacts),
+    schema = artifacts[0]['payload']['schema'] if artifacts else None
+    _require(schema in {SCHEMA, 'resolution-trial-v2'}
+             and all(a['payload']['schema'] == schema for a in artifacts),
              'mixed or unsupported resolution artifact schemas')
     by_hash = {a['artifact_hash']: a['payload'] for a in artifacts}
     _require(all(type(r['trial_index']) is int for arm in ('baseline', 'candidate')
@@ -72,6 +85,8 @@ def validate_packet(packet, manifest):
     population = [case_from_dict(by_hash[r['artifact_hash']]['case'])
                   for r in packet['baseline_trials'] if r['trial_index'] == 0]
     first = artifacts[0]['payload']
+    _require((schema == 'resolution-trial-v2') == isinstance(first['design']['semantic_qualification'], dict),
+             'native semantic schema/design mismatch')
     validate_registration(manifest, population, first['design'])
     registered = {c.case_id: canonical_hash(asdict(c)) for c in population}
     expected_sequence = [(c.case_id, index, arm) for index in range(manifest.repetitions)
@@ -161,14 +176,16 @@ def _replay_tools(case, payload):
              'resolution ledger replay differs from retained state')
 
 
-def regrade(payload):
+def regrade(payload, trusted_calibration_hashes=frozenset()):
     case = case_from_dict(payload['case'])
     _require(payload['agent_input'] == asdict(case.request), 'resolution agent input mismatch')
     _require(type(payload['reverse']) is bool, 'invalid resolution permutation')
-    _require(payload['semantic_message_qualified'] is False
-             and payload['semantic_evaluation_receipt'] is None
-             and payload['qualified_semantic_calibration_hashes'] == []
-             and payload['semantic_stage'] is None, 'native resolution semantic qualification unsupported')
+    native = payload['schema'] == 'resolution-trial-v2'
+    if not native:
+        _require(payload['semantic_message_qualified'] is False
+                 and payload['semantic_evaluation_receipt'] is None
+                 and payload['qualified_semantic_calibration_hashes'] == []
+                 and payload['semantic_stage'] is None, 'native resolution semantic qualification unsupported')
     _require(payload['authority'] == 'lab_only', 'resolution execution authority mismatch')
     error = payload['execution_error']
     _require(error is None or isinstance(error, str) and error.isidentifier(),
@@ -182,7 +199,13 @@ def regrade(payload):
     _replay_tools(case, payload)
     result = evaluate_execution(payload)
     for key, value in json.loads(result.metrics_json).items():
-        _require(canonical_hash(payload[key]) == canonical_hash(value), 'resolution metrics mismatch')
+        observed_key = 'structural_contract_passed' if native and key == 'passed' else key
+        _require(canonical_hash(payload[observed_key]) == canonical_hash(value), 'resolution metrics mismatch')
+    if native:
+        from cx_eval_lab.resolution_semantic_replay import JointResolutionEvaluation, verify_semantics
+        result = JointResolutionEvaluation(result, verify_semantics(payload, trusted_calibration_hashes))
+        _require(payload['semantic_message_qualified'] is result.to_dict()['semantic_message_qualified'],
+                 'native semantic qualification summary mismatch')
     return result
 
 

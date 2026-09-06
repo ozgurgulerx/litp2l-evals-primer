@@ -38,9 +38,9 @@ class TrialArtifact:
 
 
 def _regrade(payload, trusted_calibration_hashes):
-    if payload['schema'] == 'resolution-trial-v1':
+    if payload['schema'] in {'resolution-trial-v1', 'resolution-trial-v2'}:
         from cx_eval_lab.resolution_evidence import regrade
-        return regrade(payload)
+        return regrade(payload, trusted_calibration_hashes)
     if payload["schema"] != "refund-trial-v1":
         raise ValueError("unsupported trial artifact schema")
     case = RefundCase.from_dict(payload["case"])
@@ -90,7 +90,8 @@ def _replay_packet(packet, trusted_calibration_hashes):
     manifest = ExperimentManifest(**packet["manifest"])
     if manifest.content_hash != packet["manifest_hash"]:
         raise ValueError("manifest hash mismatch")
-    if any(a['payload']['schema'] == 'resolution-trial-v1' for a in packet['trial_artifacts']):
+    if any(a['payload']['schema'] in {'resolution-trial-v1', 'resolution-trial-v2'}
+           for a in packet['trial_artifacts']):
         from cx_eval_lab.resolution_evidence import validate_packet
         validate_packet(packet, manifest)
     artifacts = {}
@@ -149,7 +150,7 @@ def _replay_packet(packet, trusted_calibration_hashes):
 
 
 def _population_entry(payload):
-    if payload['schema'] == 'resolution-trial-v1':
+    if payload['schema'] in {'resolution-trial-v1', 'resolution-trial-v2'}:
         from cx_eval_lab.resolution_evidence import case_from_dict, population_entry
         return population_entry(case_from_dict(payload['case']))
     case = payload['case']

@@ -99,12 +99,12 @@ class CalibrationRecord:
             "false_block_upper_95": exact_loss_interval(self.false_blocks, self.truthful_examples, 0.90)[1],
         }
 
-    def rejection(self, judge, case, policy_version, now, allow_synthetic):
+    def rejection(self, judge, case, policy_version, now, allow_synthetic, *, criterion_id=CRITERION):
         if self.evidence_kind == "synthetic" and not allow_synthetic:
             return "synthetic_qualification_not_permitted"
         if not _timestamp(self.issued_at) <= now < _timestamp(self.expires_at):
             return "qualification_not_current"
-        if (self.criterion_id != CRITERION or self.evaluator_version != judge.evaluator_version
+        if (self.criterion_id != criterion_id or self.evaluator_version != judge.evaluator_version
                 or self.configuration_hash != judge.configuration_hash):
             return "evaluator_configuration_mismatch"
         if (case.dataset_version not in self.dataset_versions or policy_version not in self.policy_versions
