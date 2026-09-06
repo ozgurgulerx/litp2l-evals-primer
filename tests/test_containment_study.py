@@ -1,9 +1,13 @@
 """Barrier-ordered real child processes; synthetic detector and policy labels."""
 
 import copy
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import redirect_stdout
+import io
 import json
 import os
 from pathlib import Path
+import socket
 import subprocess
 import sys
 import tempfile
@@ -100,6 +104,48 @@ class ContainmentStudyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 run_trial('../unknown')
             launch.assert_not_called()
+
+    def test_worker_protocol_and_atomic_permission_boundary(self):
+        import cx_eval_lab.containment_study as study
+        with tempfile.TemporaryDirectory() as root, ThreadPoolExecutor(max_workers=1) as pool:
+            path = Path(root) / 'unit.sqlite'
+            study.initialize(path)
+            controller, endpoint = socket.socketpair()
+            future = pool.submit(study._worker, path, endpoint.detach(), 'protected')
+            try:
+                self.assertEqual('queued', study._receive(controller)['event'])
+                study._send(controller, {'command': 'attempt', 'request_id': 'request-1'})
+                self.assertEqual('committed', study._receive(controller)['status'])
+                study.revoke(path)
+                study._send(controller, {'command': 'attempt', 'request_id': 'request-2'})
+                self.assertEqual('denied', study._receive(controller)['status'])
+                study._send(controller, {'command': 'shutdown'})
+                self.assertEqual(0, future.result(timeout=study.TIMEOUT))
+            finally:
+                controller.close()
+            self.assertEqual(1, len(study.snapshot(path)['effects']))
+            with self.assertRaises(ValueError):
+                study.initialize(path)
+            with self.assertRaises(ValueError):
+                study.attempt_write(path, 'unknown', 'protected')
+
+    def test_coordinator_protocol_reaps_real_child_after_task_cancel(self):
+        import cx_eval_lab.containment_study as study
+        with tempfile.TemporaryDirectory() as root, ThreadPoolExecutor(max_workers=1) as pool:
+            path = Path(root) / 'unit.sqlite'
+            study.initialize(path)
+            controller, endpoint = socket.socketpair()
+            output = io.StringIO()
+            with patch.object(sys, 'stdin', io.StringIO('cancel\nreap\n')), redirect_stdout(output):
+                future = pool.submit(study._coordinator, path, endpoint.detach(), 'protected')
+                try:
+                    self.assertEqual('queued', study._receive(controller)['event'])
+                    study._send(controller, {'command': 'shutdown'})
+                    self.assertEqual(0, future.result(timeout=study.TIMEOUT))
+                finally:
+                    controller.close()
+            events = [json.loads(line)['event'] for line in output.getvalue().splitlines()]
+            self.assertEqual(['coordinator_ready', 'parent_task_cancelled', 'child_reaped'], events)
 
     def test_cli_retains_and_refuses_overwrite(self):
         with tempfile.TemporaryDirectory() as root:

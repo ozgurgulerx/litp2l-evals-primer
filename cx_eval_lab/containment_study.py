@@ -237,8 +237,11 @@ def run_trial(case):
             if schedule != 'normal':
                 _record(path, 'scripted_detector_alert', {'reference_kind': kind})
             if delegated:
-                process.stdin.write('cancel\n')
-                process.stdin.flush()
+                control_input = process.stdin
+                if control_input is None:
+                    raise RuntimeError('coordinator control pipe is unavailable')
+                control_input.write('cancel\n')
+                control_input.flush()
                 cancelled = _read_process(process)
                 if cancelled != {'event': 'parent_task_cancelled', 'pid': process.pid}:
                     raise ValueError('coordinator cancellation acknowledgement mismatch')
