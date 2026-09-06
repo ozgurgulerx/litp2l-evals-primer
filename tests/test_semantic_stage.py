@@ -70,6 +70,21 @@ class SemanticStageTests(unittest.TestCase):
         self.assertNotIn('expected_outcome', judge.requests[0].evidence_json)
         self.assertNotIn('simulate_timeout_after_commit', judge.requests[0].evidence_json)
 
+    def test_single_run_preserves_semantic_audit_and_usage_separately(self):
+        from cx_eval_lab.semantic import SemanticJudgment
+        from cx_eval_lab.models import RuntimeEvidence
+        class MeteredFixture(FixtureJudge):
+            def evaluate(self, request):
+                return SemanticJudgment('pass', 'Synthetic fixture.', RuntimeEvidence(
+                    'fixture', 'test-model', ('judge-response-1',), 10, 2, 12, 0.001, 'fixture price'))
+        judge = MeteredFixture()
+        result = evaluate_agent(FreeFormReference(), (self.case,), semantic_stage=setup_stage(judge))
+        data = result.case_results[0].to_dict()
+        self.assertIn('semantic_stage', data)
+        self.assertEqual(0.001, data['semantic_stage']['judgment']['runtime_evidence']['cost_usd'])
+        self.assertEqual(0.08, data['cost_usd'])
+        self.assertIn('judge_latency_ms', data['semantic_stage'])
+
     def test_expiry_scope_version_and_small_sample_block_qualification(self):
         changes = (
             {'expires_at': '2026-09-05T00:00:00+00:00'},
