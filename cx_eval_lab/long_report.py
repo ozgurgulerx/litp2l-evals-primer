@@ -198,18 +198,18 @@ def _ratio(n, total):
 def score_extraction(units, report):
     """Exact atomic spans define recovery; containing several atoms is not recovering them."""
     _unique(units, 'unit_id')
-    seen = set()
+    seen = {}
     scored = []
     claims = report['claims']
     for unit in units:
         _fields(unit, ('unit_id', 'span', 'citation_ids'))
         _span(report['text'], unit['span'])
         key = (unit['span']['start'], unit['span']['end'])
-        _require(key not in seen, 'duplicate extracted span')
-        seen = seen | {key}
+        duplicate_of = seen.get(key)
+        seen = {**seen, key: seen.get(key, unit['unit_id'])}
         exact = [c for c in claims if c['span'] == unit['span']]
         contained = [c['claim_id'] for c in claims if unit['span']['start'] <= c['span']['start'] and c['span']['end'] <= unit['span']['end']]
-        scored.append({**unit, 'exact_claim_ids': [c['claim_id'] for c in exact], 'contained_claim_ids': contained,
+        scored.append({**unit, 'duplicate_of': duplicate_of, 'exact_claim_ids': [c['claim_id'] for c in exact], 'contained_claim_ids': contained,
             'status': exact[0]['status'] if len(exact) == 1 else 'unscored_nonatomic_or_unmatched',
             'semantic_binding_hash': canonical_hash(exact) if exact else None})
     recovered = {k for r in scored for k in r['exact_claim_ids']}
@@ -219,7 +219,8 @@ def score_extraction(units, report):
     compound = [g for g in groups if len(g) > 1]
     return {'units': scored, 'extracted_unit_count': len(units),
         'atomic_recall': _ratio(len(recovered), len(claims)),
-        'exact_unit_precision': _ratio(sum(bool(r['exact_claim_ids']) for r in scored), len(units)),
+        'exact_unit_precision': _ratio(sum(bool(r['exact_claim_ids']) and r['duplicate_of'] is None for r in scored), len(units)),
+        'duplicate_unit_count': sum(r['duplicate_of'] is not None for r in scored),
         'unscored_unit_count': sum(not r['exact_claim_ids'] for r in scored),
         'omitted_claim_ids': [c['claim_id'] for c in claims if c['claim_id'] not in recovered],
         'compound_groups': compound, 'compound_fully_recovered': _ratio(sum(set(g).issubset(recovered) for g in compound), len(compound)),
