@@ -324,7 +324,7 @@ def _superiority_rule(
         )
     observed_gain = report.task_success_rate - baseline_task_success
     return GateRuleResult(
-        "superiority:task_success",
+        "illustrative_point_gain:task_success",
         observed_gain >= policy.minimum_task_success_gain,
         f"{observed_gain:.3f}",
         f">= {policy.minimum_task_success_gain:.3f}",
