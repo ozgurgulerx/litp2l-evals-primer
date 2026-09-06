@@ -65,6 +65,18 @@ experiment = run_paired_experiment(
 
 The runner fails closed when the manifest dataset or measurement kind disagrees with the supplied cases or profiles. Missing, duplicated, or mismatched trial keys are rejected by the statistical comparison rather than silently dropped.
 
+Run the complete deterministic evidence path with:
+
+```bash
+uv run python -m cx_eval_lab experiment \
+  --baseline-agent reference \
+  --candidate-agent reference \
+  --minimum-independent-clusters 30 \
+  --output artifacts/runs/paired-reference.json
+```
+
+The default five-case dataset produces ten records per arm because the registered default is two repetitions. With a thirty-cluster minimum, the command exits with `hold`: ten repeated trials still represent only five independent customer clusters. Passing `--minimum-independent-clusters 5` exercises a synthetic `lab_pass` for teaching, but it does not turn five customers into adequate production evidence. The output packet contains the manifest and its hash, every raw trial, the comparison, raw-artifact hash, prerequisite IDs, invalidation rules, and authority receipt.
+
 ## Statistical non-inferiority
 
 For paired binary outcomes, define (d_i=y_{candidate,i}-y_{baseline,i}). A registered non-inferiority claim with margin \(\Delta\) is supported when the lower confidence bound for the candidate-minus-baseline contrast satisfies:

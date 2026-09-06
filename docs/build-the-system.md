@@ -265,7 +265,7 @@ Do not copy a universal FTE estimate. Size the work from responsibilities:
 
 Estimate expected case/run volume, repeat policy, review minutes, label delay, model/tool cost, trace volume, incident rate, and required release cadence. Then test the proposed capacity against peak—not only average—review and rollback demand.
 
-The next build step is Stage 2 instrumentation: normalize a real OpenAI SDK run into the same trace contract, account for usage and cost, repeat stochastic trials, and compare it with the deterministic reference.
+The implementation now covers the Stage 2 evidence spine: typed tool arguments, normalized OpenAI response/usage evidence, repeated paired deterministic trials, a cluster-aware teaching interval, minimum-evidence holds, and immutable authority receipts. The next qualification step is to execute registered live-model and fault-injection experiments on a larger independent sample; until those artifacts exist, the portal keeps their status and authority below production.
 
 ## The Living regression set
 
