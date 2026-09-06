@@ -116,6 +116,8 @@ The executable implementation first averages repeated differences within each in
 
 ### Three different decisions
 
+The [executed statistical study](statistical-method-study.md) now provides a concrete counterexample: with thirty independent customers and true degradation of four points, this normal rule passes 29.39% of the time despite a three-point margin. A zero-discordance sample yields zero estimated variance. The minimum-count check does not qualify the method; do not promote its `lab_only` result to production authority.
+
 | Evidence | Correct result |
 | --- | --- |
 | Lower bound `−0.020`, margin `0.030` | Non-inferior under the registered inclusive rule; not superior if the interval includes zero |

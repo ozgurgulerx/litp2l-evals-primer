@@ -26,6 +26,8 @@ Every slice must have a reason to exist, an owner, and a denominator. Pre-regist
 
 Never publish a rate without its sample size **n** and a confidence interval. A five-point movement on forty cases may be ordinary sampling noise; the correct action can be “watch and gather evidence” rather than “block” or “ship.” Use paired candidate-versus-baseline outcomes when the same cases are available.
 
+An interval is useful only when its method fits the sampling and measurement process. The [executed method study and Katas 05–07](statistical-method-study.md) show three concrete failures: zero observed variance hiding rare losses, a customer-weighted contrast disagreeing with pooled task rates, and exact inference becoming confidently wrong when judge labels hide real failures. Report these assumptions alongside the interval; `n ≥ 30` does not validate them.
+
 ## Measure repeatability
 
 One run is not a verdict for a nondeterministic system. Repeat trials at the blast radius the application demands and report the distribution, not only the best attempt.

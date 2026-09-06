@@ -33,6 +33,10 @@ Every study ends with three explicit decisions:
 
 The decision must link to a code change, experiment, documented non-goal, or open question. “Interesting” is not an outcome.
 
+## Completed local method comparison
+
+The [statistical method study](statistical-method-study.md) enumerates interval coverage and false promotion for known synthetic populations, compares the current normal interval with a scoped binomial alternative, and demonstrates unequal-customer weighting and biased labels. Its complete downloadable artifact and three worked katas are available. It is evidence about the methods under stated assumptions—not a live-model or production study.
+
 ## Initial study programme
 
 | Study | Central question | Candidate CX experiment |

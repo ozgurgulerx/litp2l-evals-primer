@@ -1,6 +1,7 @@
 """Qualify the measuring method against a known finite population model."""
 
 import unittest
+import math
 import json
 import subprocess
 import sys
@@ -75,6 +76,30 @@ class StatisticalStudyTests(unittest.TestCase):
         exact_loss_interval(1, 30)
         with self.assertRaises(ValueError):
             exact_loss_interval(True, 30)
+
+    def test_binomial_endpoints_solve_registered_tail_equations(self):
+        from cx_eval_lab.statistical_study import exact_loss_interval
+        lower, upper = exact_loss_interval(3, 10)
+        upper_tail = sum(math.comb(10, j) * upper ** j * (1 - upper) ** (10 - j)
+                         for j in range(4))
+        lower_tail = sum(math.comb(10, j) * lower ** j * (1 - lower) ** (10 - j)
+                         for j in range(3))
+        self.assertAlmostEqual(0.025, upper_tail)
+        self.assertAlmostEqual(0.975, lower_tail)
+
+    def test_invalid_probability_or_confidence_is_rejected(self):
+        from cx_eval_lab.statistical_study import exact_loss_interval, sparse_population_study
+        for probability in (-0.1, 1.1, float('nan'), True):
+            with self.subTest(probability=probability), self.assertRaises(ValueError):
+                sparse_population_study(loss_probability=probability)
+        for confidence in (0, 1, float('nan')):
+            with self.subTest(confidence=confidence), self.assertRaises(ValueError):
+                exact_loss_interval(3, 30, confidence)
+
+    def test_published_artifact_matches_executed_generator(self):
+        from cx_eval_lab.statistical_study import study_report
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/statistical-method-study-v1.json'
+        self.assertEqual(json.loads(path.read_text()), json.loads(json.dumps(study_report())))
 
 
 if __name__ == '__main__':

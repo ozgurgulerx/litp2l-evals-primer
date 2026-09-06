@@ -7,6 +7,12 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Executed statistical-method evidence
+
+The [statistical method study](statistical-method-study.md) now supplies full count-level results for known-population interval coverage, false promotion, power, and biased-label counterexamples, plus an unequal-cluster estimand example. Its [retained artifact](assets/statistical-method-study-v1.json) is checked against the generator by the test suite. The alternative follows [NIST's binomial-tail inversion equations](https://itl.nist.gov/div898/software/dataplot/refman2/auxillar/exacbino.htm), verified on 2026-09-06. This supports the narrow fixed-sample binomial lesson; general clustered and sequential method qualification remains incomplete.
+
+### Supplied research corpus
+
 | Research source | Primary contribution | Canonical treatment |
 | --- | --- | --- |
 | Best GitHub Repositories for LLM Evaluation in 2026 | Tool categories, quick starts, licensing, portability, model/application/production layers | System Studies, Benchmark Reproducibility, Courses |

@@ -124,4 +124,6 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 05–07](statistical-method-study.md) now cover statistical false promotion, unequal-cluster estimands, and biased judge labels, with executed enumeration results and worked solutions.
+
 The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas cover dataset improvement, human annotation, judge calibration, statistical coverage, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those exercises are pending until their runnable checks and worked solutions exist.

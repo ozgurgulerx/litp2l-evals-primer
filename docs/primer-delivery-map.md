@@ -20,7 +20,7 @@ For executable work, completion requires an inspectable chain from input through
 | Complete trial evidence | Full paired artifacts and offline re-grading CLI; tests reject changed, missing and mislinked evidence | Independent provenance, source-file verification, grader-version enforcement and immutable reassessment under new graders |
 | Semantic stage in runner | Evaluator interface exists; no actual judge stage connected | Evaluator-owned stage with errors, abstention, usage, qualified registry and reviewed calibration data |
 | Realistic object resolution | Explicit-ID argument tasks exist | Ambiguous descriptions, real competing records, corrections, clarification and counterbalanced order |
-| Statistical qualification | Teaching interval and minimum-evidence hold exist | Simulated known populations; coverage, false promotion, sparse discordance, unequal clusters and sequential looks |
+| Statistical qualification | Executed exact enumeration: sparse discordance, coverage, false promotion, power and biased labels; unequal-cluster estimand kata | General clustered interval coverage, sequential looks, calibration-error propagation and repeated-holdout controls |
 | Process recovery experiment | Typed scorer fixtures exist | Actual subprocess interruption and durable ledger recovery before/after commit |
 | Architecture experiments | Hand-authored scorer fixtures exist | Executed retrieval/oracle/full-context arms; delegation/merge traces; matched budgets |
 | Voice validity | Timeline scorer fixture exists | Recorded audio, synchronized action events and independent timing annotations |
