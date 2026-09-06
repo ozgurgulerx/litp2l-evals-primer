@@ -1,10 +1,10 @@
 """Executed lexical retrieval interventions and mock refunds, not model evaluation."""
 
 import argparse
-from dataclasses import asdict, dataclass, replace
 import json
-from pathlib import Path
 import re
+from dataclasses import asdict, dataclass, replace
+from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
 
@@ -181,6 +181,10 @@ def execute_trial(case, documents, arm, agent, *, registration_hash=None):
     return {'payload': payload, 'artifact_hash': canonical_hash(payload)}
 
 
+def _count(rows, key):
+    return sum(row['grade'][key] for row in rows)
+
+
 def _summary(trials):
     rows = []
     for agent in AGENTS:
@@ -188,17 +192,17 @@ def _summary(trials):
             selected = [trial['payload'] for trial in trials
                         if trial['payload']['agent'] == agent and trial['payload']['arm'] == arm]
             n = len(selected)
-            def count(key):
-                return sum(row['grade'][key] for row in selected)
             rows.append({'agent': agent, 'arm': arm, 'case_count': n,
-                'knowledge_in_corpus_count': count('knowledge_in_corpus'),
-                'knowledge_supplied_count': count('knowledge_supplied'),
-                'knowledge_recall': count('knowledge_supplied') / n,
-                'decision_correct_count': count('decision_correct'),
-                'contract_passes': count('contract_passed'), 'contract_pass_rate': count('contract_passed') / n,
+                'knowledge_in_corpus_count': _count(selected, 'knowledge_in_corpus'),
+                'knowledge_supplied_count': _count(selected, 'knowledge_supplied'),
+                'knowledge_recall': _count(selected, 'knowledge_supplied') / n,
+                'decision_correct_count': _count(selected, 'decision_correct'),
+                'contract_passes': _count(selected, 'contract_passed'),
+                'contract_pass_rate': _count(selected, 'contract_passed') / n,
                 'abstentions': sum(row['decision']['action'] == 'abstain' for row in selected),
-                'action_attempts': count('action_attempt_count'),
-                'completed_denials': count('completed_denial'), 'blocked_attempts': count('blocked_attempts')})
+                'action_attempts': _count(selected, 'action_attempt_count'),
+                'completed_denials': _count(selected, 'completed_denial'),
+                'blocked_attempts': _count(selected, 'blocked_attempts')})
     return rows
 
 

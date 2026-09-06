@@ -1,20 +1,20 @@
 """Local retrieval/action controls; no model or empirical transfer claims."""
 
 import copy
-from dataclasses import replace
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
+from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
 
 
 class KnowledgeActionTests(unittest.TestCase):
     def test_retrieval_repair_and_persistent_action_failure(self):
-        from cx_eval_lab.knowledge_action import run_study, replay_study
+        from cx_eval_lab.knowledge_action import replay_study, run_study
         report = run_study()
         self.assertTrue(report['conformance_passed'])
         self.assertFalse(report['deployment_authorized'])
@@ -28,7 +28,11 @@ class KnowledgeActionTests(unittest.TestCase):
         self.assertTrue(all(row['case_count'] == 3 for row in report['summary']))
 
     def test_stale_retrieval_abstains_and_oracle_denial_completes(self):
-        from cx_eval_lab.knowledge_action import execute_trial, example_cases, example_documents
+        from cx_eval_lab.knowledge_action import (
+            example_cases,
+            example_documents,
+            execute_trial,
+        )
         case, docs = example_cases()[1], example_documents()
         retrieved = execute_trial(case, docs, 'retrieval', 'policy-control')['payload']
         self.assertFalse(retrieved['grade']['knowledge_supplied'])
@@ -41,7 +45,11 @@ class KnowledgeActionTests(unittest.TestCase):
         self.assertTrue(oracle['grade']['contract_passed'])
 
     def test_wrong_amount_is_attempted_then_blocked_and_state_resets(self):
-        from cx_eval_lab.knowledge_action import execute_trial, example_cases, example_documents
+        from cx_eval_lab.knowledge_action import (
+            example_cases,
+            example_documents,
+            execute_trial,
+        )
         case, docs = example_cases()[2], example_documents()
         bad = execute_trial(case, docs, 'oracle', 'wrong-amount-mutant')['payload']
         self.assertTrue(bad['grade']['knowledge_supplied'])
@@ -57,7 +65,11 @@ class KnowledgeActionTests(unittest.TestCase):
         self.assertEqual(1, len(first['payload']['final_state']['refunds']))
 
     def test_full_context_order_reversal_does_not_change_decision_or_effects(self):
-        from cx_eval_lab.knowledge_action import execute_trial, example_cases, example_documents
+        from cx_eval_lab.knowledge_action import (
+            example_cases,
+            example_documents,
+            execute_trial,
+        )
         for case in example_cases():
             normal = execute_trial(case, example_documents(), 'full-context', 'policy-control')['payload']
             reverse = execute_trial(case, tuple(reversed(example_documents())),
@@ -89,7 +101,7 @@ class KnowledgeActionTests(unittest.TestCase):
             self.assertEqual(expected, [row[key] for row in report['summary']])
 
     def test_replay_rejects_rehashed_execution_and_summary_tampering(self):
-        from cx_eval_lab.knowledge_action import run_study, replay_study
+        from cx_eval_lab.knowledge_action import replay_study, run_study
         original = run_study()
         for kind in ('event', 'summary', 'decision', 'context'):
             report = copy.deepcopy(original)
@@ -109,7 +121,11 @@ class KnowledgeActionTests(unittest.TestCase):
                 replay_study(report)
 
     def test_invalid_inputs_and_unknown_control_do_not_execute(self):
-        from cx_eval_lab.knowledge_action import execute_trial, example_cases, example_documents
+        from cx_eval_lab.knowledge_action import (
+            example_cases,
+            example_documents,
+            execute_trial,
+        )
         case, docs = example_cases()[0], example_documents()
         for changes in ({'amount_cents': True}, {'age_days': -1}, {'currency': 'unknown'}, {'case_id': '../label'}):
             with self.subTest(changes=changes), self.assertRaises(ValueError):
@@ -148,11 +164,11 @@ class KnowledgeActionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             target = Path(root) / 'knowledge.json'
             command = [sys.executable, '-m', 'cx_eval_lab.knowledge_action', '--output', str(target)]
-            result = subprocess.run(command, capture_output=True, text=True)
+            result = subprocess.run(command, capture_output=True, text=True, check=False)
             self.assertEqual(0, result.returncode, result.stderr)
             saved = target.read_bytes()
             self.assertTrue(json.loads(saved)['conformance_passed'])
-            self.assertNotEqual(0, subprocess.run(command, capture_output=True).returncode)
+            self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
             self.assertEqual(saved, target.read_bytes())
 
 
