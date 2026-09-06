@@ -29,7 +29,8 @@ DEFAULT_MEASUREMENT_PROFILE = MeasurementProfile(
 
 
 class SupportAgent(Protocol):
-    name: str
+    @property
+    def name(self) -> str: ...
 
     def run(self, request: RefundAgentInput, tools: RefundTools) -> AgentOutput: ...
 
