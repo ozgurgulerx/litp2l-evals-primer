@@ -6,9 +6,13 @@ from unittest.mock import patch
 
 from cx_eval_lab.dataset import load_refund_cases
 from cx_eval_lab.agents import ReferenceSupportAgent
-from cx_eval_lab.evaluators import evaluate_case
+from cx_eval_lab.evaluators import (
+    evaluate_case, hash_customer_message, hash_structured_claims, hash_evidence_context,
+)
 from cx_eval_lab.gate import GatePolicy, apply_release_gate
-from cx_eval_lab.models import AgentOutput, TRUSTED_MESSAGE_TEMPLATES, TrustedMessageTemplate
+from cx_eval_lab.models import (
+    AgentOutput, TRUSTED_MESSAGE_TEMPLATES, TrustedMessageTemplate, SemanticEvaluationReceipt,
+)
 from cx_eval_lab.runner import evaluate_agent
 from cx_eval_lab.world import RefundTools, RefundWorld
 
@@ -87,6 +91,39 @@ class TemplateFactsTests(unittest.TestCase):
 
     def test_valid_ineligibility_explanation_remains_valid(self):
         self.assertTrue(self.grade('The order is not eligible.').passed)
+
+    def test_passing_bound_receipt_cannot_override_template_prerequisites(self):
+        output = AgentOutput('I could not verify the account.', 'not_refunded')
+        receipt = SemanticEvaluationReceipt(
+            'refund_customer_message_truth_v1', 'fixture-judge', 'sha256:' + 'a' * 64,
+            hash_customer_message(output.message), hash_structured_claims(output),
+            True, False, hash_evidence_context(self.case, self.world.events, self.world.snapshot),
+        )
+        result = evaluate_case(
+            self.case, output, self.world.events, self.world.snapshot, 1, 0,
+            semantic_evaluation_receipt=receipt,
+            qualified_semantic_calibration_hashes=frozenset({receipt.calibration_receipt_hash}),
+        )
+        self.assertFalse(result.passed)
+        self.assertEqual(1, result.unqualified_message_count)
+
+    def test_all_transaction_only_templates_still_pass_when_committed(self):
+        from tests.test_semantic_claim_integrity import committed_world
+
+        case, world = committed_world()
+        templates = tuple(template for template in TRUSTED_MESSAGE_TEMPLATES
+                          if template.template_id.startswith('refund_committed'))
+        self.assertEqual(3, len(templates))
+        for template in templates:
+            with self.subTest(template=template.template_id):
+                output = AgentOutput(
+                    template.message, 'refunded', message_template_id=template.template_id,
+                    transaction_status_claim=template.transaction_status_claim,
+                    settlement_status_claim=template.settlement_status_claim,
+                )
+                result = evaluate_case(case, output, world.events, world.snapshot, 1, 0)
+                self.assertTrue(result.passed)
+                self.assertEqual('resolved', result.resolution_status)
 
     def test_execution_failure_claim_requires_an_execution_failure(self):
         self.assertFalse(self.grade('The agent did not complete this case.').passed)

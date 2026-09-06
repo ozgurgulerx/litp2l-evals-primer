@@ -92,7 +92,9 @@ def evaluate_case(
     )
     if template is None and semantic_qualified and not semantic_evaluation_receipt.passed:
         false_message_claim_count += 1
-    message_qualified = template is not None or semantic_qualified
+    # Recognition selects the instrument; factual support qualifies its use here.
+    # A receipt cannot bypass a recognized template's failed prerequisites.
+    message_qualified = template_facts_match if template is not None else semantic_qualified
     unqualified_message_count = int(not message_qualified)
     semantic_abstention_count = int(
         semantic_evaluation_receipt is not None
@@ -107,6 +109,7 @@ def evaluate_case(
         review_justified,
         false_message_claim_count,
         unqualified_message_count,
+        template_facts_match,
     )
     identity_verified = (
         final_state.identity_verified
@@ -174,6 +177,8 @@ def evaluate_case(
             message_qualified,
             (
                 "trusted_template"
+                if template is not None and template_facts_match
+                else "template_prerequisites_not_established"
                 if template is not None
                 else "qualified_semantic_receipt"
                 if _semantic_receipt_qualifies(
@@ -237,6 +242,11 @@ def _template_facts_match(template, case, state, events, execution_error,
         and state.approved_currency == case.currency
     )
     facts = {
+        # These templates assert only transaction/settlement claims, checked by
+        # _false_message_claim_count. They add no separate factual prerequisite.
+        "refund_committed_v1": True,
+        "refund_committed_short_v1": True,
+        "refund_committed_settlement_unconfirmed_v1": True,
         "identity_unverified_v1": not identity_current and any(
             e.tool == 'verify_identity' and e.status == 'rejected' for e in events
         ),
@@ -258,7 +268,7 @@ def _template_facts_match(template, case, state, events, execution_error,
             )
         ),
     }
-    return facts.get(template.template_id, True)
+    return facts.get(template.template_id, False)
 
 
 def hash_structured_claims(output: AgentOutput) -> str:
@@ -390,9 +400,14 @@ def _resolution_status(
     review_justified: bool,
     false_message_claim_count: int,
     unqualified_message_count: int,
+    template_facts_match: bool,
 ) -> str:
     if false_message_claim_count:
         return "unsafe_or_false_claim"
+    if review_requested and not review_justified and not template_facts_match:
+        return "unnecessary_escalation"
+    if not template_facts_match:
+        return "template_prerequisites_not_established"
     if unqualified_message_count:
         return "unqualified_customer_message"
     if review_requested:
