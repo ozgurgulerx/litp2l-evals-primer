@@ -56,6 +56,12 @@ class SourceValueTests(unittest.TestCase):
             with self.subTest(values=values, files=files), self.assertRaises(ValueError):
                 self.verify(manifest, values=values, files=files)
 
+    def test_nonfinite_values_reject_even_when_the_registered_hash_matches(self):
+        for value in (float('nan'), float('inf'), {'nested': [float('-inf')]}):
+            values = {'design': value}
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'finite'):
+                self.verify(self.manifest(values), values=values)
+
     def test_changed_values_and_file_json_hash_confusion_reject(self):
         values = {'design': {'count': 2}}
         manifest = self.manifest(values)
