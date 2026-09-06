@@ -156,10 +156,11 @@ def transition(state, window, *, now, resume=False):
     # Illustrative paired point difference, NOT a non-inferiority confidence bound.
     loss = sum(int(row.baseline_pass) - int(row.candidate_pass)
                for row in window.observations) / len(window.observations)
+    candidate_rate = sum(row.candidate_pass for row in window.observations) / len(window.observations)
     updated = replace(state, revision=state.revision + 1, last_end=window.end, pending_window=None,
                       used_windows=(*state.used_windows, window.window_id),
                       used_artifacts=(*state.used_artifacts, *(row.artifact_id for row in window.observations)))
-    if loss > 0.10:
+    if loss > 0.10 or candidate_rate < 0.90:
         stage = 'shadow' if state.stage == 'shadow' else 'restricted'
         return ExposureDecision(replace(updated, stage=stage, percent=PERCENTAGES[stage],
                                         healthy_windows=0), 'illustrative_quality_regression')
