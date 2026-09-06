@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
@@ -75,8 +75,15 @@ def _summarize(rows, manifest, label, membership):
     baseline = sum(row['baseline']['passed'] for row in eligible) / count if count else None
     candidate = sum(row['candidate']['passed'] for row in eligible) / count if count else None
     comparison = None
-    # Never silently remove unqualified pairs from the registered inference population.
+    clusters = sorted({row['customer_id'] for row in rows})
+    cluster_delta = None
     if rows and count == len(rows):
+        means = [sum(int(r['candidate']['passed']) - int(r['baseline']['passed'])
+                     for r in rows if r['customer_id'] == customer)
+                 / sum(r['customer_id'] == customer for r in rows) for customer in clusters]
+        cluster_delta = sum(means) / len(means)
+    # Never silently remove unqualified pairs from the registered inference population.
+    if len(clusters) >= 2 and count == len(rows):
         comparison = paired_non_inferiority(
             tuple(PairedTrial(**row['baseline']) for row in rows),
             tuple(PairedTrial(**row['candidate']) for row in rows),
@@ -90,7 +97,7 @@ def _summarize(rows, manifest, label, membership):
             'changes': changes, 'baseline_rate': baseline, 'candidate_rate': candidate,
             'rate_population': 'qualified pairs only; descriptive, not a missingness adjustment',
             'trial_weighted_delta': candidate - baseline if count else None,
-            'cluster_weighted_delta': None if comparison is None else comparison['point_difference'],
+            'cluster_weighted_delta': cluster_delta,
             'comparison': comparison, 'status': status,
             'issues': ['missing_slice'] if not rows else ['unqualified_pairs'] if count != len(rows) else []}
 
