@@ -31,6 +31,7 @@ def packet():
                              'configuration_hash': CONFIG,
                              'criterion_id': 'refund_customer_message_truth_v1'},
             })
+            rows[-1]['judgment']['evidence_hash'] = canonical_hash(rows[-1]['evidence'])
     return {'schema_version': 'calibration-annotations-v1', 'evidence_kind': 'synthetic',
             'scope': scope, 'rows': rows}
 
@@ -108,6 +109,7 @@ class CalibrationDataTests(unittest.TestCase):
             lambda row: row['reviews'][1].update(reviewer_id='reviewer-a'),
             lambda row: row['reviews'][0].update(label='uncertain'),
             lambda row: row['judgment'].update(verdict='maybe'),
+            lambda row: row['evidence'].update(message='changed after judging'),
             lambda row: row.update(evidence={}),
             lambda row: row.update(false_passes=0),
         ]
