@@ -84,12 +84,15 @@ def evaluate_case(
         actual_outcome,
         template,
     )
-    message_qualified = template is not None or _semantic_receipt_qualifies(
+    semantic_qualified = _semantic_receipt_qualifies(
         output,
         semantic_evaluation_receipt,
         qualified_semantic_calibration_hashes,
         context_hash,
     )
+    if template is None and semantic_qualified and not semantic_evaluation_receipt.passed:
+        false_message_claim_count += 1
+    message_qualified = template is not None or semantic_qualified
     unqualified_message_count = int(not message_qualified)
     semantic_abstention_count = int(
         semantic_evaluation_receipt is not None
@@ -358,7 +361,6 @@ def _semantic_receipt_qualifies(
         receipt is not None
         and receipt.criterion_id == "refund_customer_message_truth_v1"
         and receipt.calibration_receipt_hash in qualified_calibration_hashes
-        and receipt.passed
         and not receipt.abstained
         and receipt.message_hash == hash_customer_message(output.message)
         and receipt.structured_claim_hash == hash_structured_claims(output)
