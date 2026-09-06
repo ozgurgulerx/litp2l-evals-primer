@@ -1,0 +1,1488 @@
+{
+  "schema": "isolation-study-v1",
+  "registration": {
+    "runs": [
+      "run-A",
+      "run-B"
+    ],
+    "query": "What is the status of my synthetic case?",
+    "strategies": [
+      "query-only",
+      "scoped"
+    ],
+    "worker_contexts": [
+      "fresh-workers",
+      "reused-worker",
+      "concurrent-threads"
+    ],
+    "shared_policy": {
+      "policy": "synthetic-shared-readonly-v1"
+    },
+    "phase_assignments": {
+      "fresh-workers": [
+        [
+          "A-first",
+          "run-A",
+          "worker-1"
+        ],
+        [
+          "B-first",
+          "run-B",
+          "worker-2"
+        ],
+        [
+          "A-repeat",
+          "run-A",
+          "worker-3"
+        ]
+      ],
+      "reused-worker": [
+        [
+          "A-first",
+          "run-A",
+          "worker-shared"
+        ],
+        [
+          "B-first",
+          "run-B",
+          "worker-shared"
+        ],
+        [
+          "A-repeat",
+          "run-A",
+          "worker-shared"
+        ]
+      ],
+      "concurrent-threads": [
+        [
+          "A-first",
+          "run-A",
+          "worker-A"
+        ],
+        [
+          "B-first",
+          "run-B",
+          "worker-B"
+        ],
+        [
+          "A-repeat",
+          "run-A",
+          "worker-A"
+        ]
+      ]
+    },
+    "sharing_contract": {
+      "private_cache": "same-run-only",
+      "shared_policy": "read-only-for-both-runs"
+    },
+    "schedule": "A first write; B same-query read; A repeat; concurrent threads overlap at barriers",
+    "identity": "operator-issued contexts; user query is not a run selector"
+  },
+  "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+  "comparisons": [
+    {
+      "strategy": "query-only",
+      "worker_context": "fresh-workers",
+      "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+      "initial_store": [
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "calls": [
+        {
+          "sequence": 1,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 2,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 3,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 4,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 5,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 6,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 7,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 8,
+          "run_id": "run-A",
+          "worker_id": "worker-3",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "step": "A-first",
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 3,
+          "write_sequence": 4,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "B-first",
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 7,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "A-repeat",
+          "run_id": "run-A",
+          "worker_id": "worker-3",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 8,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "final_store": [
+        {
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "grade": {
+        "foreign_marker_responses": 1,
+        "same_run_cache_hit": true,
+        "shared_policy_readable": true,
+        "shared_policy_overwrites_denied": 2,
+        "shared_policy_unchanged": true,
+        "private_writes": 1,
+        "contract_passed": false
+      },
+      "receipt_hash": "sha256:a4c55bd16d74ee4fad03a88a1232768b86d6705eb046806b3fcd9ee9a5c8e71d"
+    },
+    {
+      "strategy": "query-only",
+      "worker_context": "reused-worker",
+      "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+      "initial_store": [
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "calls": [
+        {
+          "sequence": 1,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 2,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 3,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 4,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 5,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 6,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 7,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 8,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "step": "A-first",
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 3,
+          "write_sequence": 4,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "B-first",
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 7,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "A-repeat",
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 8,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "final_store": [
+        {
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "grade": {
+        "foreign_marker_responses": 1,
+        "same_run_cache_hit": true,
+        "shared_policy_readable": true,
+        "shared_policy_overwrites_denied": 2,
+        "shared_policy_unchanged": true,
+        "private_writes": 1,
+        "contract_passed": false
+      },
+      "receipt_hash": "sha256:98999d47eca8c2ebd5ee92edd9ab0b3b657514eaddc257a695633fe1cba7310d"
+    },
+    {
+      "strategy": "query-only",
+      "worker_context": "concurrent-threads",
+      "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+      "initial_store": [
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "calls": [
+        {
+          "sequence": 1,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "worker_ready",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 2,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "worker_ready",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 3,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 4,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 5,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 6,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 7,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 8,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 9,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 10,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "step": "A-first",
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 5,
+          "write_sequence": 6,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "B-first",
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 9,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "A-repeat",
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 10,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "final_store": [
+        {
+          "storage_key": [
+            "private",
+            "*",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "grade": {
+        "foreign_marker_responses": 1,
+        "same_run_cache_hit": true,
+        "shared_policy_readable": true,
+        "shared_policy_overwrites_denied": 2,
+        "shared_policy_unchanged": true,
+        "private_writes": 1,
+        "contract_passed": false
+      },
+      "receipt_hash": "sha256:c51609ffc3ac1f3491ff5cb6484cc4b5eb46b7ceee908b76366474846bbd536b"
+    },
+    {
+      "strategy": "scoped",
+      "worker_context": "fresh-workers",
+      "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+      "initial_store": [
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "calls": [
+        {
+          "sequence": 1,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 2,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 3,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 4,
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "thread_id": 8375574912,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 5,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 6,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 7,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 8,
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "thread_id": 8375574912,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "sequence": 9,
+          "run_id": "run-A",
+          "worker_id": "worker-3",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "step": "A-first",
+          "run_id": "run-A",
+          "worker_id": "worker-1",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 3,
+          "write_sequence": 4,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "B-first",
+          "run_id": "run-B",
+          "worker_id": "worker-2",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 7,
+          "write_sequence": 8,
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "step": "A-repeat",
+          "run_id": "run-A",
+          "worker_id": "worker-3",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 9,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "final_store": [
+        {
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "grade": {
+        "foreign_marker_responses": 0,
+        "same_run_cache_hit": true,
+        "shared_policy_readable": true,
+        "shared_policy_overwrites_denied": 2,
+        "shared_policy_unchanged": true,
+        "private_writes": 2,
+        "contract_passed": true
+      },
+      "receipt_hash": "sha256:ffe757b038535e15f8c797ea6c19d95f26fa93e717e2db246895acf8a4bcc5bd"
+    },
+    {
+      "strategy": "scoped",
+      "worker_context": "reused-worker",
+      "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+      "initial_store": [
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "calls": [
+        {
+          "sequence": 1,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 2,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 3,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 4,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 5,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 6,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 7,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 8,
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "sequence": 9,
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "thread_id": 8375574912,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "step": "A-first",
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 3,
+          "write_sequence": 4,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "B-first",
+          "run_id": "run-B",
+          "worker_id": "worker-shared",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 7,
+          "write_sequence": 8,
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "step": "A-repeat",
+          "run_id": "run-A",
+          "worker_id": "worker-shared",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 9,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "final_store": [
+        {
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "grade": {
+        "foreign_marker_responses": 0,
+        "same_run_cache_hit": true,
+        "shared_policy_readable": true,
+        "shared_policy_overwrites_denied": 2,
+        "shared_policy_unchanged": true,
+        "private_writes": 2,
+        "contract_passed": true
+      },
+      "receipt_hash": "sha256:257749be9f7a68d4a4049bb795af8daa365297ec5184614b6813039b9facdfe0"
+    },
+    {
+      "strategy": "scoped",
+      "worker_context": "concurrent-threads",
+      "registration_hash": "sha256:7da80aeb637d0d5ee9d027f512e20a94f109584b6759a985d5db7bd6940cd231",
+      "initial_store": [
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "calls": [
+        {
+          "sequence": 1,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "worker_ready",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 2,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "worker_ready",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 3,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 4,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 5,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 6,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "sequence": 7,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "policy_read",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        },
+        {
+          "sequence": 8,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "policy_write_denied",
+          "query": null,
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "attempted-overwrite"
+          }
+        },
+        {
+          "sequence": 9,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": null
+        },
+        {
+          "sequence": 10,
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "thread_id": 6158381056,
+          "operation": "private_write",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "sequence": 11,
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "thread_id": 6141554688,
+          "operation": "private_read",
+          "query": "What is the status of my synthetic case?",
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "step": "A-first",
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 5,
+          "write_sequence": 6,
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "step": "B-first",
+          "run_id": "run-B",
+          "worker_id": "worker-B",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 9,
+          "write_sequence": 10,
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "step": "A-repeat",
+          "run_id": "run-A",
+          "worker_id": "worker-A",
+          "query": "What is the status of my synthetic case?",
+          "read_sequence": 11,
+          "write_sequence": null,
+          "value": {
+            "private_marker": "run-A"
+          }
+        }
+      ],
+      "final_store": [
+        {
+          "storage_key": [
+            "private",
+            "run-A",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-A"
+          }
+        },
+        {
+          "storage_key": [
+            "private",
+            "run-B",
+            "sha256:c6cef850ecc8d04afd925f83aa111d0fb8ff00d6fc94d378ec7fb34dab5f870b"
+          ],
+          "value": {
+            "private_marker": "run-B"
+          }
+        },
+        {
+          "storage_key": [
+            "shared-policy",
+            "*",
+            "policy-v1"
+          ],
+          "value": {
+            "policy": "synthetic-shared-readonly-v1"
+          }
+        }
+      ],
+      "grade": {
+        "foreign_marker_responses": 0,
+        "same_run_cache_hit": true,
+        "shared_policy_readable": true,
+        "shared_policy_overwrites_denied": 2,
+        "shared_policy_unchanged": true,
+        "private_writes": 2,
+        "contract_passed": true
+      },
+      "receipt_hash": "sha256:553ddea6be20e1144069bd511a90a36ee86c27b306b8ca21ca3b1a9124c75e51"
+    }
+  ],
+  "conformance_passed": true,
+  "deployment_authorized": false,
+  "limitations": "Synthetic markers only, no external/private data or model calls. Fresh/reused workers are Python objects; concurrent workers are two actual threads, not processes. A writes before B reads under explicit barriers; this is not scheduling fuzz or a race-rate estimate. Public immutable policy sharing is authorized; private answers are run-scoped. Operator handles and SQLite facade constrain this API, not hostile Python code or direct database access. Retained operation replay checks state consistency and grades; no source execution attestation, empirical cross-run risk estimate or deployment authority is claimed.",
+  "report_hash": "sha256:fd31121825363c59f703b5240793e4791634ab78cf20d9140d65c6af2b123489"
+}
