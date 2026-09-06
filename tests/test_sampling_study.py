@@ -141,3 +141,17 @@ class SamplingStudyTests(unittest.TestCase):
             self.assertEqual('finite-stratified-sampling-v1', json.loads(before)['schema'])
             self.assertNotEqual(0, subprocess.run(cmd, capture_output=True, check=False).returncode)
             self.assertEqual(before, target.read_bytes())
+
+    def test_exact_interval_boundary_does_not_round_unsafe_rate_down_to_threshold(self):
+        from cx_eval_lab.sampling_study import estimate_sample
+        frame = [{'unit_id': f'u{i}', 'stratum': 'only'} for i in range(3)]
+        rows = [{**r, 'failure': i == 0, 'pi': 1} for i, r in enumerate(frame)]
+        result = estimate_sample(frame, {'only': 3}, rows, threshold=.3333333333333333)
+        self.assertEqual('block', result['decisions']['interval'])
+
+    def test_retained_artifact_matches_complete_reexecution(self):
+        from cx_eval_lab.sampling_study import replay_study, run_study
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/sampling-study-v1.json'
+        artifact = json.loads(path.read_text())
+        self.assertEqual(run_study(), artifact)
+        self.assertEqual(artifact, replay_study(artifact))
