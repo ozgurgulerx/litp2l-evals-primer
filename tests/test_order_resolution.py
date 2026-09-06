@@ -2,6 +2,9 @@
 
 from dataclasses import asdict
 import json
+from pathlib import Path
+import sys
+import tempfile
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -10,6 +13,11 @@ from tests import test_openai_runtime as runtime_tests
 
 
 class OrderResolutionTests(unittest.TestCase):
+    def test_unresolved_requests_require_valid_text_and_customer_context(self):
+        from cx_eval_lab.order_resolution import UnresolvedRequest
+        for utterance, customer in (('', 'customer-1'), ('refund', ''), (None, 'customer-1')):
+            with self.subTest(utterance=utterance), self.assertRaises(ValueError):
+                UnresolvedRequest(utterance, customer)
     def test_input_omits_target_and_candidate_order_permutation_preserves_answer(self):
         from cx_eval_lab.order_resolution import example_cases, run_case, DescriptiveResolver
         cases = example_cases()
