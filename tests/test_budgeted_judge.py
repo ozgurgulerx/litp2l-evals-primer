@@ -58,6 +58,22 @@ class BudgetedJudgeTests(unittest.TestCase):
         self.assertNotIn('private path', result.campaign_audit_json)
         self.assertEqual(600, self.ledger.snapshot()['held_reservations_micro_usd'])
 
+    def test_malformed_runtime_cost_cannot_break_failure_audit(self):
+        from cx_eval_lab.semantic import SemanticJudgment
+        from cx_eval_lab.models import RuntimeEvidence
+        malformed = SemanticJudgment('pass', 'fixture', RuntimeEvidence(
+            'fixture', 'fixture', (), 1, 1, 2, float('nan'), 'invalid fixture'),
+            '{"retained":"provider evidence"}')
+        with patch.object(type(self.inner), 'evaluate', return_value=malformed):
+            result = self.judge.evaluate(self.request())
+        self.assertEqual('abstain', result.verdict)
+        self.assertIsNone(result.runtime_evidence)
+        self.assertEqual(malformed.provider_audit_json, result.provider_audit_json)
+        audit = json.loads(result.campaign_audit_json)
+        self.assertEqual('abstained', audit['status'])
+        self.assertIn('uncommitted_judgment', audit)
+        self.assertEqual(600, self.ledger.snapshot()['held_reservations_micro_usd'])
+
     def test_missing_invocation_or_conflict_makes_no_additional_call(self):
         self.assertEqual('abstain', self.judge.evaluate(SemanticRequest('{}')).verdict)
         self.assertEqual([], self.client.calls)
