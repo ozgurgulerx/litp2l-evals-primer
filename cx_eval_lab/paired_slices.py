@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
@@ -39,6 +39,8 @@ def _validate(packet, required, trusted):
         if type(payload['identity']['trial_index']) is not int:
             raise ValueError('artifact trial index requires an exact integer')
         case = RefundCase.from_dict(payload['case'])
+        if canonical_hash(payload['agent_input']) != canonical_hash(asdict(case.agent_input)):
+            raise ValueError('retained agent input differs from the registered case input')
         if len(case.slices) != len(set(case.slices)):
             raise ValueError('case slice labels must be unique')
         if case.case_id in cases and cases[case.case_id] != case.to_dict():
@@ -49,6 +51,10 @@ def _validate(packet, required, trusted):
             if type(row['trial_index']) is not int or type(row['passed']) is not bool:
                 raise ValueError('trial index and passed require exact integer/boolean types')
     replay_packet(packet, trusted_calibration_hashes=trusted)
+    # Preserve registration/execution order, not lexical case-ID order or artifact order.
+    ordered_cases = [cases[row['case_id']] for row in packet['baseline_trials'] if row['trial_index'] == 0]
+    if dict(manifest.input_hashes).get('dataset') != canonical_hash(ordered_cases):
+        raise ValueError('dataset must register the canonical ordered full-case list, not file bytes')
     return manifest, cases
 
 
