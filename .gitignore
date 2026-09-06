@@ -1,5 +1,8 @@
 .DS_Store
+.coverage
+.env*
+.pytest_cache/
 .venv/
 __pycache__/
+artifacts/runs/
 site/
-

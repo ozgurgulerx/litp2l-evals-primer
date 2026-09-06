@@ -1,0 +1,33 @@
+{
+  "artifact_type": "synthetic_probability_calibration",
+  "population": "cx_resolution_automation_teaching_sample",
+  "predictions": [
+    {"id": "P01", "confidence": 0.95, "correct": 1},
+    {"id": "P02", "confidence": 0.90, "correct": 1},
+    {"id": "P03", "confidence": 0.85, "correct": 0},
+    {"id": "P04", "confidence": 0.80, "correct": 1},
+    {"id": "P05", "confidence": 0.75, "correct": 1},
+    {"id": "P06", "confidence": 0.65, "correct": 0},
+    {"id": "P07", "confidence": 0.60, "correct": 1},
+    {"id": "P08", "confidence": 0.55, "correct": 0},
+    {"id": "P09", "confidence": 0.40, "correct": 0},
+    {"id": "P10", "confidence": 0.30, "correct": 1}
+  ],
+  "reliability_bins": [
+    {"range": "[0.00,0.60)", "lower": 0.0, "upper": 0.6, "upper_inclusive": false, "support": 3, "mean_confidence": 0.416666667, "empirical_accuracy": 0.333333333},
+    {"range": "[0.60,0.80)", "lower": 0.6, "upper": 0.8, "upper_inclusive": false, "support": 3, "mean_confidence": 0.666666667, "empirical_accuracy": 0.666666667},
+    {"range": "[0.80,1.00]", "lower": 0.8, "upper": 1.0, "upper_inclusive": true, "support": 4, "mean_confidence": 0.875, "empirical_accuracy": 0.75}
+  ],
+  "scores": {
+    "brier": 0.23725,
+    "negative_log_likelihood": 0.663855329,
+    "ece": 0.075
+  },
+  "selective_thresholds": [
+    {"threshold": 0.6, "coverage": 0.7, "automated": 7, "wrong": 2, "selective_risk": 0.285714286},
+    {"threshold": 0.8, "coverage": 0.4, "automated": 4, "wrong": 1, "selective_risk": 0.25},
+    {"threshold": 0.9, "coverage": 0.2, "automated": 2, "wrong": 0, "selective_risk": 0.0}
+  ],
+  "synthetic": true,
+  "limitation": "Ten teaching cases do not establish a production error bound."
+}

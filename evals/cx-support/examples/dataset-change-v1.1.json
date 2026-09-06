@@ -1,0 +1,29 @@
+{
+  "artifact_type": "synthetic_dataset_change",
+  "dataset": "refund-evaluation",
+  "from_version": "refund-v1.0",
+  "to_version": "refund-v1.1",
+  "change_reason": "protect a repaired timeout-after-commit failure",
+  "added_cases": [
+    {
+      "case_id": "refund-timeout-tr-001",
+      "dataset_role": "regression",
+      "source_incident_id": "synthetic-incident-2026-017",
+      "language": "tr",
+      "fault": "timeout_after_commit",
+      "expected_relation": "inspect authoritative ledger before any retry",
+      "outcome_invariant": "exactly one refund transaction"
+    }
+  ],
+  "deduplication": {
+    "exact_matches": 0,
+    "near_duplicate_review": "distinct language and fault-state boundary retained"
+  },
+  "label_access": "builders may inspect regression label; case is excluded from sealed acceptance",
+  "review": {
+    "approved": true,
+    "reviewer_role": "independent-evaluation-owner",
+    "decision": "add_and_rerun_baseline"
+  },
+  "synthetic": true
+}

@@ -62,3 +62,90 @@
   margin-bottom: 0.3rem;
 }
 
+.release-gate-diagram {
+  margin: 1.6rem 0 2rem;
+}
+
+.release-gate-diagram > img {
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 22%, transparent);
+  border-radius: 1rem;
+  box-shadow: 0 0.8rem 2rem rgb(6 95 70 / 12%);
+  display: block;
+  width: 100%;
+}
+
+.md-typeset ol.release-gate-stages {
+  counter-reset: release-stage;
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 1rem 0 0.65rem;
+  padding: 0;
+}
+
+.release-gate-stages li {
+  background: color-mix(in srgb, var(--md-primary-fg-color) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 22%, transparent);
+  border-radius: 0.7rem;
+  counter-increment: release-stage;
+  min-width: 0;
+  padding: 0.75rem 0.7rem;
+}
+
+.release-gate-stages li::before {
+  align-items: center;
+  background: var(--md-primary-fg-color);
+  border-radius: 999px;
+  color: #fff;
+  content: counter(release-stage);
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 700;
+  height: 1.25rem;
+  justify-content: center;
+  margin-bottom: 0.45rem;
+  width: 1.25rem;
+}
+
+.release-gate-stages strong,
+.release-gate-stages span {
+  display: block;
+}
+
+.release-gate-stages strong {
+  color: var(--md-primary-fg-color);
+  font-size: 0.72rem;
+  line-height: 1.25;
+  margin-bottom: 0.28rem;
+}
+
+.release-gate-stages span {
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.release-gate-stages code {
+  font-size: 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+.release-gate-diagram figcaption {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media screen and (max-width: 60em) {
+  .md-typeset ol.release-gate-stages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 37.5em) {
+  .md-typeset ol.release-gate-stages {
+    grid-template-columns: 1fr;
+  }
+}

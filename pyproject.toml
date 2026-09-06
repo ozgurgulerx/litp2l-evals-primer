@@ -7,6 +7,16 @@ dependencies = [
   "mkdocs-material>=9.6,<10",
 ]
 
+[project.optional-dependencies]
+openai = [
+    "openai-agents>=0.22.0",
+]
+
 [tool.uv]
 package = false
+
+[dependency-groups]
+dev = [
+    "coverage>=7.16.0",
+]
 

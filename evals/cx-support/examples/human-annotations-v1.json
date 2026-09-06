@@ -1,0 +1,50 @@
+{
+  "artifact_type": "synthetic_human_annotation_study",
+  "study_id": "cx-resolution-pilot-v1",
+  "criterion": "resolution_explanation",
+  "labels": ["pass", "fail", "unknown"],
+  "items": [
+    {"case_id": "H01", "situation": "eligible refund completed and clearly explained"},
+    {"case_id": "H02", "situation": "agent claims success but no transaction exists"},
+    {"case_id": "H03", "situation": "transaction pending but response says completed"},
+    {"case_id": "H04", "situation": "policy evidence is missing"},
+    {"case_id": "H05", "situation": "correct refusal with a concise reason"},
+    {"case_id": "H06", "situation": "correct result with needlessly accusatory tone"},
+    {"case_id": "H07", "situation": "Turkish response uses an ambiguous settlement term"},
+    {"case_id": "H08", "situation": "correct escalation with an explicit next step"}
+  ],
+  "annotations": [
+    {"case_id": "H01", "reviewer": "R1", "label": "pass"},
+    {"case_id": "H01", "reviewer": "R2", "label": "pass"},
+    {"case_id": "H01", "reviewer": "R3", "label": "pass"},
+    {"case_id": "H02", "reviewer": "R1", "label": "fail"},
+    {"case_id": "H02", "reviewer": "R2", "label": "fail"},
+    {"case_id": "H02", "reviewer": "R3", "label": "fail"},
+    {"case_id": "H03", "reviewer": "R1", "label": "fail"},
+    {"case_id": "H03", "reviewer": "R2", "label": "fail"},
+    {"case_id": "H03", "reviewer": "R3", "label": "pass"},
+    {"case_id": "H04", "reviewer": "R1", "label": "unknown"},
+    {"case_id": "H04", "reviewer": "R2", "label": "unknown"},
+    {"case_id": "H04", "reviewer": "R3", "label": "fail"},
+    {"case_id": "H05", "reviewer": "R1", "label": "pass"},
+    {"case_id": "H05", "reviewer": "R2", "label": "pass"},
+    {"case_id": "H05", "reviewer": "R3", "label": "pass"},
+    {"case_id": "H06", "reviewer": "R1", "label": "fail"},
+    {"case_id": "H06", "reviewer": "R2", "label": "pass"},
+    {"case_id": "H06", "reviewer": "R3", "label": "fail"},
+    {"case_id": "H07", "reviewer": "R1", "label": "unknown"},
+    {"case_id": "H07", "reviewer": "R2", "label": "pass"},
+    {"case_id": "H07", "reviewer": "R3", "label": "unknown"},
+    {"case_id": "H08", "reviewer": "R1", "label": "pass"},
+    {"case_id": "H08", "reviewer": "R2", "label": "pass"},
+    {"case_id": "H08", "reviewer": "R3", "label": "pass"}
+  ],
+  "adjudications": [
+    {"case_id": "H03", "label": "fail", "reason": "submitted and settled are different states"},
+    {"case_id": "H04", "label": "unknown", "reason": "required policy evidence is absent"},
+    {"case_id": "H06", "label": "fail", "reason": "criterion mixes factual status and interaction quality and must be split"},
+    {"case_id": "H07", "label": "unknown", "reason": "requires a Turkish-language anchor or specialist review"}
+  ],
+  "synthetic": true,
+  "release_evidence": false
+}

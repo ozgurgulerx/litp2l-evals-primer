@@ -8,10 +8,10 @@ All book chapters live in [`docs/`](docs). Edit the Markdown files, then preview
 
 ```bash
 uv sync
-uv run mkdocs serve
+make serve
 ```
 
-Open <http://127.0.0.1:8000> while the preview server is running. Changes appear automatically.
+Open <http://localhost:8797/litp2l-evals-primer/> while the preview server is running. Changes appear automatically. The `localhost` hostname is intentional: Safari can reject an explicit `127.0.0.1` HTTP URL when HTTPS-Only mode is enabled.
 
 ## Check the book
 
@@ -27,4 +27,3 @@ The strict build catches broken navigation and configuration problems. Every pus
 1. Create a Markdown file in `docs/`.
 2. Add it to `nav` in [`mkdocs.yml`](mkdocs.yml).
 3. Run `make build` before pushing.
-

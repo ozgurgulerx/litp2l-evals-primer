@@ -1,0 +1,41 @@
+{
+  "artifact_type": "synthetic_rag_claim_evaluation",
+  "run_id": "research-refund-817-rc2",
+  "question": "Did my refund complete and when will it arrive?",
+  "evidence": [
+    {"source_id": "ledger-order-817", "text": "refund r-91 is submitted at 10:02Z"},
+    {"source_id": "guide-v2-section-2", "text": "describe submitted refunds as pending and do not promise settlement time"}
+  ],
+  "claims": [
+    {
+      "claim": "The refund completed.",
+      "correct": false,
+      "supported": false,
+      "citation_entails": false,
+      "verdict": "contradicted"
+    },
+    {
+      "claim": "A refund event occurred at 10:02Z.",
+      "correct": true,
+      "supported": true,
+      "citation_entails": true,
+      "verdict": "supported_as_submission_event_only"
+    },
+    {
+      "claim": "The funds will reach the bank within three days.",
+      "correct": null,
+      "supported": false,
+      "citation_entails": false,
+      "verdict": "unsupported_current_truth_not_verified"
+    }
+  ],
+  "summary": {
+    "supported": 1,
+    "contradicted": 1,
+    "unsupported": 1,
+    "truth_not_verified": 1
+  },
+  "decision": "fail",
+  "failure_stage": "generation",
+  "synthetic": true
+}

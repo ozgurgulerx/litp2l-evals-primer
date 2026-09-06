@@ -32,25 +32,44 @@ theme:
     - content.action.edit
     - content.code.copy
     - navigation.footer
-    - navigation.indexes
     - navigation.sections
     - navigation.top
+    - navigation.tracking
     - search.highlight
     - search.suggest
+    - toc.follow
+    - toc.integrate
 
 nav:
   - Start Here: index.md
-  - 1. Foundations: foundations.md
-  - 2. Dataset Design: dataset-design.md
-  - 3. Metrics: metrics.md
-  - 4. LLM as a Judge: llm-as-a-judge.md
-  - 5. Production Evals: production-evals.md
-  - 6. Shipping Checklist: checklist.md
+  - Part I · Evaluation foundations:
+      - 1. Foundations: foundations.md
+      - 2. Dataset Design: dataset-design.md
+      - 3. Metrics: metrics.md
+      - 4. Human Evaluation: human-evaluation.md
+      - 5. LLM as a Judge: llm-as-a-judge.md
+      - 6. Robustness, Safety & Fairness: robustness-safety.md
+      - 7. RAG & Research Evals: rag-research-evals.md
+      - 8. Agent & System Evals: agent-evals.md
+      - 9. Benchmark Reproducibility: benchmark-reproducibility.md
+      - 10. Production Evals: production-evals.md
+      - 11. Release Gates & Shipping: checklist.md
+  - Part II · Build the CX evaluation system:
+      - The CX Eval Lab: build-the-system.md
+  - Part III · Reference library:
+      - References: references.md
+      - Courses & Learning Paths: courses.md
+      - Interview & Design Drills: interview-drills.md
+      - Source Coverage Ledger: source-coverage.md
+  - Part IV · Comparative system studies:
+      - System Studies: system-studies.md
 
 markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
@@ -62,5 +81,9 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 copyright: Copyright &copy; 2026 Ozgur Guler

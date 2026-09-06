@@ -1,0 +1,25 @@
+{
+  "artifact_type": "synthetic_judge_calibration_summary",
+  "judge_version": "grounded-status-v1",
+  "criterion": "grounded_transaction_status",
+  "qualification_dataset": "grounding-human-gold-v2",
+  "sample_size": 120,
+  "confusion_counts": {
+    "judge_fail_human_fail": 28,
+    "judge_fail_human_pass": 6,
+    "judge_pass_human_fail": 4,
+    "judge_pass_human_pass": 70,
+    "abstain_human_fail": 8,
+    "abstain_human_pass": 4
+  },
+  "false_pass_rate": 0.125,
+  "coverage": 0.9,
+  "known_failure_slice": "language:tr AND workflow:timeout-status",
+  "authority_decision": {
+    "en_low_medium_risk": "qualified",
+    "tr": "shadow_only",
+    "high_risk_financial": "human_escalation"
+  },
+  "requalify_on": ["model", "prompt", "rubric", "parser", "threshold", "traffic_shift"],
+  "synthetic": true
+}

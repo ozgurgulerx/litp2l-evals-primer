@@ -1,0 +1,28 @@
+{
+  "artifact_type": "synthetic_production_canary",
+  "matured_eligible_cases_per_arm": 1000,
+  "control": {
+    "verified_resolutions": 840,
+    "repeat_contacts": 110,
+    "duplicate_refunds": 0,
+    "p95_latency_ms": 1900,
+    "trace_completeness": 0.997
+  },
+  "candidate": {
+    "verified_resolutions": 852,
+    "repeat_contacts": 96,
+    "duplicate_refunds": 1,
+    "p95_latency_ms": 2100,
+    "trace_completeness": 0.998
+  },
+  "decision": {
+    "action": "rollback",
+    "reasons": ["hard:duplicate_refund"],
+    "average_quality_can_override": false
+  },
+  "follow_up": {
+    "first_causal_failure": "retry after timeout-after-commit without authoritative state inspection",
+    "required_receipt": "incident-to-regression dataset change"
+  },
+  "synthetic": true
+}

@@ -1,0 +1,11 @@
+Create one wide 16:9 editorial technical illustration for an educational guide about LLM evaluation release gates.
+
+Subject and composition: a clean left-to-right control pipeline. On the left, show a small cluster of test-case cards and two abstract model blocks merging into a measurement chamber. In the centre, show a substantial decision gate made from several independent parallel checkpoints, suggesting that every constraint must pass separately. Continue into a small canary node, then branch toward an expanding production network above and a curved rollback path below.
+
+Use simple visual symbols inside the independent checkpoints: a shield, balanced scales, an upward trend arrow, a segmented group of people, a speedometer, and a coin. Symbols only; do not include words or numbers.
+
+Style: precise modern editorial illustration with subtle isometric depth, crisp vector-like geometry, restrained shadows, generous white space, and a white background. Use the site's palette: evergreen, dark teal, mint green, and soft grey, with small amber and coral accents for hold and rollback states. Professional and calm rather than playful or futuristic.
+
+Leave generous margins around every element and keep the main flow centered. The finished image must remain clear when displayed at approximately 900 pixels wide.
+
+No text, no letters, no numbers, no labels, no legend, no logo, no watermark, no signature, no code, no browser chrome, no screenshot, no photorealism, no dark background, and no clutter.
