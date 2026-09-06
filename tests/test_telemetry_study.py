@@ -2,6 +2,8 @@
 
 import copy
 import json
+import socket
+import threading
 import unittest
 
 
@@ -65,6 +67,46 @@ class TelemetryStudyTests(unittest.TestCase):
         mismatch['request_id'] = 'R04'
         with self.assertRaises(ValueError):
             join_feedback(arm['ledger'], arm['spans'], [mismatch])
+
+    def test_standalone_feedback_rejects_forged_trace_and_duplicate_roots(self):
+        from cx_eval_lab.telemetry_study import join_feedback
+        arm = self.report['arms'][0]
+        for mode in ('trace', 'span', 'version', 'duplicate'):
+            spans = copy.deepcopy(arm['spans'])
+            root = next(s for s in spans if s['attributes']['role'] == 'request')
+            if mode == 'trace':
+                root['trace_id'] = 'a' * 32
+            elif mode == 'span':
+                root['span_id'] = 'a' * 16
+            elif mode == 'version':
+                root['attributes']['evaluation_version'] = 'unregistered'
+            else:
+                spans.append(copy.deepcopy(root))
+            with self.assertRaises(ValueError):
+                join_feedback(arm['ledger'], spans, arm['feedback_input'])
+
+    def test_idle_socket_cannot_hang_collector_shutdown(self):
+        from cx_eval_lab.telemetry_collector import LocalCollector
+        collector = LocalCollector('normal').__enter__()
+        connection = socket.create_connection(collector.server.server_address, timeout=2)
+        connection.sendall(b'POST /v1/traces HTTP/1.1\r\n')
+        shutdown = threading.Thread(target=collector.__exit__, daemon=True)
+        shutdown.start()
+        try:
+            shutdown.join(timeout=3)
+            self.assertFalse(shutdown.is_alive(), 'partial HTTP headers must have a bounded timeout')
+        finally:
+            connection.close()
+            shutdown.join(timeout=3)
+
+    def test_rehashed_unsupported_scope_claim_is_rejected(self):
+        from cx_eval_lab.evidence import canonical_hash
+        from cx_eval_lab.telemetry_study import verify_study
+        bad = copy.deepcopy(self.report)
+        bad['scope'] = 'Durable production proof'
+        bad['content_hash'] = canonical_hash({k: v for k, v in bad.items() if k != 'content_hash'})
+        with self.assertRaises(ValueError):
+            verify_study(bad)
 
 
 if __name__ == '__main__':
