@@ -36,6 +36,25 @@ class TelemetryStudyTests(unittest.TestCase):
         self.assertIsNone(rows['reject']['observed_pass_rate'])
         self.assertFalse(self.report['deployment_authorized'])
 
+    def test_manifest_records_execution_packages_and_source_hashes(self):
+        manifest = self.report['manifest']
+        for package in ('opentelemetry-sdk', 'opentelemetry-api', 'opentelemetry-proto',
+                        'opentelemetry-exporter-otlp-proto-http'):
+            self.assertEqual('1.44.0', manifest['packages'][package])
+        self.assertRegex(manifest['python'], r'^3\.\d+\.\d+$')
+        self.assertIn('requests', manifest['packages'])
+        self.assertEqual(2, len(manifest['source_hashes']))
+        for digest in manifest['source_hashes'].values():
+            self.assertRegex(digest, r'^[0-9a-f]{64}$')
+
+    def test_standalone_join_rejects_missing_span_identity_cleanly(self):
+        from cx_eval_lab.telemetry_study import join_feedback
+        arm = self.report['arms'][0]
+        spans = copy.deepcopy(arm['spans'])
+        del spans[0]['parent_span_id']
+        with self.assertRaises(ValueError):
+            join_feedback(arm['ledger'], spans, arm['feedback_input'])
+
     def test_retry_is_real_http_repeated_payload_with_one_stored_span(self):
         retry = next(arm for arm in self.report['arms'] if arm['mode'] == 'retry-dedup')
         self.assertEqual([503, 200], [x['status_code'] for x in retry['attempts'][:2]])
