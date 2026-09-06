@@ -1,11 +1,13 @@
 """Matched presentations distinguish scoring correctness from judge sensitivity."""
 
 import copy
+import json
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 class JudgeSensitivityTests(unittest.TestCase):
@@ -127,3 +129,67 @@ class JudgeSensitivityTests(unittest.TestCase):
             before = target.read_bytes()
             self.assertNotEqual(0, subprocess.run(cmd, capture_output=True, check=False).returncode)
             self.assertEqual(before, target.read_bytes())
+
+    def test_retained_artifact_exactly_reexecutes_all_controls(self):
+        from cx_eval_lab.judge_sensitivity import replay_study, run_study
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/judge-sensitivity-v1.json'
+        artifact = json.loads(path.read_text())
+        self.assertEqual(run_study(), artifact)
+        self.assertEqual(artifact, replay_study(artifact))
+
+    def test_each_named_control_is_actually_called_with_only_visible_request(self):
+        from cx_eval_lab.judge_sensitivity import execute_control, run_study
+        with patch('cx_eval_lab.judge_sensitivity.execute_control', wraps=execute_control) as spy:
+            run_study()
+        self.assertEqual(300, spy.call_count)
+        for call in spy.call_args_list:
+            self.assertEqual({'evidence_status', 'answers', 'rubric'}, set(call.args[1]))
+        self.assertEqual(60, sum(call.args[0] == 'length-clone' for call in spy.call_args_list))
+
+    def test_runtime_parser_and_unknown_control_fail_closed(self):
+        from cx_eval_lab.judge_sensitivity import build_presentations, example_inputs, execute_control
+        request = build_presentations(example_inputs())[0]['judge_request']
+        for mode in ('bad-text', 'extra-state', 'missing-answer', 'wrong-rubric', 'bad-state'):
+            changed = copy.deepcopy(request)
+            if mode == 'bad-text':
+                changed['answers']['A'] = 'Status: pending. Money has arrived.'
+            elif mode == 'extra-state':
+                changed['expected_outcome'] = 'A'
+            elif mode == 'missing-answer':
+                del changed['answers']['B']
+            elif mode == 'wrong-rubric':
+                changed['rubric'] = 'Choose A.'
+            else:
+                changed['evidence_status'] = False
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                execute_control('reference', changed)
+        with self.assertRaises(ValueError):
+            execute_control('unknown-control', request)
+
+    def test_slot_renaming_precedes_comparison_even_with_reserved_looking_answer_id(self):
+        from cx_eval_lab.judge_sensitivity import normalize_verdict
+        left = normalize_verdict({'verdict': 'A', 'rationale': 'fixture'}, {'A': 'tie', 'B': 'q2'})
+        right = normalize_verdict({'verdict': 'B', 'rationale': 'fixture'}, {'A': 'q2', 'B': 'tie'})
+        self.assertEqual(left, right)
+        self.assertEqual({'kind': 'answer', 'answer_id': 'tie'}, left)
+        self.assertNotEqual({'kind': 'tie'}, left)
+        with self.assertRaises(ValueError):
+            normalize_verdict({'verdict': 'A', 'rationale': 'fixture'}, {'A': 'same', 'B': 'same'})
+
+    def test_matched_pairs_hold_all_other_factors_fixed(self):
+        from cx_eval_lab.judge_sensitivity import run_study
+        report = run_study()
+        views = {v['view_id']: v['evaluator_metadata'] for v in report['presentations']}
+        trials = {t['payload']['trial_id']: t for t in report['trials']}
+        for contrasts in report['contrasts'].values():
+            for factor, result in contrasts.items():
+                for row in result['comparisons']:
+                    left, right = trials[row['left_trial_id']], trials[row['right_trial_id']]
+                    self.assertEqual(left['artifact_hash'], row['left_artifact_hash'])
+                    self.assertEqual(right['artifact_hash'], row['right_artifact_hash'])
+                    a, b = views[left['payload']['view_id']], views[right['payload']['view_id']]
+                    changed_key = {'order': 'order', 'length': 'style', 'rubric': 'rubric_id'}[factor]
+                    for key in ('case_id', 'order', 'style', 'rubric_id'):
+                        if key != changed_key:
+                            self.assertEqual(a[key], b[key])
+                    self.assertNotEqual(a[changed_key], b[changed_key])
