@@ -1,0 +1,3695 @@
+{
+  "schema": "context-packing-study-v1",
+  "inputs": {
+    "budget_bytes": 240,
+    "cases": [
+      {
+        "age_days": 10,
+        "amount_cents": 4000,
+        "case_id": "eligible",
+        "currency": "USD",
+        "customer_id": "customer-0",
+        "order_id": "order-0"
+      },
+      {
+        "age_days": 45,
+        "amount_cents": 4000,
+        "case_id": "too-old",
+        "currency": "USD",
+        "customer_id": "customer-1",
+        "order_id": "order-1"
+      },
+      {
+        "age_days": 10,
+        "amount_cents": 6000,
+        "case_id": "over-limit",
+        "currency": "USD",
+        "customer_id": "customer-2",
+        "order_id": "order-2"
+      }
+    ],
+    "passages": [
+      {
+        "content": {
+          "facts": {
+            "window_days": 30
+          },
+          "text": "refund policy eligibility order"
+        },
+        "passage_id": "window",
+        "source_kind": "authoritative-policy",
+        "updated_at": 1,
+        "version": "policy-v2"
+      },
+      {
+        "content": {
+          "facts": {
+            "window_days": 30
+          },
+          "text": "refund policy eligibility order"
+        },
+        "passage_id": "window-copy",
+        "source_kind": "authoritative-policy",
+        "updated_at": 2,
+        "version": "policy-v2"
+      },
+      {
+        "content": {
+          "facts": {
+            "max_refund_cents": 5000
+          },
+          "text": "refund policy limit"
+        },
+        "passage_id": "limit",
+        "source_kind": "authoritative-policy",
+        "updated_at": 3,
+        "version": "policy-v2"
+      },
+      {
+        "content": {
+          "facts": {
+            "max_refund_cents": 10000,
+            "window_days": 90
+          },
+          "text": "refund policy"
+        },
+        "passage_id": "stale",
+        "source_kind": "authoritative-policy",
+        "updated_at": 4,
+        "version": "policy-v1"
+      },
+      {
+        "content": {
+          "facts": {},
+          "text": "refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc"
+        },
+        "passage_id": "promo",
+        "source_kind": "promotion",
+        "updated_at": 5,
+        "version": "policy-v2"
+      }
+    ],
+    "policy": {
+      "max_refund_cents": 5000,
+      "version": "policy-v2",
+      "window_days": 30
+    },
+    "query": "refund policy eligibility order limit"
+  },
+  "protocol": {
+    "arms": [
+      "top2",
+      "top5",
+      "filtered-top5",
+      "oracle"
+    ],
+    "agents": [
+      "policy-control",
+      "ignore-limit-mutant"
+    ],
+    "ranking": "unique-ascii-term-overlap-id-tiebreak",
+    "packing": "recency-descending-id-tiebreak-whole-json-passages",
+    "filter": "trusted-active-version-and-authoritative-source-kind-then-exact-content-dedup",
+    "budget_unit": "UTF8 bytes of actual serialized context_body, excluding request and outer wrapper",
+    "required_evidence_units": [
+      "window_days",
+      "max_refund_cents"
+    ],
+    "agent_contract": "require complete noncontradictory two-fact bundle",
+    "backend": "independent-window-and-amount-cap-v1",
+    "authority": "local synthetic study only"
+  },
+  "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+  "trials": [
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "top2",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          }
+        ],
+        "packed_ids": [
+          "window-copy",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 71,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 141,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 141,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days"
+          ],
+          "packed_units": [
+            "window_days"
+          ],
+          "retrieved_evidence_unit_recall": 0.5,
+          "packed_evidence_unit_recall": 0.5,
+          "expected_action": "refund",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:efdaaf02b5356cd2a7c8726c753110dc60603f1b5e73b63a06e9ac84a78a0d05"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "top2",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          }
+        ],
+        "packed_ids": [
+          "window-copy",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 71,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 141,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 141,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days"
+          ],
+          "packed_units": [
+            "window_days"
+          ],
+          "retrieved_evidence_unit_recall": 0.5,
+          "packed_evidence_unit_recall": 0.5,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:348f3e4dcb7e9dd00fd659e91816e4687b02dff2bdce61d8f9d69df95fa0b422"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "top2",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          }
+        ],
+        "packed_ids": [
+          "window-copy",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 71,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 141,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 141,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days"
+          ],
+          "packed_units": [
+            "window_days"
+          ],
+          "retrieved_evidence_unit_recall": 0.5,
+          "packed_evidence_unit_recall": 0.5,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:83065fb86231c97b2e8a8d70196bf1326c472898fe3ee190a7276bad9899e625"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "top5",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "keep",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "keep",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "promo"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "promo",
+            "proposed_body_bytes": 191,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "stale",
+            "proposed_body_bytes": 268,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 256,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          }
+        ],
+        "packed_bytes": 191,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{},\"text\":\"refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 0.0,
+          "expected_action": "refund",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:2f86ccaf960564952d64e647794bbf2e78eadaf5e8f26b3f354ebec5c0e8acb8"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "top5",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "keep",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "keep",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "promo"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "promo",
+            "proposed_body_bytes": 191,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "stale",
+            "proposed_body_bytes": 268,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 256,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          }
+        ],
+        "packed_bytes": 191,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{},\"text\":\"refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 0.0,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:eef69e5040b61deba8896b091d112e45e18467b8bfb4dd4081c69cf8acc787a3"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "top5",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "keep",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "keep",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "promo"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "promo",
+            "proposed_body_bytes": 191,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "stale",
+            "proposed_body_bytes": 268,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 256,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          }
+        ],
+        "packed_bytes": 191,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{},\"text\":\"refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 0.0,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:cd62a5097cbd1f1af6f260343278794244fb677e43d1f26c8d19462bc438b1fc"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "filtered-top5",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "drop_duplicate",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "drop_version",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "drop_source_kind",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "refund",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            },
+            "result": {
+              "status": "committed"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "refund",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:aeb27f0b59f1517bbd7b3151e0e4cd666b1359a99f190f1d42ea57dfb4f60d95"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "filtered-top5",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "drop_duplicate",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "drop_version",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "drop_source_kind",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "deny",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:79ff406f27db7c16ed9d5ec4a351c6e0fab963fc74a94a64011fa902beef074a"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "filtered-top5",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "drop_duplicate",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "drop_version",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "drop_source_kind",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "deny",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:e6e324d0eaa5dd81f748529f28c719582fa572138a79c43b1d97f38bcbf4df43"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "oracle",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "limit"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "refund",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            },
+            "result": {
+              "status": "committed"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "refund",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:179696078e7a0a17c1958cc99a05131dc5e95570f87d2e0a54e953d28c5b28fd"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "oracle",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "limit"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "deny",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:5672e0b1cbd53f4b6a25465c3707db684fdd1fe6bee775b3c51ba2debb5eae83"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "oracle",
+        "agent": "policy-control",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "limit"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "deny",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:f379f8108e2758934b2f59ece769925f66651fb8fe38e178d2ed15e0a4dae295"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "top2",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          }
+        ],
+        "packed_ids": [
+          "window-copy",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 71,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 141,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 141,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days"
+          ],
+          "packed_units": [
+            "window_days"
+          ],
+          "retrieved_evidence_unit_recall": 0.5,
+          "packed_evidence_unit_recall": 0.5,
+          "expected_action": "refund",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:78ac57afa8fbbea92e33f386c6f7a1f99553cf91a097c0de6ed41e427c2dc884"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "top2",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          }
+        ],
+        "packed_ids": [
+          "window-copy",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 71,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 141,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 141,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days"
+          ],
+          "packed_units": [
+            "window_days"
+          ],
+          "retrieved_evidence_unit_recall": 0.5,
+          "packed_evidence_unit_recall": 0.5,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:bb96551e6fbeca7fdd2e796fe870ae29213a8badb26208c9b692e1f32720904b"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "top2",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          }
+        ],
+        "packed_ids": [
+          "window-copy",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 71,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 141,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 141,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days"
+          ],
+          "packed_units": [
+            "window_days"
+          ],
+          "retrieved_evidence_unit_recall": 0.5,
+          "packed_evidence_unit_recall": 0.5,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:377a03e95d41dd7ba4e9ceb5cc16fdc3c5178e2ce3fb6f07baefaee134cec0c1"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "top5",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "keep",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "keep",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "promo"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "promo",
+            "proposed_body_bytes": 191,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "stale",
+            "proposed_body_bytes": 268,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 256,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          }
+        ],
+        "packed_bytes": 191,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{},\"text\":\"refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 0.0,
+          "expected_action": "refund",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:10e5187e9d377213525e3748235e694ab04d385ea55a03df0f6deceec4fef629"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "top5",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "keep",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "keep",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "promo"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "promo",
+            "proposed_body_bytes": 191,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "stale",
+            "proposed_body_bytes": 268,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 256,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          }
+        ],
+        "packed_bytes": 191,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{},\"text\":\"refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 0.0,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:41bf606310689e277171e8f39484589a425ed85c842562f7d3429af2e7d0aad9"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "top5",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "keep",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "keep",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "promo"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "promo",
+            "proposed_body_bytes": 191,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "stale",
+            "proposed_body_bytes": 268,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 256,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window-copy",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 261,
+            "decision": "drop_budget"
+          }
+        ],
+        "packed_bytes": 191,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{},\"text\":\"refund \u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\"}]"
+        },
+        "decision": {
+          "action": "abstain",
+          "reason": "incomplete_or_conflicting_policy_bundle"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 0.0,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 0,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:58b63aae79e2dbcce618fb3faff55fd1647baad27249d129201753da0c63cc6a"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "filtered-top5",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "drop_duplicate",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "drop_version",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "drop_source_kind",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "refund",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            },
+            "result": {
+              "status": "committed"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "refund",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:f7e75cf88179e6c43247a43113364e62cf4fc9cfa220ea676ad115b1c6c16856"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "filtered-top5",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "drop_duplicate",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "drop_version",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "drop_source_kind",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "deny",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:ac70c4b72c020a105ee5d3e50e971121f047b67161bb6121a4dadbcbca081e67"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "filtered-top5",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "window-copy",
+          "limit",
+          "stale",
+          "promo"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "window-copy",
+            "decision": "drop_duplicate",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          },
+          {
+            "passage_id": "stale",
+            "decision": "drop_version",
+            "content_hash": "sha256:08cf6ac3bf8d732c02116e9762d3e6e330fd1a73ba9989b32d53e4d5b93d9c63"
+          },
+          {
+            "passage_id": "promo",
+            "decision": "drop_source_kind",
+            "content_hash": "sha256:1437f7d2ba7d1b2a7065ae9a45df8e91829cde8e7ec1812b6d7c5618e65c5e7f"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "refund",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-2",
+              "order_id": "order-2",
+              "currency": "USD",
+              "amount_cents": 6000
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "amount_limit"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 1,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:bec36ba894db9190b04a605bf5b1eea12d4b5f75d5c1d7552f2f57480655ce0f"
+    },
+    {
+      "payload": {
+        "case_id": "eligible",
+        "arm": "oracle",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "limit"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-0",
+            "order_id": "order-0"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "refund",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            },
+            "result": {
+              "status": "committed"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": [
+            {
+              "customer_id": "customer-0",
+              "order_id": "order-0",
+              "currency": "USD",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "refund",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:e58aa8780ab7f944aecedbbeffc69d45814caa60399eaaf2c524b256742bfc39"
+    },
+    {
+      "payload": {
+        "case_id": "too-old",
+        "arm": "oracle",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "limit"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 45,
+            "amount_cents": 4000,
+            "currency": "USD",
+            "customer_id": "customer-1",
+            "order_id": "order-1"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "deny",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": true,
+          "blocked_attempts": 0,
+          "contract_passed": true
+        }
+      },
+      "artifact_hash": "sha256:9c426b780eb8e05cac824558c4e3d9a345be3e5d8ecfd20afeb1020c4a347cd8"
+    },
+    {
+      "payload": {
+        "case_id": "over-limit",
+        "arm": "oracle",
+        "agent": "ignore-limit-mutant",
+        "registration_hash": "sha256:00be0cc2f1f5352622701d914c3a6ffc3751c0f5f4ba6e142442204a71bd874c",
+        "rankings": [
+          {
+            "passage_id": "window",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "window-copy",
+            "matched_terms": [
+              "eligibility",
+              "order",
+              "policy",
+              "refund"
+            ],
+            "score": 4
+          },
+          {
+            "passage_id": "limit",
+            "matched_terms": [
+              "limit",
+              "policy",
+              "refund"
+            ],
+            "score": 3
+          },
+          {
+            "passage_id": "stale",
+            "matched_terms": [
+              "policy",
+              "refund"
+            ],
+            "score": 2
+          },
+          {
+            "passage_id": "promo",
+            "matched_terms": [
+              "refund"
+            ],
+            "score": 1
+          }
+        ],
+        "retrieved_ids": [
+          "window",
+          "limit"
+        ],
+        "selected_ids": [
+          "window",
+          "limit"
+        ],
+        "selection_events": [
+          {
+            "passage_id": "window",
+            "decision": "keep",
+            "content_hash": "sha256:b3d2ab94707cb618bf38bb2a580bc72c8a6a6403e8ff263e68c853f176485528"
+          },
+          {
+            "passage_id": "limit",
+            "decision": "keep",
+            "content_hash": "sha256:0ca9c6aae00d34d84528f3c9d3e7ebaa4e40eae7651b7a834e968fb4ee73a186"
+          }
+        ],
+        "packed_ids": [
+          "limit",
+          "window"
+        ],
+        "packing_events": [
+          {
+            "passage_id": "limit",
+            "proposed_body_bytes": 66,
+            "decision": "pack"
+          },
+          {
+            "passage_id": "window",
+            "proposed_body_bytes": 136,
+            "decision": "pack"
+          }
+        ],
+        "packed_bytes": 136,
+        "agent_input": {
+          "request": {
+            "age_days": 10,
+            "amount_cents": 6000,
+            "currency": "USD",
+            "customer_id": "customer-2",
+            "order_id": "order-2"
+          },
+          "context_body": "[{\"facts\":{\"max_refund_cents\":5000},\"text\":\"refund policy limit\"},{\"facts\":{\"window_days\":30},\"text\":\"refund policy eligibility order\"}]"
+        },
+        "decision": {
+          "action": "refund",
+          "reason": "restricted_structured_policy_interpreter"
+        },
+        "initial_state": {
+          "refunds": []
+        },
+        "tool_events": [
+          {
+            "tool": "issue_refund",
+            "arguments": {
+              "customer_id": "customer-2",
+              "order_id": "order-2",
+              "currency": "USD",
+              "amount_cents": 6000
+            },
+            "result": {
+              "status": "blocked",
+              "reason": "amount_limit"
+            }
+          }
+        ],
+        "final_state": {
+          "refunds": []
+        },
+        "grade": {
+          "retrieved_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "packed_units": [
+            "window_days",
+            "max_refund_cents"
+          ],
+          "retrieved_evidence_unit_recall": 1.0,
+          "packed_evidence_unit_recall": 1.0,
+          "expected_action": "deny",
+          "decision_correct": false,
+          "blocked_attempts": 1,
+          "contract_passed": false
+        }
+      },
+      "artifact_hash": "sha256:5e32f3f049c92cf37285fde4de4e5242da22a72e0b833b1a224829c607b4dab9"
+    }
+  ],
+  "summary": [
+    {
+      "agent": "policy-control",
+      "arm": "top2",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 0.5,
+      "packed_evidence_unit_recall": 0.5,
+      "contract_passes": 0,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "policy-control",
+      "arm": "top5",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 1.0,
+      "packed_evidence_unit_recall": 0.0,
+      "contract_passes": 0,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "policy-control",
+      "arm": "filtered-top5",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 1.0,
+      "packed_evidence_unit_recall": 1.0,
+      "contract_passes": 3,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "policy-control",
+      "arm": "oracle",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 1.0,
+      "packed_evidence_unit_recall": 1.0,
+      "contract_passes": 3,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "ignore-limit-mutant",
+      "arm": "top2",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 0.5,
+      "packed_evidence_unit_recall": 0.5,
+      "contract_passes": 0,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "ignore-limit-mutant",
+      "arm": "top5",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 1.0,
+      "packed_evidence_unit_recall": 0.0,
+      "contract_passes": 0,
+      "blocked_attempts": 0
+    },
+    {
+      "agent": "ignore-limit-mutant",
+      "arm": "filtered-top5",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 1.0,
+      "packed_evidence_unit_recall": 1.0,
+      "contract_passes": 2,
+      "blocked_attempts": 1
+    },
+    {
+      "agent": "ignore-limit-mutant",
+      "arm": "oracle",
+      "case_count": 3,
+      "retrieved_evidence_unit_recall": 1.0,
+      "packed_evidence_unit_recall": 1.0,
+      "contract_passes": 2,
+      "blocked_attempts": 1
+    }
+  ],
+  "deployment_authorized": false,
+  "evidence_kind": "executed_deterministic_mock",
+  "limitations": "Constructed cases, not population evidence. Lexical ranking and structured fact parsing are not language understanding. Metadata authority is assumed, not authenticated. Oracle uses evaluator knowledge and is not a fair deployable retrieval method. UTF8 context bytes include facts and JSON but exclude request/wrapper; not tokenizer, model cost or latency measurements. Larger k interacts with recency reordering and a fixed byte budget; prefix-preserving packing need not evict earlier evidence. Requiring both facts is this control contract, not a universal minimum-evidence theorem. Source IDs and duplicate content are distinct; coverage counts two evidence units, not duplicate documents. Local re-execution is not historical attestation.",
+  "report_hash": "sha256:653dba2e63b3fa1d4d697bd70142d034eb517c67e3b2898bb7aa8456ac9f866a"
+}
