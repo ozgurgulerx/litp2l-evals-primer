@@ -94,10 +94,15 @@ def _validate_sources(inputs):
     _fields(inputs, ('schema', 'task', 'rubric', 'sources', 'reports'))
     _require(inputs['schema'] == 'long-report-inputs-v1', 'known input schema required')
     task = inputs['task']
-    _fields(task, ('task_id', 'as_of', 'scope', 'questions'))
+    _fields(task, ('task_id', 'as_of', 'scope', 'questions', 'required_synthesis_ids'))
     _identifier(task['task_id'])
     _identifier(task['scope'])
     _date(task['as_of'])
+    required_synthesis = task['required_synthesis_ids']
+    _require(isinstance(required_synthesis, list) and required_synthesis, 'independent synthesis obligations required')
+    for requirement in required_synthesis:
+        _identifier(requirement)
+    _require(len(required_synthesis) == len(set(required_synthesis)), 'duplicate synthesis obligation')
     questions = _unique(task['questions'], 'question_id')
     _require(bool(questions), 'required question inventory cannot disappear')
     for question in questions.values():
@@ -121,7 +126,7 @@ def _validate_sources(inputs):
     return questions, sources
 
 
-def _validate_report(report, questions, sources):
+def _validate_report(report, questions, sources, required_synthesis):
     _fields(report, ('report_id', 'text', 'claims', 'coverage', 'synthesis'))
     _text(report['text'])
     claims = _unique(report['claims'], 'claim_id')
@@ -131,13 +136,15 @@ def _validate_report(report, questions, sources):
     link_ids = []
     spans = []
     for claim in claims.values():
-        _fields(claim, ('claim_id', 'span', 'kind', 'status', 'links', 'reason', 'question_ids'))
+        _fields(claim, ('claim_id', 'span', 'kind', 'status', 'links', 'reason', 'question_ids', 'abstention_target_answerability'))
         _span(report['text'], claim['span'])
         _require(not MARKER.search(claim['span']['quote']), 'atomic spans must exclude citation trailers')
         spans.append((claim['span']['start'], claim['span']['end']))
         containers = [w for w in windows if w.start(1) <= claim['span']['start'] < claim['span']['end'] <= w.end(1)]
         _require(len(containers) == 1, 'gold atom outside registered Finding paragraph')
         _require(claim['kind'] in ('factual', 'recommendation', 'inference', 'abstention') and claim['status'] in STATUSES, 'explicit kind/status required')
+        _require(claim['abstention_target_answerability'] == ('unknown' if claim['kind'] == 'abstention' else None),
+                 'abstention target answerability is separate from assertion support')
         _text(claim['reason'])
         _require(isinstance(claim['question_ids'], list) and claim['question_ids']
             and len(set(claim['question_ids'])) == len(claim['question_ids']) and set(claim['question_ids']).issubset(questions), 'claim/question join mismatch')
@@ -158,6 +165,9 @@ def _validate_report(report, questions, sources):
                 _require(link['source_id'] in sources and link['relation'] in ('entails', 'contradicts', 'insufficient'), 'source/relation mismatch')
                 _span(sources[link['source_id']]['text'], link['source_span'])
     _require(len(spans) == len(set(spans)), 'duplicate atomic span would double count')
+    ordered_spans = sorted(spans)
+    _require(all(left[1] <= right[0] for left, right in zip(ordered_spans, ordered_spans[1:])),
+             'registered atomic clause spans must not intersect')
     _require(len(link_ids) == len(set(link_ids)) and sorted(link_ids) == sorted(m.group(1) for m in MARKER.finditer(report['text'])),
              'all literal citation attempts must join the complete inventory')
     # Independent inventory completeness check: all non-structural Finding text is covered.
@@ -179,14 +189,18 @@ def _validate_report(report, questions, sources):
             and set(row['claim_ids']) == {k for k, c in claims.items() if row['question_id'] in c['question_ids']}, 'question coverage/claim map disagreement')
         _require((row['status'] == 'omitted') == (not row['claim_ids']), 'omission is not a supplied answer')
         if row['status'] == 'justified_abstention':
-            _require(any(claims[k]['kind'] == 'abstention' and claims[k]['status'] == 'unknown' for k in row['claim_ids']), 'justified abstention needs explicit unknown evidence')
+            _require(any(claims[k]['kind'] == 'abstention' and claims[k]['status'] == 'supported'
+                and claims[k]['abstention_target_answerability'] == 'unknown' for k in row['claim_ids']),
+                'justified abstention needs a supported statement about an unknown target')
     synthesis = _unique(report['synthesis'], 'synthesis_id')
+    _require(set(synthesis) == set(required_synthesis), 'all task-registered synthesis obligations need explicit reviews')
     for row in synthesis.values():
         _fields(row, ('synthesis_id', 'claim_ids', 'evidence_claim_ids', 'status', 'reason'))
         _text(row['reason'])
-        _require(row['status'] in STATUSES, 'explicit synthesis status required')
+        _require(row['status'] in (*STATUSES, 'omitted'), 'explicit synthesis status required')
         for key in ('claim_ids', 'evidence_claim_ids'):
-            _require(isinstance(row[key], list) and row[key] and len(set(row[key])) == len(row[key])
+            _require(isinstance(row[key], list) and (bool(row[key]) if row['status'] != 'omitted' else not row[key])
+                and len(set(row[key])) == len(row[key])
                 and set(row[key]).issubset(claims), 'synthesis claim/evidence join mismatch')
     return claims, windows
 
@@ -227,6 +241,8 @@ def score_extraction(units, report):
         'observed_support': _ratio(len(recovered & gold_supported), len(recovered)),
         'full_inventory_support': _ratio(len(gold_supported), len(claims)),
         'unknown_recovered_count': sum(c['status'] == 'unknown' and c['claim_id'] in recovered for c in claims),
+        'abstention_target_unknown_recovered_count': sum(c.get('abstention_target_answerability') == 'unknown'
+            and c['claim_id'] in recovered for c in claims),
         'score_scope': 'observed support conditions on exact-matched registered atoms; unmatched units remain unscored, omissions retain full recall denominator'}
 
 
@@ -248,6 +264,7 @@ def _report_analysis(report, sources, as_of, context):
     return {'report_id': report['report_id'], 'report_hash': canonical_hash(report), 'shared_context_hash': context,
         'word_count': len(report['text'].split()), 'gold_claim_count': len(claims), 'controls': controls,
         'gold_status_counts': {s: sum(c['status'] == s for c in claims.values()) for s in STATUSES},
+        'underlying_unknown_count': sum(c['abstention_target_answerability'] == 'unknown' for c in claims.values()),
         'source_bindings': source_bindings, 'question_coverage': report['coverage'], 'synthesis': synthesis,
         'coverage_counts': dict(Counter(r['status'] for r in report['coverage'])),
         'synthesis_counts': dict(Counter(r['status'] for r in synthesis))}
@@ -257,12 +274,14 @@ def run_study(inputs=None):
     owned = json.loads(json.dumps(example_inputs() if inputs is None else inputs, allow_nan=False))
     questions, sources = _validate_sources(owned)
     for report in owned['reports']:
-        _validate_report(report, questions, sources)
+        _validate_report(report, questions, sources, owned['task']['required_synthesis_ids'])
     shared = canonical_hash({k: owned[k] for k in ('task', 'rubric', 'sources')})
     protocol = {'controls': list(CONTROLS), 'extraction_scope': 'registered single-line Finding paragraphs only; not surrounding prose or general NLP material-claim discovery',
         'span_unit': 'Unicode code points, end exclusive; exclude Finding prefix, final punctuation and citation trailers',
         'atomic_match': 'exact span identity only; enclosing compounds are one-to-many coverage, not atomic recovery',
         'semantic_authority': 'all status, question mapping and synthesis judgments supplied by the authored casebook',
+        'abstention': 'assertion support is separate from unknown underlying target; nonabstention target answerability is not assessed',
+        'gold_format': 'declared nonoverlapping Finding atoms; format compliance and casebook review, not general extraction qualification',
         'denominators': 'registered atomic inventory and required questions remain fixed under extraction omission'}
     registration = canonical_hash({'inputs': owned, 'protocol': protocol})
     analyses = [_report_analysis(r, sources, owned['task']['as_of'], shared) for r in owned['reports']]

@@ -132,9 +132,9 @@ class LongReportTests(unittest.TestCase):
         original = {c['claim_id']: c for c in inputs['reports'][0]['claims']}
         repaired = {c['claim_id']: c for c in inputs['reports'][1]['claims']}
         self.assertEqual('supported', original['C08']['status'])
-        self.assertEqual('unknown', original['C08']['answerability'])
+        self.assertEqual('unknown', original['C08']['abstention_target_answerability'])
         self.assertEqual('supported', repaired['C16']['status'])
-        self.assertEqual('unknown', repaired['C16']['answerability'])
+        self.assertEqual('unknown', repaired['C16']['abstention_target_answerability'])
         report = run_study(inputs)
         self.assertEqual(0, report['reports'][1]['gold_status_counts']['unknown'])
         self.assertEqual(4, report['reports'][1]['underlying_unknown_count'])
