@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import json
 import math
+import argparse
 from functools import lru_cache
+from pathlib import Path
 
 from cx_eval_lab.statistics import PairedTrial, paired_non_inferiority
 
@@ -44,7 +46,7 @@ def _upper_loss_limit(k, n, tail):
     return (low + high) / 2
 
 
-@lru_cache(maxsize=2048)
+@lru_cache(maxsize=2048, typed=True)
 def exact_loss_interval(k: int, n: int, confidence: float = 0.95):
     """Equal-tailed Clopper–Pearson bounds by numerical binomial inversion.
 
@@ -156,12 +158,34 @@ def study_report():
             sparse_population_study(n=30, loss_probability=0.01),
             sparse_population_study(n=30, loss_probability=0.04),
             sparse_population_study(n=100, loss_probability=0.04),
-            sparse_population_study(n=100, loss_probability=0.10,
+            sparse_population_study(n=200, loss_probability=0.01),
+            sparse_population_study(n=200, loss_probability=0.04),
+            sparse_population_study(n=200, loss_probability=0.10,
                                     hidden_loss_probability=1.0),
         ],
         "unequal_clusters": unequal_cluster_example(),
     }
 
 
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, help="new JSON artifact path; never overwritten")
+    args = parser.parse_args()
+    if args.output is not None and args.output.exists():
+        parser.error("output exists; retain history and choose a new artifact path")
+    payload = json.dumps(study_report(), indent=2, allow_nan=False)
+    if args.output is None:
+        print(payload)
+    else:
+        try:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            with args.output.open("x", encoding="utf-8") as destination:
+                destination.write(payload + "\n")
+        except OSError as error:
+            parser.error(f"cannot persist study: {error}")
+        print(f"saved statistical study: {args.output}; authority: lab_only")
+    return 0
+
+
 if __name__ == "__main__":
-    print(json.dumps(study_report(), indent=2, allow_nan=False))
+    raise SystemExit(main())
