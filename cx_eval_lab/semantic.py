@@ -48,6 +48,8 @@ class CalibrationRecord:
     minimum_per_class: int
     max_false_pass_upper: float
     max_false_block_upper: float
+    abstentions: int = 0
+    max_abstention_rate: float = 0.20
 
     def __post_init__(self):
         for digest in (self.configuration_hash, self.label_artifact_hash):
@@ -65,6 +67,8 @@ class CalibrationRecord:
                 raise ValueError("nonempty qualification scopes are required")
             object.__setattr__(self, name, values)
         scopes = tuple(sorted(tuple(sorted(scope)) for scope in self.slice_scopes))
+        if len(scopes) != 1:
+            raise ValueError("each calibration record must cover one joint slice scope")
         if not scopes or any(not scope or any(not isinstance(v, str) or not v for v in scope)
                              for scope in scopes):
             raise ValueError("explicit joint slice scopes are required")
@@ -75,7 +79,10 @@ class CalibrationRecord:
                 raise ValueError("calibration counts require 0 <= errors <= examples <= 500")
         if type(self.minimum_per_class) is not int or self.minimum_per_class < 1:
             raise ValueError("minimum calibration count must be positive")
-        for limit in (self.max_false_pass_upper, self.max_false_block_upper):
+        if (type(self.abstentions) is not int or not 0 <= self.abstentions
+                <= self.false_blocks + self.false_examples - self.false_passes):
+            raise ValueError("abstention count conflicts with class-conditional outcomes")
+        for limit in (self.max_false_pass_upper, self.max_false_block_upper, self.max_abstention_rate):
             if isinstance(limit, bool) or not isinstance(limit, (float, int)) or not 0 <= limit <= 1:
                 raise ValueError("error-rate limits must be probabilities")
 
@@ -104,6 +111,8 @@ class CalibrationRecord:
             return "outside_qualified_scope"
         if min(self.truthful_examples, self.false_examples) < self.minimum_per_class:
             return "insufficient_calibration_examples"
+        if self.abstentions / (self.truthful_examples + self.false_examples) > self.max_abstention_rate:
+            return "calibration_abstention_limit_exceeded"
         bounds = self.error_bounds
         if (bounds["false_pass_upper_95"] > self.max_false_pass_upper
                 or bounds["false_block_upper_95"] > self.max_false_block_upper):
