@@ -23,6 +23,8 @@ class ReplayAssessment:
     synthetic_diagnostic: bool
     checked_at: str
     replayed_trials: int
+    failed_trials: int
+    unqualified_message_trials: int
     semantic_trials: int
     calibration_status: str
     issues: tuple[str, ...]
@@ -83,4 +85,6 @@ def assess_replay(packet, *, trusted_packet_hash, historical_calibration_hashes,
         historical_trust_hash=canonical_hash(sorted(historical_calibration_hashes)),
         synthetic_diagnostic=allow_synthetic, checked_at=now.isoformat(),
         replayed_trials=len(results), semantic_trials=semantic_trials,
+        failed_trials=sum(not result.passed for result in results),
+        unqualified_message_trials=sum(result.unqualified_message_count > 0 for result in results),
         calibration_status=status, issues=tuple(issues))
