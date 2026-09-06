@@ -10,6 +10,8 @@ Write the rules, thresholds, gating slices, minimum evidence, decision owner, ex
 
 ## Four rule types
 
+The [CI Gate Lab](ci-gate-lab.md) now runs passing, insufficient-evidence, and policy-violation controls, retains their packets, and replays the grades. The configured workflow makes book publication depend on these software checks. It does not grant application deployment authority.
+
 1. **Hard invariant** — zero confirmed violations; never traded against an aggregate gain.
 2. **Non-inferiority** — the candidate stays within a risk-derived margin of the baseline on each protected slice, with paired uncertainty.
 3. **Superiority** — the improvement used to justify greater exposure must be evidenced, not merely higher as a point estimate.

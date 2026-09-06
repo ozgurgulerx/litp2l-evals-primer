@@ -1,6 +1,7 @@
 """CI must exercise passing, held and blocked evidence without deploying AI."""
 
 import json
+import copy
 from pathlib import Path
 import subprocess
 import sys
@@ -46,6 +47,26 @@ class CIConformanceTests(unittest.TestCase):
         self.assertFalse(any(step.get('continue-on-error') == 'true' for step in steps))
         pages = yaml.load((ROOT / '.github/workflows/pages.yml').read_text(), Loader=yaml.BaseLoader)
         self.assertEqual('eval-conformance', pages['jobs']['build-and-deploy']['needs'])
+
+    def test_packet_verification_rejects_missing_evidence_and_authority_escalation(self):
+        from cx_eval_lab.ci_conformance import run_conformance, verify_packet
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'evidence'
+            run_conformance(output, 'test-revision')
+            original = json.loads((output / 'reference.json').read_text())
+            for mutate, expected in (
+                (lambda p: p['experiment']['trial_artifacts'].pop(), 'artifact'),
+                (lambda p: p['receipt'].update(action='canary'), 'action'),
+                (lambda p: p['receipt'].update(authority_ceiling='production'), 'authority'),
+                (lambda p: p['receipt'].update(receipt_hash='wrong'), 'receipt hash'),
+            ):
+                with self.subTest(expected=expected):
+                    changed = copy.deepcopy(original)
+                    mutate(changed)
+                    with self.assertRaisesRegex(ValueError, expected):
+                        verify_packet(changed, action='lab_pass', revision='test-revision')
+            with self.assertRaisesRegex(ValueError, 'revision'):
+                verify_packet(original, action='lab_pass', revision='another-revision')
 
 
 if __name__ == '__main__':

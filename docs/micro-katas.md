@@ -124,6 +124,8 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 16–17](ci-gate-lab.md) exercise expected rejection in CI and the distinction between software conformance, candidate qualification, and application deployment. The command is verified locally; cloud execution and canary control remain separate milestones.
+
 [Katas 13–15](frontier-risk-decisions.md) now cover a bounded safety case, detection versus containment, and reliability-adjusted autonomy. They are worked reasoning and calculation exercises, not executed frontier-risk experiments.
 
 [Katas 11–12](process-recovery-study.md) now exercise actual process interruption, durable-effect reconciliation, changed idempotency arguments, and approval revocation. Their payment service is a local mock; no real money or live agent is involved.

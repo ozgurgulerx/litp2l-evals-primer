@@ -99,7 +99,23 @@ class StatisticalStudyTests(unittest.TestCase):
     def test_published_artifact_matches_executed_generator(self):
         from cx_eval_lab.statistical_study import study_report
         path = Path(__file__).resolve().parents[1] / 'docs/assets/statistical-method-study-v1.json'
-        self.assertEqual(json.loads(path.read_text()), json.loads(json.dumps(study_report())))
+        expected = json.loads(path.read_text())
+        actual = json.loads(json.dumps(study_report()))
+        def compare(left, right):
+            if isinstance(left, dict):
+                self.assertEqual(left.keys(), right.keys())
+                for key in left:
+                    compare(left[key], right[key])
+            elif isinstance(left, list):
+                self.assertEqual(len(left), len(right))
+                for a, b in zip(left, right):
+                    compare(a, b)
+            elif isinstance(left, float):
+                # libm rounding can differ between macOS and Linux CI.
+                self.assertAlmostEqual(left, right, places=12)
+            else:
+                self.assertEqual(left, right)
+        compare(expected, actual)
 
 
 if __name__ == '__main__':

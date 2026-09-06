@@ -1,0 +1,6 @@
+{
+  "returncode": 2,
+  "expected_returncode": 2,
+  "stdout": "evidence action: block; independent clusters: 5\n",
+  "stderr": ""
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "ci-conformance-v1",
+  "code_revision": "1797a1c",
+  "checks": [
+    {
+      "name": "reference",
+      "artifact": "reference.json",
+      "action": "lab_pass",
+      "replayed_trials": 20,
+      "artifact_hash": "sha256:de6b4f1daab24e94c65b987dff5ca5a39dfcdb85625e563685d4cedcd8e0002f"
+    },
+    {
+      "name": "insufficient-evidence",
+      "artifact": "insufficient-evidence.json",
+      "action": "hold",
+      "replayed_trials": 20,
+      "artifact_hash": "sha256:198d5b22ea85c98970c17b521c153acc7d04d0525189173c5292ef5836cd0fa8"
+    },
+    {
+      "name": "policy-bypass",
+      "artifact": "policy-bypass.json",
+      "action": "block",
+      "replayed_trials": 20,
+      "artifact_hash": "sha256:7093c90cf1429c7d3f8aaf3ada85f8bcdba6e6f3afe80e6c4ebbbd41dad86a4d"
+    }
+  ],
+  "deployment_authorized": false,
+  "meaning": "software conformance only; no model capability or deployment qualification"
+}
