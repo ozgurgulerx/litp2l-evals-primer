@@ -120,6 +120,30 @@ class KnowledgeActionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             execute_trial(case, (*docs, docs[0]), 'oracle', 'policy-control')
 
+    def test_server_permissions_policy_and_duplicate_guards_independent_of_agent(self):
+        from cx_eval_lab.knowledge_action import RefundLedger, example_cases
+        case = replace(example_cases()[0], amount_cents=1)
+        arguments = {key: getattr(case, key)
+                     for key in ('customer_id', 'order_id', 'amount_cents', 'currency')}
+        ledger = RefundLedger(case, 30)
+        for mutation in ({'customer_id': 'foreign'}, {'order_id': 'foreign'},
+                         {'currency': 'EUR'}, {'amount_cents': True}, {'amount_cents': 2}):
+            updated, event = ledger.issue_refund({**arguments, **mutation})
+            self.assertEqual(ledger, updated)
+            self.assertEqual('blocked', event['result']['status'])
+            self.assertEqual('arguments_mismatch', event['result']['reason'])
+        denied = RefundLedger(replace(case, age_days=45), 30)
+        updated, event = denied.issue_refund(arguments)
+        self.assertEqual(denied, updated)
+        self.assertEqual('policy_denied', event['result']['reason'])
+        accepted, event = ledger.issue_refund(arguments)
+        self.assertEqual('accepted', event['result']['status'])
+        self.assertEqual((), ledger.refunds)
+        self.assertEqual(1, len(accepted.refunds))
+        updated, event = accepted.issue_refund(arguments)
+        self.assertEqual(accepted, updated)
+        self.assertEqual('duplicate_denied', event['result']['reason'])
+
     def test_cli_retains_without_overwrite(self):
         with tempfile.TemporaryDirectory() as root:
             target = Path(root) / 'knowledge.json'
