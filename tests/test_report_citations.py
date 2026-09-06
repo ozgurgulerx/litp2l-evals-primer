@@ -145,3 +145,57 @@ class ReportCitationTests(unittest.TestCase):
         self.assertIn('[L4]', inputs['report']['text'])
         with self.assertRaises(ValueError):
             run_study(inputs)
+
+    def test_repeated_source_citation_does_not_inflate_supported_claim_count(self):
+        from cx_eval_lab.evidence import canonical_hash
+        from cx_eval_lab.report_citations import example_inputs, run_study
+        inputs = example_inputs()
+        text = inputs['report']['text'].replace('[L1]', '[L1] [L5]')
+        inputs['report']['text'] = text
+        for section in inputs['report']['sections']:
+            quote = section['span']['quote'].replace('[L1]', '[L1] [L5]')
+            start = text.index(quote)
+            section['span'] = {'start': start, 'end': start + len(quote), 'quote': quote}
+        for claim in inputs['claims']:
+            quote = claim['span']['quote']
+            start = text.index(quote)
+            claim['span'] = {'start': start, 'end': start + len(quote), 'quote': quote}
+        inputs['citations'].append({**copy.deepcopy(inputs['citations'][0]), 'citation_id': 'L5'})
+        sources = {s['source_id']: s for s in inputs['sources']}
+        claims = {c['claim_id']: c for c in inputs['claims']}
+        adjudications = []
+        old = {a['citation_id']: a for a in inputs['link_adjudications']}
+        for citation in inputs['citations']:
+            quote = '[' + citation['citation_id'] + ']'
+            start = text.index(quote)
+            citation['locator_span'] = {'start': start, 'end': start + len(quote), 'quote': quote}
+            previous = old['L1' if citation['citation_id'] == 'L5' else citation['citation_id']]
+            adjudications.append({**previous, 'citation_id': citation['citation_id'],
+                'binding_hash': canonical_hash({'claim': claims[citation['claim_id']], 'citation': citation,
+                                                'source': sources.get(citation['source_id'])})})
+        inputs['link_adjudications'] = adjudications
+        for ref in inputs['references']:
+            for judgment in ref['judgments']:
+                judgment['claim_binding_hash'] = canonical_hash(claims[judgment['claim_id']])
+        self.rebind_references(inputs)
+        analysis = run_study(inputs)['citation_analysis']
+        self.assertEqual(3, analysis['metrics']['entailed_all_attempted_links']['numerator'])
+        self.assertEqual(5, analysis['metrics']['entailed_all_attempted_links']['denominator'])
+        self.assertEqual(2, analysis['metrics']['claims_supported_by_citations']['numerator'])
+        self.assertEqual(2, analysis['unique_resolved_source_count'])
+
+    def test_unknown_truth_and_unresolved_support_cannot_be_coerced(self):
+        from cx_eval_lab.report_citations import example_inputs, run_study
+        for mode in ('unknown-truth', 'unresolved-entailed', 'unresolved-quote', 'empty-span', 'reversed-span'):
+            inputs = example_inputs()
+            if mode == 'unknown-truth':
+                inputs['references'][0]['judgments'][0]['correct'] = None
+            elif mode == 'unresolved-entailed':
+                inputs['link_adjudications'][3]['entailed'] = True
+            elif mode == 'unresolved-quote':
+                inputs['citations'][3]['source_span'] = {'start': 0, 'end': 1, 'quote': 'x'}
+            else:
+                span = inputs['claims'][0]['span']
+                span['end'] = span['start'] - (mode == 'reversed-span')
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                run_study(inputs)

@@ -395,12 +395,13 @@
   },
   "protocol": {
     "span_unit": "Python Unicode code-point offsets; end exclusive",
+    "citation_syntax": "every literal [opaque-ID] occurrence requires a unique registered citation record",
     "material_claims": "supplied atomic claim inventory, not extraction",
     "semantic_annotations": "authored source-span entailment, question mapping and truth judgments, not automatic understanding",
     "dates": "as_of and source effective intervals govern current support; review date records later correction",
     "abstention": "no registered claim is an abstention; omitted questions are not justified abstentions"
   },
-  "registration_hash": "sha256:9b01d976b1a3e485a30078f51071848a459cedaa064d8392ddccbe5234de7406",
+  "registration_hash": "sha256:517f5d9579e10caf1d874d1ded04688bbf094c783dfe8c22abaf83923a53e69c",
   "citation_analysis": {
     "links": [
       {
@@ -832,5 +833,5 @@
   "deployment_authorized": false,
   "evidence_kind": "synthetic_authored_report_analysis",
   "limitations": "Entire corpus, report and reviews are invented. Computation verifies spans, bindings, dates and aggregates supplied semantic judgments; it does not discover entailment, factual truth or all material claims. Required-question completeness is relative to the registered authored mapping. No actual long-report/model performance, human review or deployment qualification is established. The historical reference is deliberately wrong for one claim. Reassessment changes the instrument, not the report. Hashes preserve local consistency, not authenticated authority or execution history.",
-  "report_hash": "sha256:33c80b3bb019f107a382a185c13787272f0d332d8880d1af7316d528c0807cc1"
+  "report_hash": "sha256:46207d090b2b599da6c63e65542dee43f6bc988f33caf1020672ee9488ae7d08"
 }

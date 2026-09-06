@@ -166,6 +166,9 @@ def _validate(inputs):
         else:
             _require(citation['source_id'] in sources, 'foreign source ID; unresolved links must be explicit None')
             _check_span(sources[citation['source_id']]['text'], citation['source_span'])
+    markers = [(m.group(1), m.start(), m.end()) for m in re.finditer(r'\[([A-Za-z0-9_-]{1,80})\]', report['text'])]
+    registered_markers = [(c['citation_id'], c['locator_span']['start'], c['locator_span']['end']) for c in citations.values()]
+    _require(sorted(markers) == sorted(registered_markers), 'every literal citation marker occurrence must join the inventory')
     adjudications = _unique(inputs['link_adjudications'], 'citation_id')
     _require(set(adjudications) == set(citations), 'every attempted link needs an explicit authored adjudication')
     for key, row in adjudications.items():
@@ -258,7 +261,9 @@ def run_study(inputs=None):
         'changed_claim_ids': [a['claim_id'] for a, b in zip(original['claims'], updated['claims'], strict=True) if a['correct'] != b['correct']],
         'reviewed_on': owned['references'][1]['reviewed_on'],
         'review_note': 'Authored correction exposes a false pass in the old reference; the report and corpus did not change.'}
-    protocol = {'span_unit': 'Python Unicode code-point offsets; end exclusive', 'material_claims': 'supplied atomic claim inventory, not extraction',
+    protocol = {'span_unit': 'Python Unicode code-point offsets; end exclusive',
+        'citation_syntax': 'every literal [opaque-ID] occurrence requires a unique registered citation record',
+        'material_claims': 'supplied atomic claim inventory, not extraction',
         'semantic_annotations': 'authored source-span entailment, question mapping and truth judgments, not automatic understanding',
         'dates': 'as_of and source effective intervals govern current support; review date records later correction',
         'abstention': 'no registered claim is an abstention; omitted questions are not justified abstentions'}
