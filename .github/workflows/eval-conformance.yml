@@ -33,6 +33,8 @@ jobs:
           uv run --extra openai coverage xml -o coverage.xml
       - name: Exercise lab pass, insufficient-evidence hold, and policy block
         run: uv run python -m cx_eval_lab.ci_conformance --output-dir ci-evidence --code-revision "$CXLAB_CODE_REVISION"
+      - name: Exercise campaign consistency and release-decision composition
+        run: uv run python -m cx_eval_lab.campaign_conformance --output ci-evidence/campaign-conformance.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure
