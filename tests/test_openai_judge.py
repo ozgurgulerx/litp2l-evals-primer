@@ -127,7 +127,8 @@ class OpenAIJudgeTests(unittest.TestCase):
         self.assertEqual(usage, json.loads(result.provider_audit_json)['response']['usage'])
 
     def test_invalid_configuration_and_oversized_input_do_not_call_provider(self):
-        for change in ({'timeout_seconds': float('nan')}, {'input_usd_per_million': -1},
+        for change in ({'timeout_seconds': float('nan')}, {'timeout_seconds': 10**400},
+                       {'input_usd_per_million': 10**400}, {'input_usd_per_million': -1},
                        {'max_output_tokens': True}, {'model': ''}, {'output_usd_per_million': None}):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 self.judge(**change)
