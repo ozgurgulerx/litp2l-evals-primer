@@ -1,6 +1,8 @@
 """Barrier-ordered real child processes; synthetic detector and policy labels."""
 
+import copy
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -16,6 +18,8 @@ class ContainmentStudyTests(unittest.TestCase):
         self.assertTrue(report['conformance_passed'])
         self.assertFalse(report['deployment_authorized'])
         self.assertEqual(6, len(report['trials']))
+        self.assertTrue(all(t['initial_state'] == {'revoked': False, 'effects': [], 'events': []}
+                            for t in report['trials']))
         trials = {trial['case']: trial for trial in report['trials']}
         self.assertEqual([0, 1, 1, 0, 0, 1], [len(t['final_state']['effects']) for t in report['trials']])
         self.assertEqual([2, 1, 0, 2, 2, 0], [t['grade']['denied_attempts'] for t in report['trials']])
@@ -51,17 +55,44 @@ class ContainmentStudyTests(unittest.TestCase):
     def test_timeout_reaps_owned_controller_and_delegated_worker(self):
         import cx_eval_lab.containment_study as study
         processes = []
+        delegated = []
         original = subprocess.Popen
+        original_read = study._read_process
         def tracked(*args, **kwargs):
             process = original(*args, **kwargs)
             processes.append(process)
             return process
+        def observed_read(process):
+            message = original_read(process)
+            if message.get('event') == 'coordinator_ready':
+                delegated.append(message['child_pid'])
+            return message
         with patch.object(study.subprocess, 'Popen', side_effect=tracked), \
+                patch.object(study, '_read_process', side_effect=observed_read), \
                 patch.object(study, '_receive', side_effect=TimeoutError('fixture blocked IPC')):
             with self.assertRaises(TimeoutError):
                 study.run_trial('cancel-parent-only')
         self.assertTrue(processes)
         self.assertTrue(all(process.poll() is not None for process in processes))
+        self.assertEqual(1, len(delegated))
+        with self.assertRaises(ProcessLookupError):
+            os.kill(delegated[0], 0)
+
+    def test_conformance_rejects_wrong_causal_order_despite_identical_counts(self):
+        from cx_eval_lab.containment_study import _conforms, grade, run_study
+        report = run_study()
+        self.assertTrue(_conforms(report['trials']))
+        for case, event in (('cancel-parent-only', 'parent_task_cancelled'),
+                            ('late-revoke', 'authority_revoked')):
+            trials = copy.deepcopy(report['trials'])
+            trial = next(row for row in trials if row['case'] == case)
+            state = trial['final_state']
+            marker = next(row for row in state['events'] if row['event'] == event)
+            marker['seq'] = max(row['seq'] for row in state['events']) + 1 if event.startswith('parent') else 0
+            state['events'].sort(key=lambda row: row['seq'])
+            trial['grade'] = grade(state, trial['configuration']['kind'])
+            self.assertEqual([0, 1, 1, 0, 0, 1], [row['grade']['completed_effects'] for row in trials])
+            self.assertFalse(_conforms(trials))
 
     def test_unknown_case_rejected_before_process_creation(self):
         from cx_eval_lab.containment_study import run_trial
