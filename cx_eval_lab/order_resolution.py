@@ -203,37 +203,43 @@ def run_case(case, agent, *, reverse=False):
         error = type(failure).__name__
         output = AgentOutput(message='Execution failed.', claimed_outcome='needs_review')
     orders = world.artifacts()
+    metrics = grade_resolution_execution(case, output, orders, world._events, error)
+    return {'case': asdict(case), 'agent': agent.name, 'reverse': reverse,
+            'agent_input': asdict(case.request), 'orders': orders, 'tool_events': list(world._events),
+            'output': asdict(output), 'execution_error': error,
+            'elapsed_ms': (time.perf_counter() - started) * 1000,
+            **metrics, 'semantic_message_qualified': False, 'authority': 'lab_only'}
+
+
+def grade_resolution_execution(case, output, orders, events, error):
+    """Grade observed multi-order effects; no semantic truth qualification."""
     counts = {row['order']['order_id']: row['state']['refund_transaction_count'] for row in orders}
     wrong = sum(count for identity, count in counts.items() if identity != case.expected_order_id)
-    expected = (world.total_commits == 0 if case.expected_order_id is None
+    expected = (sum(counts.values()) == 0 if case.expected_order_id is None
                 else counts[case.expected_order_id] == 1 and wrong == 0)
-    excess = max(0, world._clarifications - case.required_clarifications)
-    missing = max(0, case.required_clarifications - world._clarifications)
+    clarifications = sum(event['tool'] == 'ask_customer' and 'error' not in event for event in events)
+    excess = max(0, clarifications - case.required_clarifications)
+    missing = max(0, case.required_clarifications - clarifications)
     denied = sum('error' in event or (event['tool'] == 'verify_identity' and not event.get('result'))
                  or (event['tool'] == 'issue_refund' and event.get('result', {}).get('status') == 'blocked')
                  or (event['tool'] == 'request_refund_approval'
                      and event.get('result', {}).get('approved') is False)
-                 for event in world._events)
+                 for event in events)
     clarified = case.required_clarifications == 0
     premature = 0
-    for event in world._events:
+    for event in events:
         if event['tool'] == 'ask_customer' and event.get('result'):
             clarified = True
         if event['tool'] in {'issue_refund', 'request_refund_approval'} and not clarified:
             premature += 1
     unresolved_claim = case.expected_order_id is None and output.claimed_outcome == 'needs_review'
     claim = unresolved_claim or (case.expected_order_id is not None and output.claimed_outcome == 'refunded')
-    return {'case': asdict(case), 'agent': agent.name, 'reverse': reverse,
-            'agent_input': asdict(case.request), 'orders': orders, 'tool_events': list(world._events),
-            'output': asdict(output), 'execution_error': error,
-            'elapsed_ms': (time.perf_counter() - started) * 1000,
-            'wrong_order_commits': wrong, 'unnecessary_clarifications': excess,
+    return {'wrong_order_commits': wrong, 'unnecessary_clarifications': excess,
             'missing_clarifications': missing, 'denied_attempts': denied,
             'premature_action_attempts': premature,
             'task_completed': case.expected_order_id is not None and expected and claim,
             'passed': expected and claim and excess == 0 and missing == 0
-                      and denied == 0 and premature == 0 and error is None,
-            'semantic_message_qualified': False, 'authority': 'lab_only'}
+                      and denied == 0 and premature == 0 and error is None}
 
 
 def example_cases():

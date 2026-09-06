@@ -38,6 +38,9 @@ class TrialArtifact:
 
 
 def _regrade(payload, trusted_calibration_hashes):
+    if payload['schema'] == 'resolution-trial-v1':
+        from cx_eval_lab.resolution_evidence import regrade
+        return regrade(payload)
     if payload["schema"] != "refund-trial-v1":
         raise ValueError("unsupported trial artifact schema")
     case = RefundCase.from_dict(payload["case"])
@@ -87,6 +90,9 @@ def _replay_packet(packet, trusted_calibration_hashes):
     manifest = ExperimentManifest(**packet["manifest"])
     if manifest.content_hash != packet["manifest_hash"]:
         raise ValueError("manifest hash mismatch")
+    if any(a['payload']['schema'] == 'resolution-trial-v1' for a in packet['trial_artifacts']):
+        from cx_eval_lab.resolution_evidence import validate_packet
+        validate_packet(packet, manifest)
     artifacts = {}
     for artifact in packet["trial_artifacts"]:
         digest = artifact["artifact_hash"]
@@ -119,7 +125,7 @@ def _replay_packet(packet, trusted_calibration_hashes):
             expected = {
                 "passed": result.passed, "latency_ms": result.latency_ms,
                 "cost_usd": result.cost_usd,
-                "cluster_id": payload["case"]["customer_id"],
+                "cluster_id": _population_entry(payload)[1],
                 "failed_checks": [check.name for check in result.checks if not check.passed],
             }
             if any(row[name] != value for name, value in expected.items()):
@@ -132,11 +138,19 @@ def _replay_packet(packet, trusted_calibration_hashes):
                      for case_id in case_ids for index in range(manifest.repetitions)}
     if keys != expected_keys:
         raise ValueError("incomplete registered repetitions or paired arms")
-    population = [artifacts[row["artifact_hash"]]["case"]
+    population = [artifacts[row["artifact_hash"]]
                   for row in packet["baseline_trials"] if row["trial_index"] == 0]
     population_digest = canonical_hash(
-        [[case["case_id"], case["customer_id"], case["slices"]] for case in population]
+        [_population_entry(payload) for payload in population]
     )
     if population_digest != manifest.population_hash:
         raise ValueError("registered population hash mismatch")
     return tuple(results)
+
+
+def _population_entry(payload):
+    if payload['schema'] == 'resolution-trial-v1':
+        from cx_eval_lab.resolution_evidence import case_from_dict, population_entry
+        return population_entry(case_from_dict(payload['case']))
+    case = payload['case']
+    return [case['case_id'], case['customer_id'], case['slices']]

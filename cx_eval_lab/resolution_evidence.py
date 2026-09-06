@@ -1,0 +1,169 @@
+"""Native multi-order evidence: mock-tool replay, not execution attestation."""
+
+from dataclasses import asdict, dataclass
+import json
+import math
+
+from cx_eval_lab.evidence import canonical_hash
+from cx_eval_lab.models import AgentOutput, CheckResult, RuntimeEvidence
+from cx_eval_lab.order_resolution import (
+    MultiOrderWorld, OrderRecord, ResolutionCase, UnresolvedRequest, grade_resolution_execution,
+)
+
+SCHEMA = 'resolution-trial-v1'
+DATASET = 'order-resolution-v1'
+EVALUATOR = 'resolution-contract-v1'
+ESTIMAND = 'candidate_minus_baseline_resolution_contract'
+SLICES = ('journey:refund', 'surface:order-resolution')
+
+
+def _require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def case_from_dict(raw):
+    case = ResolutionCase(**{**raw, 'request': UnresolvedRequest(**raw['request']),
+                              'orders': tuple(OrderRecord(**r) for r in raw['orders'])})
+    _require(isinstance(case.case_id, str) and bool(case.case_id.strip()), 'invalid resolution case ID')
+    _require(case.clarification_reply is None or isinstance(case.clarification_reply, str),
+             'invalid clarification reply')
+    _require(1 <= len(case.orders) <= 100, 'resolution case requires 1..100 orders')
+    return case
+
+
+def population_entry(case):
+    return [case.case_id, case.request.customer_id, list(SLICES)]
+
+
+def design(baseline, candidate):
+    return {'baseline_agent': baseline, 'candidate_agent': candidate,
+            'order_permutation': 'reverse_on_odd_repetitions',
+            'arm_order': 'alternate_by_case_and_repetition',
+            'criterion': EVALUATOR, 'semantic_qualification': 'not_implemented'}
+
+
+def validate_registration(manifest, cases, registered_design):
+    _require(cases and len({c.case_id for c in cases}) == len(cases), 'unique resolution cases required')
+    _require(type(manifest.repetitions) is int and manifest.repetitions >= 2
+             and manifest.repetitions % 2 == 0, 'balanced resolution repetitions require a positive even count')
+    _require(manifest.dataset_version == DATASET and manifest.evaluator_version == EVALUATOR
+             and manifest.estimand == ESTIMAND, 'resolution manifest scope mismatch')
+    _require(registered_design == design(registered_design['baseline_agent'],
+                                        registered_design['candidate_agent']), 'unsupported resolution design')
+    hashes = dict(manifest.input_hashes)
+    _require(hashes.get('resolution-cases') == canonical_hash([asdict(c) for c in cases]),
+             'registered resolution cases mismatch')
+    _require(hashes.get('resolution-design') == canonical_hash(registered_design),
+             'registered resolution design mismatch')
+    _require(manifest.population_hash == canonical_hash([population_entry(c) for c in cases]),
+             'registered resolution population mismatch')
+
+
+def validate_packet(packet, manifest):
+    artifacts = packet['trial_artifacts']
+    _require(artifacts and all(a['payload']['schema'] == SCHEMA for a in artifacts),
+             'mixed or unsupported resolution artifact schemas')
+    by_hash = {a['artifact_hash']: a['payload'] for a in artifacts}
+    population = [case_from_dict(by_hash[r['artifact_hash']]['case'])
+                  for r in packet['baseline_trials'] if r['trial_index'] == 0]
+    first = artifacts[0]['payload']
+    validate_registration(manifest, population, first['design'])
+    registered = {c.case_id: canonical_hash(asdict(c)) for c in population}
+    for artifact in artifacts:
+        p = artifact['payload']
+        identity = p['identity']
+        _require(canonical_hash(p['case']) == registered.get(identity['case_id']),
+                 'resolution case changed between paired trials')
+        _require(p['design'] == first['design'] and p['agent'] == p['design'][identity['arm'] + '_agent'],
+                 'resolution arm configuration mismatch')
+        _require(type(identity['trial_index']) is int and type(p['reverse']) is bool
+                 and p['reverse'] == bool(identity['trial_index'] % 2), 'resolution schedule mismatch')
+        _require(p['dataset_version'] == manifest.dataset_version
+                 and p['measurement']['evidence_kind'] == manifest.measurement_kind,
+                 'resolution dataset or measurement mismatch')
+
+
+@dataclass(frozen=True)
+class ResolutionEvaluation:
+    case_id: str
+    checks: tuple[CheckResult, ...]
+    task_completed: bool
+    latency_ms: int
+    cost_usd: float | None
+    metrics_json: str
+
+    @property
+    def passed(self):
+        return all(c.passed for c in self.checks)
+
+    @property
+    def unqualified_message_count(self):
+        return 1
+
+    def to_dict(self):
+        return {'case_id': self.case_id, 'checks': [c.to_dict() for c in self.checks],
+                'passed': self.passed, 'task_completed': self.task_completed,
+                'latency_ms': self.latency_ms, 'cost_usd': self.cost_usd,
+                'metrics': json.loads(self.metrics_json), 'criterion': EVALUATOR,
+                'unqualified_message_count': 1, 'semantic_message_qualified': False}
+
+
+def evaluate_execution(payload):
+    case = case_from_dict(payload['case'])
+    data = payload['output']
+    runtime = data.get('runtime_evidence')
+    output = AgentOutput(**{**data, 'runtime_evidence': None if runtime is None else RuntimeEvidence(**runtime)})
+    metrics = grade_resolution_execution(case, output, payload['orders'], payload['tool_events'],
+                                         payload['execution_error'])
+    checks = tuple(CheckResult(name, metrics[name] == 0, str(metrics[name])) for name in (
+        'wrong_order_commits', 'unnecessary_clarifications', 'missing_clarifications',
+        'denied_attempts', 'premature_action_attempts'))
+    checks += (CheckResult('resolution_contract', metrics['passed'], 'structural outcome and response enum'),)
+    return ResolutionEvaluation(case.case_id, checks, metrics['task_completed'], payload['latency_ms'],
+                                payload['cost_usd'], json.dumps(metrics, sort_keys=True))
+
+
+def _replay_tools(case, payload):
+    world = MultiOrderWorld(case, payload['reverse'])
+    tools = world.tools()
+    # Explicit facade whitelist: evidence cannot invoke arbitrary Python members.
+    methods = {name: getattr(tools, name) for name in (
+        'list_orders', 'ask_customer', 'verify_identity', 'get_order', 'consult_refund_policy',
+        'request_refund_approval', 'issue_refund', 'inspect_order_status')}
+    events = payload['tool_events']
+    _require(isinstance(events, list) and len(events) <= 1000, 'invalid resolution tool transcript')
+    for event in events:
+        _require(event['tool'] in methods and isinstance(event['arguments'], list),
+                 'unsupported resolution tool or arguments')
+        try:
+            methods[event['tool']](*event['arguments'])
+        except (ValueError, PermissionError):
+            pass  # The recorded error must exactly match below, including its class.
+        except (TypeError, IndexError, AttributeError) as error:
+            raise ValueError('malformed resolution tool arguments') from error
+        _require(world._events and canonical_hash(world._events[-1]) == canonical_hash(event),
+                 'resolution tool replay differs from recorded result')
+    _require(canonical_hash(world.artifacts()) == canonical_hash(payload['orders']),
+             'resolution ledger replay differs from retained state')
+
+
+def regrade(payload):
+    case = case_from_dict(payload['case'])
+    _require(payload['agent_input'] == asdict(case.request), 'resolution agent input mismatch')
+    _require(type(payload['reverse']) is bool, 'invalid resolution permutation')
+    _require(payload['semantic_message_qualified'] is False
+             and payload['semantic_evaluation_receipt'] is None
+             and payload['qualified_semantic_calibration_hashes'] == []
+             and payload['semantic_stage'] is None, 'native resolution semantic qualification unsupported')
+    _require(payload['authority'] == 'lab_only', 'resolution execution authority mismatch')
+    _require(type(payload['latency_ms']) is int and payload['latency_ms'] >= 0,
+             'invalid resolution latency')
+    cost = payload['cost_usd']
+    _require(cost is None or type(cost) in (int, float) and math.isfinite(cost) and cost >= 0,
+             'invalid resolution cost')
+    _replay_tools(case, payload)
+    result = evaluate_execution(payload)
+    for key, value in json.loads(result.metrics_json).items():
+        _require(canonical_hash(payload[key]) == canonical_hash(value), 'resolution metrics mismatch')
+    return result
