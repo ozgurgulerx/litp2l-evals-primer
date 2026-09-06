@@ -256,6 +256,40 @@ class SyntheticBookExampleTests(unittest.TestCase):
         self.assertEqual("lab_pass", artifact["receipt"]["action"])
         self.assertEqual("lab_only", artifact["receipt"]["authority_ceiling"])
 
+    def test_advanced_protocol_fixture_recomputes_factorial_and_simulator_results(self) -> None:
+        artifact = load_example("advanced-protocols-v1.json")
+        simulator = artifact["simulator_backtest"]
+        predictions = simulator["predictions"]
+        observed_accuracy = sum(
+            (item["probability"] >= simulator["threshold"]) == bool(item["observed"])
+            for item in predictions
+        ) / len(predictions)
+        observed_brier = sum(
+            (item["probability"] - item["observed"]) ** 2 for item in predictions
+        ) / len(predictions)
+
+        cells = artifact["model_harness_factorial"]["cells"]
+        model_means = {
+            model: sum(item["success_rate"] for item in cells if item["model"] == model) / 2
+            for model in {item["model"] for item in cells}
+        }
+        harness_means = {
+            harness: sum(item["success_rate"] for item in cells if item["harness"] == harness) / 2
+            for harness in {item["harness"] for item in cells}
+        }
+
+        self.assertAlmostEqual(simulator["accuracy"], observed_accuracy)
+        self.assertAlmostEqual(simulator["brier"], observed_brier)
+        self.assertAlmostEqual(
+            artifact["model_harness_factorial"]["average_model_b_minus_a"],
+            model_means["model-b"] - model_means["model-a"],
+        )
+        self.assertAlmostEqual(
+            artifact["model_harness_factorial"]["average_harness_2_minus_1"],
+            harness_means["harness-2"] - harness_means["harness-1"],
+        )
+        self.assertEqual("lab_only", artifact["authority_ceiling"])
+
 
 if __name__ == "__main__":
     unittest.main()

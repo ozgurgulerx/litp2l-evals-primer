@@ -65,6 +65,9 @@ nav:
   - Part IV · Comparative system studies:
       - System Studies: system-studies.md
       - Research-to-Practice Evidence: research-to-practice.md
+      - Long-Running & Serving Failures: long-running-serving.md
+      - Modern Agent Architectures: modern-agent-architectures.md
+      - Eval Operations & Integrity: eval-operations-integrity.md
 
 markdown_extensions:
   - admonition

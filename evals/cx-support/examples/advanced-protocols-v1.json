@@ -1,0 +1,93 @@
+{
+  "artifact_type": "completed_synthetic_advanced_protocol_suite",
+  "suite_version": "advanced-protocols-v1",
+  "measurement_kind": "synthetic",
+  "authority_ceiling": "lab_only",
+  "persistence": {
+    "safe_resume": {
+      "constraints_preserved": true,
+      "approvals_preserved": true,
+      "unfinished_work_preserved": true,
+      "transaction_ids": ["refund:order-817"]
+    },
+    "broken_compaction": {
+      "constraints_preserved": true,
+      "approvals_preserved": false,
+      "unfinished_work_preserved": false,
+      "transaction_ids": ["refund:order-817", "refund:order-817"]
+    }
+  },
+  "serving_failure": {
+    "fault": "timeout_after_commit",
+    "stream_started": true,
+    "fallback_started": true,
+    "inspected_before_retry": false,
+    "transaction_count": 2,
+    "decision": "fail"
+  },
+  "skills": [
+    {"case": "explicit-correct", "expected": "refund-policy", "selected": "refund-policy", "execution": true, "result": "pass"},
+    {"case": "competing-selection", "expected": "refund-policy", "selected": "generic-support", "execution": true, "result": "selection_error"},
+    {"case": "stale-procedure", "expected": "refund-policy", "selected": "refund-policy", "instructions_current": false, "execution": true, "result": "stale_instruction_error"},
+    {"case": "correct-skill-bad-execution", "expected": "refund-policy", "selected": "refund-policy", "execution": false, "result": "execution_error"}
+  ],
+  "knowledge_to_action": [
+    {"interface": "normal_retrieval", "knowledge_present": false, "retrieval": false, "reasoning": false, "action": false, "state": false},
+    {"interface": "oracle_documents", "knowledge_present": true, "retrieval": true, "reasoning": true, "action": false, "state": false},
+    {"interface": "full_context", "knowledge_present": true, "retrieval": true, "reasoning": true, "action": true, "state": true},
+    {"interface": "alternate_search", "knowledge_present": true, "retrieval": true, "reasoning": false, "action": false, "state": false}
+  ],
+  "voice": {
+    "task_id": "voice-refund-817",
+    "utterance_end_ms": 4200,
+    "action_started_ms": 3900,
+    "expected_identifier": "order-817",
+    "heard_identifier": "order-817",
+    "task_completed": true,
+    "decision": "fail_premature_action"
+  },
+  "multi_agent": {
+    "required_subtasks": 3,
+    "completed_subtasks": 2,
+    "coverage": 0.666666667,
+    "duplicate_assignments": 1,
+    "duplicate_effects": 1,
+    "merge_conflicts": 1,
+    "information_losses": 1,
+    "cost_usd": 0.9,
+    "matched_single_agent_budget_usd": 0.6,
+    "decision": "fail"
+  },
+  "model_harness_factorial": {
+    "cells": [
+      {"model": "model-a", "harness": "harness-1", "success_rate": 0.7},
+      {"model": "model-a", "harness": "harness-2", "success_rate": 0.8},
+      {"model": "model-b", "harness": "harness-1", "success_rate": 0.75},
+      {"model": "model-b", "harness": "harness-2", "success_rate": 0.85}
+    ],
+    "average_model_b_minus_a": 0.05,
+    "average_harness_2_minus_1": 0.1
+  },
+  "integrity": {
+    "development_judge_delta": 0.12,
+    "independent_verifier_delta": -0.08,
+    "contaminated": false,
+    "decision": "reject_independent_verification_regressed"
+  },
+  "simulator_backtest": {
+    "predictions": [
+      {"probability": 0.9, "observed": 1},
+      {"probability": 0.8, "observed": 0},
+      {"probability": 0.2, "observed": 0},
+      {"probability": 0.1, "observed": 1}
+    ],
+    "threshold": 0.5,
+    "accuracy": 0.5,
+    "brier": 0.375
+  },
+  "limitations": [
+    "The suite validates evaluator logic against synthetic observations, not live-model capability.",
+    "The scenarios are compact teaching instruments rather than representative production samples.",
+    "No result grants deployment authority."
+  ]
+}

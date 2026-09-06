@@ -33,6 +33,9 @@ EXPECTED_CHAPTERS = (
     "docs/source-coverage.md",
     "docs/system-studies.md",
     "docs/research-to-practice.md",
+    "docs/long-running-serving.md",
+    "docs/modern-agent-architectures.md",
+    "docs/eval-operations-integrity.md",
 )
 
 DEPTH_CHAPTERS = {
@@ -137,6 +140,32 @@ DEPTH_CHAPTERS = {
         "Noisy labels and judge-error propagation",
         "Repeated holdout use",
         "Artifact: paired evidence receipt",
+        "Exercise",
+    ),
+    "docs/long-running-serving.md": (
+        "durable state",
+        "Four-arm persistence experiment",
+        "Human–agent collaboration outcomes",
+        "Serving failures are behavioral interventions",
+        "Evidence added in this chapter",
+        "Exercise",
+    ),
+    "docs/modern-agent-architectures.md": (
+        "Knowledge-to-action systems",
+        "Skills and capability selection",
+        "Voice and multimodal workflows",
+        "Multi-agent evaluation",
+        "Agent-family-specific evidence",
+        "Evidence added in this chapter",
+        "Exercise",
+    ),
+    "docs/eval-operations-integrity.md": (
+        "Evaluation-service architecture",
+        "Resumable runs",
+        "Model-versus-harness factorial experiment",
+        "Evaluation integrity is a runtime boundary",
+        "Simulator qualification and deployment backtesting",
+        "Evidence added in this chapter",
         "Exercise",
     ),
     "docs/interview-drills.md": (

@@ -228,7 +228,7 @@ class AttributionIntegrityAndOperationsTests(unittest.TestCase):
         )
 
         self.assertEqual(0.5, result.accuracy)
-        self.assertAlmostEqual(0.425, result.brier_score)
+        self.assertAlmostEqual(0.375, result.brier_score)
 
     def test_resumable_run_is_idempotent_and_rejects_conflicting_fragments(self) -> None:
         first = RunFragment("run-1", "case-1", 0, "manifest-a", "hash-a")

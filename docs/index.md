@@ -78,6 +78,16 @@ The [Source Coverage Ledger](source-coverage.md) maps every substantive theme fr
 
 Each study asks the same questions of a paper, platform, or codebase, then records what the CX lab should adopt, adapt, or reject. This keeps comparison practical and stops the section from becoming a vendor catalogue. [Open the study programme →](system-studies.md)
 
+<div class="chapter-grid" markdown>
+
+<a class="chapter-card" href="long-running-serving/"><strong>Long-running & serving failures</strong>Test compaction, restart, approvals, ambiguous commits, fallback, and human workload.</a>
+
+<a class="chapter-card" href="modern-agent-architectures/"><strong>Modern agent architectures</strong>Evaluate knowledge-to-action systems, skill selection, voice timelines, and multi-agent coordination.</a>
+
+<a class="chapter-card" href="eval-operations-integrity/"><strong>Eval operations & integrity</strong>Run resumable experiments, separate model and harness effects, protect graders, and backtest simulators.</a>
+
+</div>
+
 ## Five operating families
 
 | Family | Primary home | What it answers |
