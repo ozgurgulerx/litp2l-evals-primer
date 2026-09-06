@@ -19,6 +19,8 @@ from cx_eval_lab.semantic import CalibrationRegistry
 class ReplayAssessment:
     packet_hash: str
     registry_hash: str
+    historical_trust_hash: str
+    synthetic_diagnostic: bool
     checked_at: str
     replayed_trials: int
     semantic_trials: int
@@ -76,5 +78,9 @@ def assess_replay(packet, *, trusted_packet_hash, historical_calibration_hashes,
         'revoked_hashes': sorted(registry.revoked_hashes),
     })
     status = 'not_applicable' if not semantic_trials else 'not_current' if issues else 'current'
-    return ReplayAssessment(digest, registry_hash, now.isoformat(), len(results),
-                            semantic_trials, status, tuple(issues))
+    return ReplayAssessment(
+        packet_hash=digest, registry_hash=registry_hash,
+        historical_trust_hash=canonical_hash(sorted(historical_calibration_hashes)),
+        synthetic_diagnostic=allow_synthetic, checked_at=now.isoformat(),
+        replayed_trials=len(results), semantic_trials=semantic_trials,
+        calibration_status=status, issues=tuple(issues))
