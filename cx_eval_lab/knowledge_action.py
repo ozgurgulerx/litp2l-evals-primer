@@ -18,7 +18,7 @@ def _identifier(value):
 
 
 def _integer(value, minimum, maximum):
-    if type(value) is not int or not minimum <= value <= maximum:
+    if type(value) is not int or not minimum <= value <= maximum:  # noqa: E721 - bool is not an integer input
         raise ValueError('bounded integer required')
 
 
@@ -116,7 +116,7 @@ class RefundLedger:
     def issue_refund(self, arguments):
         args = json.loads(json.dumps(arguments, allow_nan=False))
         valid = (isinstance(args, dict) and args == _expected_arguments(self.case)
-                 and type(args.get('amount_cents')) is int)
+                 and type(args.get('amount_cents')) is int)  # noqa: E721 - reject bool, including True == 1
         reason = ('arguments_mismatch' if not valid else
                   'policy_denied' if self.case.age_days > self.active_window_days else
                   'duplicate_denied' if self.refunds else None)
@@ -188,7 +188,8 @@ def _summary(trials):
             selected = [trial['payload'] for trial in trials
                         if trial['payload']['agent'] == agent and trial['payload']['arm'] == arm]
             n = len(selected)
-            count = lambda key: sum(row['grade'][key] for row in selected)
+            def count(key):
+                return sum(row['grade'][key] for row in selected)
             rows.append({'agent': agent, 'arm': arm, 'case_count': n,
                 'knowledge_in_corpus_count': count('knowledge_in_corpus'),
                 'knowledge_supplied_count': count('knowledge_supplied'),
