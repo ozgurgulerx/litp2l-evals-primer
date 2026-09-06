@@ -22,6 +22,8 @@ organization, use, date, evidence source, limitations, and local authority.
 
 ## Evidence maturity rubric
 
+Use [Frontier Risk Decisions](frontier-risk-decisions.md) for the next step: turn these method receipts into a bounded safety case. Its worked examples separate capability, practical uplift, harmful propensity, safeguards, internal deployment, participant outcomes, and residual uncertainty. Numerical exercises are explicitly illustrative; they are not additional company deployment evidence.
+
 | Level | Minimum public evidence | What may be claimed | What may not be claimed |
 | --- | --- | --- | --- |
 | **Production control** | A first party says the method informed pre-deployment assessment, deployment decisions, live monitoring, or an operational safeguard | “Disclosed as used in this named operational context” | Universal effectiveness, causal impact, or suitability for our gate |

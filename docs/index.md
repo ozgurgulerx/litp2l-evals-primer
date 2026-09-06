@@ -10,7 +10,15 @@ A practical field guide to knowing whether an AI system is good enough—and kee
 
 This primer will use one running example: a customer-support agent that begins with a small refund workflow and gradually becomes more capable. Its evaluation system grows beside it. Every important idea should eventually point to a case, trace, grader, experiment, release rule, or production-learning artifact that we can inspect.
 
-The reading order and building order are intentionally different. Readers meet the ideas before the implementation details. We, however, build a thin working slice early so the chapters are based on evidence rather than invented examples.
+The reading order and building order are intentionally different. Readers meet the ideas before the implementation details. We build a thin working slice early and distinguish recorded executions, illustrative exercises, and outstanding evidence throughout the chapters.
+
+If you are arriving with a decision to make, use three questions:
+
+- **What must I measure?** Start with [Foundations](foundations.md), [Metrics](metrics.md), and the relevant task-family chapter.
+- **What evidence do I have?** Inspect the [Evidence Spine](evidence-spine.md), [executed studies](system-studies.md), and [Source Coverage Ledger](source-coverage.md).
+- **What does it justify?** Use [Release Gates](checklist.md) for application exposure and [Frontier Risk Decisions](frontier-risk-decisions.md) for the wider claim–evidence–safeguard argument.
+
+The four-part reading order remains below. The [micro-katas](micro-katas.md) offer worked practice; the [delivery map](primer-delivery-map.md) distinguishes implemented material from remaining work.
 
 <div class="chapter-grid" markdown>
 

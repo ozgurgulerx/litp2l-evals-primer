@@ -45,6 +45,8 @@ Excluding a volatile ranking, price, star count, or copied quick-start is intent
 
 ## Recent capability addendum
 
+The [Frontier Risk Decisions chapter](frontier-risk-decisions.md) addresses the audit's risk-decision gaps using six rechecked primary sources: Anthropic's RSP v3 discussion, DeepMind's Frontier Safety Framework update and human-participant research, OpenAI's safeguards disclosure, and METR's incident investigation and task-horizon limitations. Katas 13–15 are worked reasoning/calculation exercises. Monitoring, isolation, and participant-study protocols are proposed—not locally executed or deployment-qualified.
+
 The supplied reports remain the coverage baseline. This dated addendum captures capabilities and failure modes that became more prominent after parts of that corpus were written.
 
 | Emerging capability or risk | Portal treatment | Qualification boundary |

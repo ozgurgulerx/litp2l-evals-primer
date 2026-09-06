@@ -70,6 +70,7 @@ nav:
       - Statistical Method Study: statistical-method-study.md
       - Process Recovery Study: process-recovery-study.md
       - Research-to-Practice Evidence: research-to-practice.md
+      - Frontier Risk Decisions: frontier-risk-decisions.md
       - Long-Running & Serving Failures: long-running-serving.md
       - Modern Agent Architectures: modern-agent-architectures.md
       - Eval Operations & Integrity: eval-operations-integrity.md

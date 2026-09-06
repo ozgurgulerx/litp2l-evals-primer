@@ -4,6 +4,8 @@ A release gate is the enforcement point for the evaluation contract. It decides 
 
 ## Pre-register the decision contract
 
+For high-consequence or internal frontier workloads, supplement this application gate with a [bounded safety case](frontier-risk-decisions.md). A capability result, a detected violation, and effective containment are separate claims. Neither a green task score nor the label “internal only” substitutes for evidence about the requested permissions, assets, and exposure.
+
 Write the rules, thresholds, gating slices, minimum evidence, decision owner, exception path, and known-good rollback target before seeing candidate results. A gate invented after the data arrives is a rationalization. Every override must be named, logged, scoped, time-boxed, and paired with a monitoring trigger.
 
 ## Four rule types

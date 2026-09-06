@@ -25,7 +25,7 @@ For executable work, completion requires an inspectable chain from input through
 | Architecture experiments | Hand-authored scorer fixtures exist | Executed retrieval/oracle/full-context arms; delegation/merge traces; matched budgets |
 | Voice validity | Timeline scorer fixture exists | Recorded audio, synchronized action events and independent timing annotations |
 | Second domain | Domain comparison prose exists | Coding or artifact task with independent authoritative outcome and reproducible failure |
-| Frontier risk bridge | External practice matrix and research chapters exist | Capability, uplift, propensity, exposure, safeguard effectiveness and residual uncertainty worked safety case |
+| Frontier risk bridge | Source-verified worked safety case and Katas 13–15 separate capability, uplift, propensity, controls, internal deployment, human outcomes and useful autonomy | Execute local monitoring/isolation protocols; obtain relevant empirical transfer evidence; retain unresolved research limits |
 | Operational release curriculum | Release and production chapters, synthetic examples | Runnable CI gate, shadow/canary state machine, expand/restrict/rollback exercises and incident-to-dataset loop |
 
 ## Whole-curriculum coverage requirements

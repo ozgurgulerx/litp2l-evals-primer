@@ -124,6 +124,8 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 13–15](frontier-risk-decisions.md) now cover a bounded safety case, detection versus containment, and reliability-adjusted autonomy. They are worked reasoning and calculation exercises, not executed frontier-risk experiments.
+
 [Katas 11–12](process-recovery-study.md) now exercise actual process interruption, durable-effect reconciliation, changed idempotency arguments, and approval revocation. Their payment service is a local mock; no real money or live agent is involved.
 
 [Katas 08–10](semantic-grading-lab.md) now exercise calibration bounds, scoped qualification, negative versus unknown judgments, and retained judge evidence. Their judge is a synthetic control double; live semantic accuracy remains unmeasured.
