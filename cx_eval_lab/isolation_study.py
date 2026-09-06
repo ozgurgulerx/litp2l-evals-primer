@@ -165,7 +165,7 @@ def _execute(store, mode):
 
 def registration():
     return {'runs': ['run-A', 'run-B'], 'query': QUERY, 'strategies': list(STRATEGIES),
-        'worker_contexts': list(CONTEXTS), 'shared_policy': POLICY,
+        'worker_contexts': list(CONTEXTS), 'shared_policy': dict(POLICY),
         'phase_assignments': {mode: list(zip(('A-first', 'B-first', 'A-repeat'), ('run-A', 'run-B', 'run-A'), workers))
                               for mode, workers in WORKERS.items()},
         'sharing_contract': {'private_cache': 'same-run-only', 'shared_policy': 'read-only-for-both-runs'},
