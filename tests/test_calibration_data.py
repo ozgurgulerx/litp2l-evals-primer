@@ -127,6 +127,11 @@ class CalibrationDataTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             compile_data(data)
 
+    def test_rejects_malformed_policy_timestamps_without_traceback(self):
+        for field in ('issued_at', 'expires_at'):
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                compile_data(packet(), policy={**policy(), field: 123})
+
     def test_cli_retains_input_and_computed_record_without_overwrite(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
