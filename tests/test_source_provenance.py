@@ -131,6 +131,12 @@ class SourceProvenanceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.verify(manifest, input_files={**self.inputs, 'dataset': link})
 
+    def test_operator_input_with_symlinked_parent_is_rejected(self):
+        alias = self.root / 'alias'
+        alias.symlink_to(self.root, target_is_directory=True)
+        with self.assertRaises(ValueError):
+            self.verify(input_files={**self.inputs, 'dataset': alias / 'dataset.json'})
+
 
 if __name__ == '__main__':
     unittest.main()
