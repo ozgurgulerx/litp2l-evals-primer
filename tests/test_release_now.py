@@ -93,6 +93,19 @@ class ReleaseNowTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.assess(now=NOW.replace(tzinfo=None))
 
+    def test_future_execution_cannot_support_an_earlier_decision(self):
+        from tests.test_resolution_evidence import rehash
+        changed = copy.deepcopy(self.packet)
+        for artifact in changed['trial_artifacts']:
+            audit = artifact['payload']['semantic_stage']
+            audit['started_at'] = (NOW + timedelta(hours=2)).isoformat()
+            audit['completed_at'] = (NOW + timedelta(hours=2)).isoformat()
+        rehash(changed)
+        self.packet = changed
+        result = self.assess(trusted_packet_hash=canonical_hash(changed))
+        self.assertEqual('block', result['action'])
+        self.assertIn('evidence_after_decision_time', result['issues'])
+
 
 if __name__ == '__main__':
     unittest.main()
