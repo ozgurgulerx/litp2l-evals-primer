@@ -155,11 +155,19 @@ def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes):
     qualification_hash = canonical_hash(stage['qualification'])
     _require(qualification_hash in trusted_calibration_hashes, 'campaign_qualification_not_trusted')
     receipt = payload['semantic_evaluation_receipt']
+    verdict = stage['judgment']['verdict']
+    _require(verdict in {'pass', 'fail', 'abstain'}, 'invalid_campaign_judge_verdict')
     if receipt is not None:
+        _require(stage['status'] == 'graded' and stage['reason'] is None
+                 and receipt['passed'] is (verdict == 'pass')
+                 and receipt['abstained'] is (verdict == 'abstain'), 'campaign_judgment_receipt_mismatch')
         _require(qualification_hash == receipt['calibration_receipt_hash']
                  and receipt['evaluator_version'] == stage['qualification']['evaluator_version']
                  and receipt['criterion_id'] == stage['qualification']['criterion_id'] == CRITERION,
                  'campaign_qualification_receipt_mismatch')
+    else:
+        _require(stage['status'] == 'unqualified' and stage['reason'], 'missing_semantic_receipt')
+        issues.add('semantic_qualification_missing')
     request_hash = canonical_hash({'criterion': CRITERION, 'evidence': stage['request']})
     configuration = stage['qualification']['configuration_hash']
     if row is not None:
