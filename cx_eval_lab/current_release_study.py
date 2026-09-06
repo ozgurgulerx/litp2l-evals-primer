@@ -5,6 +5,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+from typing import Any
 
 from cx_eval_lab.calibration_data import compile_calibration
 from cx_eval_lab.campaign_budget import CampaignPolicy
@@ -51,7 +52,7 @@ def _setup(config):
     return record, calibration, transport.calls, policy, values
 
 
-def _assessments(packet, arguments, record):
+def _assessments(packet, arguments: dict[str, Any], record):
     controls = (
         ('current-diagnostic', {}),
         ('revoked', {'registry': CalibrationRegistry((record,), frozenset({record.content_hash}))}),

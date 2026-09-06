@@ -106,6 +106,30 @@ class ReleaseNowTests(unittest.TestCase):
         self.assertEqual('block', result['action'])
         self.assertIn('evidence_after_decision_time', result['issues'])
 
+    def test_future_campaign_event_and_missing_policy_inputs_both_block(self):
+        milliseconds = int(NOW.timestamp() * 1000)
+        for field in ('admission', 'completion'):
+            snapshot = {'invocations': [{'admitted_ms': milliseconds + (field == 'admission'),
+                'receipt_json': '{"completed_unix_ms":%d}' % (milliseconds + (field == 'completion'))}]}
+            result = self.assess(campaign_snapshot=snapshot)
+            self.assertEqual('block', result['action'])
+            self.assertIn('evidence_after_decision_time', result['issues'])
+            self.assertIn('campaign_inputs_missing', result['issues'])
+        result = self.assess(campaign_snapshot={'invocations': [{'admitted_ms': -1, 'receipt_json': None}]})
+        self.assertIn('invalid_evidence_chronology', result['issues'])
+
+    def test_bad_packet_or_base_receipts_do_not_produce_a_new_pass(self):
+        from cx_eval_lab.release_now import assess_release_now
+        for packet in ({}, {'bad': float('nan')}, {'manifest': None}):
+            result = assess_release_now(packet, **self.arguments).to_dict()
+            self.assertEqual('block', result['action'])
+            self.assertIn('malformed_packet', result['issues'])
+        result = self.assess(prerequisite_receipts=())
+        self.assertIn('base_receipt_failed', result['issues'])
+        self.assertEqual('block', self.assess(now=NOW - timedelta(days=1))['action'])
+        with self.assertRaises(ValueError):
+            self.assess(allow_synthetic='true')
+
 
 if __name__ == '__main__':
     unittest.main()

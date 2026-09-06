@@ -311,3 +311,82 @@ A system has 300 paired trials created from ten customers, a favourable point es
 
 ??? success "Answer"
     The decision is `inconclusive` or `block`, not canary eligibility. There are only ten independent clusters, and the latency provenance is falsely labelled. Repetition improves knowledge about stochastic behaviour on those ten customers but does not satisfy the population-evidence minimum. Correct the provenance, sample the required independent units, retain exact trial pairs, and rerun the registered comparison.
+
+## Kata 49: matching a hash is not validating an input
+
+A dataset file contains `{ "limit": 2 }` followed by a newline. A native experiment registers the JSON value `{"limit":2}`. Both represent the same data, but their byte hashes differ. A second input contains `NaN`, and its producer supplies a matching hash. Does that make the input valid?
+
+**Task:** verify file bytes and structured values without conflating them. Then change both a non-finite value and its registered hash: the validator must still reject it. Finally use an input label resembling a relative path and explain why it must not select a file by itself.
+
+```python
+import hashlib
+import json
+from cx_eval_lab.evidence import canonical_hash
+
+raw = b'{ "limit": 2 }\n'
+byte_hash = 'sha256:' + hashlib.sha256(raw).hexdigest()
+value_hash = canonical_hash(json.loads(raw))
+assert byte_hash != value_hash
+```
+
+??? success "Solution: separate representation, validity and trusted selection"
+    `verify_sources` now accepts two explicit operator maps. `input_files` maps registered names to operator-selected paths and hashes their exact bytes. `input_values` maps names to finite JSON-compatible values and hashes their canonical representation. The maps must be disjoint; together they must cover exactly the registered non-source inputs. Neither may override a `source:` entry. Missing, extra or conflicting mappings fail.
+
+    Source verification still checks the full Python/package-input inventory, the expected local Git revision, registered bytes and committed bytes. An added untracked Python module, changed source, symlink or mismatched evaluator identity cannot be hidden by updating the manifest alone. File paths come from the operator map, never from manifest labels. A label such as `../../outside/example` remains an opaque identifier if explicitly supplied as a value name; it is not a request to traverse directories.
+
+    Validity must be checked independently of the digest. The existing canonical hash helper can represent non-standard non-finite values, so the new verifier explicitly performs strict JSON serialization with `allow_nan=False` before hashing. `test_nonfinite_values_reject_even_when_the_registered_hash_matches` caught a real implementation gap: earlier tests rejected an altered value because its hash differed, without proving that a coherently registered invalid value would fail.
+
+    For a native provider run, the operator supplies full case values, the experiment design, semantic registration, campaign-policy hash preimage and judge configuration identity. `asdict(JudgeConfig)` is not the complete judge identity: the hash also binds the output schema, adapter, endpoint, retry setting and native format name. Use the adapter's fresh `configuration_identity` object; a copied digest string is not a substitute for those inputs.
+
+**Extend:** preserve the original file hash when recording a parsed representation. Decide which identity supports exact reproduction and which supports semantic comparison. Do not silently canonicalize an original signed or byte-sensitive artifact and call it unchanged.
+
+**Interview answer:** “A hash establishes equality to an anchor, not schema validity or trusted origin. I distinguish exact bytes from canonical values, validate independently, and let the operator—not an uploaded manifest—select filesystem paths and expected identities.”
+
+## Kata 50: successful replay is not permission for a new release
+
+An old packet replays all sixteen trials successfully. The same calibration has since been revoked. A source label still names the right evaluator, but the local code has changed. Another packet claims its judgment completed at 14:00 while a proposed release decision is dated 12:00.
+
+**Task:** preserve the historical evidence while rejecting a new decision that depends on revoked qualification, changed source or future evidence. Do not accept a prebuilt `passed=True` source or calibration assessment as a replacement for recomputation.
+
+```bash
+uv run --extra openai python -m unittest tests.test_release_now tests.test_source_values -v
+uv run --extra openai python -m cx_eval_lab.current_release_study \
+  --output /tmp/primer-current-release-my-first-run.json
+```
+
+Run from a controlled checkout with committed package source and locked project inputs; use a fresh output filename. The study pins the current revision before execution, rather than relabeling an older packet after the fact. Its provider transport, prices, annotation labels, clock advances and prerequisite controls are synthetic. No network model call or application deployment is performed.
+
+??? success "Solution: recompute a point-in-time decision from raw evidence"
+    `assess_release_now` receives the packet plus separately selected operator inputs: packet anchor, historical calibration trust, current registry, aware clock, source root, expected revision/evaluator, file/value maps, test/prerequisite receipts and campaign policy/snapshot anchor. It does not accept cached source, replay or campaign assessments as authority.
+
+    It first verifies the packet identity and committed source/input identities. It then replays the unchanged trials and checks current calibration. Campaign assessment and the existing release builder are recomputed from their inputs. Each resulting check is retained and hashed in a new composed decision. Missing or contradictory evidence can restrict the result; no component grants deployment authority.
+
+    Revocation changes the new current-calibration result, not the old grade. Likewise, expiry can leave an old judgment historically interpretable while making its qualification unusable now. An out-of-window manifest cannot receive a new base receipt. If source verification fails, the function blocks before historical re-grading instead of claiming the changed implementation reproduced the original experiment.
+
+    Chronology is another independent check. The decision cannot predate available native judgment start/completion times or campaign admission/completion times. Tests reproduce the previously accepted future-evidence case and now block it. This checks known timestamps only: missing legacy timestamps are not invented, and a consistent timestamp does not authenticate a clock.
+
+    A current synthetic qualification check is still diagnostic. Even with explicit positive prerequisite fixtures, the four constructed cases share one customer and cannot satisfy the registered independent-cluster minimum. The base decision holds. Revocation or contradictory source inputs can then turn that hold into a block; neither path grants traffic authority. Using genuinely unqualified application prerequisites also blocks.
+
+**Limits:** the caller owns the registry snapshot, clock, expected revision, input selection and prerequisite provenance. The function does not authenticate those inputs, prove loaded bytecode matches files, verify installed dependencies from a lockfile alone, or prevent a subsequent revocation/source change. Recompute at use time. A serialized result is not a reusable deployment permit, and atomic handoff to an authorized exposure controller remains separate work.
+
+### Executed current-release controls
+
+The [retained study packet](assets/current-release-study-v1.json) was generated against committed source revision `fc981a6959f8bb8d25fdf3838e8e12ac62313a67`. Unlike the orchestration unit tests, this run used the real source verifier against the repository's committed bytes. It retained one sixteen-trial paired packet, sixteen mocked SDK requests, and four separate calibration executions/requests. The seven assessments reuse that packet; they are not seven independent experiments.
+
+| Operator condition | Observed new decision | Interpretation |
+| --- | --- | --- |
+| Current synthetic diagnostic, positive prerequisite fixtures | `hold` | Source and replay checks succeed, but one customer is insufficient independent evidence |
+| Calibration revoked | `block` | Historical failed-trial count remains zero; present qualification is withdrawn |
+| Calibration expired | `block` | Historical grades remain reproducible; calibration is not current |
+| Synthetic qualification disallowed | `block` | Diagnostic labels cannot satisfy normal qualification |
+| Wrong expected revision | `block` | Source identity check fails before replay |
+| Changed operator case values | `block` | Registered experiment inputs no longer match |
+| Unqualified application prerequisites | `block` | Current source and calibration cannot replace application qualification |
+
+All seven records retain `authority_ceiling="none"` and `deployment_authorized=false`. The study CLI exits successfully only when the expected controls reproduce; it retains the failed report and exits nonzero otherwise. The CI workflow now invokes this command, but a workflow definition is not evidence of an observed cloud run. These controls demonstrate local composition, not authenticated provenance, real semantic accuracy or live exposure control.
+
+**Counterexample: a hold for the wrong reason.** Independent review found that the first study checker would accept a current-control `hold` even if accounting had changed to `hold` and the statistical comparison had changed to `pass`. The outer action matched, but the teaching claim no longer did. Six failing mutation probes reproduced that weakness. The repaired checker requires clear accounting, all 64 available timestamps checked without future evidence, an inconclusive one-cluster comparison, and no deployment authority in any control. A [second committed-source execution](assets/current-release-study-v2.json), after fix `96c76da`, reproduced the same seven outcomes under the stronger checker. The original packet remains available; the fix does not relabel its source revision.
+
+**Extend:** change a component decision while preserving the outer action. Which assertion should fail? A conformance suite must test the reason for an expected rejection, not reward an implementation that blocks everything.
+
+**Interview answer:** “I keep historical reproducibility separate from present eligibility. I recompute source, current qualification and accounting against independent operator inputs, reject chronology contradictions, and let each check restrict the decision. A valid old result cannot authorize new exposure after its assumptions change.”

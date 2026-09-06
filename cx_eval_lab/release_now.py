@@ -57,7 +57,7 @@ def _chronology(packet, snapshot, now):
         timestamps = [row['admitted_ms']]
         if row['receipt_json'] is not None:
             timestamps.append(json.loads(row['receipt_json'])['completed_unix_ms'])
-        if any(type(stamp) is not int or stamp < 0 for stamp in timestamps):
+        if any(type(stamp) is not int or stamp < 0 for stamp in timestamps):  # noqa: E721 -- reject bool and integer subclasses
             raise ValueError('invalid campaign evidence timestamp')
         observed.extend(timestamps)
     return {'known_timestamps_checked': len(observed),
@@ -80,9 +80,10 @@ def assess_release_now(packet, *, trusted_packet_hash, historical_calibration_ha
     """
     if not isinstance(now, datetime) or now.tzinfo is None or now.utcoffset() is None:
         raise ValueError('release assessment requires an aware operator clock')
-    if type(allow_synthetic) is not bool:
+    if not isinstance(allow_synthetic, bool):
         raise ValueError('synthetic diagnostic permission must be explicit')
-    checks = {'source': None, 'replay': None, 'chronology': None, 'campaign': None, 'base_receipt': None}
+    checks: dict[str, dict | None] = {
+        'source': None, 'replay': None, 'chronology': None, 'campaign': None, 'base_receipt': None}
     try:
         owned = json.loads(json.dumps(packet, allow_nan=False))
         packet_hash = canonical_hash(owned)

@@ -65,7 +65,11 @@ Paid model studies require an explicit model and metered run configuration. Huma
 
 ## Follow-up audit remediation plan — 6 September 2026
 
-### Current execution handoff — native provider checkpoint `59d4b29`
+### Current execution handoff — current release checkpoint `96c76da`
+
+Katas 49–50 now join real committed-source verification, independently selected file/value inputs, historical replay, current calibration, campaign accounting and the base release receipt in a recomputed point-in-time decision. The retained seven-control study holds the current synthetic diagnostic and blocks all six restrictive variants. Native judgment/campaign timestamps cannot postdate the proposed decision, and coherently hashed non-finite values are rejected. This supersedes earlier rows that list local source/current-calibration composition as wholly pending. Independent human calibration, authenticated registry and prerequisite provenance, loaded-environment attestation, new-grader reassessment and atomic handoff to an exposure controller remain open.
+
+The next content priority is an executed knowledge-to-action comparison: retrieval, oracle-document and full-context arms with authoritative final-state outcomes and extracted execution observations. Keep deterministic controls distinct from a later budgeted model study. In parallel with that learning path, prepare representative, independently reviewed calibration and untouched acceptance cases; synthetic calibration must not be promoted merely because integration tests pass. Frontier containment/isolation experiments and a second coding/artifact domain remain required parts of the full objective.
 
 This handoff supersedes the **work ordering**, not the retained historical baseline and phase descriptions below. It responds to the follow-up audit against the current local source. Local implementation is not evidence that the public site has received these changes. No new live evaluation, deployment, or human qualification is claimed by this plan.
 

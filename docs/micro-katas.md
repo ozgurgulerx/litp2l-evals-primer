@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 49–50](evidence-spine.md#kata-49-matching-a-hash-is-not-validating-an-input) distinguish file-byte identity from canonical-value identity, reject coherently hashed invalid inputs, and recompute a current release decision from committed source, historical replay, current calibration and campaign evidence. Seven retained controls preserve old grades while restricting new decisions; mocked model responses and synthetic qualification do not authorize deployment.
+
 [Katas 28–31](sequential-decisions-lab.md) compute repeated-look false promotion, derive sequential likelihood evidence, break label and independence assumptions, and budget across release campaigns. Exact synthetic path enumeration supports the worked results, not general deployment qualification.
 
 [Katas 24–27](exposure-control-lab.md) execute shadow/canary/expansion/restriction/rollback routing, preserve pending cohorts, expire stale routing and separate rollback from containment. The retained 280-request study is simulation-only.

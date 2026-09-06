@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Current release evidence composition
+
+[Katas 49–50](evidence-spine.md#kata-49-matching-a-hash-is-not-validating-an-input) add explicit file/value source verification and a composed current-release assessment. The [retained study](assets/current-release-study-v1.json) verifies actual committed repository bytes, replays one sixteen-trial native packet and applies seven current-state controls: current diagnostic holds; revoked, expired, synthetic-disabled, wrong-revision, changed-case and unqualified-prerequisite controls block. Four separate calibration executions and all provider responses are synthetic. Historical grades survive revocation unchanged. This closes local source/current-calibration composition—not authoritative registry retrieval, human calibration, execution attestation, atomic exposure authorization or observed cloud CI.
+
 ### Executed statistical-method evidence
 
 The [statistical method study](statistical-method-study.md) now supplies full count-level results for known-population interval coverage, false promotion, power, and biased-label counterexamples, plus an unequal-cluster estimand example. Its [retained artifact](assets/statistical-method-study-v1.json) is checked against the generator by the test suite. The alternative follows [NIST's binomial-tail inversion equations](https://itl.nist.gov/div898/software/dataplot/refman2/auxillar/exacbino.htm), verified on 2026-09-06. This supports the narrow fixed-sample binomial lesson; general clustered and sequential method qualification remains incomplete.

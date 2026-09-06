@@ -41,6 +41,8 @@ jobs:
         run: uv run python -m cx_eval_lab.resolution_semantic_study --output ci-evidence/resolution-semantic.json
       - name: Exercise native SDK transport and campaign accounting offline
         run: uv run --extra openai python -m cx_eval_lab.native_provider_study --output ci-evidence/native-provider.json
+      - name: Recompute committed source and current qualification offline
+        run: uv run --extra openai python -m cx_eval_lab.current_release_study --output ci-evidence/current-release.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure
