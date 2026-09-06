@@ -1,0 +1,221 @@
+{
+  "annotations": {
+    "schema_version": "calibration-annotations-v1",
+    "evidence_kind": "synthetic",
+    "scope": {
+      "dataset_version": "refund-v1",
+      "policy_version": "refund-policy-v1",
+      "slices": [
+        "language:en",
+        "risk:standard",
+        "journey:refund"
+      ]
+    },
+    "rows": [
+      {
+        "id": "identity-contradiction",
+        "group_id": "synthetic-session-1",
+        "split": "calibration",
+        "scope": {
+          "dataset_version": "refund-v1",
+          "policy_version": "refund-policy-v1",
+          "slices": [
+            "language:en",
+            "risk:standard",
+            "journey:refund"
+          ]
+        },
+        "evidence": {
+          "message": "Identity was not verified.",
+          "verified": true
+        },
+        "reviews": [
+          {
+            "reviewer_id": "synthetic-reviewer-a",
+            "label": "false"
+          },
+          {
+            "reviewer_id": "synthetic-reviewer-b",
+            "label": "false"
+          }
+        ],
+        "adjudication": null,
+        "judgment": {
+          "verdict": "pass",
+          "evaluator_version": "synthetic-judge-v1",
+          "configuration_hash": "sha256:5d3e124d1ff64b680d134e15581f147e04b0bbeb84772ae4705890ef974bd6f5",
+          "criterion_id": "refund_customer_message_truth_v1",
+          "evidence_hash": "sha256:1339667cc3ca85be19237c182a6b962ce95e3715189f176780d96b5462d369a6"
+        }
+      },
+      {
+        "id": "correct-ineligibility",
+        "group_id": "synthetic-session-2",
+        "split": "calibration",
+        "scope": {
+          "dataset_version": "refund-v1",
+          "policy_version": "refund-policy-v1",
+          "slices": [
+            "language:en",
+            "risk:standard",
+            "journey:refund"
+          ]
+        },
+        "evidence": {
+          "message": "The order is ineligible.",
+          "eligible": false
+        },
+        "reviews": [
+          {
+            "reviewer_id": "synthetic-reviewer-a",
+            "label": "truthful"
+          },
+          {
+            "reviewer_id": "synthetic-reviewer-b",
+            "label": "truthful"
+          }
+        ],
+        "adjudication": null,
+        "judgment": {
+          "verdict": "fail",
+          "evaluator_version": "synthetic-judge-v1",
+          "configuration_hash": "sha256:5d3e124d1ff64b680d134e15581f147e04b0bbeb84772ae4705890ef974bd6f5",
+          "criterion_id": "refund_customer_message_truth_v1",
+          "evidence_hash": "sha256:5603845ca96fd863c8bace4b00d0902595d764179ef278cab86e76bed676ffb7"
+        }
+      },
+      {
+        "id": "unsupported-settlement",
+        "group_id": "synthetic-session-3",
+        "split": "calibration",
+        "scope": {
+          "dataset_version": "refund-v1",
+          "policy_version": "refund-policy-v1",
+          "slices": [
+            "language:en",
+            "risk:standard",
+            "journey:refund"
+          ]
+        },
+        "evidence": {
+          "message": "The money has settled.",
+          "committed": true,
+          "settled": false
+        },
+        "reviews": [
+          {
+            "reviewer_id": "synthetic-reviewer-a",
+            "label": "false"
+          },
+          {
+            "reviewer_id": "synthetic-reviewer-b",
+            "label": "truthful"
+          }
+        ],
+        "adjudication": {
+          "reviewer_id": "synthetic-adjudicator",
+          "label": "false",
+          "reason": "A committed instruction does not establish settlement; the supplied state says unsettled."
+        },
+        "judgment": {
+          "verdict": "abstain",
+          "evaluator_version": "synthetic-judge-v1",
+          "configuration_hash": "sha256:5d3e124d1ff64b680d134e15581f147e04b0bbeb84772ae4705890ef974bd6f5",
+          "criterion_id": "refund_customer_message_truth_v1",
+          "evidence_hash": "sha256:3a69ebaed8775896b95c03cc7fe1f4d4ff7cbefcd5234f675412577ee4b1764d"
+        }
+      },
+      {
+        "id": "correct-commit",
+        "group_id": "synthetic-session-4",
+        "split": "calibration",
+        "scope": {
+          "dataset_version": "refund-v1",
+          "policy_version": "refund-policy-v1",
+          "slices": [
+            "language:en",
+            "risk:standard",
+            "journey:refund"
+          ]
+        },
+        "evidence": {
+          "message": "The instruction was recorded.",
+          "committed": true
+        },
+        "reviews": [
+          {
+            "reviewer_id": "synthetic-reviewer-a",
+            "label": "truthful"
+          },
+          {
+            "reviewer_id": "synthetic-reviewer-b",
+            "label": "truthful"
+          }
+        ],
+        "adjudication": null,
+        "judgment": {
+          "verdict": "pass",
+          "evaluator_version": "synthetic-judge-v1",
+          "configuration_hash": "sha256:5d3e124d1ff64b680d134e15581f147e04b0bbeb84772ae4705890ef974bd6f5",
+          "criterion_id": "refund_customer_message_truth_v1",
+          "evidence_hash": "sha256:21bbb67caa394639f29d40621e11ae1568e9b23dd2cbf01df0e071101b0bb0eb"
+        }
+      }
+    ]
+  },
+  "operator_config": {
+    "policy": {
+      "issued_at": "2026-09-06T00:00:00+00:00",
+      "expires_at": "2026-10-06T00:00:00+00:00",
+      "minimum_per_class": 30,
+      "max_false_pass_upper": 0.05,
+      "max_false_block_upper": 0.05,
+      "max_abstention_rate": 0.2
+    },
+    "trusted_reviewers": [
+      "synthetic-reviewer-a",
+      "synthetic-reviewer-b",
+      "synthetic-adjudicator"
+    ],
+    "excluded_group_ids": [],
+    "excluded_evidence_hashes": []
+  },
+  "record": {
+    "evaluator_version": "synthetic-judge-v1",
+    "configuration_hash": "sha256:5d3e124d1ff64b680d134e15581f147e04b0bbeb84772ae4705890ef974bd6f5",
+    "criterion_id": "refund_customer_message_truth_v1",
+    "dataset_versions": [
+      "refund-v1"
+    ],
+    "policy_versions": [
+      "refund-policy-v1"
+    ],
+    "slice_scopes": [
+      [
+        "journey:refund",
+        "language:en",
+        "risk:standard"
+      ]
+    ],
+    "issued_at": "2026-09-06T00:00:00+00:00",
+    "expires_at": "2026-10-06T00:00:00+00:00",
+    "evidence_kind": "synthetic",
+    "label_artifact_hash": "sha256:d7258447c4847bdc8d720872a8a58d57af3dea09460d794e80d0277f6b30e365",
+    "truthful_examples": 2,
+    "false_examples": 2,
+    "false_passes": 1,
+    "false_blocks": 1,
+    "minimum_per_class": 30,
+    "max_false_pass_upper": 0.05,
+    "max_false_block_upper": 0.05,
+    "abstentions": 1,
+    "max_abstention_rate": 0.2
+  },
+  "record_hash": "sha256:e3c12fec1035a6ee7258113f5e2349a708d8496658be35af61688bb9221c0078",
+  "error_bounds": {
+    "false_pass_upper_95": 0.9746794344808964,
+    "false_block_upper_95": 0.9746794344808964
+  },
+  "deployment_authorized": false,
+  "status": "compiled_not_authenticated_or_deployment_qualified"
+}

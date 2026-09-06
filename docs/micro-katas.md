@@ -124,6 +124,8 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 18–20](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) reconstruct calibration counts from retained rows, preserve adjudication, reject declared split leakage and connect incident learning to independent requalification. The executed four-row example is synthetic and remains unqualified.
+
 [Katas 16–17](ci-gate-lab.md) exercise expected rejection in CI and the distinction between software conformance, candidate qualification, and application deployment. The command is verified locally; cloud execution and canary control remain separate milestones.
 
 [Katas 13–15](frontier-risk-decisions.md) now cover a bounded safety case, detection versus containment, and reliability-adjusted autonomy. They are worked reasoning and calculation exercises, not executed frontier-risk experiments.

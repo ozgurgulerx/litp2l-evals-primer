@@ -13,7 +13,7 @@ The [statistical method study](statistical-method-study.md) now supplies full co
 
 ### Supplied research corpus
 
-The [Semantic Grading Lab](semantic-grading-lab.md) adds tested runner integration and Katas 08–10 for scoped qualification, class-error bounds, abstention, configuration drift, expiry/revocation, and retained judge evidence. Its fixture judge and declared synthetic counts are control tests, not human calibration or live-model accuracy evidence. Genuine calibration ingestion and live semantic studies remain open.
+The [Semantic Grading Lab](semantic-grading-lab.md) adds tested runner integration and Katas 08–10 for scoped qualification, class-error bounds, abstention, configuration drift, expiry/revocation, and retained judge evidence. Katas 18–20 add an executed row-derived annotation compiler, a retained four-row synthetic packet, independent-adjudicator checks and declared split-leakage controls. Fixture judges, synthetic labels and reviewer identifiers are control tests, not human calibration or live-model accuracy evidence. Authenticated human annotation provenance, representative data collection and live semantic studies remain open.
 
 | Research source | Primary contribution | Canonical treatment |
 | --- | --- | --- |

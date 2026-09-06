@@ -31,7 +31,7 @@ The runner now has an evaluator-owned semantic stage. A `SemanticJudge` receives
 | Issue, expiry, revocation | Qualification is time-limited and can be withdrawn |
 | Evidence kind | Synthetic records may exercise lab plumbing but cannot qualify measured runs |
 
-The registry is trusted operator configuration, not proof that reviewers actually performed their work. Its label-artifact hash must resolve to real evidence outside this interface. The current implementation consumes reviewed counts; it does not yet ingest annotation rows, independently verify reviewer provenance, or infer qualification scopes from raw calibration data. Never change `synthetic` to `human_reviewed` to make a run pass.
+The registry is trusted operator configuration, not proof that reviewers actually performed their work. Its label-artifact hash must resolve to real evidence outside this interface. Direct construction of `CalibrationRecord` still accepts operator-supplied counts; the new `compile_calibration` ingestion path derives those counts from retained annotation rows and checks their declared scope. Neither path independently authenticates reviewers or establishes that sampling was representative. Never change `synthetic` to `human_reviewed` to make a run pass.
 
 Counts are limited to 500 examples per class in this teaching implementation because its exact-binomial helper is deliberately bounded. Errors are evaluated with one-sided 95% upper bounds, obtained from the upper endpoint of a two-sided 90% exact interval. Each error bound is marginal: the two simultaneous claims are not automatically a joint 95% guarantee. Correlated or repeatedly reused calibration examples require a different analysis.
 
@@ -104,4 +104,78 @@ uv run python -m unittest tests.test_semantic_stage -v
 
 The next deliverable is not a larger fixture set. It is a frozen, independently reviewed calibration artifact for a resolved model/rubric configuration, with class and slice denominators, disagreements, abstentions, error bounds, held-out checks, and explicit limits. The runner can now consume a judge through the protocol, but no live semantic study or production qualification is claimed here.
 
-The [judge chapter](llm-as-a-judge.md) explains rubric design, human calibration, bias, and risk–coverage trade-offs. The [delivery map](primer-delivery-map.md) tracks the remaining adapter, reviewed-data ingestion, live-study, and deployment-control work.
+The [judge chapter](llm-as-a-judge.md) explains rubric design, human calibration, bias, and risk–coverage trade-offs. The [delivery map](primer-delivery-map.md) tracks the remaining adapter, authenticated reviewed-data provenance, live-study, and deployment-control work.
+
+## Kata 18: reconstruct calibration from the labels
+
+The [retained compilation packet](assets/calibration-compiled-v1.json) contains four synthetic examples. The people-like reviewer identifiers and judge verdicts are teaching fixtures, not real annotations or model calls.
+
+| Customer explanation and supplied state | Final reference label | Fixture judge | Contribution |
+| --- | --- | --- | --- |
+| “Identity was not verified”; `verified=true` | False | Pass | One false pass |
+| “The order is ineligible”; `eligible=false` | Truthful | Fail | One false block |
+| “The money has settled”; committed but not settled | False, after adjudication | Abstain | One abstention, no false pass |
+| “The instruction was recorded”; committed | Truthful | Pass | Correct pass |
+
+**Know:** a class error rate needs its own denominator. A false pass is a pass on a false statement, not the fraction of all rows that happen to be wrong. On truthful statements, this lab counts both failure and abstention as blocking useful automation.
+
+**Task:** compute the counts before running the compiler. Does successfully generating a record mean the judge is qualified?
+
+```bash
+uv run python -m cx_eval_lab.calibration_data \
+  --input evals/cx-support/examples/calibration-annotations-v1.json \
+  --config evals/cx-support/examples/calibration-policy-v1.json \
+  --output /tmp/primer-calibration-my-first-run.json
+uv run python -m unittest tests.test_calibration_data -v
+```
+
+Choose a fresh output path on subsequent runs. The CLI refuses to overwrite an existing artifact. It makes no network or model calls.
+
+??? success "Solution: compilation is not qualification"
+    The denominators are two truthful and two false examples. There is one false pass, one false block and one abstention. Both class error estimates are 50%; the overall abstention rate is 25%. The configured minimum is thirty per class, the class upper-bound limits are 5%, and the abstention limit is 20%.
+
+    Compilation succeeds because the evidence is structurally consistent and the counts can be computed. Qualification fails. Even in synthetic test mode it fails the minimum-count rule; measured runs also reject synthetic evidence. The other limits are not waived just because an earlier check already rejects the record.
+
+    `compile_calibration` in `cx_eval_lab/calibration_data.py` derives every count. Its policy input cannot override `false_passes`, `false_blocks`, denominators or the label-artifact hash. The output retains the complete input, operator configuration, computed record and error bounds. `deployment_authorized` stays false.
+
+**Extend:** change the truthful rejected example's fixture verdict from `fail` to `abstain`. False blocks remain one; abstentions rise to two. Change only its message without updating the judgment evidence binding: compilation must reject it, because that verdict refers to different evidence.
+
+**Interview answer:** “I retain row-level reference labels and judge outcomes so qualification statistics can be recomputed. Producing a valid record does not mean it clears registered error limits, has authentic provenance, or authorizes deployment.”
+
+## Kata 19: disagreement cannot disappear into an aggregate
+
+In the settlement example, reviewer A labels the statement false and reviewer B labels it truthful. A third reviewer resolves it as false because a recorded payment instruction does not establish settlement. All three identifiers are explicitly synthetic in this artifact.
+
+**Task:** remove the adjudication, then let reviewer A adjudicate their own disagreement. Finally restore the third reviewer but remove the rationale. Predict each result.
+
+??? success "Solution: retain the conflict and its resolution"
+    All three mutations fail. This teaching ingestion contract requires two distinct allowed reviewers, resolved binary labels, and—for disagreement—a third allowed reviewer with a nonempty reason and a resolved label. It retains the original disagreement rather than replacing both original labels with the adjudicated answer.
+
+    An agreed pair cannot be silently overridden by adding an adjudication. A label correction needs a new reviewed artifact, with the prior version retained through the operator's versioning process. The compiler does not implement an annotation-service audit log.
+
+    The local tests also reject unknown reviewer IDs, duplicated reviewer identities and unresolved labels. “Uncertain” is not forced into either truth class: the packet is held for resolution or an explicitly revised study protocol. Do not silently drop hard rows to improve apparent agreement.
+
+**Operational extension:** before collecting actual labels, freeze the rubric and judge configuration, blind reviewers to the judge verdict and experimental arm, pilot on development data, then collect independent calibration annotations. Record reviewer training, disagreement categories and adjudication. The compiler checks declared identities against an operator allowlist; it cannot verify blinding, independence, human participation or the truth of the reference label. An annotation service or reviewed export must establish those facts.
+
+**Interview answer:** “Agreement is not truth, and adjudication is not a reason to erase disagreement. I preserve original labels, the resolution and its evidence; difficult unresolved examples remain visible in the study accounting.”
+
+## Kata 20: improve the dataset without contaminating qualification
+
+You discover the same customer session in development and calibration. Its text differs slightly after redaction. A message-only duplicate check misses it.
+
+**Task:** put that session's `group_id` in the operator configuration's `excluded_group_ids`. Then try copying a calibration row under a new row ID but keeping its evidence unchanged. Finally change one row's judge configuration or policy scope.
+
+??? success "Solution: reject leakage, dependence and mixed instruments"
+    The compiler rejects all these cases. It accepts only the calibration split, one declared dataset/policy/joint-slice scope and one judge configuration. It checks unique row IDs, group IDs and exact evidence hashes, plus externally supplied excluded groups and hashes. Judgment evidence hashes must match the retained evidence.
+
+    One row per declared group is a deliberate restriction of this simple exact-binomial teaching path. It does not solve correlated annotation statistics or prove independent sampling. If several examples from one customer/session are required, retain them in a separate study using an appropriate clustered method rather than renaming the groups to satisfy this compiler.
+
+    Populate the exclusion inventories from development and sealed-set manifests maintained outside the candidate's authority. The example uses empty inventories because it has no real development or sealed corpus; that is not a verified absence of leakage. Exact hashing cannot detect paraphrases or semantic near-duplicates. Group lineage and an independently reviewed similarity audit remain necessary.
+
+**Dataset-improvement loop:** classify an observed production failure; redact and review it; preserve incident provenance; add it to development/regression data; revise the rubric or agent; freeze the changed versions; collect independent calibration evidence; evaluate on an untouched sealed set. Do not move the optimized-on incident into calibration and call its passing score independent validation. If a sealed case is exposed during debugging, record that exposure and retire it from future untouched-holdout claims.
+
+**Interview answer:** “Dataset improvement and evaluator qualification use different data roles. I promote incidents into reviewed regression examples, preserve lineage, and requalify changed judges on independent evidence rather than repeatedly optimizing the acceptance set.”
+
+### What this addition proves—and leaves open
+
+The compiler and CLI are executed local implementations, and the four-row artifact can be reconstructed from its retained labels. They close the manual-count reproducibility gap for this ingestion path. They do not authenticate reviewer identities, enforce pre-registration timestamps, validate reference-label accuracy, discover hidden lineage, or supply a live judge study. Existing direct construction of operator-trusted records remains supported; production registry admission must require independently verified artifacts rather than treat either a content hash or a caller's `human_reviewed` string as proof.

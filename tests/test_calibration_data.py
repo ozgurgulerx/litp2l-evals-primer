@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from cx_eval_lab.evidence import canonical_hash
 from tests.test_semantic_stage import CONFIG, FixtureJudge, NOW
@@ -131,6 +132,53 @@ class CalibrationDataTests(unittest.TestCase):
         for field in ('issued_at', 'expires_at'):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 compile_data(packet(), policy={**policy(), field: 123})
+
+    def test_rejects_incomplete_nonfinite_and_unresolved_packets(self):
+        for mutate in (
+            lambda data: data.update(schema_version='unknown'),
+            lambda data: data.update(rows=[]),
+            lambda data: data['scope'].update(slices=[]),
+            lambda data: data['scope'].update(slices=['x', 'x']),
+            lambda data: data['scope'].update(dataset_version=''),
+            lambda data: data['rows'][0].update(reviews=[]),
+            lambda data: data['rows'][0].update(adjudication={}),
+            lambda data: data['rows'][0]['evidence'].update(value=float('nan')),
+        ):
+            data = packet()
+            mutate(data)
+            with self.subTest(mutation=mutate), self.assertRaises(ValueError):
+                compile_data(data)
+        with self.assertRaises(ValueError):
+            compile_data(packet(), trusted_reviewers='reviewer-a')
+
+    def test_published_example_is_recomputable_and_not_qualified(self):
+        from cx_eval_lab.calibration_data import compile_calibration
+        from dataclasses import asdict
+        from types import SimpleNamespace
+        report = json.loads(Path('docs/assets/calibration-compiled-v1.json').read_text())
+        record = compile_calibration(report['annotations'], **report['operator_config'])
+        self.assertEqual(json.loads(json.dumps(asdict(record))), report['record'])
+        self.assertEqual(record.content_hash, report['record_hash'])
+        self.assertEqual((2, 2, 1, 1, 1), (record.truthful_examples, record.false_examples,
+                         record.false_passes, record.false_blocks, record.abstentions))
+        from cx_eval_lab.dataset import load_refund_cases
+        case = load_refund_cases('evals/cx-support/datasets/regression/refund_v1.json')[0]
+        judge = SimpleNamespace(evaluator_version=record.evaluator_version,
+                                configuration_hash=record.configuration_hash)
+        self.assertEqual('insufficient_calibration_examples',
+                         record.rejection(judge, case, 'refund-policy-v1', NOW, True))
+
+    def test_cli_main_success_and_safe_error_are_instrumented(self):
+        from cx_eval_lab.calibration_data import main
+        with tempfile.TemporaryDirectory() as directory:
+            output = str(Path(directory) / 'record.json')
+            args = ['calibration', '--input', 'evals/cx-support/examples/calibration-annotations-v1.json',
+                    '--config', 'evals/cx-support/examples/calibration-policy-v1.json', '--output', output]
+            with patch.object(sys, 'argv', args):
+                main()
+                with patch('sys.stderr'), self.assertRaises(SystemExit) as raised:
+                    main()
+                self.assertEqual(2, raised.exception.code)
 
     def test_cli_retains_input_and_computed_record_without_overwrite(self):
         with tempfile.TemporaryDirectory() as directory:

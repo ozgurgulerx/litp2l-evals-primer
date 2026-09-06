@@ -1,0 +1,13 @@
+{
+  "policy": {
+    "issued_at": "2026-09-06T00:00:00+00:00",
+    "expires_at": "2026-10-06T00:00:00+00:00",
+    "minimum_per_class": 30,
+    "max_false_pass_upper": 0.05,
+    "max_false_block_upper": 0.05,
+    "max_abstention_rate": 0.2
+  },
+  "trusted_reviewers": ["synthetic-reviewer-a", "synthetic-reviewer-b", "synthetic-adjudicator"],
+  "excluded_group_ids": [],
+  "excluded_evidence_hashes": []
+}
