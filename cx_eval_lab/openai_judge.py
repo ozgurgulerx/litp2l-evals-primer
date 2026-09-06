@@ -172,7 +172,9 @@ class OpenAIResponsesJudge:
         except (ValueError, TypeError, AttributeError):
             return self._result('abstain', 'invalid_evidence_request', {'status': 'not_sent'})
         try:
-            response = self.client.with_options(timeout=self.config.timeout_seconds, max_retries=0).responses.create(
+            response = self.client.with_options(
+                timeout=self.config.timeout_seconds, max_retries=0,
+                base_url='https://api.openai.com/v1').responses.create(
                 model=self.config.model, instructions=self.config.rubric,
                 input=[{'role': 'user', 'content': request.evidence_json}],
                 text={'format': {'type': 'json_schema', 'name': 'refund_truth_verdict',
