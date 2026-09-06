@@ -19,7 +19,6 @@ from cx_eval_lab.models import (
     trusted_message_template_by_message,
 )
 
-
 COMMITTED_REFUND_STATUSES = frozenset({"committed", "timed_out_after_commit"})
 
 
@@ -90,7 +89,9 @@ def evaluate_case(
         qualified_semantic_calibration_hashes,
         context_hash,
     )
-    if template is None and semantic_qualified and not semantic_evaluation_receipt.passed:
+    if (template is None and semantic_qualified
+            and semantic_evaluation_receipt is not None
+            and not semantic_evaluation_receipt.passed):
         false_message_claim_count += 1
     # Recognition selects the instrument; factual support qualifies its use here.
     # A receipt cannot bypass a recognized template's failed prerequisites.

@@ -4,14 +4,20 @@ import unittest
 from dataclasses import replace
 from unittest.mock import patch
 
-from cx_eval_lab.dataset import load_refund_cases
 from cx_eval_lab.agents import ReferenceSupportAgent
+from cx_eval_lab.dataset import load_refund_cases
 from cx_eval_lab.evaluators import (
-    evaluate_case, hash_customer_message, hash_structured_claims, hash_evidence_context,
+    evaluate_case,
+    hash_customer_message,
+    hash_evidence_context,
+    hash_structured_claims,
 )
 from cx_eval_lab.gate import GatePolicy, apply_release_gate
 from cx_eval_lab.models import (
-    AgentOutput, TRUSTED_MESSAGE_TEMPLATES, TrustedMessageTemplate, SemanticEvaluationReceipt,
+    TRUSTED_MESSAGE_TEMPLATES,
+    AgentOutput,
+    SemanticEvaluationReceipt,
+    TrustedMessageTemplate,
 )
 from cx_eval_lab.runner import evaluate_agent
 from cx_eval_lab.world import RefundTools, RefundWorld
