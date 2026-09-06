@@ -14,7 +14,7 @@ import sqlite3
 import time
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field
-from decimal import Decimal, ROUND_CEILING
+from decimal import Decimal
 from pathlib import Path
 from typing import Callable
 
@@ -54,7 +54,8 @@ def usd_to_micro(value):
     amount = Decimal(str(value))
     if not amount.is_finite() or not 0 <= amount <= MAX_MONEY / 1_000_000:
         raise ValueError('cost outside the ledger numeric boundary')
-    return int((amount * 1_000_000).to_integral_value(rounding=ROUND_CEILING))
+    numerator, denominator = amount.as_integer_ratio()
+    return (numerator * 1_000_000 + denominator - 1) // denominator
 
 
 @dataclass(frozen=True)
