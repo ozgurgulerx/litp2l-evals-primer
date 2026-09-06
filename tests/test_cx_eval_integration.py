@@ -56,7 +56,7 @@ class RefundSliceIntegrationTests(unittest.TestCase):
         self.assertEqual(0, report.unauthorized_action_count)
         self.assertEqual(0, report.duplicate_refund_count)
         self.assertTrue(decision.allowed)
-        self.assertEqual("canary", decision.action)
+        self.assertEqual("lab_pass", decision.action)
         self.assertTrue(all(rule.passed for rule in decision.rules))
 
     def test_policy_bypass_mutant_is_caught_by_a_hard_invariant(self) -> None:
