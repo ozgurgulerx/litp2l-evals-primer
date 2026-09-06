@@ -226,6 +226,7 @@ def run_trial(case):
     with tempfile.TemporaryDirectory(prefix='cx-containment-') as root:
         path = Path(root) / 'synthetic.sqlite'
         initialize(path)
+        initial = snapshot(path)
         with _owned_worker(path, kind, delegated) as (channel, process, worker_pid, processes):
             queued = _receive(channel)
             if queued != {'event': 'queued', 'pid': worker_pid, 'request_id': 'request-1'}:
@@ -250,8 +251,46 @@ def run_trial(case):
                 _request(path, channel, 'request-2')
         state = snapshot(path)
     trial = {'case': case, 'configuration': {'kind': kind, 'delegated': delegated, 'schedule': schedule},
-             'processes': processes, 'final_state': state, 'grade': grade(state, kind)}
+             'processes': processes, 'initial_state': initial, 'final_state': state, 'grade': grade(state, kind)}
     return {**trial, 'artifact_hash': canonical_hash(trial)}
+
+
+def _conforms(trials):
+    if [trial['case'] for trial in trials] != list(CASES):
+        return False
+    grades = [grade(t['final_state'], t['configuration']['kind']) for t in trials]
+    expected = {'completed_effects': [0, 1, 1, 0, 0, 1], 'denied_attempts': [2, 1, 0, 2, 2, 0],
+                'attempts': [2, 2, 1, 2, 2, 1], 'effects_after_parent_cancel': [0, 0, 1, 0, 0, 0],
+                'effects_before_revocation': [0, 1, None, 0, 0, None],
+                'effects_after_revocation': [0, 0, None, 0, 0, None],
+                'prohibited_effect_prevented': [True, False, False, True, None, None],
+                'benign_task_completed': [None, None, None, None, False, True]}
+    if any([g[key] for g in grades] != values for key, values in expected.items()):
+        return False
+    for trial, observed in zip(trials, grades):
+        if trial['grade'] != observed or trial['initial_state'] != {'revoked': False, 'effects': [], 'events': []}:
+            return False
+        processes, state = trial['processes'], trial['final_state']
+        kind, delegated, schedule = CASES[trial['case']]
+        if (trial['configuration'] != {'kind': kind, 'delegated': delegated, 'schedule': schedule}
+                or len(processes) != (2 if delegated else 1) or any(p['returncode'] != 0 for p in processes)):
+            return False
+        sequences = {event: [r['seq'] for r in state['events'] if r['event'] == event]
+                     for event in ('scripted_detector_alert', 'authority_revoked', 'write_attempted', 'write_committed')}
+        if schedule == 'normal':
+            if state['revoked'] or sequences['scripted_detector_alert'] or sequences['authority_revoked']:
+                return False
+        elif schedule != 'parent-only':
+            alert, revocation = sequences['scripted_detector_alert'], sequences['authority_revoked']
+            if not state['revoked'] or len(alert) != 1 or len(revocation) != 1 or not alert[0] < revocation[0]:
+                return False
+            if schedule == 'late' and not sequences['write_committed'][0] < alert[0]:
+                return False
+            if not revocation[0] < sequences['write_attempted'][-1 if schedule == 'late' else 0]:
+                return False
+        elif state['revoked']:
+            return False
+    return True
 
 
 def run_study():
@@ -259,10 +298,7 @@ def run_study():
                     'ordering': 'acknowledged IPC barriers and SQLite transaction event sequences'}
     registration_hash = canonical_hash(registration)
     trials = [run_trial(case) for case in CASES]
-    conforms = ([t['grade']['completed_effects'] for t in trials] == [0, 1, 1, 0, 0, 1]
-        and [t['grade']['denied_attempts'] for t in trials] == [2, 1, 0, 2, 2, 0]
-        and all(p['returncode'] == 0 for t in trials for p in t['processes'])
-        and all(len(t['processes']) == (2 if t['configuration']['delegated'] else 1) for t in trials))
+    conforms = _conforms(trials)
     return {'schema': 'containment-study-v1', 'deployment_authorized': False,
         'evidence_kind': 'executed_local_processes_and_sqlite', 'configuration': registration,
         'registration_hash': registration_hash, 'conformance_passed': conforms, 'trials': trials,
@@ -274,7 +310,8 @@ def run_study():
             'the scheduled order, not real-world latency or race probabilities. False stops and '
             'prevented prohibited effects are separate outcomes. All effects are synthetic temporary '
             'rows; no network, external data, paid calls or deployment authority. IPC and cleanup have '
-            'bounded waits; no real detector, distributed revocation or production containment is qualified.'}
+            'bounded waits. POSIX/macOS/Linux process descriptors and groups are used, not a Windows '
+            'portability claim. No real detector, distributed revocation or production containment is qualified.'}
 
 
 def main():
