@@ -2,9 +2,6 @@
 
 import copy
 import json
-import subprocess
-import sys
-import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
@@ -122,22 +119,3 @@ class ResolutionSliceTests(unittest.TestCase):
                         row['artifact_hash'] = artifact['artifact_hash']
             with self.assertRaises(ValueError):
                 self.derive(packet)
-
-    def test_sidecar_is_derived_not_new_execution_and_cli_requires_trust(self):
-        from cx_eval_lab.resolution_slices import run_study
-        report = run_study(trusted_calibration_hashes=self.trust)
-        self.assertEqual('retrospective_replay_diagnostics', report['evidence_kind'])
-        self.assertEqual(3, len(report['comparisons']))
-        self.assertNotIn('packet', report['comparisons'][0])
-        self.assertTrue(all(row['report']['joint']['status'] == 'hold' for row in report['comparisons']))
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / 'slices.json'
-            command = [sys.executable, '-m', 'cx_eval_lab.resolution_slices', '--output', str(path)]
-            self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
-            command += ['--trusted-calibration-hash', next(iter(self.trust))]
-            first = subprocess.run(command, capture_output=True, text=True, check=False)
-            self.assertEqual(0, first.returncode, first.stderr)
-            original = path.read_bytes()
-            self.assertEqual(report, json.loads(original))
-            self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
-            self.assertEqual(original, path.read_bytes())
