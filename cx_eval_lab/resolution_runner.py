@@ -15,6 +15,14 @@ from cx_eval_lab.source_provenance import capture_source_inputs
 from cx_eval_lab.statistics import PairedTrial
 
 
+def _campaign_inputs(stage):
+    from cx_eval_lab.budgeted_judge import BudgetedSemanticJudge
+    if stage is None or not isinstance(stage.judge, BudgetedSemanticJudge):
+        return ()
+    return (('campaign-policy', stage.judge.ledger.policy.content_hash),
+            ('judge-config', stage.judge.configuration_hash))
+
+
 def make_manifest(cases, baseline_agent_id, candidate_agent_id, *, repetitions=2, semantic_stage=None):
     """A synthetic teaching registration, constructed before any agent runs."""
     from cx_eval_lab import resolution_semantic as ns
@@ -35,7 +43,8 @@ def make_manifest(cases, baseline_agent_id, candidate_agent_id, *, repetitions=2
         input_hashes=(*capture_source_inputs(Path(__file__).resolve().parents[1]),
                       ('resolution-cases', canonical_hash([asdict(c) for c in cases])),
                       ('resolution-design', canonical_hash(registration)),
-                      *((('native-semantic-registration', canonical_hash(semantic)),) if semantic else ())),
+                      *((('native-semantic-registration', canonical_hash(semantic)),) if semantic else ()),
+                      *_campaign_inputs(semantic_stage)),
         invalidation_rules=('case_or_design_change', 'source_change', 'semantic_scope_not_qualified'))
 
 
@@ -45,6 +54,9 @@ def run_paired_resolution(*, cases, baseline_agent, candidate_agent, manifest,
     registration = design(baseline_agent.name, candidate_agent.name,
                           None if semantic_stage is None else semantic_stage.registration)
     validate_registration(manifest, cases, registration)
+    for key, value in _campaign_inputs(semantic_stage):
+        if dict(manifest.input_hashes).get(key) != value:
+            raise ValueError('native campaign registration mismatch')
     kind = 'measured' if measurement_profile is None else measurement_profile.evidence_kind
     if measurement_profile is not None and kind != 'synthetic':
         raise ValueError('measured resolution runs require wall-clock and runtime evidence')

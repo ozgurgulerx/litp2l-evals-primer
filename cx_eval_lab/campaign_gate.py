@@ -134,6 +134,10 @@ def _snapshot(snapshot, policy, issues):
 
 
 def _execution_request(payload):
+    if payload['schema'] == 'resolution-trial-v2':
+        from cx_eval_lab.resolution_semantic import judge_request
+        return judge_request(payload)
+    _require(payload['schema'] == 'refund-trial-v1', 'unsupported_campaign_trial_schema')
     case = RefundCase.from_dict(payload['case'])
     return {'customer_request': asdict(case.agent_input),
             'output': {key: value for key, value in payload['output'].items() if key != 'runtime_evidence'},
@@ -144,6 +148,12 @@ def _execution_request(payload):
 
 
 def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes, registered_configuration):
+    criterion = CRITERION
+    if payload['schema'] == 'resolution-trial-v2':
+        from cx_eval_lab.resolution_semantic import CRITERION as NATIVE_CRITERION
+        criterion = NATIVE_CRITERION
+        _require(registered_configuration == payload['design']['semantic_qualification']['configuration_hash'],
+                 'native_campaign_configuration_not_registered')
     stage = payload.get('semantic_stage') or {}
     if not stage.get('judgment') or not stage['judgment'].get('campaign_audit_json'):
         issues.add('campaign_judgment_missing')
@@ -163,12 +173,12 @@ def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes, 
                  and receipt['abstained'] is (verdict == 'abstain'), 'campaign_judgment_receipt_mismatch')
         _require(qualification_hash == receipt['calibration_receipt_hash']
                  and receipt['evaluator_version'] == stage['qualification']['evaluator_version']
-                 and receipt['criterion_id'] == stage['qualification']['criterion_id'] == CRITERION,
+                 and receipt['criterion_id'] == stage['qualification']['criterion_id'] == criterion,
                  'campaign_qualification_receipt_mismatch')
     else:
         _require(stage['status'] == 'unqualified' and stage['reason'], 'missing_semantic_receipt')
         issues.add('semantic_qualification_missing')
-    request_hash = canonical_hash({'criterion': CRITERION, 'evidence': stage['request']})
+    request_hash = canonical_hash({'criterion': criterion, 'evidence': stage['request']})
     configuration = stage['qualification']['configuration_hash']
     _require(registered_configuration is None or configuration == registered_configuration,
              'registered_judge_configuration_mismatch')
