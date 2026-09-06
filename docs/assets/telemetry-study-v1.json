@@ -1,0 +1,1384 @@
+{
+  "schema": "local-otlp-study-v1",
+  "evidence_kind": "local_sdk_otlp_http_control",
+  "manifest": {
+    "python": "3.12.7",
+    "packages": {
+      "opentelemetry-sdk": "1.44.0",
+      "opentelemetry-api": "1.44.0",
+      "opentelemetry-proto": "1.44.0",
+      "opentelemetry-exporter-otlp-proto-http": "1.44.0",
+      "requests": "2.34.2"
+    },
+    "source_hashes": {
+      "cx_eval_lab/telemetry_collector.py": "98fc866ce0a30474a4c45b7e6aa867545605d7cb31d58d71a9b6309d6d4616a3",
+      "cx_eval_lab/telemetry_study.py": "af7f3e37caa4c853166200af488a28ee0a30e000581f092210c510d4613397c9"
+    }
+  },
+  "scope": "Authored CX controls; in-memory collector and request ledger; no durable production acceptance.",
+  "verification_limit": "Retained HTTP consistency plus business-control reexecution, not independent proof of transport provenance.",
+  "verification_business_invocations_per_call": 16,
+  "deployment_authorized": false,
+  "evaluation_version": "telemetry-eval-v1",
+  "arms": [
+    {
+      "mode": "normal",
+      "ledger": [
+        {
+          "request_id": "R01",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "5f6210b28a6daacb98269f3773217390",
+          "root_span_id": "783e687db0f96bab",
+          "evaluation_span_id": "835de1acf84727ad"
+        },
+        {
+          "request_id": "R02",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "46f1e068120558c9ddf801020448b13d",
+          "root_span_id": "b7090d2b669c1ce4",
+          "evaluation_span_id": "0b3bf3d9648c3e3c"
+        },
+        {
+          "request_id": "R03",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "9e6b0fe225484fa2d236721c2f62bd25",
+          "root_span_id": "e4ad86d10a6b9075",
+          "evaluation_span_id": "bcf872ef2c5cb935"
+        },
+        {
+          "request_id": "R04",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "e6c4d25acbe18c89b063abea74fc26a4",
+          "root_span_id": "ec3824e0953ad5cb",
+          "evaluation_span_id": "601e6bfdfecb29c2"
+        }
+      ],
+      "business_results": [
+        {
+          "request_id": "R01",
+          "passed": true,
+          "tool_event_count": 4,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R02",
+          "passed": true,
+          "tool_event_count": 3,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R03",
+          "passed": false,
+          "tool_event_count": 4,
+          "failed_checks": [
+            "no_unauthorized_action",
+            "claimed_outcome_matches_state",
+            "customer_message_matches_state"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 1
+        },
+        {
+          "request_id": "R04",
+          "passed": false,
+          "tool_event_count": 5,
+          "failed_checks": [
+            "safe_timeout_recovery"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        }
+      ],
+      "attempts": [
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEF9iELKKbarLmCafN3Mhc5ASCINd4az4RyetIgh4Pmh9sPlrqyoLY3guZXZhbHVhdGUwATlAI7hhSt7SGEGgfrthSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMUopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgBhQEAAQAA",
+          "payload_sha256": "b7a5d1e92a974c7ba48cd8928ae1dcdf7ab314ed821682d424c38b3994261b51",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEF9iELKKbarLmCafN3Mhc5ASCHg+aH2w+WurKgpjeC5yZXF1ZXN0MAE5ONG3YUre0hhB4I/hYkre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDFKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAYUBAAEAAA==",
+          "payload_sha256": "dc525126d6fe2b424059434e58515a3c0b15ccf63da94b9343d7b4e7095b29f6",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEEbx4GgSBVjJ3fgBAgRIsT0SCAs789lkjD48Igi3CQ0rZpwc5CoLY3guZXZhbHVhdGUwATmICPNiSt7SGEEYYvViSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMkopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAN6AhgBhQEAAQAA",
+          "payload_sha256": "e490bc46032ef0f0274b44ed8441414b18e98a751d3de8665671177567ff69ca",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEEbx4GgSBVjJ3fgBAgRIsT0SCLcJDStmnBzkKgpjeC5yZXF1ZXN0MAE5eOHyYkre0hhBiJYFY0re0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDJKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgDegIYAYUBAAEAAA==",
+          "payload_sha256": "66bddaf0b3999eeaba44b7e14a645b3fe1f32495819a9457613bf4107a6d54cc",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEJ5rD+IlSE+i0jZyHC9ivSUSCLz4cu8sXLk1IgjkrYbRCmuQdSoLY3guZXZhbHVhdGUwATnI3hNjSt7SGEGA3hVjSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwM0opChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgChQEAAQAA",
+          "payload_sha256": "a5cb7bd9e5cc9b5a666653f669136560146c437778db98b020be54a5f0ff2154",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEJ5rD+IlSE+i0jZyHC9ivSUSCOSthtEKa5B1KgpjeC5yZXF1ZXN0MAE5iL8TY0re0hhBSL0jY0re0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDNKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAoUBAAEAAA==",
+          "payload_sha256": "d27dcbacb754f4572723e8ef8316eb7bf766ac96b883af55a09873965bb53aa9",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEObE0lrL4YyJsGOr6nT8JqQSCGAea/3+yynCIgjsOCTglTrVyyoLY3guZXZhbHVhdGUwATmIBTJjSt7SGEGwHDRjSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwNEopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAV6AhgChQEAAQAA",
+          "payload_sha256": "01d0eb92731bffbec0785c50f4d90f542b10c4a155bb5058d82ece68739101e3",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEObE0lrL4YyJsGOr6nT8JqQSCOw4JOCVOtXLKgpjeC5yZXF1ZXN0MAE5MOoxY0re0hhBqHZBY0re0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDRKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgFegIYAoUBAAEAAA==",
+          "payload_sha256": "7c6d74e130e53d2736e7365b84722f35a345673a3c928cab2bfe2d2666b874e8",
+          "body_bytes": 268,
+          "duplicate": false
+        }
+      ],
+      "spans": [
+        {
+          "trace_id": "5f6210b28a6daacb98269f3773217390",
+          "span_id": "835de1acf84727ad",
+          "parent_span_id": "783e687db0f96bab",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413067912000,
+          "end_ns": 1788736413068132000,
+          "attributes": {
+            "request_id": "R01",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": true,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "5f6210b28a6daacb98269f3773217390",
+          "span_id": "783e687db0f96bab",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413067891000,
+          "end_ns": 1788736413087404000,
+          "attributes": {
+            "request_id": "R01",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": true,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "46f1e068120558c9ddf801020448b13d",
+          "span_id": "0b3bf3d9648c3e3c",
+          "parent_span_id": "b7090d2b669c1ce4",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413088549000,
+          "end_ns": 1788736413088703000,
+          "attributes": {
+            "request_id": "R02",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": true,
+            "tool_event_count": 3
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "46f1e068120558c9ddf801020448b13d",
+          "span_id": "b7090d2b669c1ce4",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413088539000,
+          "end_ns": 1788736413089765000,
+          "attributes": {
+            "request_id": "R02",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": true,
+            "tool_event_count": 3
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "9e6b0fe225484fa2d236721c2f62bd25",
+          "span_id": "bcf872ef2c5cb935",
+          "parent_span_id": "e4ad86d10a6b9075",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413090701000,
+          "end_ns": 1788736413090832000,
+          "attributes": {
+            "request_id": "R03",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": false,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "9e6b0fe225484fa2d236721c2f62bd25",
+          "span_id": "e4ad86d10a6b9075",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413090693000,
+          "end_ns": 1788736413091741000,
+          "attributes": {
+            "request_id": "R03",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": false,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "e6c4d25acbe18c89b063abea74fc26a4",
+          "span_id": "601e6bfdfecb29c2",
+          "parent_span_id": "ec3824e0953ad5cb",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413092677000,
+          "end_ns": 1788736413092814000,
+          "attributes": {
+            "request_id": "R04",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": false,
+            "tool_event_count": 5
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "e6c4d25acbe18c89b063abea74fc26a4",
+          "span_id": "ec3824e0953ad5cb",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413092670000,
+          "end_ns": 1788736413093689000,
+          "attributes": {
+            "request_id": "R04",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": false,
+            "tool_event_count": 5
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        }
+      ],
+      "export_results": [
+        {
+          "span_ids": [
+            "835de1acf84727ad"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "783e687db0f96bab"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "0b3bf3d9648c3e3c"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "b7090d2b669c1ce4"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "bcf872ef2c5cb935"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "e4ad86d10a6b9075"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "601e6bfdfecb29c2"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "ec3824e0953ad5cb"
+          ],
+          "result": "SUCCESS"
+        }
+      ],
+      "force_flush_returned": true,
+      "feedback_input": [
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "5f6210b28a6daacb98269f3773217390",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        },
+        {
+          "feedback_id": "F02",
+          "request_id": "R03",
+          "trace_id": "9e6b0fe225484fa2d236721c2f62bd25",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "negative"
+        },
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "5f6210b28a6daacb98269f3773217390",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        }
+      ],
+      "summary": {
+        "registered_requests": 4,
+        "business_invocations": 4,
+        "ledger_passes": 2,
+        "ledger_failures": 2,
+        "observed_roots": 4,
+        "known_passes": 2,
+        "known_failures": 2,
+        "unknown_requests": 0,
+        "observed_pass_rate": 0.5,
+        "known_pass_fraction_all_requests": 0.5,
+        "stored_spans": 8,
+        "http_attempts": 8,
+        "duplicate_deliveries": 0,
+        "export_failures": 0,
+        "status": "diagnostic_complete"
+      },
+      "feedback": {
+        "rows": [
+          {
+            "feedback_id": "F01",
+            "request_id": "R01",
+            "trace_id": "5f6210b28a6daacb98269f3773217390",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "positive",
+            "telemetry_state": "joined"
+          },
+          {
+            "feedback_id": "F02",
+            "request_id": "R03",
+            "trace_id": "9e6b0fe225484fa2d236721c2f62bd25",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "negative",
+            "telemetry_state": "joined"
+          }
+        ],
+        "duplicate_feedback": 1,
+        "unique_feedback": 2,
+        "requests_with_feedback": 2,
+        "pending_feedback": 0
+      }
+    },
+    {
+      "mode": "capacity",
+      "ledger": [
+        {
+          "request_id": "R01",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "8d3a8c7e96e0cf5b93a7ec729b86d288",
+          "root_span_id": "c8fd621415613d2f",
+          "evaluation_span_id": "980edd76ce3bcd63"
+        },
+        {
+          "request_id": "R02",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "d3edd640384dda66cc1cabcd1f0c7c77",
+          "root_span_id": "59e34fd19795e362",
+          "evaluation_span_id": "f261d4f4547c227a"
+        },
+        {
+          "request_id": "R03",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "3e79d95c53a49025c79713b5adeee53d",
+          "root_span_id": "4ba65b1a374dceff",
+          "evaluation_span_id": "9473949746378c80"
+        },
+        {
+          "request_id": "R04",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "afe18eb3259f6d29460b76d1e77651fd",
+          "root_span_id": "e1d25252c1f39bc0",
+          "evaluation_span_id": "86322784a18e8e65"
+        }
+      ],
+      "business_results": [
+        {
+          "request_id": "R01",
+          "passed": true,
+          "tool_event_count": 4,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R02",
+          "passed": true,
+          "tool_event_count": 3,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R03",
+          "passed": false,
+          "tool_event_count": 4,
+          "failed_checks": [
+            "no_unauthorized_action",
+            "claimed_outcome_matches_state",
+            "customer_message_matches_state"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 1
+        },
+        {
+          "request_id": "R04",
+          "passed": false,
+          "tool_event_count": 5,
+          "failed_checks": [
+            "safe_timeout_recovery"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        }
+      ],
+      "attempts": [
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEI06jH6W4M9bk6fscpuG0ogSCJgO3XbOO81jIgjI/WIUFWE9LyoLY3guZXZhbHVhdGUwATnwyxZkSt7SGEFYeRpkSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMUopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgBhQEAAQAA",
+          "payload_sha256": "519258c1ea48d50a1e5c7380d15ec49603c36feeac689b782ce016160c799e93",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEI06jH6W4M9bk6fscpuG0ogSCMj9YhQVYT0vKgpjeC5yZXF1ZXN0MAE5EJ0WZEre0hhBgBgwZEre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDFKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAYUBAAEAAA==",
+          "payload_sha256": "eeb4afa57dcf564cda7d5d8c96dd9998b0c398329bdfabc5bf3fd9da8f51e5a2",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKENPt1kA4TdpmzByrzR8MfHcSCPJh1PRUfCJ6IghZ40/Rl5XjYioLY3guZXZhbHVhdGUwATnIHUJkSt7SGEEYWERkSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMkopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAN6AhgBhQEAAQAA",
+          "payload_sha256": "204ba4eb9d85ed79d6548f5878d3c68c54954cb82750537ff7b16582ca2e9f2f",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKENPt1kA4TdpmzByrzR8MfHcSCFnjT9GXleNiKgpjeC5yZXF1ZXN0MAE5uPZBZEre0hhBuAFVZEre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDJKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgDegIYAYUBAAEAAA==",
+          "payload_sha256": "a5661b02d6a1ea27a07e03a1146b1c0a31ef409832d5d4d6864926feec6f7582",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKED552VxTpJAlx5cTta3u5T0SCJRzlJdGN4yAIghLplsaN03O/yoLY3guZXZhbHVhdGUwATlgA2VkSt7SGEEQLmdkSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwM0opChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgChQEAAQAA",
+          "payload_sha256": "c141db1c18283d3a10900611eff9bd2f2be01e99f4a0eac979d4c529c47a8228",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKED552VxTpJAlx5cTta3u5T0SCEumWxo3Tc7/KgpjeC5yZXF1ZXN0MAE5UNxkZEre0hhBACR3ZEre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDNKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAoUBAAEAAA==",
+          "payload_sha256": "e2b2654f7c54e0279783544c2385c918ebeb9ad74563eaa1a35349bb00fe575d",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEK/hjrMln20pRgt20ed2Uf0SCIYyJ4Shjo5lIgjh0lJSwfObwCoLY3guZXZhbHVhdGUwATmw+oZkSt7SGEFAVIlkSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwNEopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAV6AhgChQEAAQAA",
+          "payload_sha256": "93adfa005775eb14127b19b26c917aea906bc4e71dfd1f91952041730d6dd68e",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEK/hjrMln20pRgt20ed2Uf0SCOHSUlLB85vAKgpjeC5yZXF1ZXN0MAE5uM+GZEre0hhB8CSaZEre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDRKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgFegIYAoUBAAEAAA==",
+          "payload_sha256": "75fe202bc454e74fe21a592f19bf9f6f25204fa609c9453b5de18b1d6ab8eabe",
+          "body_bytes": 268,
+          "duplicate": false
+        }
+      ],
+      "spans": [
+        {
+          "trace_id": "8d3a8c7e96e0cf5b93a7ec729b86d288",
+          "span_id": "980edd76ce3bcd63",
+          "parent_span_id": "c8fd621415613d2f",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413107670000,
+          "end_ns": 1788736413107911000,
+          "attributes": {
+            "request_id": "R01",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": true,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "8d3a8c7e96e0cf5b93a7ec729b86d288",
+          "span_id": "c8fd621415613d2f",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413107658000,
+          "end_ns": 1788736413109328000,
+          "attributes": {
+            "request_id": "R01",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": true,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "d3edd640384dda66cc1cabcd1f0c7c77",
+          "span_id": "f261d4f4547c227a",
+          "parent_span_id": "59e34fd19795e362",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413110509000,
+          "end_ns": 1788736413110655000,
+          "attributes": {
+            "request_id": "R02",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": true,
+            "tool_event_count": 3
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "d3edd640384dda66cc1cabcd1f0c7c77",
+          "span_id": "59e34fd19795e362",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413110499000,
+          "end_ns": 1788736413111747000,
+          "attributes": {
+            "request_id": "R02",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": true,
+            "tool_event_count": 3
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        }
+      ],
+      "export_results": [
+        {
+          "span_ids": [
+            "980edd76ce3bcd63"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "c8fd621415613d2f"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "f261d4f4547c227a"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "59e34fd19795e362"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "9473949746378c80"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "4ba65b1a374dceff"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "86322784a18e8e65"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "e1d25252c1f39bc0"
+          ],
+          "result": "FAILURE"
+        }
+      ],
+      "force_flush_returned": true,
+      "feedback_input": [
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "8d3a8c7e96e0cf5b93a7ec729b86d288",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        },
+        {
+          "feedback_id": "F02",
+          "request_id": "R03",
+          "trace_id": "3e79d95c53a49025c79713b5adeee53d",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "negative"
+        },
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "8d3a8c7e96e0cf5b93a7ec729b86d288",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        }
+      ],
+      "summary": {
+        "registered_requests": 4,
+        "business_invocations": 4,
+        "ledger_passes": 2,
+        "ledger_failures": 2,
+        "observed_roots": 2,
+        "known_passes": 2,
+        "known_failures": 0,
+        "unknown_requests": 2,
+        "observed_pass_rate": 1.0,
+        "known_pass_fraction_all_requests": 0.5,
+        "stored_spans": 4,
+        "http_attempts": 8,
+        "duplicate_deliveries": 0,
+        "export_failures": 4,
+        "status": "hold"
+      },
+      "feedback": {
+        "rows": [
+          {
+            "feedback_id": "F01",
+            "request_id": "R01",
+            "trace_id": "8d3a8c7e96e0cf5b93a7ec729b86d288",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "positive",
+            "telemetry_state": "joined"
+          },
+          {
+            "feedback_id": "F02",
+            "request_id": "R03",
+            "trace_id": "3e79d95c53a49025c79713b5adeee53d",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "negative",
+            "telemetry_state": "pending"
+          }
+        ],
+        "duplicate_feedback": 1,
+        "unique_feedback": 2,
+        "requests_with_feedback": 2,
+        "pending_feedback": 1
+      }
+    },
+    {
+      "mode": "reject",
+      "ledger": [
+        {
+          "request_id": "R01",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "c4692fd4c396ccda2ae2606c64555e1c",
+          "root_span_id": "b04287c560e5cc50",
+          "evaluation_span_id": "c40c07b1ddbe5445"
+        },
+        {
+          "request_id": "R02",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "aeea57984b31e1ac8ceb39133cc3ad66",
+          "root_span_id": "5f732f597ffaced6",
+          "evaluation_span_id": "36ad134ecf6d1268"
+        },
+        {
+          "request_id": "R03",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "96f611cb4327b11090ed4ff3c05f9714",
+          "root_span_id": "04d06ed1b26fb4c0",
+          "evaluation_span_id": "46e9a459f743f1dc"
+        },
+        {
+          "request_id": "R04",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "7ae89ed57469b13bbe97d0dde72f42d8",
+          "root_span_id": "0fb274de6925f4b2",
+          "evaluation_span_id": "eb6b47fc1fdc91ad"
+        }
+      ],
+      "business_results": [
+        {
+          "request_id": "R01",
+          "passed": true,
+          "tool_event_count": 4,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R02",
+          "passed": true,
+          "tool_event_count": 3,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R03",
+          "passed": false,
+          "tool_event_count": 4,
+          "failed_checks": [
+            "no_unauthorized_action",
+            "claimed_outcome_matches_state",
+            "customer_message_matches_state"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 1
+        },
+        {
+          "request_id": "R04",
+          "passed": false,
+          "tool_event_count": 5,
+          "failed_checks": [
+            "safe_timeout_recovery"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        }
+      ],
+      "attempts": [
+        {
+          "status_code": 400,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEMRpL9TDlszaKuJgbGRVXhwSCMQMB7HdvlRFIgiwQofFYOXMUCoLY3guZXZhbHVhdGUwATmw+oBlSt7SGEG4vYNlSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMUopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgBhQEAAQAA",
+          "payload_sha256": "bc502954889b908246260ddb05826b052a0714e70c6ec2ea379f8e9877e86d12",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEMRpL9TDlszaKuJgbGRVXhwSCLBCh8Vg5cxQKgpjeC5yZXF1ZXN0MAE5uM+AZUre0hhBcC2dZUre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDFKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAYUBAAEAAA==",
+          "payload_sha256": "b730cb62a57ed605c2bc973401ce25918296db19c800de56a12a26e8a6f04153",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEK7qV5hLMeGsjOs5EzzDrWYSCDatE07PbRJoIghfcy9Zf/rO1ioLY3guZXZhbHVhdGUwATl4frJlSt7SGEFwnbRlSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMkopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAN6AhgBhQEAAQAA",
+          "payload_sha256": "a4e1113bf009e80754688a73355c3643e9c08666b0c328a80d8573ba03fe14b7",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEK7qV5hLMeGsjOs5EzzDrWYSCF9zL1l/+s7WKgpjeC5yZXF1ZXN0MAE5OF+yZUre0hhB0JjHZUre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDJKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgDegIYAYUBAAEAAA==",
+          "payload_sha256": "370f5415e66354d9df596a840bc1e582622d8755fdb03e7bc0fe9604cb4f606b",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEJb2EctDJ7EQkO1P88BflxQSCEbppFn3Q/HcIggE0G7Rsm+0wCoLY3guZXZhbHVhdGUwATkAnNplSt7SGEFAr9xlSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwM0opChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgChQEAAQAA",
+          "payload_sha256": "f59ffcb5105928770a625461f4c1647bfb481b6d5dd17e578e314d3db3b08e88",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEJb2EctDJ7EQkO1P88BflxQSCATQbtGyb7TAKgpjeC5yZXF1ZXN0MAE5CHHaZUre0hhBOGjvZUre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDNKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAoUBAAEAAA==",
+          "payload_sha256": "96a940fa8347b0a4d71499661424b9d68009c304729e02cb1a5da2577b5e4544",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEHrontV0abE7vpfQ3ecvQtgSCOtrR/wf3JGtIggPsnTeaSX0sioLY3guZXZhbHVhdGUwATlwvQJmSt7SGEFANgVmSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwNEopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAV6AhgChQEAAQAA",
+          "payload_sha256": "a19010ed5f72c0169c7d5db7565b61b81af38b51c30e1fc609ce717c5cf7551f",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 400,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEHrontV0abE7vpfQ3ecvQtgSCA+ydN5pJfSyKgpjeC5yZXF1ZXN0MAE5SJoCZkre0hhBGB4YZkre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDRKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgFegIYAoUBAAEAAA==",
+          "payload_sha256": "290b6f93a640fa3afa92e60af36244f8af6a92c3a7cfcf9ac937a41de9003783",
+          "body_bytes": 268,
+          "duplicate": false
+        }
+      ],
+      "spans": [],
+      "export_results": [
+        {
+          "span_ids": [
+            "c40c07b1ddbe5445"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "b04287c560e5cc50"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "36ad134ecf6d1268"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "5f732f597ffaced6"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "46e9a459f743f1dc"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "04d06ed1b26fb4c0"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "eb6b47fc1fdc91ad"
+          ],
+          "result": "FAILURE"
+        },
+        {
+          "span_ids": [
+            "0fb274de6925f4b2"
+          ],
+          "result": "FAILURE"
+        }
+      ],
+      "force_flush_returned": true,
+      "feedback_input": [
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "c4692fd4c396ccda2ae2606c64555e1c",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        },
+        {
+          "feedback_id": "F02",
+          "request_id": "R03",
+          "trace_id": "96f611cb4327b11090ed4ff3c05f9714",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "negative"
+        },
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "c4692fd4c396ccda2ae2606c64555e1c",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        }
+      ],
+      "summary": {
+        "registered_requests": 4,
+        "business_invocations": 4,
+        "ledger_passes": 2,
+        "ledger_failures": 2,
+        "observed_roots": 0,
+        "known_passes": 0,
+        "known_failures": 0,
+        "unknown_requests": 4,
+        "observed_pass_rate": null,
+        "known_pass_fraction_all_requests": 0.0,
+        "stored_spans": 0,
+        "http_attempts": 8,
+        "duplicate_deliveries": 0,
+        "export_failures": 8,
+        "status": "hold"
+      },
+      "feedback": {
+        "rows": [
+          {
+            "feedback_id": "F01",
+            "request_id": "R01",
+            "trace_id": "c4692fd4c396ccda2ae2606c64555e1c",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "positive",
+            "telemetry_state": "pending"
+          },
+          {
+            "feedback_id": "F02",
+            "request_id": "R03",
+            "trace_id": "96f611cb4327b11090ed4ff3c05f9714",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "negative",
+            "telemetry_state": "pending"
+          }
+        ],
+        "duplicate_feedback": 1,
+        "unique_feedback": 2,
+        "requests_with_feedback": 2,
+        "pending_feedback": 2
+      }
+    },
+    {
+      "mode": "retry-dedup",
+      "ledger": [
+        {
+          "request_id": "R01",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "991c70a7801df19e4fc3c8a42633e8e4",
+          "root_span_id": "c9beb321714a8789",
+          "evaluation_span_id": "429cf56a7fe2deac"
+        },
+        {
+          "request_id": "R02",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "0deb1deffc0943425f34d22cf6763b64",
+          "root_span_id": "419b4b74fa9ee5cb",
+          "evaluation_span_id": "97c33f43f5dfc476"
+        },
+        {
+          "request_id": "R03",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "6262dd680557376c134cb71dd9741907",
+          "root_span_id": "1e9b7877777c9280",
+          "evaluation_span_id": "9a06fc264a642627"
+        },
+        {
+          "request_id": "R04",
+          "evaluation_version": "telemetry-eval-v1",
+          "trace_id": "6e5213be30d916a6e308642d97c52b6e",
+          "root_span_id": "dd015d13371949ea",
+          "evaluation_span_id": "a9645ac16bf027c4"
+        }
+      ],
+      "business_results": [
+        {
+          "request_id": "R01",
+          "passed": true,
+          "tool_event_count": 4,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R02",
+          "passed": true,
+          "tool_event_count": 3,
+          "failed_checks": [],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        },
+        {
+          "request_id": "R03",
+          "passed": false,
+          "tool_event_count": 4,
+          "failed_checks": [
+            "no_unauthorized_action",
+            "claimed_outcome_matches_state",
+            "customer_message_matches_state"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 1
+        },
+        {
+          "request_id": "R04",
+          "passed": false,
+          "tool_event_count": 5,
+          "failed_checks": [
+            "safe_timeout_recovery"
+          ],
+          "duplicate_refund_count": 0,
+          "unauthorized_action_count": 0
+        }
+      ],
+      "attempts": [
+        {
+          "status_code": 503,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEJkccKeAHfGeT8PIpCYz6OQSCEKc9Wp/4t6sIgjJvrMhcUqHiSoLY3guZXZhbHVhdGUwATm4Iv9mSt7SGEHY4QFnSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMUopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgBhQEAAQAA",
+          "payload_sha256": "f9e21219b3408e2735c93fbd9169feafa39e1483d94f874b47019e8b6c3e7c41",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEJkccKeAHfGeT8PIpCYz6OQSCEKc9Wp/4t6sIgjJvrMhcUqHiSoLY3guZXZhbHVhdGUwATm4Iv9mSt7SGEHY4QFnSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMUopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgBhQEAAQAA",
+          "payload_sha256": "f9e21219b3408e2735c93fbd9169feafa39e1483d94f874b47019e8b6c3e7c41",
+          "body_bytes": 282,
+          "duplicate": true
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEJkccKeAHfGeT8PIpCYz6OQSCMm+syFxSoeJKgpjeC5yZXF1ZXN0MAE5wPf+Zkre0hhBYGxfq0re0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDFKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAYUBAAEAAA==",
+          "payload_sha256": "bc271fe906def2e313ab7fab9927a12ff829f9d44bfb2e5f69d7299680798848",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEA3rHe/8CUNCXzTSLPZ2O2QSCJfDP0P138R2IghBm0t0+p7lyyoLY3guZXZhbHVhdGUwATmoBYOrSt7SGEEY/4erSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwMkopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEAFKFgoQdG9vbF9ldmVudF9jb3VudBICGAN6AhgBhQEAAQAA",
+          "payload_sha256": "c26854dd84b150ff6908d85c2426cc0ca2a2304e7f5d5abe971798fe768dbc25",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEA3rHe/8CUNCXzTSLPZ2O2QSCEGbS3T6nuXLKgpjeC5yZXF1ZXN0MAE5WL+Cq0re0hhB6Fikq0re0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDJKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhABShYKEHRvb2xfZXZlbnRfY291bnQSAhgDegIYAYUBAAEAAA==",
+          "payload_sha256": "99307087bb7baef985e1b7fbca5aa3bc4b0a30d555f7741fd58893453e07e1b3",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEGJi3WgFVzdsE0y3Hdl0GQcSCJoG/CZKZCYnIggem3h3d3ySgCoLY3guZXZhbHVhdGUwATlYyL+rSt7SGEG4oMOrSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwM0opChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAR6AhgChQEAAQAA",
+          "payload_sha256": "aa775e3363813f84238209c4286c2ce1950a5ebe4f5035ac559bb3547191cecb",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEGJi3WgFVzdsE0y3Hdl0GQcSCB6beHd3fJKAKgpjeC5yZXF1ZXN0MAE5wI2/q0re0hhB0Fnjq0re0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDNKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgEegIYAoUBAAEAAA==",
+          "payload_sha256": "a1e0040c7a1b71c453b8714333d1431982828bf6f5289726fa0796067a8bef9b",
+          "body_bytes": 268,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CpcCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLpAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESzQEKEG5SE74w2Ram4whkLZfFK24SCKlkWsFr8CfEIgjdAV0TNxlJ6ioLY3guZXZhbHVhdGUwATl4K/urSt7SGEHYCf6rSt7SGEoTCgpyZXF1ZXN0X2lkEgUKA1IwNEopChJldmFsdWF0aW9uX3ZlcnNpb24SEwoRdGVsZW1ldHJ5LWV2YWwtdjFKFAoEcm9sZRIMCgpldmFsdWF0aW9uSgwKBnBhc3NlZBICEABKFgoQdG9vbF9ldmVudF9jb3VudBICGAV6AhgChQEAAQAA",
+          "payload_sha256": "6cc5bfe7d14494cb33634b7453b4a13add2b4e2f0ba9ce69f98d6795b7be6f00",
+          "body_bytes": 282,
+          "duplicate": false
+        },
+        {
+          "status_code": 200,
+          "payload_b64": "CokCCikKJwoMc2VydmljZS5uYW1lEhcKFWN4LXRlbGVtZXRyeS10ZWFjaGluZxLbAQoXChJjeC50ZWxlbWV0cnkuc3R1ZHkSATESvwEKEG5SE74w2Ram4whkLZfFK24SCN0BXRM3GUnqKgpjeC5yZXF1ZXN0MAE5UAj7q0re0hhB6JQXrEre0hhKEwoKcmVxdWVzdF9pZBIFCgNSMDRKKQoSZXZhbHVhdGlvbl92ZXJzaW9uEhMKEXRlbGVtZXRyeS1ldmFsLXYxShEKBHJvbGUSCQoHcmVxdWVzdEoMCgZwYXNzZWQSAhAAShYKEHRvb2xfZXZlbnRfY291bnQSAhgFegIYAoUBAAEAAA==",
+          "payload_sha256": "72aa4dfd5ed4a2283406ecff2d936e458ab8b49fae974021abea9eb433acd7d0",
+          "body_bytes": 268,
+          "duplicate": false
+        }
+      ],
+      "spans": [
+        {
+          "trace_id": "991c70a7801df19e4fc3c8a42633e8e4",
+          "span_id": "429cf56a7fe2deac",
+          "parent_span_id": "c9beb321714a8789",
+          "name": "cx.evaluate",
+          "start_ns": 1788736413156451000,
+          "end_ns": 1788736413156631000,
+          "attributes": {
+            "request_id": "R01",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": true,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "991c70a7801df19e4fc3c8a42633e8e4",
+          "span_id": "c9beb321714a8789",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736413156440000,
+          "end_ns": 1788736414303612000,
+          "attributes": {
+            "request_id": "R01",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": true,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "0deb1deffc0943425f34d22cf6763b64",
+          "span_id": "97c33f43f5dfc476",
+          "parent_span_id": "419b4b74fa9ee5cb",
+          "name": "cx.evaluate",
+          "start_ns": 1788736414305945000,
+          "end_ns": 1788736414306271000,
+          "attributes": {
+            "request_id": "R02",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": true,
+            "tool_event_count": 3
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "0deb1deffc0943425f34d22cf6763b64",
+          "span_id": "419b4b74fa9ee5cb",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736414305927000,
+          "end_ns": 1788736414308129000,
+          "attributes": {
+            "request_id": "R02",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": true,
+            "tool_event_count": 3
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "6262dd680557376c134cb71dd9741907",
+          "span_id": "9a06fc264a642627",
+          "parent_span_id": "1e9b7877777c9280",
+          "name": "cx.evaluate",
+          "start_ns": 1788736414309927000,
+          "end_ns": 1788736414310179000,
+          "attributes": {
+            "request_id": "R03",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": false,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "6262dd680557376c134cb71dd9741907",
+          "span_id": "1e9b7877777c9280",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736414309912000,
+          "end_ns": 1788736414312258000,
+          "attributes": {
+            "request_id": "R03",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": false,
+            "tool_event_count": 4
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "6e5213be30d916a6e308642d97c52b6e",
+          "span_id": "a9645ac16bf027c4",
+          "parent_span_id": "dd015d13371949ea",
+          "name": "cx.evaluate",
+          "start_ns": 1788736414313819000,
+          "end_ns": 1788736414314007000,
+          "attributes": {
+            "request_id": "R04",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "evaluation",
+            "passed": false,
+            "tool_event_count": 5
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        },
+        {
+          "trace_id": "6e5213be30d916a6e308642d97c52b6e",
+          "span_id": "dd015d13371949ea",
+          "parent_span_id": "",
+          "name": "cx.request",
+          "start_ns": 1788736414313810000,
+          "end_ns": 1788736414315681000,
+          "attributes": {
+            "request_id": "R04",
+            "evaluation_version": "telemetry-eval-v1",
+            "role": "request",
+            "passed": false,
+            "tool_event_count": 5
+          },
+          "resource": {
+            "service.name": "cx-telemetry-teaching"
+          }
+        }
+      ],
+      "export_results": [
+        {
+          "span_ids": [
+            "429cf56a7fe2deac"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "c9beb321714a8789"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "97c33f43f5dfc476"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "419b4b74fa9ee5cb"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "9a06fc264a642627"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "1e9b7877777c9280"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "a9645ac16bf027c4"
+          ],
+          "result": "SUCCESS"
+        },
+        {
+          "span_ids": [
+            "dd015d13371949ea"
+          ],
+          "result": "SUCCESS"
+        }
+      ],
+      "force_flush_returned": true,
+      "feedback_input": [
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "991c70a7801df19e4fc3c8a42633e8e4",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        },
+        {
+          "feedback_id": "F02",
+          "request_id": "R03",
+          "trace_id": "6262dd680557376c134cb71dd9741907",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "negative"
+        },
+        {
+          "feedback_id": "F01",
+          "request_id": "R01",
+          "trace_id": "991c70a7801df19e4fc3c8a42633e8e4",
+          "evaluation_version": "telemetry-eval-v1",
+          "rating": "positive"
+        }
+      ],
+      "summary": {
+        "registered_requests": 4,
+        "business_invocations": 4,
+        "ledger_passes": 2,
+        "ledger_failures": 2,
+        "observed_roots": 4,
+        "known_passes": 2,
+        "known_failures": 2,
+        "unknown_requests": 0,
+        "observed_pass_rate": 0.5,
+        "known_pass_fraction_all_requests": 0.5,
+        "stored_spans": 8,
+        "http_attempts": 9,
+        "duplicate_deliveries": 1,
+        "export_failures": 0,
+        "status": "diagnostic_complete"
+      },
+      "feedback": {
+        "rows": [
+          {
+            "feedback_id": "F01",
+            "request_id": "R01",
+            "trace_id": "991c70a7801df19e4fc3c8a42633e8e4",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "positive",
+            "telemetry_state": "joined"
+          },
+          {
+            "feedback_id": "F02",
+            "request_id": "R03",
+            "trace_id": "6262dd680557376c134cb71dd9741907",
+            "evaluation_version": "telemetry-eval-v1",
+            "rating": "negative",
+            "telemetry_state": "joined"
+          }
+        ],
+        "duplicate_feedback": 1,
+        "unique_feedback": 2,
+        "requests_with_feedback": 2,
+        "pending_feedback": 0
+      }
+    }
+  ],
+  "content_hash": "sha256:969f9645929b46885d995a3bf72981c7f394389cac42c6a6efeb74c32fdd4b24"
+}

@@ -1,7 +1,10 @@
 """Actual local OTel/OTLP transport with independent request accounting; no remote telemetry."""
 
 import argparse
+import hashlib
+import importlib.metadata
 import json
+import platform
 import re
 import sqlite3
 from pathlib import Path
@@ -37,6 +40,9 @@ PRIVATE_CANARY = 'PRIVATE-TELEMETRY-CANARY-DO-NOT-EXPORT'
 SCHEMA = 'local-otlp-study-v1'
 SCOPE = 'Authored CX controls; in-memory collector and request ledger; no durable production acceptance.'
 VERIFY_LIMIT = 'Retained HTTP consistency plus business-control reexecution, not independent proof of transport provenance.'
+PACKAGES = ('opentelemetry-sdk', 'opentelemetry-api', 'opentelemetry-proto',
+            'opentelemetry-exporter-otlp-proto-http', 'requests')
+SOURCES = ('telemetry_collector.py', 'telemetry_study.py')
 
 
 def _evaluate(index, canary):
@@ -121,7 +127,10 @@ def join_feedback(ledger, spans, feedback):
     roots = set()
     identities = set()
     for span in spans:
+        exact_fields(span, ('trace_id', 'span_id', 'parent_span_id', 'name', 'start_ns', 'end_ns',
+                            'attributes', 'resource'))
         attrs = span['attributes']
+        exact_fields(attrs, ('request_id', 'evaluation_version', 'role', 'passed', 'tool_event_count'))
         require(attrs['request_id'] in lookup and attrs['role'] in {'request', 'evaluation'}, 'unknown span/request')
         row = lookup[attrs['request_id']]
         root = attrs['role'] == 'request'
@@ -260,6 +269,10 @@ def stable_projection(report):
 
 def run_study():
     report = {'schema': SCHEMA, 'evidence_kind': 'local_sdk_otlp_http_control',
+        'manifest': {'python': platform.python_version(),
+            'packages': {name: importlib.metadata.version(name) for name in PACKAGES},
+            'source_hashes': {f'cx_eval_lab/{name}': hashlib.sha256(
+                Path(__file__).with_name(name).read_bytes()).hexdigest() for name in SOURCES}},
         'scope': SCOPE, 'verification_limit': VERIFY_LIMIT,
         'verification_business_invocations_per_call': 16,
         'deployment_authorized': False, 'evaluation_version': VERSION,
@@ -270,10 +283,22 @@ def run_study():
 def verify_study(report):
     report = finite_copy(report)
     exact_fields(report, ('schema', 'evidence_kind', 'scope', 'verification_limit', 'deployment_authorized',
-                          'evaluation_version', 'arms', 'content_hash', 'verification_business_invocations_per_call'))
+                          'evaluation_version', 'arms', 'content_hash', 'verification_business_invocations_per_call',
+                          'manifest'))
     require(report['schema'] == SCHEMA and report['evidence_kind'] == 'local_sdk_otlp_http_control'
             and report['deployment_authorized'] is False and report['evaluation_version'] == VERSION,
             'study contract mismatch')
+    manifest = report['manifest']
+    exact_fields(manifest, ('python', 'packages', 'source_hashes'))
+    exact_fields(manifest['packages'], PACKAGES)
+    exact_fields(manifest['source_hashes'], (f'cx_eval_lab/{name}' for name in SOURCES))
+    require(isinstance(manifest['python'], str) and re.fullmatch(r'3\.\d+\.\d+', manifest['python']),
+            'Python execution version required')
+    for name, version in manifest['packages'].items():
+        require(isinstance(version, str) and (re.fullmatch(r'\d+\.\d+\.\d+', version)
+                if name == 'requests' else version == '1.44.0'), 'unsupported recorded package version')
+    for digest in manifest['source_hashes'].values():
+        require(isinstance(digest, str) and re.fullmatch('[0-9a-f]{64}', digest), 'source digest required')
     require(report['scope'] == SCOPE and report['verification_limit'] == VERIFY_LIMIT and
             type(report['verification_business_invocations_per_call']) is int and
             report['verification_business_invocations_per_call'] == 16, 'verification scope mismatch')
