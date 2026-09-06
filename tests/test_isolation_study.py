@@ -126,6 +126,22 @@ class IsolationStudyTests(unittest.TestCase):
             self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
             self.assertEqual(saved, output.read_bytes())
 
+    def test_returned_registration_cannot_mutate_future_policy(self):
+        from cx_eval_lab.isolation_study import POLICY, registration, run_study
+        expected = dict(POLICY)
+        report = run_study()
+        try:
+            report['registration']['shared_policy']['policy'] = 'changed-by-report-reader'
+            self.assertEqual(expected, POLICY)
+            self.assertEqual(expected, registration()['shared_policy'])
+            fresh = run_study()
+            self.assertTrue(fresh['conformance_passed'])
+            self.assertEqual(expected, fresh['comparisons'][0]['initial_store'][0]['value'])
+        finally:
+            # Keep the RED reproducer isolated even when the buggy alias exists.
+            POLICY.clear()
+            POLICY.update(expected)
+
     def test_rehashed_concurrent_calls_must_join_the_ready_thread(self):
         from cx_eval_lab.isolation_study import replay_study, run_study
         report = run_study()
