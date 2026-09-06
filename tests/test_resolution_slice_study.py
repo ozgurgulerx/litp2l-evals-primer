@@ -28,7 +28,7 @@ class ResolutionSliceStudyTests(unittest.TestCase):
         self.assertFalse(report['deployment_authorized'])
         for comparison in report['comparisons']:
             self.assertNotIn('packet', comparison)
-            self.assertEqual([], comparison['plan']['required_labels'])
+            self.assertEqual([], comparison['plan']['required_slices'])
         self.assertEqual(before, SOURCE.read_bytes())
 
     def test_missing_or_wrong_explicit_anchors_fail(self):
@@ -52,6 +52,13 @@ class ResolutionSliceStudyTests(unittest.TestCase):
                 digest = 'sha256:' + hashlib.sha256(path.read_bytes()).hexdigest()
                 with self.assertRaises(ValueError):
                     self.derive(path, digest)
+
+    def test_changed_bytes_fail_against_original_pin(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / SOURCE.name
+            path.write_bytes(SOURCE.read_bytes() + b'\n')
+            with self.assertRaisesRegex(ValueError, 'source byte hash'):
+                self.derive(path)
 
     def test_cli_requires_explicit_trust_and_refuses_overwrite(self):
         with tempfile.TemporaryDirectory() as directory:
