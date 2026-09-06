@@ -199,6 +199,8 @@ Cursor's [benchmark reward-hacking investigation](https://cursor.com/blog/reward
 
 `evaluate_integrity` rejects any contaminated run regardless of score improvement.
 
+The [Cross-Run Isolation Study](cross-run-isolation-study.md) extends the cache example into actual local reads and writes. Katas 56–57 cross query-only versus run-scoped keys with fresh, reused and concurrently active workers, while retaining positive checks for authorized reuse. This tests the cache contract, not every route by which an evaluation worker could communicate or alter evidence.
+
 ## Optimising the evaluator and agent together
 
 Keep three evidence channels:

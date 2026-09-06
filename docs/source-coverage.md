@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Executed cross-run cache controls
+
+The [Cross-Run Isolation Study](cross-run-isolation-study.md) and Katas 56–57 execute six SQLite-backed comparisons: query-only versus run-scoped keys, each with fresh worker objects, a reused object and two concurrent threads. The [retained packet](assets/isolation-study-v1.json) contains 18 responses and 55 operations. The buggy key exposes one foreign marker in each worker mode; scoped keys expose none while preserving same-run hits, both shared-policy reads and two overwrite refusals. Replay binds phases, worker identities, concurrent thread identities and causal order to the registered contract. This is application-level cooperative-code evidence—not hostile-worker isolation, authenticated logs, model behavior or a population leakage rate.
+
 ### Executed knowledge-to-action controls
 
 The [Knowledge-to-Action Study](knowledge-action-study.md) and Katas 51–53 add 18 local executions across lexical retrieval, oracle documents and full context, crossed with a correct structured-policy control and a wrong-amount mutant. The [retained packet](assets/knowledge-action-study-v1.json) supports re-execution of rankings, context, decisions, rejected/accepted mock writes and final-state grades. Correct-control completion is 1/3, 3/3 and 3/3; mutant completion is 0/3, 1/3 and 1/3. All cases share one customer and two invented policy documents. Natural-language policy interpretation, active-version discovery, realistic search scale, representative sampling, model runs and deployment qualification remain open; these results do not establish a production improvement.

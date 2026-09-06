@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 56–57](cross-run-isolation-study.md) test forbidden private-cache reuse across runs while preserving same-run cache hits and shared read-only policy access. The lessons distinguish worker lifetime from resource isolation, trusted run context from query text, and application-level checks from hostile-code containment.
+
 [Katas 54–55](frontier-risk-decisions.md#kata-54-cancellation-was-acknowledged-but-the-worker-wrote) distinguish coordinator cancellation from write-authority revocation, early intervention from late detection, and correctly enforced false stops from useful service. The worked reasoning keeps enforcement tests separate from detector calibration and explains why benign positive controls are essential.
 
 [Katas 51–53](knowledge-action-study.md) compare lexical retrieval, oracle documents and full context, then hold evidence fixed while changing the downstream action control. Worked solutions distinguish corpus coverage from supplied evidence, backend enforcement from agent success, and constructed-case differences from production estimates.
