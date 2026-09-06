@@ -7,7 +7,7 @@ signatures, an attestation of execution, or permission to deploy.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from cx_eval_lab.evaluators import evaluate_case
 from cx_eval_lab.models import (
@@ -57,13 +57,16 @@ def _regrade(payload, trusted_calibration_hashes):
     registered = frozenset(payload["qualified_semantic_calibration_hashes"])
     if not registered.issubset(trusted_calibration_hashes):
         raise ValueError("replay requires independently trusted calibration hashes")
-    return evaluate_case(
+    result = evaluate_case(
         case, output, events, state, latency_ms=payload["latency_ms"],
         cost_usd=payload["cost_usd"], execution_error=payload["execution_error"],
         semantic_evaluation_receipt=receipt,
         qualified_semantic_calibration_hashes=registered,
         policy_version=payload["policy_version"],
     )
+    if payload.get("semantic_stage") is not None:
+        return replace(result, semantic_stage_json=json.dumps(payload["semantic_stage"], sort_keys=True))
+    return result
 
 
 def replay_packet(packet: dict, *, trusted_calibration_hashes=frozenset()):

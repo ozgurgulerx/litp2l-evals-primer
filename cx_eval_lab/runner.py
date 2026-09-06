@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import math
+import json
 import time
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from typing import Protocol
 
 from cx_eval_lab.evaluators import evaluate_case
@@ -266,6 +267,8 @@ def _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_sta
         semantic_evaluation_receipt=semantic_receipt,
         qualified_semantic_calibration_hashes=accepted_hashes,
     )
+    if semantic_audit is not None:
+        result = replace(result, semantic_stage_json=json.dumps(semantic_audit, sort_keys=True))
     return result, {
         "schema": "refund-trial-v1",
         "case": case.to_dict(),

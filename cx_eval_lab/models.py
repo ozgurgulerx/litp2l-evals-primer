@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import json
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -438,6 +439,7 @@ class CaseEvaluation:
     resolution_status: str = "resolved"
     runtime_evidence: RuntimeEvidence | None = None
     semantic_evaluation_receipt: SemanticEvaluationReceipt | None = None
+    semantic_stage_json: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -472,6 +474,8 @@ class CaseEvaluation:
                 if self.semantic_evaluation_receipt is None
                 else self.semantic_evaluation_receipt.to_dict()
             ),
+            **({"semantic_stage": json.loads(self.semantic_stage_json)}
+               if self.semantic_stage_json is not None else {}),
         }
 
 
