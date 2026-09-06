@@ -82,7 +82,9 @@ def _meter(data, config):
     usage = data.get('usage')
     tokens = tuple(usage.get(key) for key in ('input_tokens', 'output_tokens', 'total_tokens')) \
         if isinstance(usage, dict) else (None, None, None)
-    valid = all(type(n) is int and n >= 0 for n in tokens) and tokens[0] + tokens[1] == tokens[2]
+    # Defensive envelope bound, not a model context limit or a campaign budget.
+    valid = (all(type(n) is int and 0 <= n <= 1_000_000_000 for n in tokens)
+             and tokens[0] + tokens[1] == tokens[2])
     if not valid:
         tokens = (None, None, None)
     cost = None
@@ -172,9 +174,12 @@ class OpenAIResponsesJudge:
         except (ValueError, TypeError, AttributeError):
             return self._result('abstain', 'invalid_evidence_request', {'status': 'not_sent'})
         try:
-            response = self.client.with_options(
+            request_client = self.client.with_options(
                 timeout=self.config.timeout_seconds, max_retries=0,
-                base_url='https://api.openai.com/v1').responses.create(
+                base_url='https://api.openai.com/v1')
+            if str(getattr(request_client, 'base_url', '')).rstrip('/') != 'https://api.openai.com/v1':
+                raise ValueError('effective judge endpoint differs from declared identity')
+            response = request_client.responses.create(
                 model=self.config.model, instructions=self.config.rubric,
                 input=[{'role': 'user', 'content': request.evidence_json}],
                 text={'format': {'type': 'json_schema', 'name': 'refund_truth_verdict',
