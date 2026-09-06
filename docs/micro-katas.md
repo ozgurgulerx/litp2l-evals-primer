@@ -1,8 +1,12 @@
 # Micro-katas: learn by breaking and repairing an evaluation
 
+After the individual exercises, use the [release-decision capstone](capstone.md) to connect them: inspect three retained artifacts, submit a bounded decision, and revise it under three pressure variants. A complete worked memo and evidence index are supplied.
+
 Each kata asks you to predict a result, run a small experiment, explain the failure, and inspect a solution. The reference solution remains working. Try your changes in a separate branch or scratch copy, then use the regression tests to check your reasoning.
 
 These first three katas exercise real defects found in the refund grader. They use synthetic customers and local code; no model key is needed. Run commands from the repository root after `uv sync --group dev`.
+
+[Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) follow a real child-process timeout through partial evidence retention and distinguish candidate verdicts, conformance failure, upload eligibility and confirmed artifact storage. They do not authorize production deployment or claim durable recovery after runner loss.
 
 ## Kata 01: a trusted sentence that lies
 

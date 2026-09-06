@@ -57,6 +57,7 @@ nav:
   - Part II · Build the CX evaluation system:
       - The CX Eval Lab: build-the-system.md
       - Follow One CX Packet: cx-evidence-walkthrough.md
+      - Capstone · Defend the Release: capstone.md
       - Evidence Spine: evidence-spine.md
       - Semantic Grading Lab: semantic-grading-lab.md
       - CI Gate Lab: ci-gate-lab.md

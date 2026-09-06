@@ -1,0 +1,59 @@
+{
+  "schema": "capstone-evidence-index-v1",
+  "purpose": "Authored classroom index of retained historical evidence, not execution attestation or release authorization",
+  "requested_action": "Expand a production refund agent to 25 percent exposure",
+  "worked_decision": "hold",
+  "deployment_authorized": false,
+  "artifacts": [
+    {
+      "file": "current-release-study-v2.json",
+      "sha256": "bf16187e77b4c3b67a7590a073ae20ca8728a8fa67b6565f96ddd2c2bc04e5be",
+      "scope": "Native multi-order SDK mock-transport study; synthetic agent/judge responses and qualification inputs",
+      "expected": {
+        "/conformance_passed": true,
+        "/deployment_authorized": false,
+        "/assessments/0/name": "current-diagnostic",
+        "/assessments/0/assessment/action": "hold",
+        "/assessments/0/assessment/authority_ceiling": "none",
+        "/assessments/0/assessment/checks/base_receipt/comparison/independent_cluster_count": 1,
+        "/assessments/0/assessment/checks/base_receipt/comparison/pair_count": 8,
+        "/assessments/0/assessment/checks/base_receipt/comparison/status": "inconclusive",
+        "/assessments/1/name": "revoked",
+        "/assessments/1/assessment/action": "block"
+      }
+    },
+    {
+      "file": "telemetry-study-v1.json",
+      "sha256": "7a087fed3f971e4716d0bdab4b7ca0f617da13d4c6a9ed6757d8c4158d4ebf4d",
+      "scope": "Legacy synthetic business controls with actual loopback OTLP HTTP delivery; not the native release population",
+      "expected": {
+        "/deployment_authorized": false,
+        "/arms/1/mode": "capacity",
+        "/arms/1/summary/observed_pass_rate": 1.0,
+        "/arms/1/summary/observed_roots": 2,
+        "/arms/1/summary/registered_requests": 4,
+        "/arms/1/summary/ledger_passes": 2,
+        "/arms/1/summary/unknown_requests": 2,
+        "/arms/1/summary/status": "hold",
+        "/arms/1/feedback/pending_feedback": 1
+      }
+    },
+    {
+      "file": "exposure-control-v1.json",
+      "sha256": "27f9f50e427918ed55a4ab966af453f3455604b12a0c06b9e80989623751ad53",
+      "scope": "Separate simulated exposure controller and disposable mock ledgers; no production traffic",
+      "expected": {
+        "/deployment_authorized": false,
+        "/windows/5/window/window_id": "window-6",
+        "/windows/5/served_candidate": 4,
+        "/windows/5/artifacts/1/candidate/wrong_order_commits": 1,
+        "/windows/5/artifacts/2/candidate/wrong_order_commits": 1,
+        "/windows/5/artifacts/18/candidate/wrong_order_commits": 1,
+        "/windows/5/artifacts/35/candidate/wrong_order_commits": 1,
+        "/windows/5/decision/reason": "hard_violation",
+        "/windows/5/decision/state/stage": "rolled_back",
+        "/windows/5/decision/state/percent": 0
+      }
+    }
+  ]
+}

@@ -6,6 +6,22 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Failed-run CI evidence checkpoint — 7 September 2026
+
+[Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) repair a concrete operating gap: timeouts previously bypassed command diagnostics, and failed conformance runs had no structured partial-run summary. The implementation now retains verified prior checks and a separate failure record, preserves the original failure, distinguishes launch/timeout/packet/replay errors, and never fabricates a candidate verdict or continues later controls. The lesson executes two ordinary local controls followed by a real harmless child-process timeout. It also explains why identical exit integers from different commands have different meanings, and why upload eligibility is not confirmed durable storage.
+
+RED checkpoint `b7261eb`, GREEN `a54990f`, final validation/refactor `6bef7e2`. At the final code revision, all 551 tests passed in a fresh branch-inclusive coverage run: 90% overall and 88% for `ci_conformance.py`. Targeted Ruff and Pyright passed; the isolated installed-environment dependency audit found no known vulnerabilities. The published capstone and timeout snippets execute successfully, the strict book build passes, and both new solutions open without page overflow at a 1152-pixel desktop viewport. Fresh current-release composition retains one HOLD and six BLOCK controls, with deployment authorization false.
+
+These checks establish local failure-path behavior, not durability after disk failure, termination of the parent, host loss or arbitrary process-tree escape. No cloud CI run, branch-protection enforcement, actual model calibration or application rollout is claimed. The full curriculum objective and empirical transfer requirements remain open.
+
+### Integrated release-decision capstone — 7 September 2026
+
+The [capstone](capstone.md) now requires a bounded decision memo and machine-readable evidence index across three existing retained studies. Its worked HOLD decision and three pressure variants connect measurement validity, missing telemetry, current qualification, incompatible evidence scopes and side effects completed before rollback. A noncompensatory rubric requires inspectable claims, correct denominators and owner-specific reopening evidence. Existing chapters and artifacts remain intact.
+
+The chapter's published Python example checks three file-byte hashes and 29 exact values without running models or network calls. Independent review requested direct pointers to observed roots and each wrong-order commit, plus a worked evidence table; both improvements were incorporated. This is a learner integration and historical inspection exercise, not new execution attestation, human calibration or production authority. Actual model-backed transfer, independent annotation, durable authenticated operations and full curriculum completion remain open.
+
+Verification: the published inspection block passes, and in-memory negative probes reject an incorrect hash, an incorrect expected value and a boolean/integer substitution. The strict book build and whitespace check pass. All four worked solutions open in the local desktop browser; the evidence table renders and page width equals the 1152-pixel viewport. These documentation checks do not claim a new full runtime-test run, mobile/Safari verification, cloud CI execution or publication.
+
 ### Native telemetry delivery checkpoint — 7 September 2026
 
 [Katas 83–84](telemetry-delivery-study.md) now retain actual OpenTelemetry SDK/OTLP HTTP traffic to a loopback test receiver. Four controls separate independent request accounting, business outcomes, HTTP attempts, unique spans and feedback joins. Capacity loss leaves only the two passing request roots: observed success becomes 100% while the complete business record remains two passes and two failures. A stored span followed by a 503 response causes one real repeated POST; deduplication retains eight unique spans from nine attempts without repeating the measured business action.

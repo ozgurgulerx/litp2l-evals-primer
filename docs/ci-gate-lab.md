@@ -6,7 +6,7 @@ A release check can fail in two directions: it can reject a good candidate, or i
 
 ## What runs, and what it authorizes
 
-The workflow `.github/workflows/eval-conformance.yml` runs on pull requests, manual dispatch, or a reusable-workflow call. The existing Pages workflow calls it before publishing the **book**. The conformance job has read-only repository permissions, no model credentials, bounded runtime, SHA-pinned actions, and credential persistence disabled during checkout. It installs the locked dependencies, runs tests with an 80% production-code coverage threshold, exercises the decision controls, builds the documentation, and uploads available evidence even after failure.
+The workflow `.github/workflows/eval-conformance.yml` runs on pull requests, manual dispatch, or a reusable-workflow call. The existing Pages workflow calls it before publishing the **book**. The conformance job has read-only repository permissions, no model credentials, bounded runtime, SHA-pinned actions, and credential persistence disabled during checkout. It installs the locked dependencies, runs tests with an 80% production-code coverage threshold, exercises the decision controls, builds the documentation, and attempts to upload available evidence even after failure.
 
 The security choices follow [GitHub's secure-use guidance](https://docs.github.com/en/actions/reference/security/secure-use). Workflow artifacts provide a retained inspection surface, subject to configured retention and access—not permanent or independently authenticated evidence. See [GitHub's artifact documentation](https://docs.github.com/en/actions/tutorials/store-and-share-data).
 
@@ -75,7 +75,100 @@ uv run python -m unittest tests.test_ci_conformance -v
 
 **Interview answer:** “I separate tests of the evaluator, qualification of the candidate, and authorization of the deployment. CI green establishes only what the job actually tested. The deployment job must validate scoped, current authority rather than infer it from a generic success status.”
 
-## Run and inspect the same checks locally
+## Kata 85: a timeout is not a candidate BLOCK
+
+**Know:** a control can be expected to reject a candidate, while the experiment that should produce that rejection can fail to finish. Those are different observations. A timeout does not establish that the candidate violated the contract, and an earlier successful control does not finish the remaining experiment.
+
+**Predict:** the reference and insufficient-evidence controls finish and validate. The policy-bypass control times out before returning a packet. What should the overall command return? Which evidence may be retained? May the third action be filled in as `block` because that is its expected answer?
+
+The failed-run path writes `conformance-failure.json`, distinct from the successful `conformance.json`. It preserves only fully verified prior controls, identifies the failed control and phase, and leaves `deployment_authorized` false. A timeout command record uses a null return code rather than inventing zero or the expected candidate exit. Partial process output is diagnostic text, not a completed decision receipt.
+
+These command logs belong to a synthetic, credential-free lab. Capturing stdout/stderr is not a privacy filter: do not apply the same unrestricted capture to customer conversations or secret-bearing production processes. Define redaction, access and retention before exporting such logs. A local exclusive-create write also does not establish durable storage across crashes or disk failure.
+
+| Observed event | Candidate conclusion | Conformance conclusion | Operator action |
+| --- | --- | --- | --- |
+| Known-bad control exits 2 with replayable BLOCK evidence | This local control was blocked | Pass this control's expected rejection | Continue the remaining software checks |
+| Expected HOLD exits 3 with valid underpowered evidence | Insufficient evidence for promotion | Pass this control's expected hold | Do not turn test success into release clearance |
+| Child times out or cannot start | No completed candidate verdict from this attempt | Fail the conformance run | Preserve partial diagnostics; investigate execution |
+| Exit is expected but the packet is missing, malformed or fails replay | No verified verdict from this attempt | Fail the conformance run | Investigate the evidence path; do not trust exit alone |
+
+**Run:** this example executes the first two actual local conformance controls, then substitutes a deliberately slow Python child for the third command. That child is not an agent run. The timeout is real; it is not a declared failure label passed into a scorer. The temporary directory is deleted when the example exits; remove that context manager only if you intentionally choose a fresh persistent output location.
+
+```python
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+from unittest.mock import patch
+from cx_eval_lab.ci_conformance import run_conformance
+
+native_run = subprocess.run
+
+def timeout_third(command, **kwargs):
+    if "policy-bypass" in command:
+        return native_run(
+            [sys.executable, "-c",
+             "import time; print('started timeout control', flush=True); time.sleep(5)"],
+            capture_output=True, text=True, timeout=0.5, check=False,
+        )
+    return native_run(command, **kwargs)
+
+with tempfile.TemporaryDirectory() as scratch:
+    output = Path(scratch) / "conformance"
+    with patch("cx_eval_lab.ci_conformance.subprocess.run", side_effect=timeout_third):
+        try:
+            run_conformance(output, "authored-timeout-exercise")
+        except subprocess.TimeoutExpired:
+            pass  # Expected injected fault; the assertions below decide success.
+        else:
+            raise AssertionError("The injected timeout was not raised")
+    failure = json.loads((output / "conformance-failure.json").read_text())
+    command_record = json.loads((output / "policy-bypass-command.json").read_text())
+    assert failure["failed_control"] == "policy-bypass"
+    assert failure["status"] == "timeout"
+    assert [row["action"] for row in failure["checks"]] == ["lab_pass", "hold"]
+    assert failure["deployment_authorized"] is False
+    assert command_record["returncode"] is None
+    assert not (output / "conformance.json").exists()
+    print("2 verified controls; third timed out; no completed run or release authority")
+```
+
+The revision string here is an explicit teaching label, not source attestation. This snippet also deliberately catches the injected timeout so it can inspect diagnostics. Do not copy that catch into a deployment workflow and ignore the assertions or the failed conformance result.
+
+??? success "Solution: keep completed evidence without inventing completion"
+    The failed run retains two verified checks, not three. The third control's expected action remains part of the test design; it is not an observed candidate decision. No successful final summary is emitted. The normal CLI fails rather than returning a successful conformance result.
+
+    Read the exit code in the context of the command that emitted it. The inner `experiment` command uses 2 for its BLOCK result; the outer `ci_conformance` command's argument/error handler also exits 2 on a conformance failure. The same integer cannot identify both meanings without the command, phase and verified evidence. Do not build a workflow that interprets every exit 2 as a successfully blocked candidate.
+
+    A matching expected process exit is only the first condition. Packet parsing, artifact replay, revision checks, comparison consistency and authority checks must also succeed before the control enters the completed-check list. A malformed or missing packet therefore cannot borrow the previous control's success.
+
+    For this controlled offline lab, investigate and rerun in a new output directory, preserving the failed run for comparison. For state-changing application experiments, first reconcile side effects and pending usage: rerunning a process is not evidence that replaying its business actions is safe. The runner intentionally does not retry this failure automatically.
+
+**Boundary:** Python's `subprocess.run(timeout=...)` kills and waits for its child before raising `TimeoutExpired`; process creation itself may delay that exception. Captured timeout output can be bytes even with `text=True`. These are reasons to preserve a distinct timeout record and decode diagnostic bytes explicitly. They are not proof of descendant-process containment or external side-effect reversal. [Python subprocess documentation](https://docs.python.org/3/library/subprocess.html#subprocess.run)
+
+## Kata 86: the upload step is not a durable experiment ledger
+
+**Situation:** the conformance job has a 15-minute timeout and an artifact-upload step with `if: always()`. An engineer concludes that every interrupted experiment must therefore have a complete evidence packet in GitHub.
+
+**Task:** distinguish a caught child timeout, an unexpected exit, a terminated Python parent, a cancelled job, and a lost runner. State what you would inspect before rerunning or allowing downstream publication.
+
+??? success "Solution: separate local persistence, upload eligibility and confirmed storage"
+    A caught child timeout can produce the local failed-run diagnostics while the Python parent and filesystem remain available. An unexpected exit can retain its command output, but only validated packets enter the completed-check list. The failure file is diagnostic evidence, not a model-performance observation or an authenticated release receipt.
+
+    Terminating the parent can prevent any failure handler from running. Disk-full or permission failures can prevent local writes. A lost runner can make local files inaccessible. None of these missing records is evidence of a pass, a candidate block, or a successful rollback.
+
+    Exclusive-create writes prevent replacement of an existing file but are not atomic or crash-durable. An interrupted write can leave truncated JSON, including the final summary. Parse and validate its expected contents and referenced artifacts; filename existence is not completion. If writing the diagnostic itself fails, the original failure still propagates, and no durable failed-run record is guaranteed.
+
+    `always()` changes when the upload step is eligible to run; it does not reconstruct files that were never written. Inspect the workflow run and attempt, step conclusions, uploaded artifact identity, file inventory and expected control coverage. If no confirmed complete run exists, leave conformance incomplete and do not authorize the dependent publication or any application exposure.
+
+    Rerun software conformance under a new attempt/output identity after diagnosis. Do not merge an old partial run and a new result into one complete experiment unless the manifest, registered trial identities and retry policy explicitly permit that composition. Preserve both attempts. A durable distributed evaluation service additionally needs external task accounting and storage acknowledgements; this local JSON failure path does not implement them.
+
+GitHub documents `always()` as true even on cancellation and separately defines job timeout cancellation. These are workflow semantics, not evidence that this repository's upload succeeded. Verify the actual run before making that claim. [Status-check functions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions), [workflow timeouts](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes).
+
+**Interview answer:** “A failed experiment is not a failed candidate. I retain partial evidence with explicit completion state, validate every claimed completed control, and require confirmed artifact availability. A green upstream test or an `always()` upload condition cannot manufacture deployment authority.”
+
+## Full local verification commands
 
 ```bash
 uv sync --frozen --group dev --extra openai --extra telemetry
@@ -93,7 +186,7 @@ The statistical artifact regression compares numerical results to twelve decimal
 - Observe successful and deliberately failing runs of this workflow on GitHub after publication of the changes.
 - Configure and verify required status checks through repository governance; the workflow file alone does not enforce branch protection.
 - Supply actual model, dataset, calibration, and deployment evidence with appropriate statistical qualification.
-- Implement and exercise the application exposure controller, including shadow, canary, expansion, restriction, and rollback.
+- Transfer the [implemented local exposure controller](exposure-control-lab.md) to an authorized application environment and exercise shadow, canary, expansion, restriction and rollback there. The existing simulation is not a demonstrated production rollout.
 - Verify artifact provenance, retention, permissions, secrets isolation, and the behavior of cancelled or partially completed jobs in the operating environment.
 
 The [release chapter](checklist.md) retains the full decision contract, and the [delivery map](primer-delivery-map.md) tracks these remaining requirements. Do not describe configured-but-unobserved cloud behavior as already deployed practice.

@@ -2,6 +2,8 @@
 
 A release gate is the enforcement point for the evaluation contract. It decides whether a candidate may change exposure; the checklist is the close, not the decision mechanism.
 
+Practice the complete argument in [Capstone: defend the release](capstone.md). Its worked memo joins exact retained evidence to a bounded decision and explains why successful local conformance, partial telemetry and simulated rollback do not authorize production expansion.
+
 ## Pre-register the decision contract
 
 For high-consequence or internal frontier workloads, supplement this application gate with a [bounded safety case](frontier-risk-decisions.md). A capability result, a detected violation, and effective containment are separate claims. Neither a green task score nor the label “internal only” substitutes for evidence about the requested permissions, assets, and exposure.

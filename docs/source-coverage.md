@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Incomplete CI evidence and integrated decision defense
+
+[Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) exercise failed-run diagnostics, including a real harmless child-process timeout after two completed local controls. They separate expected candidate rejection from missing or invalid experiment evidence, and local writes from confirmed artifact storage. The [capstone](capstone.md) joins the learner's decision argument to three retained studies through 29 exact fields, with worked revocation, missingness and completed-side-effect variants. These additions deepen the operating and interview paths; they do not establish cloud workflow execution, crash-durable storage, independent human calibration or real application exposure.
+
 ### Executed incident-to-regression controls
 
 [Katas 60–61](dataset-design.md#from-incident-evidence-to-a-versioned-regression) now reproduce a synthetic timeout-after-commit incident, apply a fixed minimization, bind a scripted review to exact proposal/source/policy identities, and publish a new regression-only version. The [retained packet](assets/incident-regression-v1.json) shows a passing reference and failing duplicate-producing mutant reconstructed from the released case, plus seven rejected promotion controls. Tests cover populated-parent preservation, recomputed content identity, exact duplicate rejection and known protected-role conflicts. This implements local promotion mechanics—not real incident ingestion, independent reviewer authentication, automatic de-identification, semantic deduplication, complete exposure history or sealed acceptance qualification.

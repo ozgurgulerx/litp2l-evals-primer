@@ -40,6 +40,8 @@ The shared learning loop is:
 
 ### A learning route with evidence checkpoints
 
+Finish the route with [Capstone: defend the release](capstone.md): submit a decision memo and inspectable evidence index, then defend the result under revoked qualification, missing traces and completed side effects. The worked answer distinguishes three local studies from a qualified production system.
+
 Carry one customer workflow through this route. At each checkpoint, produce the named artifact before reading the solution. Record two separate fields: **evidence origin/status** (for example, constructed example, executed local mock, or live study) and **authorized use** (for example, lab-only, unqualified, or qualified for a named use). A live study is not automatically qualified, and an executed result may still use synthetic data. A later chapter does not upgrade an earlier artifact's authority.
 
 | Checkpoint | Read and practice | What you should be able to produce and defend |
