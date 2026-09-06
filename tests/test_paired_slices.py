@@ -125,7 +125,10 @@ class PairedSliceTests(unittest.TestCase):
         from cx_eval_lab.evidence import ExperimentManifest
         from cx_eval_lab.models import RefundCase
         from cx_eval_lab.paired_slices import SliceControl
-        from cx_eval_lab.runner import DEFAULT_MEASUREMENT_PROFILE, run_paired_experiment
+        from cx_eval_lab.runner import (
+            DEFAULT_MEASUREMENT_PROFILE,
+            run_paired_experiment,
+        )
         cases = tuple(reversed([RefundCase.from_dict(a['payload']['case'])
             for a in self.study['packet']['trial_artifacts']
             if a['payload']['identity']['arm'] == 'baseline' and a['payload']['identity']['trial_index'] == 0]))
@@ -172,11 +175,11 @@ class PairedSliceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'study.json'
             command = [sys.executable, '-m', 'cx_eval_lab.paired_slices', '--output', str(path)]
-            first = subprocess.run(command, capture_output=True, text=True)
+            first = subprocess.run(command, capture_output=True, text=True, check=False)
             self.assertEqual(0, first.returncode, first.stderr)
             original = path.read_bytes()
             self.assertEqual('paired-slices-v1', json.loads(original)['report']['schema'])
-            self.assertNotEqual(0, subprocess.run(command, capture_output=True).returncode)
+            self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
             self.assertEqual(original, path.read_bytes())
 
     def test_single_customer_cannot_get_zero_width_interval_even_if_minimum_is_one(self):
@@ -193,7 +196,10 @@ class PairedSliceTests(unittest.TestCase):
         from cx_eval_lab.evidence import ExperimentManifest
         from cx_eval_lab.models import RefundCase
         from cx_eval_lab.paired_slices import SliceControl
-        from cx_eval_lab.runner import DEFAULT_MEASUREMENT_PROFILE, run_paired_experiment
+        from cx_eval_lab.runner import (
+            DEFAULT_MEASUREMENT_PROFILE,
+            run_paired_experiment,
+        )
         cases = tuple(RefundCase.from_dict(a['payload']['case']) for a in self.study['packet']['trial_artifacts']
                       if a['payload']['identity']['arm'] == 'baseline' and a['payload']['identity']['trial_index'] == 0)
         packet = run_paired_experiment(baseline_agent=SliceControl(False), candidate_agent=SliceControl(False),

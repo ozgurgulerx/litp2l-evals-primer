@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
@@ -104,7 +104,7 @@ def _summarize(rows, manifest, label, membership):
             'eligible_pair_count': count, 'eligible_customer_count': len({r['customer_id'] for r in eligible}),
             'changes': changes, 'baseline_rate': baseline, 'candidate_rate': candidate,
             'rate_population': 'qualified pairs only; descriptive, not a missingness adjustment',
-            'trial_weighted_delta': candidate - baseline if count else None,
+            'trial_weighted_delta': candidate - baseline if candidate is not None and baseline is not None else None,
             'cluster_weighted_delta': cluster_delta,
             'comparison': comparison, 'status': status,
             'issues': ['missing_slice'] if not rows else ['unqualified_pairs'] if count != len(rows) else []}
@@ -148,6 +148,7 @@ class SliceControl:
     """Deliberate visible-request output-enum bug; transaction still executes."""
     candidate: bool
     unqualified: bool = False
+    name: str = field(default='paired-slice-control', init=False)
 
     def run(self, request, tools):
         output = ReferenceSupportAgent().run(request, tools)

@@ -7,7 +7,6 @@ from pathlib import Path
 from cx_eval_lab.artifacts import replay_packet
 from cx_eval_lab.paired_slices import derive_slice_report, run_study
 
-
 ARTIFACT = Path(__file__).resolve().parents[1] / 'docs/assets/paired-slices-v1.json'
 
 
