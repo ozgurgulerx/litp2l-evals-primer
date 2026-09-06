@@ -63,6 +63,7 @@ nav:
       - Source Coverage Ledger: source-coverage.md
   - Part IV · Comparative system studies:
       - System Studies: system-studies.md
+      - Research-to-Practice Evidence: research-to-practice.md
 
 markdown_extensions:
   - admonition

@@ -94,6 +94,10 @@ A source remains only if it changes the explanation, implementation, experiment,
 | Selective judge escalation | [Trust or Escalate](https://arxiv.org/abs/2407.18370) | Calibration sets, abstention, coverage, and human escalation |
 | Probability calibration | [On Calibration of Modern Neural Networks](https://arxiv.org/abs/1706.04599) | Reliability diagrams, temperature scaling, and calibration error |
 | Generative uncertainty | [Semantic Uncertainty](https://arxiv.org/abs/2302.09664) | Meaning-aware uncertainty across generated answers |
+| Extreme-tail reliability | [Measuring Five-Nines Reliability](https://arxiv.org/abs/2605.11209) | CEM importance sampling, proposal-support assumptions, estimator efficiency, and the research-to-production boundary |
+| Adaptive/IRT evaluation | [Computerized adaptive testing for LLM medical benchmarking](https://www.nature.com/articles/s41746-026-02671-w) and [Can We Trust Item Response Theory for AI Evaluation?](https://arxiv.org/abs/2607.15190) | Cost reduction, calibrated item banks, rank stability, population-regime failures, and non-adaptive safety cores |
+| Evaluator meta-evaluation | [AgentRewardBench](https://arxiv.org/abs/2504.08942) | Expert-grounded comparison of rule and LLM evaluators for agent trajectories |
+| Corrected judge reporting | [How to Correctly Report LLM-as-a-Judge Evaluations](https://arxiv.org/abs/2511.21140) and [No Free Labels](https://arxiv.org/abs/2503.05061) | Noisy-diagnostic correction, calibration uncertainty, reference quality, and shift assumptions |
 
 ### Behavioral testing, safety, fairness, and alignment
 
@@ -109,6 +113,8 @@ A source remains only if it changes the explanation, implementation, experiment,
 | Preference-based instruction following | [InstructGPT](https://arxiv.org/abs/2203.02155) | Human demonstrations, preference data, reward models, and policy evaluation |
 | Constitutional alignment | [Constitutional AI](https://arxiv.org/abs/2212.08073) | Rule-guided feedback and independent safety evaluation |
 | Reward overoptimization | [Scaling Laws for Reward Model Overoptimization](https://arxiv.org/abs/2210.10760) | Proxy optimization and Goodhart-style failure |
+| Hidden-objective auditing | [Auditing language models for hidden objectives](https://arxiv.org/abs/2503.10965) | Blind audit games, model organisms, mixed audit methods, and transfer limits |
+| Chain-of-thought monitorability | [OpenAI monitorability evaluations](https://openai.com/index/evaluating-chain-of-thought-monitorability/) and [internal-workload monitoring disclosure](https://openai.com/index/pacing-model-development-cyber-capabilities/) | Two-sided monitor evaluation, operational use, fragile observability, and defense-in-depth limits |
 
 ### Interpretability and explanation evaluation
 
@@ -133,6 +139,9 @@ A source remains only if it changes the explanation, implementation, experiment,
 | Multi-turn dual-control agents | [τ²-bench](https://arxiv.org/abs/2506.07982) | Stateful user-agent interaction and session evaluation |
 | Interactive agent breadth | [AgentBench](https://arxiv.org/abs/2308.03688) | Multiple agent environments and scaffolding effects |
 | Repository coding agents | [SWE-bench](https://arxiv.org/abs/2310.06770) | Real repository tasks, executable outcomes, and environment validity |
+| Long-term conversational memory | [LongMemEval](https://github.com/xiaowu0162/longmemeval) | Multi-session extraction, updates, temporal reasoning, abstention, and benchmark-to-product limits |
+| Long-context retrieval without lexical cues | [NoLiMa](https://proceedings.mlr.press/v267/modarressi25a.html) | Latent-association retrieval under long context and stress-test boundaries |
+| Personalization field validity | [The Inadequacy of Offline LLM Evaluations](https://arxiv.org/abs/2509.19364) | Real-user evidence for reset-versus-persist evaluation and the offline-to-field gap |
 
 ### Benchmarks and reproducibility
 
@@ -152,6 +161,8 @@ A source remains only if it changes the explanation, implementation, experiment,
 | Topic | Primary source | Book use |
 | --- | --- | --- |
 | Deployment-like replay | [OpenAI deployment simulation](https://openai.com/index/deployment-simulation/) | Recent production-like context, pre-release failure mining, and forecast validation |
+| Operational automated auditing | [Anthropic Petri operational update](https://www.anthropic.com/research/donating-open-source-petri) | Named pre-deployment/model-assessment use, external adoption, and remaining realism limits |
+| Realtime audio deployment | [GPT-4o system card](https://openai.com/index/gpt-4o-system-card/) and [generally available Realtime API](https://openai.com/index/introducing-gpt-realtime/) | Audio-specific pre-deployment evals, live safeguards, and the incomplete end-to-end quality boundary |
 | Evaluation-system validity | [OpenAI trustworthy third-party evaluations](https://openai.com/index/trustworthy-third-party-evaluations-foundations/) | Environment, harness, contamination, budget, and claim disclosure |
 | Trace semantics | [OpenTelemetry GenAI conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) | Portable telemetry and sensitive-field boundaries |
 | Canary control | [Google SRE Workbook: Canarying releases](https://sre.google/workbook/canarying-releases/) | Control-relative rollout, analysis, and rollback |

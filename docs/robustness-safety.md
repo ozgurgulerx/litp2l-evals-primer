@@ -346,6 +346,12 @@ For every case, specify the expected policy action, permitted tool set, final-st
 
 ## Primary reading
 
+!!! note "Research-to-practice boundary: audits and monitorability"
+    [Research-to-Practice Evidence](research-to-practice.md#petri-automated-auditing-before-release)
+    records the operational receipts for Petri and chain-of-thought monitoring,
+    while preserving human review, fixed regressions, outcome checks, and
+    independent controls as necessary boundaries.
+
 - [CheckList: Beyond Accuracy Behavioral Testing of NLP Models](https://aclanthology.org/2020.acl-main.442/)
 - [HarmBench: A Standardized Evaluation Framework for Automated Red Teaming](https://arxiv.org/abs/2402.04249)
 - [JailbreakBench: An Open Robustness Benchmark for Jailbreaking LLMs](https://arxiv.org/abs/2404.01318)

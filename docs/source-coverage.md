@@ -15,6 +15,7 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 | Best Courses and YouTube Resources for Learning LLM Evaluation | Learning routes, eight practical labs, tool practice, human/statistics gaps | Courses, Part II lab, Source Coverage Ledger |
 | Eval-Driven AI Programming | Error-analysis-first discipline, evaluator patterns, calibration, experiments, CI/CD, capstone | Dataset Design, Metrics, Judge Calibration, Build Lab |
 | Evals, Observability and Release Gates for Production AI Systems | Control loop, telemetry, release policy, canaries, incidents, governance, ownership, economics | Production Evals and Release Gates |
+| Evaluating LLM-Based AI Systems: Research Review and Production Blueprint | 2025–26 frontier methods, deployment evidence, extreme-tail reliability, stateful personalization, evaluator meta-evaluation, dynamic audits, monitorability, and realtime modalities | Research-to-Practice Evidence plus linked Part I chapters |
 
 The PDF and DOCX files supplied with the corpus are companion renderings of the same titled research. Their editable Markdown counterparts are the canonical content inputs; format duplication does not create a second curriculum requirement.
 
@@ -30,6 +31,7 @@ This second map checks the structure of each source, not only the combined topic
 | Courses and YouTube report | Assessment method; ranked resources; learning paths; eight practical projects; tool stack; requested-framework map; paper spine; human/statistical gaps and next steps | Courses & Learning Paths, Part II project table, System Studies inventory, References, Human Evaluation, Metrics, and judge-calibration exercises. Commercial rankings and stale star counts are not repeated as architectural evidence. |
 | Eval-Driven AI Programming | EDD discipline; resource routes; typed cases/results; deterministic/reference/model/human graders; calibration; failure analysis/intervention ladder; observability/CI; curriculum/capstone; first-session 80/20 | Foundations through Release Gates, executable CX lab and mutants, prompt experiment, living dataset, evidence pyramid, courses, and staged roadmap. |
 | Evals, Observability and Release Gates | Definitions/KPIs; architecture/tooling; methods/risk profiles/gate template; observability/incidents/governance/ownership/economics; operational cases; roadmap/resources/risks | Foundations, seven surfaces, Production, Release Gates, governance roles, programme economics/roadmap, System Studies case patterns, and synthetic gate/canary artifacts. |
+| Evaluating LLM-Based AI Systems | Fourteen 2025–26 developments; five-layer/six-family taxonomy; ranked research map; production blueprint; demo ideas; proposed book structure | Research-to-Practice Evidence supplies the dated maturity rubric and primary-source proof matrix; Metrics covers rare events; Judge covers evaluator qualification and correction; RAG covers stateful personalization; Robustness covers auditing/monitorability; System Studies covers dynamic generation and realtime modalities. Research-only claims remain explicitly non-gating. |
 
 Excluding a volatile ranking, price, star count, or copied quick-start is intentional: the durable concept and verification method are retained, while the live claim must be rechecked at use time.
 
@@ -44,6 +46,11 @@ The supplied reports remain the coverage baseline. This dated addendum captures 
 | Generated dynamic behavioral evals | System Studies compares Petri, Bloom, and adaptive Giskard multi-turn scenarios | Generated cases amplify discovery; reviewed fixed cases and calibrated graders retain gate authority |
 | Adaptive simulated users | Agent & System Evals and System Studies cover changing user turns, shared trace, termination, and non-collusion | Simulator behavior must be checked against held-out human sessions and is not a traffic distribution |
 | Tool ownership and lifecycle | System Studies records the 2026 Petri transfer and the AgentKit lifecycle change | Reverify current owners, releases, licenses, data path, and exportability at adoption time |
+| Research-to-practice maturity | Research-to-Practice Evidence separates production controls, field evidence, operational tools, and research/benchmarks | A repository or paper is never promoted to “production-proven” without a named operational use and first-party receipt |
+| Extreme-tail reliability | Research-to-Practice Evidence and Metrics qualify Five-Nines/CEM importance sampling | Reproduce proposal support, weight stability, and offline-to-live validity before any local gate authority |
+| Stateful personalization and memory | Research-to-Practice Evidence and RAG & Research Evals define reset/persist, counter-user, and preference-update arms | Field evidence proves an offline gap, not a universal production evaluation recipe |
+| Evaluator-of-evaluators and judge correction | Research-to-Practice Evidence and LLM as a Judge cover AgentRewardBench and bias-corrected reporting | Meta-benchmarks screen candidates; representative local human evidence qualifies them |
+| Monitorability and realtime voice | Research-to-Practice Evidence and Robustness/System Studies record disclosed operational use and its limits | Operational use is scoped to the named system, control, and source; it does not establish a complete safety or quality stack |
 
 This addendum does not replace the source-by-source audit. It extends the book while keeping the same rule: an emerging technique becomes operational evidence only after its construct, data, evaluator, environment, and authority are qualified.
 
@@ -232,6 +239,7 @@ The prose examples also have repository-local JSON companions. They are syntheti
 | RAG atomic claims | `evals/cx-support/examples/rag-claims-v1.json` | Correctness, evidence support, and unverifiable current truth remain separate fields |
 | Production canary | `evals/cx-support/examples/production-canary-v1.json` | A duplicate-refund hard invariant forces rollback despite better averages |
 | Probability calibration | `evals/cx-support/examples/probability-calibration-v1.json` | Row-level predictions recompute Brier, NLL, binned ECE, and selective thresholds |
+| Research-to-practice evidence | `evals/cx-support/examples/practice-evidence-v1.json` | Every maturity claim retains primary sources, an explicit non-claim, local adoption rule, and bounded authority |
 
 `tests/test_book_examples.py` validates these internal relations. The artifacts make the examples inspectable; they do not turn a synthetic study into an empirical result.
 
@@ -241,7 +249,7 @@ The prose examples also have repository-local JSON companions. They are syntheti
 | --- | --- | --- |
 | Concept explanation | Covered across Part I | Maintain the source audit as the field evolves |
 | Bite-sized synthetic examples | Covered in each deep chapter | Maintain visual/readability checks |
-| Templates and inspectable artifacts | Covered in Markdown plus six tested JSON companions | Promote more examples only when they add teaching value |
+| Templates and inspectable artifacts | Covered in Markdown plus seven tested JSON companions | Promote more examples only when they add teaching value |
 | Existing deterministic CX slice | Running | Preserve and reverify |
 | Human annotation and judge calibration execution | Full design plus consistency-tested synthetic artifacts | Real reviewers/model runs are required before an empirical claim |
 | RAG and multi-turn agent execution | Full treatment plus a tested atomic-claim artifact | Extend the running runtime before claiming executable RAG/multi-turn coverage |

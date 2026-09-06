@@ -1,0 +1,194 @@
+{
+  "schema_version": "practice-evidence-v1",
+  "as_of": "2026-09-06",
+  "policy": {
+    "production_claim_requires": "first-party disclosure tied to assessment, deployment decisions, live monitoring, or an operational safeguard",
+    "external_use_does_not_grant_local_authority": true,
+    "current_local_authority_requires": "completed local qualification against the registered product claim, data, evaluator, environment, and offline-to-live evidence",
+    "absence_wording": "No public deployment proof found is not proof that no private deployment exists."
+  },
+  "claims": [
+    {
+      "topic_id": "rare_failure_estimation",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2026-05-11",
+      "primary_sources": [
+        "https://arxiv.org/abs/2605.11209"
+      ],
+      "observed_use": "Cross-entropy-method importance sampling was evaluated on three models and parameterized GSM8K templates.",
+      "not_proven": "No public production deployment or release-gate evidence found.",
+      "local_adoption": "Reproduce on a controlled enumerable world, validate proposal support and weights, then shadow against live outcomes.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "personalized_stateful_evaluation",
+      "evidence_level": "field_evidence",
+      "evidence_date": "2025-09-18",
+      "primary_sources": [
+        "https://arxiv.org/abs/2509.19364",
+        "https://github.com/xiaowu0162/longmemeval"
+      ],
+      "observed_use": "A field study compared offline behavior with prompts submitted by 800 real ChatGPT and Gemini users; long-memory benchmarks provide reproducible stress tests.",
+      "not_proven": "The sources do not establish a generally validated production release gate for personalization or memory.",
+      "local_adoption": "Run reset-versus-persist, counter-user, and preference-update tests on consented or synthetic histories and compare with reviewed traffic.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "evaluator_of_evaluators",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2025-04-11",
+      "primary_sources": [
+        "https://arxiv.org/abs/2504.08942"
+      ],
+      "observed_use": "AgentRewardBench compares automatic evaluators on 1,302 expert-reviewed web-agent trajectories.",
+      "not_proven": "Leaderboard performance does not prove transfer to a product, traffic distribution, or release decision.",
+      "local_adoption": "Use the benchmark for screening, then qualify false-pass, false-block, rank-fidelity, and side-effect detection on local evidence.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "judge_bias_correction",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2025-11-26",
+      "primary_sources": [
+        "https://arxiv.org/abs/2511.21140",
+        "https://arxiv.org/abs/2503.05061"
+      ],
+      "observed_use": "Research methods correct raw judge rates using measured sensitivity and specificity and show the importance of human or verified references.",
+      "not_proven": "No public production deployment proof found, and transfer of judge error rates under distribution shift remains an assumption.",
+      "local_adoption": "Report corrected and raw estimates together until representative local calibration and shift tests support bounded use.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "adaptive_irt_evaluation",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2026-07-16",
+      "primary_sources": [
+        "https://www.nature.com/articles/s41746-026-02671-w",
+        "https://arxiv.org/abs/2607.15190"
+      ],
+      "observed_use": "A peer-reviewed medical benchmark study applied computerized adaptive testing to 38 LLMs, while a broad simulation study identified population regimes that make IRT inferences unreliable.",
+      "not_proven": "No public production deployment proof found for adaptive or IRT-based LLM release gating.",
+      "local_adoption": "Validate model fit, item-bank stability, rank consistency, exposure, and mandatory safety-core coverage before using adaptive selection to reduce cost.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "deployment_simulation",
+      "evidence_level": "production_control",
+      "evidence_date": "2026-06-16",
+      "primary_sources": [
+        "https://openai.com/index/deployment-simulation/"
+      ],
+      "named_operational_use": "OpenAI pre-deployment safety review, model development, and forecast backtesting across GPT-5-series Thinking deployments.",
+      "observed_use": "OpenAI reports using deployment replay on about 1.3 million de-identified conversations and an agentic study using 120,000 internal employee trajectories.",
+      "not_proven": "Historical prefixes can drift, rare behaviors can be missed, and the disclosure does not prove transfer to another product or traffic distribution.",
+      "local_adoption": "Register a privacy-safe replay population and forecast, verify simulator fidelity, then compare predictions with canary and post-release outcomes.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "qualified_local_only"
+    },
+    {
+      "topic_id": "petri_dynamic_auditing",
+      "evidence_level": "production_control",
+      "evidence_date": "2026-05-07",
+      "primary_sources": [
+        "https://www.anthropic.com/research/donating-open-source-petri",
+        "https://www.anthropic.com/research/petri-open-source-auditing"
+      ],
+      "named_operational_use": "Anthropic alignment assessment for every Claude model since Sonnet 4.5 and UK AISI sabotage-propensity evaluation.",
+      "observed_use": "Petri uses simulated users and tools, an auditor agent, and a judge to surface alignment-relevant behavior for assessment.",
+      "not_proven": "The disclosure does not establish that automated scores alone controlled release or that generated audits cover all alignment failures.",
+      "local_adoption": "Use Petri for discovery, human-review traces, reproduce confirmed behavior, and promote fixed cases into regression coverage.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "qualified_local_only"
+    },
+    {
+      "topic_id": "bloom_suite_generation",
+      "evidence_level": "operational_tool",
+      "evidence_date": "2025-12-19",
+      "primary_sources": [
+        "https://www.anthropic.com/research/bloom"
+      ],
+      "observed_use": "Anthropic released an executable framework that generates targeted behavioral suites and reported agreement with hand labels plus separation of baseline and intentionally misaligned models.",
+      "not_proven": "No public evidence establishes Bloom itself as a routine production release gate or shows causal deployment outcomes.",
+      "local_adoption": "Use generated suites in sandbox or shadow, then qualify construct, realism, diversity, grader behavior, and reproducibility.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "chain_of_thought_monitoring",
+      "evidence_level": "production_control",
+      "evidence_date": "2026-08-18",
+      "primary_sources": [
+        "https://openai.com/index/evaluating-chain-of-thought-monitorability/",
+        "https://openai.com/index/pacing-model-development-cyber-capabilities/",
+        "https://openai.com/index/chain-of-thought-monitoring/"
+      ],
+      "named_operational_use": "OpenAI monitoring for internal coding agents, long-running sessions, frontier workloads, and higher-risk model safeguards.",
+      "observed_use": "OpenAI discloses chain-of-thought monitoring for internal coding agents, long-running sessions, frontier workloads, and high-risk model safeguards.",
+      "not_proven": "Monitorability is incomplete and model-dependent; the evidence does not make reasoning traces faithful explanations or a sufficient safety case.",
+      "local_adoption": "Measure agent and monitor jointly, retain action/output and deterministic controls, and validate operational responses to flags.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "qualified_local_only"
+    },
+    {
+      "topic_id": "realtime_voice_evaluation",
+      "evidence_level": "production_control",
+      "evidence_date": "2025-08-28",
+      "primary_sources": [
+        "https://openai.com/index/gpt-4o-system-card/",
+        "https://openai.com/index/introducing-gpt-realtime/"
+      ],
+      "named_operational_use": "OpenAI audio-specific pre-deployment evaluation for GPT-4o and active session classifiers in the generally available Realtime API.",
+      "observed_use": "OpenAI documents audio-specific pre-deployment evaluation and active classifiers in the generally available Realtime API.",
+      "not_proven": "The sources do not establish a complete end-to-end production evaluation stack for task quality, interruption, noise, latency, and business outcomes.",
+      "local_adoption": "Add modality-specific task, safety, acoustic, turn-taking, tail-latency, tool, and recovery measurements before local qualification.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "qualified_local_only"
+    },
+    {
+      "topic_id": "adaptive_security_testing",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2025-04-29",
+      "primary_sources": [
+        "https://aclanthology.org/2025.findings-naacl.395/"
+      ],
+      "observed_use": "A peer-reviewed study optimized attacks against eight indirect prompt-injection defenses and bypassed every tested defense under its reported conditions.",
+      "not_proven": "The study is evidence about adaptive attack pressure, not proof of an effective deployed defense or a production release control.",
+      "local_adoption": "Attack the exact deployed prompt, retriever, tools, permissions, and detectors while retaining external authorization and effect-boundary controls.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "hidden_objective_auditing",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2025-03-14",
+      "primary_sources": [
+        "https://arxiv.org/abs/2503.10965"
+      ],
+      "observed_use": "Four blind teams audited a deliberately trained model organism and three recovered its implanted hidden objective using mixed methods.",
+      "not_proven": "Auditors knew a hidden objective existed and tested one model organism, so the result does not establish reliable discovery in deployed frontier models.",
+      "local_adoption": "Use the design for audit exercises and method comparison while preserving behavioral, outcome, interpretability, and data-analysis evidence separately.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    },
+    {
+      "topic_id": "long_memory_and_horizon_benchmarks",
+      "evidence_level": "research_or_benchmark",
+      "evidence_date": "2026-07-09",
+      "primary_sources": [
+        "https://github.com/xiaowu0162/longmemeval",
+        "https://proceedings.mlr.press/v267/modarressi25a.html",
+        "https://arxiv.org/abs/2607.08964"
+      ],
+      "observed_use": "LongMemEval, NoLiMa, and Long-Horizon-Terminal-Bench provide reproducible stress instruments for memory, semantic retrieval, and long-running agent work.",
+      "not_proven": "Benchmark performance does not establish product reliability, privacy, latency, or outcomes under real histories and environments.",
+      "local_adoption": "Use the benchmarks for construct stress, then add consented product histories, state invariants, tool faults, cost, latency, and reviewed incidents.",
+      "current_local_authority": "not_gating",
+      "eligible_authority_after_qualification": "shadow_only"
+    }
+  ]
+}

@@ -329,6 +329,13 @@ The primary CX lab is text-and-tool based, but the framework extends to image, a
 
 A future study should port one synthetic damaged-invoice case through LMMS-Eval or a comparable multimodal harness while preserving the same dataset-role, grader-calibration, and release-gate rules.
 
+OpenAI's published GPT-4o and Realtime API evidence shows that audio-specific
+pre-deployment evaluation and active safeguards are used in deployed systems.
+That evidence is narrower than a complete voice EvalOps stack. The
+[Research-to-Practice Evidence](research-to-practice.md#realtime-voice-deployed-safety-evidence-incomplete-quality-evidence)
+chapter separates the disclosed safety controls from the still-required task,
+noise, overlap, interruption, tail-latency, tool, and outcome measurements.
+
 ## Benchmark-study programme
 
 Use small reproductions to learn measurement rather than chase leaderboard coverage:

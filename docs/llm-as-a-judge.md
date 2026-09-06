@@ -326,6 +326,12 @@ What authority can the evidence support?
 
 ## Primary reading
 
+!!! note "Research-to-practice boundary: meta-evaluation and correction"
+    [Research-to-Practice Evidence](research-to-practice.md#evaluating-evaluators)
+    distinguishes AgentRewardBench-style evaluator screening from local judge
+    qualification, and explains why bias-corrected estimates remain non-gating
+    until sensitivity and specificity transfer to the target distribution.
+
 - [G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment](https://arxiv.org/abs/2303.16634)
 - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://arxiv.org/abs/2306.05685)
 - [Prometheus: Inducing Fine-grained Evaluation Capability in Language Models](https://arxiv.org/abs/2310.08491)

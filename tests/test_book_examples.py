@@ -30,9 +30,15 @@ class SyntheticBookExampleTests(unittest.TestCase):
             "personalized_stateful_evaluation",
             "evaluator_of_evaluators",
             "judge_bias_correction",
-            "dynamic_behavioral_auditing",
+            "adaptive_irt_evaluation",
+            "deployment_simulation",
+            "petri_dynamic_auditing",
+            "bloom_suite_generation",
             "chain_of_thought_monitoring",
             "realtime_voice_evaluation",
+            "adaptive_security_testing",
+            "hidden_objective_auditing",
+            "long_memory_and_horizon_benchmarks",
         }
 
         self.assertEqual(artifact["schema_version"], "practice-evidence-v1")
@@ -45,9 +51,31 @@ class SyntheticBookExampleTests(unittest.TestCase):
                 self.assertTrue(claim["primary_sources"])
                 self.assertTrue(claim["observed_use"])
                 self.assertTrue(claim["not_proven"])
+                self.assertTrue(claim["local_adoption"])
+                self.assertRegex(claim["evidence_date"], r"^\d{4}-\d{2}-\d{2}$")
+                self.assertLessEqual(claim["evidence_date"], artifact["as_of"])
+                self.assertEqual(claim["current_local_authority"], "not_gating")
                 self.assertIn(
-                    claim["gate_authority"],
-                    {"qualified_local_only", "shadow_only", "not_gating"},
+                    claim["eligible_authority_after_qualification"],
+                    {"shadow_only", "qualified_local_only"},
+                )
+
+        production_controls = [
+            claim
+            for claim in artifact["claims"]
+            if claim["evidence_level"] == "production_control"
+        ]
+        self.assertTrue(production_controls)
+        for claim in production_controls:
+            with self.subTest(production_control=claim["topic_id"]):
+                self.assertTrue(claim["named_operational_use"])
+                self.assertTrue(
+                    any(
+                        source.startswith(
+                            ("https://openai.com/", "https://www.anthropic.com/")
+                        )
+                        for source in claim["primary_sources"]
+                    )
                 )
 
         research_only = {
@@ -58,6 +86,14 @@ class SyntheticBookExampleTests(unittest.TestCase):
         self.assertIn("rare_failure_estimation", research_only)
         self.assertIn("evaluator_of_evaluators", research_only)
         self.assertIn("judge_bias_correction", research_only)
+        self.assertIn("adaptive_irt_evaluation", research_only)
+
+        chapter = (REPOSITORY_ROOT / "docs/research-to-practice.md").read_text(
+            encoding="utf-8"
+        )
+        for topic_id in required_topics:
+            with self.subTest(matrix_topic=topic_id):
+                self.assertIn(f"`{topic_id}`", chapter)
 
     def test_human_annotation_example_has_overlap_and_adjudication(self) -> None:
         artifact = load_example("human-annotations-v1.json")

@@ -499,6 +499,11 @@ Name the first causal failure, downstream symptoms, and minimum regression cover
 
 ## Primary reading
 
+!!! note "Research-to-practice boundary: personalization and memory"
+    [Research-to-Practice Evidence](research-to-practice.md#personalization-and-persistent-memory)
+    adds real-user field evidence, reset-versus-persist comparison, counter-user
+    controls, preference-update cases, and the limits of long-memory benchmarks.
+
 - [FActScore: Fine-grained Atomic Evaluation of Factual Precision](https://arxiv.org/abs/2305.14251)
 - [RAGAS: Automated Evaluation of Retrieval Augmented Generation](https://arxiv.org/abs/2309.15217)
 - [GAIA: a benchmark for General AI Assistants](https://arxiv.org/abs/2311.12983)

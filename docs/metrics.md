@@ -429,6 +429,13 @@ What can and cannot be claimed?
 
 ## Primary reading
 
+!!! note "Research-to-practice boundary: extreme-tail estimates"
+    [Research-to-Practice Evidence](research-to-practice.md#rare-failure-estimation)
+    examines Five-Nines/CEM importance sampling. It is a promising research
+    estimator, not public proof of a production release control. Local use must
+    validate generator coverage, proposal support, weight stability, known-rate
+    recovery, and offline-to-live calibration.
+
 - [HELM: Holistic Evaluation of Language Models](https://arxiv.org/abs/2211.09110)
 - [On Calibration of Modern Neural Networks](https://arxiv.org/abs/1706.04599)
 - [Semantic Uncertainty: Linguistic Invariances for Uncertainty Estimation in Natural Language Generation](https://arxiv.org/abs/2302.09664)
