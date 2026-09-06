@@ -128,6 +128,8 @@ The scalar point-floor check in the first five-case demo remains useful for test
 
 ## Sample size and sequential looks
 
+The [Sequential Decisions Lab](sequential-decisions-lab.md) now executes this distinction: ten repeated fixed-sample tests falsely promote 11.08% of runs at its registered null boundary, versus 2.40% for the worked likelihood-ratio rule on the same look schedule. Katas 28–31 expose the iid Bernoulli assumptions, power trade-offs, label/dependence failures and campaign-level multiplicity. These results do not qualify the general clustered comparison implemented elsewhere in this chapter.
+
 Choose sample size from the smallest decision-relevant degradation, baseline rate, target power, confidence level, clustering, expected missingness, and protected-slice requirements. “Thirty” in the executable example is a minimum-evidence fixture, not a universal sample-size recommendation.
 
 If results are inspected repeatedly, register the look schedule and error-control method. A safe sequential record includes:

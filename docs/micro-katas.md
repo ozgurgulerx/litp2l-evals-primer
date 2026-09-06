@@ -124,6 +124,8 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 28–31](sequential-decisions-lab.md) compute repeated-look false promotion, derive sequential likelihood evidence, break label and independence assumptions, and budget across release campaigns. Exact synthetic path enumeration supports the worked results, not general deployment qualification.
+
 [Katas 24–27](exposure-control-lab.md) execute shadow/canary/expansion/restriction/rollback routing, preserve pending cohorts, expire stale routing and separate rollback from containment. The retained 280-request study is simulation-only.
 
 [Katas 21–23](order-resolution-study.md) execute real competing-order refunds, reject clarification after action and preserve rejected attempts. Their 16-trial study uses deterministic agents and scripted customers, not live-model qualification.

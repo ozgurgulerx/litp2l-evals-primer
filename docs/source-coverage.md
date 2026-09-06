@@ -45,6 +45,8 @@ Excluding a volatile ranking, price, star count, or copied quick-start is intent
 
 ## Recent capability addendum
 
+The [Sequential Decisions Lab](sequential-decisions-lab.md) adds exact finite-horizon path enumeration and Katas 28–31. It compares fixed-final, repeated-fixed, Bonferroni and likelihood-ratio tests, with power, false-promotion and stopping-cost results plus label-bias and dependence counterexamples. The model is a narrow iid Bernoulli loss problem; it does not qualify general clustered traffic, model accuracy or release authority.
+
 The [Exposure Control Lab](exposure-control-lab.md) adds an executed 280-request routing simulation and Katas 24–27 for stable cohorts, maturity, missing labels, expiry, quality restriction, recovery hysteresis and rollback. It retains 349 deterministic mock-agent executions. It does not confer statistical or deployment qualification, enforce monetary/request caps, interrupt active work or configure a cloud application router.
 
 The [Order Resolution Study](order-resolution-study.md) adds 16 executed deterministic trials with independent mock order ledgers, label-free unresolved inputs, customer corrections, scripted clarification and counterbalanced ordering. Katas 21–23 distinguish authorized wrong-object actions, retrospective clarification and rejected attempts hidden by later success. The live SDK path is contract-tested with a fake runner; live-model accuracy, question quality and qualified semantic grading remain unmeasured.
