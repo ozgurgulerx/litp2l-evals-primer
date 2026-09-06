@@ -1,0 +1,47 @@
+name: Eval software conformance
+
+on:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CXLAB_CODE_REVISION: ${{ github.sha }}
+    steps:
+      - name: Check out exact workflow revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          python-version: '3.12'
+          enable-cache: false
+      - name: Install locked development dependencies
+        run: uv sync --frozen --group dev
+      - name: Unit, integration, and local CLI conformance tests
+        run: |
+          uv run coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
+          uv run coverage report --fail-under=80
+          uv run coverage xml -o coverage.xml
+      - name: Exercise lab pass, insufficient-evidence hold, and policy block
+        run: uv run python -m cx_eval_lab.ci_conformance --output-dir ci-evidence --code-revision "$CXLAB_CODE_REVISION"
+      - name: Build book with strict validation
+        run: uv run mkdocs build --strict
+      - name: Retain available evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eval-conformance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ci-evidence/
+            coverage.xml
+          if-no-files-found: warn
+          retention-days: 14
