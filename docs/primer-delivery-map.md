@@ -15,10 +15,10 @@ For executable work, completion requires an inspectable chain from input through
 | Requirement | Current evidence | Next acceptance milestone |
 | --- | --- | --- |
 | Factual template prerequisites | Regression tests reject verified-account, ineligible-approval and false execution-failure explanations | Expand the state/wording cross-product, including revoked and denied approvals |
-| Context-bound semantic judgments | Exact case, request, trace, state and policy binding; changed outcome/escalation changes claim hash | Registry binds evaluator configuration, qualification scope, expiry and revocation |
+| Context-bound semantic judgments | Exact case/request/trace/state/policy binding; registry checks configuration, joint scope, expiry, revocation, error bounds and abstention | Independently reviewed calibration data ingestion and current-authority verification during replay |
 | Honest scalar gain terminology | `illustrative_point_gain:task_success` regression | Preserve distinction in every result and exercise |
 | Complete trial evidence | Full paired artifacts and offline re-grading CLI; tests reject changed, missing and mislinked evidence | Independent provenance, source-file verification, grader-version enforcement and immutable reassessment under new graders |
-| Semantic stage in runner | Evaluator interface exists; no actual judge stage connected | Evaluator-owned stage with errors, abstention, usage, qualified registry and reviewed calibration data |
+| Semantic stage in runner | Optional evaluator-owned stage connected to single and paired runs; fixture tests cover abstention, errors, usage and scoped registry | Live model adapter, metered run configuration and independently reviewed calibration study; no live semantic qualification claimed |
 | Realistic object resolution | Explicit-ID argument tasks exist | Ambiguous descriptions, real competing records, corrections, clarification and counterbalanced order |
 | Statistical qualification | Executed exact enumeration: sparse discordance, coverage, false promotion, power and biased labels; unequal-cluster estimand kata | General clustered interval coverage, sequential looks, calibration-error propagation and repeated-holdout controls |
 | Process recovery experiment | Typed scorer fixtures exist | Actual subprocess interruption and durable ledger recovery before/after commit |

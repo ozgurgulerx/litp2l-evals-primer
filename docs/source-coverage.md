@@ -13,6 +13,8 @@ The [statistical method study](statistical-method-study.md) now supplies full co
 
 ### Supplied research corpus
 
+The [Semantic Grading Lab](semantic-grading-lab.md) adds tested runner integration and Katas 08–10 for scoped qualification, class-error bounds, abstention, configuration drift, expiry/revocation, and retained judge evidence. Its fixture judge and declared synthetic counts are control tests, not human calibration or live-model accuracy evidence. Genuine calibration ingestion and live semantic studies remain open.
+
 | Research source | Primary contribution | Canonical treatment |
 | --- | --- | --- |
 | Best GitHub Repositories for LLM Evaluation in 2026 | Tool categories, quick starts, licensing, portability, model/application/production layers | System Studies, Benchmark Reproducibility, Courses |

@@ -59,13 +59,13 @@ The tests first accept a correctly bound receipt, then change one dimension at a
 ??? success "Solution and reasoning"
     Compute `hash_evidence_context(case, events, state, policy_version=...)` in the evaluator, and compare it with `receipt.evidence_context_hash`. Separately compare message and complete structured-claim hashes. Require a permitted calibration receipt, the correct criterion, a passing decision, and no abstention.
 
-    See `hash_evidence_context`, `hash_structured_claims`, and `_semantic_receipt_qualifies` in `cx_eval_lab/evaluators.py`. The test's accepted calibration hash is a synthetic fixture, not human qualification evidence. A future registry must enforce evaluator configuration, criterion, population, expiry, and revocation.
+    See `hash_evidence_context`, `hash_structured_claims`, and `_semantic_receipt_qualifies` in `cx_eval_lab/evaluators.py`. The test's accepted calibration hash is a synthetic fixture, not human qualification evidence. The [Semantic Grading Lab](semantic-grading-lab.md) now adds registry checks for evaluator configuration, criterion, joint scope, expiry, revocation, error bounds, and abstention.
 
 **Extend:** alter only the escalation reason. Then reorder two tool events. Both changes must invalidate the original judgment. Explain why reformatting a dictionary should not change a canonical hash, while changing event order should.
 
 **Interview answer to know:** “I cache a judge result against the exact evidence packet and evaluator configuration, not just response text. Changed state or context requires re-grading. Content hashes establish identity and mutation detection; trusted provenance establishes who may issue the judgment.”
 
-**Evidence limit:** this kata repairs receipt binding. An actual semantic grading stage, qualified registry, and human calibration study remain separate delivery requirements.
+**Evidence limit:** this kata repairs receipt binding. The connected stage and registry are exercised separately in [Katas 08–10](semantic-grading-lab.md); a live judge and independent human calibration study remain delivery requirements.
 
 ## Kata 03: a point gain is not superiority evidence
 
@@ -120,10 +120,12 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 **Interview answer to know:** “I retain execution evidence separately from grader decisions. Replay validates references and recomputes grades under a pinned implementation. A digest detects changes relative to a trusted reference; it is not proof that a run happened, that world state was true, or that release is safe.”
 
-**Evidence limits:** this is deterministic re-grading of retained mock-world executions, not agent re-execution or production attestation. The CLI uses the installed grader; it does not download or enforce its revision. Population validation covers case/customer/slice membership, not independent verification of every source-file hash. The runner still has no connected semantic judge, so receipts are null here. A party able to rewrite all evidence and trusted references can fabricate a self-consistent packet; external provenance and storage controls remain necessary.
+**Evidence limits:** this is deterministic re-grading of retained mock-world executions, not agent re-execution or production attestation. The CLI uses the installed grader; it does not download or enforce its revision. Population validation covers case/customer/slice membership, not independent verification of every source-file hash. No semantic stage is selected in this CLI example, so receipts are null here; [Katas 08–10](semantic-grading-lab.md) exercise the connected optional stage. A party able to rewrite all evidence and trusted references can fabricate a self-consistent packet; external provenance and storage controls remain necessary.
 
 ## What comes next
 
+[Katas 08–10](semantic-grading-lab.md) now exercise calibration bounds, scoped qualification, negative versus unknown judgments, and retained judge evidence. Their judge is a synthetic control double; live semantic accuracy remains unmeasured.
+
 [Katas 05–07](statistical-method-study.md) now cover statistical false promotion, unequal-cluster estimands, and biased judge labels, with executed enumeration results and worked solutions.
 
-The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas cover dataset improvement, human annotation, judge calibration, statistical coverage, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those exercises are pending until their runnable checks and worked solutions exist.
+The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas deepen dataset improvement, human annotation, empirical judge calibration, general clustered/sequential inference, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those further exercises remain pending until their runnable checks and worked solutions exist.
