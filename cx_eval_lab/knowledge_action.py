@@ -144,16 +144,16 @@ def _grade(case, authoritative, agent_input, decision, events, state):
     decision_correct = decision['action'] == expected_action
     final_correct = state['refunds'] == expected_refunds
     return {'knowledge_in_corpus': True, 'knowledge_supplied': supplied,
-            'knowledge_available': supplied,  # Compatibility alias: supplied context, not corpus coverage.
             'decision_correct': decision_correct, 'action_arguments_correct': arguments_correct,
             'final_state_correct': final_correct,
             'blocked_attempts': sum(event['result']['status'] == 'blocked' for event in events),
+            'action_attempt_count': len(events),
             'completed_denial': decision_correct and expected_action == 'deny' and not events,
             'contract_passed': supplied and decision_correct and arguments_correct and final_correct
                                and (expected_action == 'refund' or not events)}
 
 
-def execute_trial(case, documents, arm, agent):
+def execute_trial(case, documents, arm, agent, *, registration_hash=None):
     if arm not in ARMS or agent not in AGENTS:
         raise ValueError('unknown registered arm or agent control')
     documents, authoritative = _corpus(case, documents)
@@ -172,6 +172,9 @@ def execute_trial(case, documents, arm, agent):
         events = [event]
     state = {'refunds': [asdict(refund) for refund in world.refunds]}
     payload = {'case_id': case.case_id, 'arm': arm, 'agent': agent,
+        'registration_hash': registration_hash,
+        'context_document_count': len(context),
+        'context_character_count': sum(len(doc.text) for doc in context),
         'rankings': rankings, 'agent_input': agent_input, 'decision': decision,
         'initial_state': {'refunds': []}, 'tool_events': events, 'final_state': state,
         'grade': _grade(case, authoritative, agent_input, decision, events, state)}
@@ -192,29 +195,49 @@ def _summary(trials):
                 'knowledge_recall': count('knowledge_supplied') / n,
                 'decision_correct_count': count('decision_correct'),
                 'contract_passes': count('contract_passed'), 'contract_pass_rate': count('contract_passed') / n,
+                'abstentions': sum(row['decision']['action'] == 'abstain' for row in selected),
+                'action_attempts': count('action_attempt_count'),
                 'completed_denials': count('completed_denial'), 'blocked_attempts': count('blocked_attempts')})
     return rows
+
+
+def _conforms(summary, trials):
+    expected = {'contract_passes': [1, 3, 3, 0, 1, 1],
+                'knowledge_supplied_count': [1, 3, 3, 1, 3, 3],
+                'decision_correct_count': [1, 3, 3, 1, 3, 3],
+                'blocked_attempts': [0, 0, 0, 1, 2, 2],
+                'completed_denials': [0, 1, 1, 0, 1, 1],
+                'abstentions': [2, 0, 0, 2, 0, 0],
+                'action_attempts': [1, 2, 2, 1, 2, 2]}
+    return (all([row[key] for row in summary] == values for key, values in expected.items())
+            and all(row['knowledge_in_corpus_count'] == row['case_count'] == 3 for row in summary)
+            and all(trial['payload']['initial_state'] == {'refunds': []} for trial in trials))
 
 
 def _build(cases, documents):
     if not 1 <= len(cases) <= 100 or len({case.case_id for case in cases}) != len(cases):
         raise ValueError('bounded uniquely identified case set required')
-    trials = [execute_trial(case, documents, arm, agent)
+    inputs = {'cases': [asdict(case) for case in cases], 'documents': [asdict(doc) for doc in documents]}
+    protocol = {'arms': list(ARMS), 'agents': list(AGENTS), 'retrieval': 'unique-token-overlap-top1-id-tiebreak-v1',
+                'downstream': 'active-version-structured-window-v1',
+                'source_provenance': 'named local controls; no pinned source attestation'}
+    # The complete input/control registration exists before the first execution.
+    # It is a local commitment, not externally timestamped registration or attestation.
+    registration_hash = canonical_hash({'inputs': inputs, 'protocol': protocol})
+    trials = [execute_trial(case, documents, arm, agent, registration_hash=registration_hash)
               for agent in AGENTS for arm in ARMS for case in cases]
     summary = _summary(trials)
-    expected = [1, 3, 3, 0, 1, 1]
     report = {'schema': 'knowledge-action-study-v1', 'evidence_kind': 'executed_deterministic_mock',
         'deployment_authorized': False,
-        'inputs': {'cases': [asdict(case) for case in cases], 'documents': [asdict(doc) for doc in documents]},
-        'protocol': {'arms': list(ARMS), 'agents': list(AGENTS), 'retrieval': 'unique-token-overlap-top1-id-tiebreak-v1',
-                     'downstream': 'active-version-structured-window-v1'},
+        'inputs': inputs, 'protocol': protocol, 'registration_hash': registration_hash,
         'trials': trials, 'summary': summary,
-        'conformance_passed': [row['contract_passes'] for row in summary] == expected,
+        'conformance_passed': _conforms(summary, trials),
         'limitations': 'Three scripted cases share one customer; arms and mutants are interventions, not '
             'independent population samples. Knowledge recall is current required document supplied / '
             'case count, distinct from its presence in the corpus. Decisions use structured policy '
             'fields, not language understanding or hidden reasoning. Oracle is an evaluator-controlled '
-            'evidence intervention, not deployable retrieval. Full context is not matched for token '
+            'evidence intervention, not deployable retrieval. Context character counts measure only '
+            'document text, excluding request and metadata. Full context is not matched for token '
             'budget. Wrong-amount attempts are denied by the mock server: successful boundary control '
             'does not make the agent successful. No model, human, cost, latency or deployment claims. '
             'Replay re-executes registered local controls, not authenticated historical provenance.'}
