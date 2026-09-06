@@ -120,7 +120,7 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 **Interview answer to know:** “I retain execution evidence separately from grader decisions. Replay validates references and recomputes grades under a pinned implementation. A digest detects changes relative to a trusted reference; it is not proof that a run happened, that world state was true, or that release is safe.”
 
-**Evidence limits:** this is deterministic re-grading of retained mock-world executions, not agent re-execution or production attestation. The CLI uses the installed grader; it does not download or enforce its revision. Population validation covers case/customer/slice membership, not independent verification of every source-file hash. No semantic stage is selected in this CLI example, so receipts are null here; [Katas 08–10](semantic-grading-lab.md) exercise the connected optional stage. A party able to rewrite all evidence and trusted references can fabricate a self-consistent packet; external provenance and storage controls remain necessary.
+**Evidence limits:** this is deterministic re-grading of retained mock-world executions, not agent re-execution or production attestation. Without `--verify-source`, the CLI uses the installed grader without enforcing its revision, and population validation covers case/customer/slice membership rather than full source-file and case-input verification. [Katas 34–35](#kata-34-the-version-label-did-not-change) add the optional stricter checks; they still do not download or attest an implementation. No semantic stage is selected in this CLI example, so receipts are null here; [Katas 08–10](semantic-grading-lab.md) exercise the connected optional stage. A party able to rewrite all evidence and trusted references can fabricate a self-consistent packet; external provenance and storage controls remain necessary.
 
 ## Kata 32: reproduce yesterday without approving today
 
@@ -168,6 +168,46 @@ uv run python -m unittest \
     If a packet has no semantic receipts, the assessment reports `calibration_status="not_applicable"`, not `"current"`. Read this as “no retained semantic receipts were checked,” not “no semantic evaluation was needed.” Historical unqualified-message counts remain visible.
 
 **Evidence boundary for both katas:** these are executed local tests using mock agents and synthetic judge responses. The new Python API does not authenticate reviewers, fetch an authoritative registry, enforce the installed grader's source revision, create a new-grader reassessment, or connect to a deployment controller. The existing `replay` CLI still performs historical replay only. The current assessment is a separate operator-invoked API; retain the registry snapshot and historical trust set alongside its digests to reproduce it later.
+
+## Kata 34: the version label did not change
+
+**Situation:** a packet names evaluator `refund-evaluators-v1`. A developer changes the grader source but leaves that label unchanged. Another run hashes the changed source while continuing to claim the original commit. A third checkout uses Git replacement refs to substitute a different source tree under the original commit label.
+
+**Predict:** which problem would a version-string comparison catch? Which requires comparing local bytes with the original committed tree?
+
+```bash
+uv run python -m unittest tests.test_source_provenance tests.test_source_replay_cli -v
+```
+
+**Task:** refuse all three source mismatches. Require a complete inventory rather than checking only `evaluators.py`; retain the registered dataset, policy and dependency declaration hashes. Test missing and extra Python files, unknown input mappings and symlinked paths. Preserve normal historical replay as a distinct, weaker operation.
+
+??? success "Solution and reasoning"
+    `verify_sources` compares the independently supplied full revision with both manifest and checkout HEAD, then checks the exact source inventory and each file's raw digest. It also reads the committed objects with Git replacement handling disabled. A friendly evaluator label is one required identity, not sufficient evidence of implementation identity.
+
+    The tests first generate a manifest from correct files. A changed file fails the manifest-byte comparison. A freshly captured dirty-file hash still fails the committed-byte comparison. An untracked Python file fails inventory equality even if a new manifest includes it. The replacement-ref regression creates two commits in a disposable fixture repository; the original revision cannot borrow the second commit's content.
+
+    The fresh-process CLI test copies the local program into a temporary repository, commits it, generates a paired packet and runs source-checked replay. It then changes the grader file and confirms rejection. No live model is used. See the [retained 20-trial example](evidence-spine.md#source-checked-replay-labels-files-and-actual-case-inputs) for the exact source identity and observed output.
+
+**Interview answer criteria:** distinguish version label, source digest, committed revision, installed environment and execution attestation. Explain why hashing only the grader entrypoint misses imported code, and why even the complete registered local source inventory does not authenticate a past model call.
+
+## Kata 35: the IDs match but the case changed
+
+**Situation:** two artifacts have identical case ID, customer ID and slice labels. One says the order is eligible for 4,000 cents; the other changes eligibility or amount. The manifest still names the original dataset file.
+
+**Predict:** can an IDs-only population hash detect the change? Does verifying the dataset file's own hash prove that the retained case came from that file?
+
+```bash
+uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
+```
+
+??? success "Solution and reasoning"
+    Neither check alone binds the retained case to the file. Load canonical cases from the operator-supplied, hash-verified dataset. Compare every retained case's complete representation and original agent input against the corresponding canonical case; require complete membership. Existing replay then verifies every registered repetition and both arms, rather than allowing a case to appear once and disappear elsewhere.
+
+    The regression tests alter eligibility, amount and customer utterance, omit a complete case, and change the release-policy version. The input-binding check rejects each inconsistency. Do not “repair” the archive by replacing its case with today's dataset row. Preserve it as inconsistent evidence and create a separately identified corrected run or reassessment.
+
+**Extend:** explain why matching all inputs still does not establish that tool events really occurred. Name an independent source of final-state evidence and who controls its write access. Then explain why a matching policy file does not establish that the archived outer release decision was computed correctly.
+
+**Evidence limit:** these two katas exercise local verification logic under a controlled checkout, not model quality, current calibration, dependency installation or production authority. The code preserves earlier content and replay workflows; strict verification is opt-in and intentionally rejects older packets that lack the required source evidence.
 
 ## Further practice
 

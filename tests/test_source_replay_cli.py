@@ -11,7 +11,7 @@ import unittest
 from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
-from tests.test_trial_replay import TrialReplayTests
+from tests import test_trial_replay
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,9 +20,20 @@ POLICY = ROOT / 'evals/cx-support/policies/refund_gate_v1.json'
 
 
 class SourceCaseBindingTests(unittest.TestCase):
+    def test_retained_teaching_packet_identity_and_grades(self):
+        from cx_eval_lab.artifacts import replay_packet
+        from cx_eval_lab.source_provenance import verify_packet_inputs
+        packet = json.loads((ROOT / 'docs/assets/source-verified-replay-v1.json').read_text())['experiment']
+        self.assertEqual('sha256:afed7ba26f2200e135e5be2cdfe15d5abf81de901a6def301893ca4a66561158',
+                         canonical_hash(packet))
+        self.assertEqual('256f52ce755bb59f0fdfa5f1a843ad7ae5d212a0', packet['manifest']['code_revision'])
+        self.assertEqual(30, len(packet['manifest']['input_hashes']))
+        self.assertEqual(20, len(replay_packet(packet)))
+        self.assertEqual(5, verify_packet_inputs(packet, dataset_path=DATASET, policy_path=POLICY))
+
     def test_full_cases_not_just_population_ids_are_bound(self):
         from cx_eval_lab.source_provenance import verify_packet_inputs
-        packet = TrialReplayTests().packet()
+        packet = test_trial_replay.TrialReplayTests().packet()
         self.assertEqual(5, verify_packet_inputs(packet, dataset_path=DATASET, policy_path=POLICY))
         for field, value in (('eligible', False), ('amount_cents', 1)):
             changed = copy.deepcopy(packet)
@@ -30,13 +41,13 @@ class SourceCaseBindingTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'dataset case'):
                 verify_packet_inputs(changed, dataset_path=DATASET, policy_path=POLICY)
         changed = copy.deepcopy(packet)
-        changed['trial_artifacts'][0]['payload']['agent_input']['message'] = 'altered request'
+        changed['trial_artifacts'][0]['payload']['agent_input']['utterance'] = 'altered request'
         with self.assertRaisesRegex(ValueError, 'agent input'):
             verify_packet_inputs(changed, dataset_path=DATASET, policy_path=POLICY)
 
     def test_omitted_case_and_wrong_policy_label_reject(self):
         from cx_eval_lab.source_provenance import verify_packet_inputs
-        packet = TrialReplayTests().packet()
+        packet = test_trial_replay.TrialReplayTests().packet()
         changed = copy.deepcopy(packet)
         case_id = changed['trial_artifacts'][0]['payload']['case']['case_id']
         changed['trial_artifacts'] = [a for a in changed['trial_artifacts']

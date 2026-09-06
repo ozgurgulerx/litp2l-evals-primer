@@ -70,7 +70,48 @@ After generating an experiment packet, run:
 uv run python -m cx_eval_lab replay --input artifacts/runs/paired-reference.json
 ```
 
-Replay rejects changed artifact hashes, missing or duplicated evidence, incorrect identity links, inconsistent summaries, missing paired repetitions, and population membership that differs from the manifest. It returns `lab_only` even when every grade matches. It does not authenticate execution provenance, enforce the installed code revision, verify source files against all manifest hashes, or qualify the statistical method. Old summary-only packets remain useful for aggregate exercises but cannot pass full replay. See [Kata 04](micro-katas.md#kata-04-recompute-a-grade-not-just-an-average) for the worked solution and mutation tests.
+Default replay rejects changed artifact hashes, missing or duplicated evidence, incorrect identity links, inconsistent summaries, missing paired repetitions, and population membership that differs from the manifest. It returns `lab_only` even when every grade matches. Without the source-verification option below, it does not enforce the local code revision or verify source files against manifest hashes. Neither mode authenticates execution provenance or qualifies the statistical method. Old summary-only packets remain useful for aggregate exercises but cannot pass full replay. See [Kata 04](micro-katas.md#kata-04-recompute-a-grade-not-just-an-average) for the worked solution and mutation tests.
+
+### Source-checked replay: labels, files and actual case inputs
+
+The [retained source-verification packet](assets/source-verified-replay-v1.json) was generated locally with a deterministic reference agent in both arms. The source/input check verified **30 files and five complete dataset cases**, then reproduced **20 trial grades**. Its `lab_pass` is still a small synthetic exercise, not statistically qualified deployment evidence.
+
+New `experiment` CLI packets record raw-byte SHA-256 hashes for all package Python files, `pyproject.toml`, `uv.lock`, the dataset and the release policy. The CLI records the local Git revision by default; an explicit `CXLAB_CODE_REVISION` override remains possible, but is checked rather than trusted in strict replay. Capturing dirty-file hashes does not make those files part of the recorded commit.
+
+The optional source check requires three independently retained operator inputs: the experiment packet digest, the full expected commit ID and the expected evaluator version. Dataset and policy paths come from explicit operator options or documented defaults, never from paths invented by the packet.
+
+For the retained example, use a controlled checkout at commit `256f52ce755bb59f0fdfa5f1a843ad7ae5d212a0`. Save the linked packet separately as `artifacts/source-verified-replay-v1.json`; the packet was added alongside this chapter after that source commit. Install the locked development environment in that checkout, then run:
+
+```bash
+uv run python -m cx_eval_lab replay \
+  --input artifacts/source-verified-replay-v1.json \
+  --verify-source \
+  --expected-code-revision 256f52ce755bb59f0fdfa5f1a843ad7ae5d212a0 \
+  --expected-evaluator-version refund-evaluators-v1 \
+  --trusted-packet-hash sha256:afed7ba26f2200e135e5be2cdfe15d5abf81de901a6def301893ca4a66561158
+```
+
+Observed output:
+
+```text
+source/input consistency verified: 30 files; 5 dataset cases; not execution attestation
+replayed 20 trials; authority: lab_only; no model calls
+```
+
+These identities are published teaching references, not a signed independent attestation. In an operating service, the producer records the packet digest outside the candidate's write scope; the verifier receives it through a trusted channel. Calculating a digest from an untrusted packet and immediately declaring that value trusted establishes no provenance.
+
+The verifier checks that the manifest revision, operator revision and checkout HEAD agree; source inventory is complete; source bytes match both the manifest and original committed Git objects; and every non-source input has an operator-supplied file mapping and matching raw bytes. Git replacement refs are disabled. Source-tree symlinks and symlinks in supplied input paths are rejected. Files are limited to 64 MiB each. A later checkout—even one with only documentation commits—must not masquerade as the recorded revision: use the exact source checkout or create a new experiment.
+
+After file verification, every retained case must match the supplied dataset in full, not merely in case ID, customer and slices. The check also compares the original agent input and complete case membership. This catches an altered refund amount or eligibility flag that would survive an IDs-only population check. Trial repetition/arm completeness and grading are then checked by replay.
+
+Keep four boundaries explicit:
+
+- **File consistency is not proof of execution.** A fabricated trace can use genuine source and input files. This check does not attest to loaded bytecode, installed dependency equivalence, model-provider execution or a remotely observed backend state. Use a controlled, non-mutating checkout; this is not a race-proof hostile-filesystem sandbox.
+- **A lockfile hash is not an environment attestation.** It records the declared dependency solution, not what the interpreter actually imported. Environment verification remains additional work.
+- **Policy-file consistency is not release-decision replay.** The outer decision is not recomputed here. The manifest's `refund-gate-v1` release policy is distinct from a trial's `refund-policy-v1` semantic/domain policy; the two version strings must not be compared as though they name the same object.
+- **Source verification is not current judge qualification.** The CLI still lacks the current-registry assessment performed by the separate API in [Katas 32–33](micro-katas.md#kata-32-reproduce-yesterday-without-approving-today). Legacy packets without source hashes remain historically replayable but cannot pass the strict source check.
+
+For executable mutation exercises and interview answer criteria, continue with [Katas 34–35](micro-katas.md#kata-34-the-version-label-did-not-change).
 
 ## Repeated trials are not new cases
 
