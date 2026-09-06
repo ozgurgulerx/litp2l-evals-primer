@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Report-evidence checkpoint — 7 September 2026
+
+[Katas 76–77](rag-research-evals.md#executed-report-and-citation-workshop) add an inspectable compact report, four invented sources, five claim annotations, four citation attempts and a five-question task. Computation separates 3/4 resolving links, 2/4 entailing attempted links, 2/5 citation-supported claims and 1/5 claims with current cited support. A dated authored reference correction exposes a false pass: factual correctness changes from 4/5 to 3/5 without changing the report or corpus. Original and reassessed grades remain linked and inspectable.
+
+The chapter now teaches exact span contracts, explicit citation-marker inventory, reference repair versus changed task dates, information-access cutoffs, and omission versus justified abstention. Independent review exposed a denominator failure when a broken citation's annotation was removed but its marker remained in the report; the implementation adds a regression for complete marker accounting. Semantic annotations and reviewer authority remain invented classroom inputs, not authenticated human evidence.
+
+Verification at implementation revision `0bcb85b`: 511 repository tests passed, with 89% overall and 95% report-module branch-inclusive coverage. Fresh CLI output, retained replay, the printed report and published Python example agree. Targeted Ruff/Pyright, dependency audit, strict book build, built anchors/artifact links and both expanded kata solutions in the local desktop browser passed; page width matched the 1152-pixel viewport. The composed current-release study retained one hold and six blocks with deployment authorization false. No live models, independent human review, mobile/Safari verification, cloud CI execution or publication is claimed by this checkpoint.
+
+This completes a compact evidence-mechanics exercise, not the larger long-report validation requirement. Next: retain a substantial multi-section report and corpus with independently checkable extraction omissions, compound claims, conflicting sources and synthesis judgments; compare original and corrected reports without changing the evaluation contract. Actual research-agent runs, independent annotation validity, protected evidence provenance and production release authority remain separate requirements.
+
 ### Verified judge-diagnostics checkpoint — 7 September 2026
 
 [Katas 74–75](llm-as-a-judge.md#executed-judge-sensitivity-workshop) now connect controlled transformations to retained judge requests, returned verdicts, identity-normalized comparisons and ensemble errors. Five deterministic controls execute 300 calls over 60 presentations of five authored cases. The first-slot control reverses answer identity in all 30 order contrasts; the length control changes in 20 of 40 padding contrasts; the keyword control changes in all 30 rubric contrasts. The three-member panel inherits the two cloned controls' same 48 erroneous views. Identical-content answer swaps diagnose arbitrary protocol selection, not necessarily a change in factual meaning.

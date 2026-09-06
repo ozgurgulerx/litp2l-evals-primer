@@ -387,6 +387,139 @@ long_report_evaluation:
 
 This artifact reveals why “the answer was in the report” and “the report was trustworthy” are different claims.
 
+### Executed report-and-citation workshop
+
+The earlier refund-report table remains an illustrative scoring example. This separate [retained workshop](assets/report-citations-v1.json) freezes a complete **compact** classroom report, four invented source documents, five material claim annotations, four attempted citations and five required subquestions. It makes the joins and reassessment inspectable; it does not yet demonstrate automated extraction or synthesis evaluation on a long professional report.
+
+Here is the entire evaluated report, including its deliberate mistakes:
+
+```text
+# Northport parcel-policy brief
+
+As-of: 2026-09-07. Invented classroom report.
+
+## Returns
+The return window is 30 days. [L1] Opened items are always refundable. [L3]
+
+## Refund timing
+Refunds settle within 5 business days. [L2]
+
+## Shipping
+Return shipping is free. [L4]
+
+## Scope
+The policy covers Northport purchases.
+```
+
+The task additionally asks for the warranty period; the report omits it. The old policy says 30 days and stops applying on 1 September. The current policy says 14 days, excludes opened items and establishes Northport scope. Separate payment and shipping sources support the timing and shipping sentences. All policies, dates and review authority labels are invented for this exercise—not consumer advice or evidence of actual human review.
+
+### Kata 76: four citations do not establish five claims
+
+**Predict:** L1 quotes the obsolete policy accurately. L2 cites the payment source. L3 attaches that same payment source to the opened-item claim. L4 has an explicitly unresolved locator, even though a shipping document in the frozen corpus supports the sentence. The scope claim is true under the supplied reference but has no citation. Which failures belong to resolution, entailment, current support and task completeness?
+
+```bash
+uv run python -m cx_eval_lab.report_citations --output /tmp/report-citations.json
+uv run python -m unittest tests.test_report_citations -v
+```
+
+Choose a fresh output path on subsequent runs. Inspect the retained report and source text alongside the exact claim, citation-marker and source-passage spans. The annotations use Python string indices—Unicode code points with an exclusive end offset. Entailment and truth judgments are explicitly authored and bound to the evidence they describe; the program validates and aggregates them rather than inferring meaning from prose.
+
+| Computed measure | Result | Interpretation |
+| --- | --- | --- |
+| Resolving citation links | 3/4 | The broken shipping citation stays in the denominator |
+| Entailing links among all attempted links | 2/4 | Old-window and timing passages entail their attached claims |
+| Entailing links among resolving links | 2/3 | This conditional rate excludes the broken link; show both denominators |
+| Claims with at least one resolving citation | 3/5 | Resolution includes the irrelevant citation |
+| Claims supported by their supplied citations | 2/5 | Uncited truth and corpus evidence not actually cited do not count |
+| Claims supported by current applicable citations | 1/5 | Only the timing claim has current cited support |
+| Required questions addressed | 4/5 | Warranty is missing; this is not abstention |
+| Required questions correctly answered after correction | 3/5 | The combined return-rule question fails; warranty remains unanswered |
+
+??? success "Solution: keep the join and the denominator visible"
+    L1 resolves and entails the 30-day sentence, but its policy is obsolete at the report date. L3 resolves to a real payment passage that says nothing supporting opened-item eligibility. L4 is unresolved; a supporting document elsewhere in the corpus does not repair the citation the report supplied. The scope sentence is true under the authored reference but uncited. These outcomes cannot be represented faithfully by one citation-count score.
+
+    The returns subquestion asks for both the window and the opened-item rule. A partial mention cannot establish a correct answer to the whole question. Warranty contributes to the required-question denominator even though it contributes no extracted claim. If evaluation considers only assertions the report chose to make, omissions disappear and concise but incomplete reports can look perfect.
+
+    Repair the specific defect: update the window and its source; correct the opened-item assertion and cite the applicable policy; repair the shipping locator; cite the scope evidence; address warranty with evidence or an explicit, justified uncertainty statement. These are proposed report repairs, not measured improvements from a newly executed research agent.
+
+### Kata 77: correct a false pass without rewriting history
+
+**Predict:** the original reference mistakenly accepts the 30-day window for this September report. A dated correction uses the already-frozen current policy and marks that claim wrong. What changes if the report, corpus and citation annotations stay identical?
+
+The original factual grade is 4/5. Reassessment is 3/5, with only C1's factual label changed. This is a correction exposing a **false pass**, not the false failure in the PersonQA example above. Both directions matter: correcting the measuring instrument is not an optimization that must raise the score. Citation results stay unchanged because their text, links and applicability evidence did not change.
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.report_citations import replay_study
+
+packet = replay_study(json.loads(Path("docs/assets/report-citations-v1.json").read_text()))
+old, new = packet["original_grade"], packet["reassessed_grade"]
+assert old["context_hash"] == new["context_hash"]
+assert old["factual_correctness"]["numerator"] == 4
+assert new["factual_correctness"]["numerator"] == 3
+assert packet["correction"]["changed_claim_ids"] == ["C1"]
+assert packet["deployment_authorized"] is False
+print("Original and reassessed correctness:",
+      old["factual_correctness"]["rate"], new["factual_correctness"]["rate"])
+```
+
+??? success "Solution: a changed grade is not a changed model"
+    Retain the original reference and its original grade. Link a new reference to the previous reference hash, bind the same report/corpus context, record the correction evidence and declared affected claims, and compute a new grade. Do not overwrite a stored pass flag and erase the reason it changed. The example's next-day review is a fictional timeline, not a claim that an independent review occurred.
+
+    Hashes and allowed review authority labels provide local consistency checks, not reviewer authentication or proof of independent adjudication. A person with authority to rewrite all inputs and their hashes could manufacture a different evidence story. Real reassessment needs controlled annotation provenance, authorized corrections and retention outside the candidate's write scope.
+
+    Replay here checks spans, joins, temporal applicability, annotation bindings and derived results. It does not prove that the authored semantic judgments are correct or exhaustive. To extend this to long reports, independently label omitted and compound claims, validate extraction, retain disagreements, score contradiction handling and synthesis, and compare actual research-agent outputs under a registered task and browsing budget.
+
+**Interview answer criteria:** distinguish resolved citations from entailment and present applicability; retain uncited claims and missing subquestions in their proper denominators; preserve old/new evidence; separate reference repair from model improvement; identify the independent annotation and access controls that the local example does not establish.
+
+#### Keep the report, not only its score
+
+A reviewer cannot reconstruct the table above from five percentages. For an inspectable evaluation, freeze the complete report, the task and its required subquestions, the source corpus, and the reference version. Attach each material claim to its exact location in the report. Attach each citation to both the claim it is offered to support and the quoted passage in the frozen source. Record how the claim and support judgments were obtained: authored teaching annotations, independent human review or a qualified evaluator are different evidence.
+
+Do not let a valid link substitute for a valid conclusion:
+
+| Question | Unit and denominator | What a positive result does not prove |
+| --- | --- | --- |
+| Does the citation resolve? | Resolved links / all attempted citation links | That the passage entails the claim |
+| Does the cited passage entail the claim? | Entailing links / attempted links; also report the resolved-only denominator | That the source is current, authoritative or correct |
+| Does this material claim have supporting citations? | Claims with support / all material claims, including uncited claims | That every conjunct of a compound claim is supported |
+| Is that support applicable at the requested time? | Claims with authoritative, in-scope, temporally applicable support / all material claims | That the corpus is complete or uncontested |
+| Is the claim factually correct under the reference? | Correct claims / all material claims, with unknowns explicit | That the reference is itself valid or that the citation supports the claim |
+| Did the report answer the task? | Required subquestions addressed, correctly answered and appropriately abstained, reported separately | That a polished heading or a sentence mentioning the topic supplies an answer |
+
+An uncited true claim can improve factual correctness without improving citation support. An obsolete policy can entail a false present-tense claim. A broken citation can accompany a true claim. These are different repairs: add evidence, update the source, fix the link or correct the assertion. Changing the retriever is not the universal response.
+
+**Span contract:** declare whether offsets count UTF-8 bytes, Unicode code points or another unit, and whether the end offset is exclusive. Validate `document[start:end] == quoted_text` against the frozen document. Reject negative, empty, reversed and out-of-range spans; do not silently truncate them. Repeated wording needs an explicit location, not an unconstrained first-string match. A report rewrite changes its identity and may invalidate every following offset.
+
+Span validation proves that the annotation points at the intended text. It does not prove semantic entailment or that the annotator extracted every material claim. Measure extraction omissions and compound-claim splitting against independently reviewed reports before using the resulting claim count as a trustworthy denominator. Otherwise an extractor can improve the score simply by ignoring the difficult assertions.
+
+#### Two clocks and two kinds of correction
+
+“Newer source” is not a sufficient adjudication rule. A page's publication or capture date is different from the period during which its policy applies. A report requested **as of 1 August** may correctly cite a policy superseded on 1 September. Conversely, a current report can be wrong while quoting an old source exactly. Record report-as-of time, source publication/capture time, effective interval, jurisdiction or product scope, and authority separately.
+
+Also register the information-access cutoff. A retrospective question about what was true on 1 August may permit a later correction that establishes the historical fact. A simulation of what an operator could decide on 1 August must exclude evidence unavailable then. Both tasks can share the same fact date while permitting different source sets. Do not let hindsight improve a historical decision simulation unnoticed.
+
+Distinguish these changes:
+
+- **Reference error at a fixed task date:** the expected answer was already wrong for the report's requested date. Keep the report and task fixed, issue a reviewed reference correction, and re-grade the same output. Either a false failure or a false pass may be exposed.
+- **A genuinely changed task date:** a previously correct answer becomes obsolete because the world changes. Evaluate a new dated task; do not call the old historical answer a hallucination merely because it is no longer current.
+- **An improved report:** the candidate changes its text or evidence. This is a new output, not merely a correction to the measuring instrument.
+
+A correction record should bind the original reference, replacement reference, report/task identity, affected claims, dated supporting sources, reviewer authority, rationale and resulting grades. The reviewer must not be able to alter an unrelated field unnoticed. Preserve old grades for audit; publish corrected comparisons with an explanation of which labels changed. Reassess all affected stored candidates under the same corrected reference before interpreting a model-to-model delta. Candidate-specific relabeling can manufacture an improvement.
+
+The [Deep Research system card](https://deploymentsafety.openai.com/deep-research) motivates both longer-answer evaluation and scrutiny of changing factual references. The local record design here is a teaching protocol, not a reproduction of OpenAI's internal grader or an assertion that the reference-correction problem is solved.
+
+??? question "Interview drill: a better score after correcting the answer key"
+    A frozen report scores 8/10 factual claims under reference v1 and 9/10 under reference v2. No model was rerun. Two citations still fail to support their attached claims, and the report omits one required subquestion. What improved, what can you release, and what do you retain?
+
+??? success "Solution: correct the measurement before claiming an improvement"
+    The measured factuality changed by one claim after a reference revision. The model and output did not improve in this experiment. Verify that v2 corrects the answer for the original task date and scope, rather than importing a later policy or accommodating this candidate. Retain the frozen report, both references, dated adjudication evidence, claim-level diff, both grades and the unchanged citation/completeness findings.
+
+    Recompute affected baseline and candidate reports under v2 before comparing systems. A change to a single answer key can alter their relative ranking; reporting only the candidate's corrected score is not a fair comparison. If adjudication is uncertain, retain that uncertainty rather than forcing a favorable reference value.
+
+    Neither 9/10 nor a one-point gain resolves unsupported citations or the omitted question. Apply the registered report contract and any material-error vetoes. In the absence of qualified, representative evidence and an authorized release policy, no production expansion follows. This example supplies ten claims in one report, not ten independent deployment tasks.
+
 ### Safety and uncertainty methodology
 
 The Deep Research system card broadens capability evaluation to prompt injection, disallowed content, StrongReject-style jailbreak testing, risky-advice comparisons, personal-data policy, BBQ bias, PersonQA factuality, cybersecurity, CBRN, persuasion, and model autonomy. It also reports pass@1 with 95% bootstrap confidence intervals for relevant evaluations rather than only point estimates.
@@ -478,8 +611,10 @@ Create an explicit coverage map:
 | --- | ---: | ---: | --- |
 | Current refund eligibility rule | yes | yes | covered |
 | State after timeout | yes | yes | covered |
-| Bank settlement timing | no | no | correctly abstained |
+| Bank settlement timing | no | yes: explicitly says timing is unverified | appropriately abstained, subject to review of evidence sufficiency |
 | Customer next step | yes | yes | covered |
+
+Omission is not abstention. A report that silently skips bank timing has left a required subquestion unanswered. A report that explains the evidence gap has addressed the question without providing a verified arrival date; keep those outcomes separate from both correctness and factual-answer coverage.
 
 ## Search budget and test-time compute
 
