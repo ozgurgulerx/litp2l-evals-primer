@@ -89,6 +89,38 @@ class PairedSliceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.derive(packet)
 
+    def test_coherent_case_rewrite_cannot_escape_registered_full_dataset(self):
+        for change_input in (False, True):
+            packet = copy.deepcopy(self.study['packet'])
+            for artifact in packet['trial_artifacts']:
+                payload = artifact['payload']
+                payload['case']['utterance'] += ' Changed after registration.'
+                if change_input:
+                    payload['agent_input']['utterance'] = payload['case']['utterance']
+            rehash(packet)
+            with self.assertRaises(ValueError):
+                self.derive(packet)
+
+    def test_agent_visible_input_must_match_the_case_even_when_output_replays(self):
+        packet = copy.deepcopy(self.study['packet'])
+        packet['trial_artifacts'][0]['payload']['agent_input']['utterance'] = 'An unrelated request.'
+        rehash(packet)
+        with self.assertRaises(ValueError):
+            self.derive(packet)
+
+    def test_missing_full_dataset_registration_is_rejected(self):
+        packet = copy.deepcopy(self.study['packet'])
+        packet['manifest']['input_hashes'] = [row for row in packet['manifest']['input_hashes'] if row[0] != 'dataset']
+        packet['manifest_hash'] = canonical_hash(packet['manifest'])
+        for artifact in packet['trial_artifacts']:
+            artifact['payload']['identity']['manifest_hash'] = packet['manifest_hash']
+        for arm in ('baseline', 'candidate'):
+            for row in packet[f'{arm}_trials']:
+                row['manifest_hash'] = packet['manifest_hash']
+        rehash(packet)
+        with self.assertRaises(ValueError):
+            self.derive(packet)
+
     def test_incomplete_pair_inventory_and_native_schema_are_rejected(self):
         for action in ('missing', 'duplicate', 'native', 'bool-index', 'bool-payload-index'):
             packet = copy.deepcopy(self.study['packet'])
