@@ -139,3 +139,22 @@ class LongReportTests(unittest.TestCase):
         self.assertEqual(0, report['reports'][1]['gold_status_counts']['unknown'])
         self.assertEqual(4, report['reports'][1]['underlying_unknown_count'])
         self.assertEqual(20, report['reports'][1]['gold_status_counts']['supported'])
+
+    def test_nested_gold_atoms_and_missing_synthesis_obligations_rejected(self):
+        from cx_eval_lab.long_report import example_inputs, run_study
+        inputs = example_inputs()
+        nested = copy.deepcopy(inputs['reports'][0]['claims'][0])
+        nested['claim_id'] = 'nested'
+        nested['links'] = []
+        nested['span']['end'] = nested['span']['start'] + len('Request R17')
+        nested['span']['quote'] = inputs['reports'][0]['text'][nested['span']['start']:nested['span']['end']]
+        inputs['reports'][0]['claims'].append(nested)
+        for row in inputs['reports'][0]['coverage']:
+            if row['question_id'] in nested['question_ids']:
+                row['claim_ids'].append('nested')
+        with self.assertRaises(ValueError):
+            run_study(inputs)
+        inputs = example_inputs()
+        inputs['reports'][0]['synthesis'] = []
+        with self.assertRaises(ValueError):
+            run_study(inputs)
