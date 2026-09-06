@@ -70,15 +70,29 @@ def _conforms(assessments, revision):
     current = results['current-diagnostic']
     source = current['checks']['source'] or {}
     replay = current['checks']['replay'] or {}
+    chronology = current['checks']['chronology'] or {}
+    campaign = current['checks']['campaign'] or {}
+    base = current['checks']['base_receipt'] or {}
+    comparison = base.get('comparison') or {}
     return (source.get('code_revision') == revision and replay.get('calibration_status') == 'current'
             and replay.get('replayed_trials') == 16 and replay.get('failed_trials') == 0
-            and current['action'] == 'hold'
+            and current['action'] == 'hold' and current['issues'] == []
+            and chronology.get('evidence_after_decision') is False
+            and chronology.get('known_timestamps_checked') == 64
+            and campaign.get('status') == 'clear' and campaign.get('issues') == []
+            and base.get('action') == 'hold'
+            and comparison.get('status') == 'inconclusive'
+            and comparison.get('independent_cluster_count') == 1
+            and all(result['deployment_authorized'] is False and result['authority_ceiling'] == 'none'
+                    for result in results.values())
             and all(result['action'] == 'block' for name, result in results.items()
                     if name != 'current-diagnostic')
             and (results['revoked']['checks']['replay'] or {}).get('failed_trials') == 0
-            and 'current_calibration_not_current' in results['expired']['issues']
+            and all('current_calibration_not_current' in results[name]['issues']
+                    for name in ('revoked', 'expired', 'synthetic-disabled'))
             and 'source_verification_failed' in results['wrong-revision']['issues']
-            and 'source_verification_failed' in results['changed-cases']['issues'])
+            and 'source_verification_failed' in results['changed-cases']['issues']
+            and (results['unqualified-prerequisites']['checks']['base_receipt'] or {}).get('action') == 'block')
 
 
 def run_study():
