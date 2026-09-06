@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from cx_eval_lab.campaign_budget import CampaignLedger, CampaignPolicy
 from cx_eval_lab.semantic import SemanticRequest
-from tests.test_openai_judge import FakeClient, OpenAIJudgeTests
+from tests import test_openai_judge as provider_fixture
 
 
 class BudgetedJudgeTests(unittest.TestCase):
@@ -20,8 +20,8 @@ class BudgetedJudgeTests(unittest.TestCase):
         self.policy = CampaignPolicy('offline-judge', 1000, 5, 2000, 600)
         self.ledger = CampaignLedger.create(Path(self.temp.name) / 'campaign.sqlite',
                                             self.policy, clock_ms=lambda: 1000)
-        self.client = FakeClient()
-        self.inner = OpenAIJudgeTests().judge(self.client)
+        self.client = provider_fixture.FakeClient()
+        self.inner = provider_fixture.OpenAIJudgeTests().judge(self.client)
         self.judge = BudgetedSemanticJudge(self.inner, self.ledger)
 
     def request(self, identifier='one', evidence='{}'):

@@ -9,7 +9,7 @@ from dataclasses import asdict, replace
 from typing import Protocol
 
 from cx_eval_lab.evaluators import evaluate_case
-from cx_eval_lab.evidence import ExperimentManifest, PairedExperiment
+from cx_eval_lab.evidence import ExperimentManifest, PairedExperiment, canonical_hash
 from cx_eval_lab.models import (
     AgentOutput,
     EvaluationReport,
@@ -143,6 +143,7 @@ def run_paired_experiment(
                 baseline_measurement_profile,
                 None,
                 semantic_stage,
+                invocation_id=canonical_hash([manifest.content_hash, case.case_id, trial_index, 'baseline']),
             )
             candidate_result, candidate_payload = _execute_isolated(
                 candidate_agent,
@@ -150,6 +151,7 @@ def run_paired_experiment(
                 candidate_measurement_profile,
                 None,
                 semantic_stage,
+                invocation_id=canonical_hash([manifest.content_hash, case.case_id, trial_index, 'candidate']),
             )
             arm_artifacts = tuple(
                 TrialArtifact.capture({
@@ -221,7 +223,7 @@ def _evaluate_isolated(
     return _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_stage)[0]
 
 
-def _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_stage=None):
+def _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_stage=None, *, invocation_id=None):
     world = RefundWorld.from_case(case)
     initial_state = world.snapshot
     tools = RefundTools(world, fault_mode=fault_mode)
@@ -255,6 +257,7 @@ def _execute_isolated(agent, case, measurement_profile, fault_mode, semantic_sta
         semantic_receipt, accepted_hashes, semantic_audit = semantic_stage.grade(
             case, output, world.events, world.snapshot, execution_error=execution_error,
             measurement_kind="measured" if measurement_profile is None else measurement_profile.evidence_kind,
+            invocation_id=invocation_id,
         )
     result = evaluate_case(
         case,

@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import re
 import time
+import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Callable, Protocol
@@ -141,6 +142,7 @@ class CalibrationRegistry:
 class SemanticRequest:
     evidence_json: str
     criterion_id: str = CRITERION
+    invocation_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -149,6 +151,7 @@ class SemanticJudgment:
     explanation: str
     runtime_evidence: RuntimeEvidence | None = None
     provider_audit_json: str | None = None
+    campaign_audit_json: str | None = None
 
     def __post_init__(self):
         if self.verdict not in {"pass", "fail", "abstain"} or not self.explanation:
@@ -171,7 +174,7 @@ class SemanticStage:
     allow_synthetic: bool = False
 
     def grade(self, case, output, events, state, *, execution_error=None,
-              policy_version="refund-policy-v1", measurement_kind="measured"):
+              policy_version="refund-policy-v1", measurement_kind="measured", invocation_id=None):
         started = time.perf_counter()
         record = self.registry.lookup(self.calibration_hash)
         synthetic_allowed = self.allow_synthetic and measurement_kind == "synthetic"
@@ -188,7 +191,7 @@ class SemanticStage:
             "policy_version": policy_version, "execution_error": execution_error,
             "authoritative_order": {"amount_cents": case.amount_cents, "currency": case.currency,
                 "eligible": case.eligible, "approval_threshold_cents": case.approval_threshold_cents},
-        }, sort_keys=True, ensure_ascii=False))
+        }, sort_keys=True, ensure_ascii=False), invocation_id=invocation_id or uuid.uuid4().hex)
         try:
             judgment = self.judge.evaluate(request)
             if not isinstance(judgment, SemanticJudgment):
@@ -198,6 +201,7 @@ class SemanticStage:
         # A slow call must not carry qualification beyond expiry.
         reason = record.rejection(self.judge, case, policy_version, self.clock(), synthetic_allowed)
         audit = {"status": "unqualified" if reason else "graded", "reason": reason,
+                 "invocation_id": request.invocation_id,
                  "qualification": asdict(record), "error_bounds": record.error_bounds,
                  "request": json.loads(request.evidence_json),
                  "request_hash": canonical_hash(json.loads(request.evidence_json)),
