@@ -3,11 +3,18 @@
 from __future__ import annotations
 
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
 from cx_eval_lab.dataset import load_refund_cases
-from cx_eval_lab.evidence import ExperimentManifest, build_evidence_receipt
+from cx_eval_lab.evidence import (
+    DeterministicTestReceipt,
+    ExperimentManifest,
+    PairedExperiment,
+    PrerequisiteReceipt,
+    build_evidence_receipt,
+)
 from cx_eval_lab.models import MeasurementProfile
 from cx_eval_lab.runner import run_paired_experiment
 from cx_eval_lab.statistics import PairedTrial, paired_non_inferiority
@@ -21,6 +28,7 @@ def make_manifest(measurement_kind: str = "synthetic") -> ExperimentManifest:
     return ExperimentManifest(
         experiment_id="cx-reference-v1",
         created_at="2026-09-06T12:00:00Z",
+        valid_until="2026-10-06T12:00:00Z",
         code_revision="8a18e2f",
         model_id="deterministic-reference-v1",
         prompt_version="refund-system-v1",
@@ -28,9 +36,20 @@ def make_manifest(measurement_kind: str = "synthetic") -> ExperimentManifest:
         dataset_version="refund-v0",
         evaluator_version="refund-evaluators-v1",
         policy_version="refund-gate-v0",
+        environment_version="python-3.12",
+        population_hash="sha256:" + "a" * 64,
         repetitions=2,
         measurement_kind=measurement_kind,
-        input_hashes=(("dataset", "sha256:dataset"), ("policy", "sha256:policy")),
+        estimand="candidate_minus_baseline_verified_success",
+        statistical_method="clustered_normal_interval",
+        non_inferiority_margin=0.03,
+        confidence_level=0.95,
+        minimum_independent_clusters=30,
+        sequential_policy="fixed_sample_no_interim_looks",
+        input_hashes=(
+            ("dataset", "sha256:" + "b" * 64),
+            ("policy", "sha256:" + "c" * 64),
+        ),
         invalidation_rules=(
             "model_or_prompt_change",
             "tool_or_evaluator_change",
@@ -39,7 +58,11 @@ def make_manifest(measurement_kind: str = "synthetic") -> ExperimentManifest:
     )
 
 
-def paired_trials(count: int, candidate_failures: set[int] | None = None):
+def paired_trials(
+    count: int,
+    candidate_failures: set[int] | None = None,
+    manifest_hash: str = "",
+):
     failures = candidate_failures or set()
     baseline = tuple(
         PairedTrial(
@@ -48,6 +71,7 @@ def paired_trials(count: int, candidate_failures: set[int] | None = None):
             cluster_id=f"customer-{index:03d}",
             arm="baseline",
             passed=True,
+            manifest_hash=manifest_hash,
         )
         for index in range(count)
     )
@@ -58,10 +82,47 @@ def paired_trials(count: int, candidate_failures: set[int] | None = None):
             cluster_id=f"customer-{index:03d}",
             arm="candidate",
             passed=index not in failures,
+            manifest_hash=manifest_hash,
         )
         for index in range(count)
     )
     return baseline, candidate
+
+
+def make_receipt(
+    measurement_kind: str = "synthetic",
+    *,
+    hard_failure: bool = False,
+):
+    current_manifest = make_manifest(measurement_kind)
+    baseline, candidate = paired_trials(30, manifest_hash=current_manifest.content_hash)
+    if hard_failure:
+        candidate = (
+            replace(candidate[0], failed_checks=("hard_invariant",)),
+            *candidate[1:],
+        )
+    return build_evidence_receipt(
+        experiment=PairedExperiment(current_manifest, baseline, candidate),
+        deterministic_test_receipt=DeterministicTestReceipt(
+            suite_id="unit-integration-e2e",
+            code_revision=current_manifest.code_revision,
+            checks=(("suite_passed", True),),
+            artifact_hash="sha256:" + "d" * 64,
+        ),
+        prerequisite_receipts=(
+            PrerequisiteReceipt(
+                "typed_tool_boundary",
+                (("contract_verified", True),),
+                "sha256:" + "e" * 64,
+            ),
+            PrerequisiteReceipt(
+                "semantic_state_grading",
+                (("contract_verified", True),),
+                "sha256:" + "f" * 64,
+            ),
+        ),
+        issued_at="2026-09-06T13:00:00Z",
+    )
 
 
 class EvidenceManifestTests(unittest.TestCase):
@@ -149,63 +210,21 @@ class StatisticalEvidenceTests(unittest.TestCase):
             )
 
     def test_synthetic_evidence_cannot_become_canary_eligible(self) -> None:
-        baseline, candidate = paired_trials(30)
-        comparison = paired_non_inferiority(
-            baseline,
-            candidate,
-            margin=0.03,
-            minimum_independent_clusters=30,
-        )
-
-        receipt = build_evidence_receipt(
-            manifest=make_manifest("synthetic"),
-            comparison=comparison,
-            hard_failure_count=0,
-            raw_artifact_hash="sha256:raw-trials",
-            deterministic_tests_passed=True,
-        )
+        receipt = make_receipt("synthetic")
 
         self.assertEqual("evidence_ready", receipt.state)
         self.assertEqual("lab_pass", receipt.action)
         self.assertEqual("lab_only", receipt.authority_ceiling)
 
-    def test_measured_qualified_evidence_can_earn_bounded_canary_authority(self) -> None:
-        baseline, candidate = paired_trials(30)
-        comparison = paired_non_inferiority(
-            baseline,
-            candidate,
-            margin=0.03,
-            minimum_independent_clusters=30,
-        )
+    def test_teaching_method_never_earns_bounded_canary_authority(self) -> None:
+        receipt = make_receipt("measured")
 
-        receipt = build_evidence_receipt(
-            manifest=make_manifest("measured"),
-            comparison=comparison,
-            hard_failure_count=0,
-            raw_artifact_hash="sha256:raw-trials",
-            deterministic_tests_passed=True,
-        )
-
-        self.assertEqual("qualified", receipt.state)
-        self.assertEqual("canary_eligible", receipt.action)
-        self.assertEqual("bounded_canary", receipt.authority_ceiling)
+        self.assertEqual("evidence_ready", receipt.state)
+        self.assertEqual("lab_pass", receipt.action)
+        self.assertEqual("lab_only", receipt.authority_ceiling)
 
     def test_hard_failure_blocks_even_when_statistical_rule_passes(self) -> None:
-        baseline, candidate = paired_trials(30)
-        comparison = paired_non_inferiority(
-            baseline,
-            candidate,
-            margin=0.03,
-            minimum_independent_clusters=30,
-        )
-
-        receipt = build_evidence_receipt(
-            manifest=make_manifest("measured"),
-            comparison=comparison,
-            hard_failure_count=1,
-            raw_artifact_hash="sha256:raw-trials",
-            deterministic_tests_passed=True,
-        )
+        receipt = make_receipt("measured", hard_failure=True)
 
         self.assertEqual("block", receipt.action)
         self.assertEqual("none", receipt.authority_ceiling)

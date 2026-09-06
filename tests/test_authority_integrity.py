@@ -74,15 +74,20 @@ def test_receipt() -> DeterministicTestReceipt:
     return DeterministicTestReceipt(
         suite_id="unit-integration-e2e",
         code_revision="abc1234",
-        passed=True,
-        receipt_hash="sha256:" + "d" * 64,
+        checks=(("suite_passed", True),),
+        artifact_hash="sha256:" + "d" * 64,
     )
 
 
 def prerequisites(state: str = "qualified") -> tuple[PrerequisiteReceipt, ...]:
+    passed = state == "qualified"
     return (
-        PrerequisiteReceipt("typed_tool_boundary", state, "sha256:" + "e" * 64),
-        PrerequisiteReceipt("semantic_state_grading", state, "sha256:" + "f" * 64),
+        PrerequisiteReceipt(
+            "typed_tool_boundary", (("contract_verified", passed),), "sha256:" + "e" * 64
+        ),
+        PrerequisiteReceipt(
+            "semantic_state_grading", (("contract_verified", passed),), "sha256:" + "f" * 64
+        ),
     )
 
 
