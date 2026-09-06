@@ -116,6 +116,14 @@ class ExposureControlTests(unittest.TestCase):
                 if artifact['candidate'] is not None:
                     self.assertIn('orders', artifact['candidate'])
 
+    def test_equally_bad_arms_do_not_earn_expansion(self):
+        from cx_eval_lab.exposure_control import ExposureState, transition
+        state = ExposureState('candidate-v1', 'baseline-v1', stage='canary', percent=5)
+        sample = window(state, failures=10)
+        sample = replace(sample, observations=tuple(replace(row, baseline_pass=False)
+                                                    for row in sample.observations))
+        self.assertEqual('restricted', transition(state, sample, now=10).state.stage)
+
 
 if __name__ == '__main__':
     unittest.main()
