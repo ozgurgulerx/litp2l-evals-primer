@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
@@ -122,3 +123,28 @@ class PairedSliceTests(unittest.TestCase):
             self.assertEqual('paired-slices-v1', json.loads(original)['report']['schema'])
             self.assertNotEqual(0, subprocess.run(command, capture_output=True).returncode)
             self.assertEqual(original, path.read_bytes())
+
+    def test_single_customer_cannot_get_zero_width_interval_even_if_minimum_is_one(self):
+        from cx_eval_lab.evidence import ExperimentManifest
+        from cx_eval_lab.paired_slices import _summarize
+        manifest = replace(ExperimentManifest(**self.study['packet']['manifest']), minimum_independent_clusters=1)
+        rows = [row for row in self.study['report']['pairs'] if 'risk:protected' in row['slices']]
+        result = _summarize(rows, manifest, 'risk:protected', 'required')
+        self.assertEqual('hold', result['status'])
+        self.assertIsNone(result['comparison'])
+        self.assertEqual(-1, result['cluster_weighted_delta'])
+
+    def test_unchanged_pass_and_failure_categories_are_not_lost(self):
+        from cx_eval_lab.evidence import ExperimentManifest
+        from cx_eval_lab.models import RefundCase
+        from cx_eval_lab.paired_slices import SliceControl
+        from cx_eval_lab.runner import DEFAULT_MEASUREMENT_PROFILE, run_paired_experiment
+        cases = tuple(RefundCase.from_dict(a['payload']['case']) for a in self.study['packet']['trial_artifacts']
+                      if a['payload']['identity']['arm'] == 'baseline' and a['payload']['identity']['trial_index'] == 0)
+        packet = run_paired_experiment(baseline_agent=SliceControl(False), candidate_agent=SliceControl(False),
+            cases=cases, manifest=ExperimentManifest(**self.study['packet']['manifest']),
+            baseline_measurement_profile=DEFAULT_MEASUREMENT_PROFILE,
+            candidate_measurement_profile=DEFAULT_MEASUREMENT_PROFILE).to_dict()
+        changes = self.derive(packet)['overall']['changes']
+        self.assertEqual(6, len(changes['unchanged_fail']))
+        self.assertEqual(2, len(changes['unchanged_pass']))
