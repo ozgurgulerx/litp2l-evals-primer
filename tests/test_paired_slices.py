@@ -47,7 +47,8 @@ class PairedSliceTests(unittest.TestCase):
         self.assertIn({'case_id': 'case-3', 'trial_index': 0}, protected['changes']['regressed'])
 
     def test_missing_required_slice_is_unknown_not_zero(self):
-        report = self.derive(required=('language:missing',))
+        from cx_eval_lab.paired_slices import run_study
+        report = run_study(required_slices=('language:missing',))['report']
         missing = next(row for row in report['slices'] if row['slice'] == 'language:missing')
         self.assertEqual(0, missing['pair_count'])
         self.assertIsNone(missing['baseline_rate'])
@@ -108,6 +109,8 @@ class PairedSliceTests(unittest.TestCase):
         for required in ('all', ('all', 'all'), ('',), (True,)):
             with self.assertRaises(ValueError):
                 self.derive(required=required)
+        with self.assertRaises(ValueError):
+            self.derive(required=('changed-policy',))
 
     def test_cli_retains_packet_and_refuses_overwrite(self):
         with tempfile.TemporaryDirectory() as directory:
