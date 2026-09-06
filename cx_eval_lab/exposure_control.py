@@ -34,6 +34,7 @@ class ExposureState:
     used_windows: tuple[str, ...] = ()
     used_artifacts: tuple[str, ...] = ()
     pending_window: str | None = None
+    expires_at: int = 120
 
     def __post_init__(self):
         _identifier(self.candidate)
@@ -42,7 +43,7 @@ class ExposureState:
             raise ValueError('candidate and baseline identities must differ')
         if self.stage not in PERCENTAGES or type(self.percent) is not int or self.percent != PERCENTAGES[self.stage]:
             raise ValueError('exposure percentage must match the registered stage')
-        for value in (self.revision, self.healthy_windows, self.last_end):
+        for value in (self.revision, self.healthy_windows, self.last_end, self.expires_at):
             _clock(value)
         if self.pending_window is not None:
             _identifier(self.pending_window)
@@ -110,7 +111,7 @@ def route(state, customer_id, *, now):
     """Stable nested customer cohorts for one candidate identity."""
     _identifier(customer_id)
     _clock(now)
-    if now < state.last_end or now - state.last_end > 30:
+    if now >= state.expires_at or now < state.last_end or now - state.last_end > 30:
         return 'baseline'
     digest = hashlib.sha256(f'{state.candidate}\0{customer_id}'.encode()).digest()
     bucket = int.from_bytes(digest[:8], 'big') % 10000
@@ -133,6 +134,8 @@ def transition(state, window, *, now, resume=False):
         return ExposureDecision(rollback, 'hard_violation')
     if window.end > now or now - window.end > 30:
         return ExposureDecision(rollback, 'stale_telemetry')
+    if now >= state.expires_at:
+        return ExposureDecision(rollback, 'campaign_expired')
     if window.window_id in state.used_windows:
         return ExposureDecision(state, 'replayed_window')
     if window.exposure_revision != state.revision:
