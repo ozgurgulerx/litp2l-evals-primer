@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import time
+from dataclasses import asdict
 from typing import Protocol
 
 from cx_eval_lab.evaluators import evaluate_case
@@ -17,6 +18,7 @@ from cx_eval_lab.models import (
 )
 from cx_eval_lab.world import RefundTools, RefundWorld
 from cx_eval_lab.statistics import PairedTrial
+from cx_eval_lab.artifacts import TrialArtifact
 
 
 DEFAULT_MEASUREMENT_PROFILE = MeasurementProfile(
@@ -129,20 +131,31 @@ def run_paired_experiment(
 
     baseline_trials: list[PairedTrial] = []
     candidate_trials: list[PairedTrial] = []
+    artifacts: list[TrialArtifact] = []
     for trial_index in range(manifest.repetitions):
         for case in cases:
-            baseline_result = _evaluate_isolated(
+            baseline_result, baseline_payload = _execute_isolated(
                 baseline_agent,
                 case,
                 baseline_measurement_profile,
                 None,
             )
-            candidate_result = _evaluate_isolated(
+            candidate_result, candidate_payload = _execute_isolated(
                 candidate_agent,
                 case,
                 candidate_measurement_profile,
                 None,
             )
+            arm_artifacts = tuple(
+                TrialArtifact.capture({
+                    **payload,
+                    "identity": {"case_id": case.case_id, "trial_index": trial_index,
+                                 "arm": arm, "manifest_hash": manifest.content_hash},
+                })
+                for arm, payload in (("baseline", baseline_payload),
+                                     ("candidate", candidate_payload))
+            )
+            artifacts.extend(arm_artifacts)
             baseline_trials.append(
                 _to_paired_trial(
                     baseline_result,
@@ -150,6 +163,7 @@ def run_paired_experiment(
                     trial_index,
                     "baseline",
                     manifest.content_hash,
+                    arm_artifacts[0].content_hash,
                 )
             )
             candidate_trials.append(
@@ -159,12 +173,14 @@ def run_paired_experiment(
                     trial_index,
                     "candidate",
                     manifest.content_hash,
+                    arm_artifacts[1].content_hash,
                 )
             )
     return PairedExperiment(
         manifest=manifest,
         baseline_trials=tuple(baseline_trials),
         candidate_trials=tuple(candidate_trials),
+        trial_artifacts=tuple(artifacts),
     )
 
 
@@ -174,6 +190,7 @@ def _to_paired_trial(
     trial_index: int,
     arm: str,
     manifest_hash: str,
+    artifact_hash: str,
 ) -> PairedTrial:
     return PairedTrial(
         case_id=case.case_id,
@@ -184,6 +201,7 @@ def _to_paired_trial(
         latency_ms=result.latency_ms,
         cost_usd=result.cost_usd,
         manifest_hash=manifest_hash,
+        artifact_hash=artifact_hash,
         failed_checks=tuple(check.name for check in result.checks if not check.passed),
     )
 
@@ -194,7 +212,12 @@ def _evaluate_isolated(
     measurement_profile: MeasurementProfile | None,
     fault_mode: str | None,
 ):
+    return _execute_isolated(agent, case, measurement_profile, fault_mode)[0]
+
+
+def _execute_isolated(agent, case, measurement_profile, fault_mode):
     world = RefundWorld.from_case(case)
+    initial_state = world.snapshot
     tools = RefundTools(world, fault_mode=fault_mode)
     execution_error = None
     started_at = time.perf_counter()
@@ -221,7 +244,7 @@ def _evaluate_isolated(
             else measurement_profile.cost_usd_per_case
         )
     )
-    return evaluate_case(
+    result = evaluate_case(
         case,
         output,
         world.events,
@@ -230,6 +253,26 @@ def _evaluate_isolated(
         cost_usd=cost_usd,
         execution_error=execution_error,
     )
+    return result, {
+        "schema": "refund-trial-v1",
+        "case": case.to_dict(),
+        "agent_input": asdict(case.agent_input),
+        "initial_state": asdict(initial_state),
+        "output": asdict(output),
+        "events": [event.to_dict() for event in world.events],
+        "final_state": asdict(world.snapshot),
+        "latency_ms": latency_ms,
+        "cost_usd": cost_usd,
+        "execution_error": execution_error,
+        "policy_version": "refund-policy-v1",
+        "measurement": (
+            {"evidence_kind": "measured", "source": "runner wall-clock and runtime usage"}
+            if measurement_profile is None else asdict(measurement_profile)
+        ),
+        "semantic_evaluation_receipt": None,
+        "qualified_semantic_calibration_hashes": [],
+        "evaluation": result.to_dict(),
+    }
 
 
 def _calculate_slice_rates(case_results) -> dict[str, float]:

@@ -21,6 +21,7 @@ class PairedTrial:
     cost_usd: float | None = None
     manifest_hash: str = ""
     failed_checks: tuple[str, ...] = ()
+    artifact_hash: str = ""
 
     def __post_init__(self) -> None:
         if self.arm not in {"baseline", "candidate"}:

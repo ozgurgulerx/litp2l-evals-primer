@@ -135,6 +135,7 @@ class PairedExperiment:
     manifest: ExperimentManifest
     baseline_trials: tuple[PairedTrial, ...]
     candidate_trials: tuple[PairedTrial, ...]
+    trial_artifacts: tuple = ()
 
     @property
     def all_trials(self) -> tuple[PairedTrial, ...]:
@@ -150,6 +151,7 @@ class PairedExperiment:
             "manifest_hash": self.manifest.content_hash,
             "baseline_trials": [trial.to_dict() for trial in self.baseline_trials],
             "candidate_trials": [trial.to_dict() for trial in self.candidate_trials],
+            "trial_artifacts": [artifact.to_dict() for artifact in self.trial_artifacts],
         }
 
 
