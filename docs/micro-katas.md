@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 74–75](llm-as-a-judge.md#executed-judge-sensitivity-workshop) execute matched order, length and rubric-wording controls, normalize A/B slots to stable answers, and show how duplicated judge errors survive majority voting. The retained local calls teach diagnostics, not measured bias rates of real LLM judges.
+
 [Katas 72–73](human-evaluation.md#executed-annotation-analysis-preserve-the-disagreement) compute agreement from the existing synthetic annotation table, retain unknown/missing denominators and undefined bootstrap outcomes, and expose a false model advantage caused by reviewer assignment. Worked solutions separate reliability from correctness and actual human qualification.
 
 [Katas 70–71](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) derive inclusion probabilities and population estimates from a risk-enriched sample, then use exact finite-population uncertainty to distinguish a favorable point estimate from numerical clearance. Missing labels and unsupported strata cannot silently become passes.

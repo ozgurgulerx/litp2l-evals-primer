@@ -6,6 +6,14 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Verified judge-diagnostics checkpoint — 7 September 2026
+
+[Katas 74–75](llm-as-a-judge.md#executed-judge-sensitivity-workshop) now connect controlled transformations to retained judge requests, returned verdicts, identity-normalized comparisons and ensemble errors. Five deterministic controls execute 300 calls over 60 presentations of five authored cases. The first-slot control reverses answer identity in all 30 order contrasts; the length control changes in 20 of 40 padding contrasts; the keyword control changes in all 30 rubric contrasts. The three-member panel inherits the two cloned controls' same 48 erroneous views. Identical-content answer swaps diagnose arbitrary protocol selection, not necessarily a change in factual meaning.
+
+Verification at implementation revision `e426a8f`: 500 repository tests passed with 89% branch-inclusive coverage; the retained study exactly matches fresh execution and replay; the chapter's Python examples execute successfully. Targeted Ruff and Pyright checks, the installed-environment dependency audit and strict book build passed. The current-release composition reports one diagnostic hold and six blocks, with deployment authorization false. The workflow now includes the study command; this is not evidence that cloud CI has run.
+
+These controls teach how to investigate judge sensitivity; they do not measure live-model bias, validate human labels or qualify a production evaluator. Independent invariance review, repeated model calls and a metered pairwise adapter remain necessary for that experiment. The next locally executable depth gap is a complete frozen research report and source corpus with claim/citation spans, dated reference reassessment and preserved original/new grades. Existing content and earlier checkpoints remain intact.
+
 ### Planning checkpoint — 7 September 2026
 
 This checkpoint responds to the follow-up audit; it does not certify implementation, live-model qualification or deployment. Static inspection confirms that the local source already contains template factual prerequisites, context-bound semantic receipts, an optional semantic stage in the runner, paired artifact references and illustrative point-gain terminology. Reproduce their acceptance tests before closing the audit findings. Earlier delivery notes remain historical context, not an automatically current status register.

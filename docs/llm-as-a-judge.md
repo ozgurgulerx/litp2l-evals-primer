@@ -184,6 +184,121 @@ Treat candidate output and retrieved text as untrusted data. Delimit them, const
 
 Record judge input limits and whether evidence or response text was truncated. An `insufficient_evidence` result is better than fabricating a verdict from a partial packet.
 
+### Executed judge-sensitivity workshop
+
+A judge that always selects A looks consistent if you compare its output strings. After swapping the answers, however, A refers to a different answer. A judge that selects the same supported answer may correctly change its output from A to B. **Normalize answer identity before measuring reversals.**
+
+The [retained sensitivity study](assets/judge-sensitivity-v1.json) executes deliberately simple judge controls on transformed inputs. It does not read a flag saying “position bias occurred.” It constructs the presentations, calls each control, retains the returned verdict, maps slots to stable answer identities and derives the disagreement from matched executions.
+
+Its scope is narrow: five authored status-comparison cases, two answer orders, three length conditions and two registered rubric wordings. Each control receives 60 presentations; five controls produce 300 local calls. These are repeated views of **five cases**, not 300 independent product situations or observations of commercial LLM judges.
+
+| Evidence and responses | Required protocol outcome |
+| --- | --- |
+| Pending status; one answer says pending and one says settled | Select the pending answer |
+| Settled status; one answer says pending and one says settled | Select the settled answer |
+| Pending status; both answers say pending | Tie |
+| Pending status; both answers say settled | Both unacceptable |
+| Status evidence absent | Abstain |
+
+The brief answers use a restricted grammar: `Status: pending.` or `Status: settled.` They have equal length. A length intervention appends neutral `Thank you.` repetitions to one stable answer, without adding a status claim. The two rubric wordings retain the same decision rules. Neither a style change that introduces a new factual assertion nor a rubric change that alters the criterion is a valid invariance test.
+
+The evaluator derives its expected outcome from registered claims and evidence. The reference control separately parses the displayed text. The actual judge request contains only evidence, A/B text and rubric—not the expected outcome, source answer IDs or claim annotations. This boundary makes the local comparison inspectable, but the reference parser is not a natural-language judge.
+
+### Kata 74: a stable slot label can hide an unstable judgment
+
+**Predict:** a correct answer starts in slot A and moves to B. Which judge should change its raw output? What must remain fixed to attribute a difference to answer order rather than wording or length?
+
+```bash
+uv run python -m cx_eval_lab.judge_sensitivity --output /tmp/judge-sensitivity.json
+uv run python -m unittest tests.test_judge_sensitivity -v
+```
+
+Choose a new output path for another run. Inspect a presentation's exact request, slot map and returned verdict. The normalized outcome is tagged as either a selected answer identity or one of the special outcomes. A response ID cannot accidentally collide with the string `tie` or `abstain`.
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.judge_sensitivity import normalize_verdict, replay_study
+
+forward = {"A": "answer-x", "B": "answer-y"}
+reverse = {"A": "answer-y", "B": "answer-x"}
+raw_a = {"verdict": "A", "rationale": "Teaching control"}
+raw_b = {"verdict": "B", "rationale": "Teaching control"}
+assert normalize_verdict(raw_a, forward) != normalize_verdict(raw_a, reverse)
+assert normalize_verdict(raw_a, forward) == normalize_verdict(raw_b, reverse)
+
+report = replay_study(json.loads(Path("docs/assets/judge-sensitivity-v1.json").read_text()))
+assert len(report["presentations"]) == 60
+assert len(report["trials"]) == 300
+order = report["contrasts"]["first-slot"]["order"]
+assert order["flips"] == order["total"] == 30
+shared = report["clone_error_overlap"]
+assert shared["length_error_view_ids"] == shared["clone_error_view_ids"]
+assert shared["length_error_view_ids"] == shared["panel_error_view_ids"]
+print("First-slot order reversals:", order["flips"], "/", order["total"])
+print("Panel errors inherited from cloned controls:", len(shared["panel_error_view_ids"]))
+```
+
+The harness registers these matched contrasts per judge:
+
+| Factor changed | Other factors held fixed | Number of contrasts |
+| --- | --- | --- |
+| Answer order | Case, length condition, rubric | 30 |
+| Length: each padded condition versus brief | Case, order, rubric | 40 |
+| Rubric wording | Case, order, length condition | 30 |
+
+The length analysis compares each padding intervention with the brief control; it does not also count padding-left versus padding-right. Each contrast retains the two trial references and normalized outcomes. Counting every arbitrary pair of runs would mix factors and inflate the denominator.
+
+| Executed control | Protocol-correct calls / 60 | Order flips / 30 | Length flips / 40 | Rubric flips / 30 |
+| --- | --- | --- | --- | --- |
+| Reference grammar parser | 60 | 0 | 0 | 0 |
+| First slot | 12 | 30 | 0 | 0 |
+| Longest answer | 12 | 10 | 20 | 0 |
+| Rubric keyword | 12 | 30 | 0 | 30 |
+| Longest-answer clone | 12 | 10 | 20 | 0 |
+
+These counts describe the registered controls, not current model performance. The identical 12/60 correctness totals conceal different failure mechanisms; the matched contrasts expose them. Zero flips alone would also be insufficient: an always-abstaining judge could be invariant while declining all answer selection.
+
+Identity flips include the deliberately identical-content pairs. On those pairs they expose arbitrary selection where this protocol requires a tie or rejection of both, not necessarily a change in factual meaning. Inspect the case, text and expected outcome before treating every flipped ID as a substantive preference reversal.
+
+??? success "Solution: compare the same answer, not the same output token"
+    For a supported answer moved from A to B, the reference control returns a different raw slot but the same answer identity. That is not a reversal. The first-position control returns A both times but switches answer identity. That is a reversal. Normalizing only the numerator while keeping a raw-slot denominator would still produce the wrong rate; normalize before matching and aggregation.
+
+    Treat `tie`, `both_unacceptable` and `abstain` as distinct outcomes. A tie means both satisfy this criterion; rejecting both is a valid negative judgment; abstention means evidence is insufficient. None is a selected answer. A transition between these outcomes is a judgment change worth inspecting, not a vote for an arbitrary candidate.
+
+    The first-position control changes normalized winners in every order contrast. The length control changes them in the brief, equal-length order contrasts because its fallback selects A; padding removes that tie-break in the other order contrasts. This interaction is why an aggregate “position bias” number needs condition-level evidence. A length heuristic can exhibit order sensitivity without having an explicit preference for one semantic answer.
+
+    In a real stochastic judge, two different outputs do not by themselves prove a positional effect. Repeat each registered presentation, measure same-presentation variation, counterbalance execution order and analyze at the independently sampled case level. Preserve provider/model version, rubric, generation settings, usage and missing trials. The local deterministic controls demonstrate the diagnostic mechanics, not the sampling design or power of a live study.
+
+**Interview answer criteria:** distinguish slot identity from answer identity; name the matched factors and denominators; preserve special outcomes; identify length/order interactions; separate within-presentation randomness from a systematic intervention effect.
+
+### Kata 75: three votes can repeat one mistake
+
+**Predict:** the panel contains the reference control and two separately named controls that both choose the longest answer. What happens when an unsupported answer is padded? Does unanimity between the two length controls provide two independent pieces of evidence?
+
+The study executes five controls: a restricted reference parser, a first-slot selector, a length selector, a rubric-keyword selector and a second length selector. The keyword control branches on the actual rubric text even though the two registered wordings have the same criterion. It is a deliberately faulty program, not a measured estimate of rubric sensitivity in an LLM.
+
+The panel uses the reference control and the two length selectors. It maps each vote to the stable answer identity before voting, retains the three member trial hashes, and requires two matching normalized outcomes; otherwise it abstains. A panel row is a derivation from member calls, not three new independent cases or another model execution.
+
+The panel is protocol-correct on only 12 of 60 views and inherits all 48 erroneous view IDs from the length controls. The reference alone is correct on all 60, but selects an answer on only 24: its other correct outcomes are 12 ties, 12 rejections of both answers and 12 abstentions. Each faulty control selects on all 60 views, including 24 unsupported selections under known state and 12 selections with no state evidence. Higher selected-answer coverage is not better performance here.
+
+??? success "Solution: measure shared errors against external evidence"
+    Padding an unsupported answer changes neither the case's status nor its registered claim. A length selector nevertheless favors it. Its clone makes the same decision for the same reason. Those two votes outnumber the reference verdict, so majority vote preserves the shared failure. Three judge names are not a substitute for three independently validated sources of evidence.
+
+    Compare error sets, not only inter-judge agreement. The two length controls have identical erroneous view sets in this constructed study, and the panel inherits their outcomes. Agreement on a wrong answer is not calibration. The exact overlap here is intentional; it does not estimate the error correlation between any real model families.
+
+    Balanced A/B ordering can expose the first-slot control without repairing the length control. Instructing a judge to ignore politeness does not prove that it does. Similarly, a rubric-wording flip should trigger inspection of the actual rubric contract and repeated judgments, not automatic selection of whichever wording produces a higher candidate score. A new rubric belongs to a new qualified evaluator configuration.
+
+    Report non-abstained decisions separately from selected-answer decisions. The reference can correctly reject both answers or return a tie without delivering an answer. Report protocol correctness, correctness among non-abstained cases, acceptance of an unsupported claim under known evidence, and selection despite missing evidence with their denominators. Collapsing all of them into “automation coverage” can reward an always-selecting judge.
+
+**Bridge to an actual judge experiment:** freeze untouched cases and independently reviewed invariance judgments; verify that padding/paraphrases preserve the intended claims; register model versions, repeats, prompt variants, budget, stopping rule and slice requirements; build and transport-test a metered pairwise adapter with the required verdict schema; then collect responses and apply the same identity-normalized comparisons. This workshop does not add that live adapter. Pairwise preference robustness does not establish the class-conditional false-pass bounds needed by a pointwise release grader. Test that grader's criterion and qualification separately.
+
+Position and verbosity effects are documented in [MT-Bench/Chatbot Arena research](https://arxiv.org/abs/2306.05685), but this workshop does not reproduce its model results or imply that its rates transfer to current models. Anthropic's [agent-evaluation guidance](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) likewise recommends clear dimension-specific rubrics, expert calibration and transcript inspection. Apply those practices to the actual task; neither a literature citation nor a passing diagnostic control qualifies a local judge.
+
+**Interview answer criteria:** distinguish replicated bias from independent evidence; inspect overlapping error sets and factor interactions; separate coverage from valid acceptance; explain the additional evidence needed for live-model and pointwise-grader qualification.
+
+**Evidence boundary:** the study executes deterministic programs on controlled text and supplied mock state. There are no model calls, actual human judgments or population confidence intervals. Replay verifies the retained inputs, computations and derived comparisons, not authenticated execution history or production performance. Existing bias guidance and the [human-rater katas](human-evaluation.md#executed-annotation-analysis-preserve-the-disagreement) remain part of the qualification process.
+
 ## Repeatability and ensembles
 
 Repeat judgments on a planned subset when the judge is nondeterministic. Report consistency and decision stability. Majority vote can reduce some random variance but cannot repair systematic bias or invalid rubrics.

@@ -68,6 +68,8 @@ jobs:
         run: uv run python -m cx_eval_lab.sampling_study --output ci-evidence/sampling-study.json
       - name: Recompute annotation agreement and reviewer-assignment controls
         run: uv run python -m cx_eval_lab.rater_study --output ci-evidence/rater-study.json
+      - name: Execute matched judge-sensitivity and shared-error controls
+        run: uv run python -m cx_eval_lab.judge_sensitivity --output ci-evidence/judge-sensitivity.json
       - name: Reconstruct mixed-trace error-analysis teaching views
         run: >-
           uv run python -m cx_eval_lab.error_analysis_workshop
