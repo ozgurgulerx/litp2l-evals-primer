@@ -6,6 +6,7 @@ An external trusted collector owns observations and candidate/baseline identitie
 
 from dataclasses import dataclass, field, replace
 import hashlib
+from cx_eval_lab.evidence import canonical_hash
 
 
 PERCENTAGES = {'shadow': 0, 'canary': 5, 'expanded': 25, 'restricted': 5, 'rolled_back': 0}
@@ -32,6 +33,7 @@ class ExposureState:
     last_end: int = 0
     used_windows: tuple[str, ...] = ()
     used_artifacts: tuple[str, ...] = ()
+    pending_window: str | None = None
 
     def __post_init__(self):
         _identifier(self.candidate)
@@ -42,6 +44,8 @@ class ExposureState:
             raise ValueError('exposure percentage must match the registered stage')
         for value in (self.revision, self.healthy_windows, self.last_end):
             _clock(value)
+        if self.pending_window is not None:
+            _identifier(self.pending_window)
         for key in ('used_windows', 'used_artifacts'):
             values = tuple(getattr(self, key))
             for value in values:
@@ -102,13 +106,12 @@ class ExposureDecision:
     deployment_authorized: bool = field(default=False, init=False)
 
 
-def route(state, customer_id, *, now=None):
+def route(state, customer_id, *, now):
     """Stable nested customer cohorts for one candidate identity."""
     _identifier(customer_id)
-    if now is not None:
-        _clock(now)
-        if now < state.last_end or now - state.last_end > 30:
-            return 'baseline'
+    _clock(now)
+    if now < state.last_end or now - state.last_end > 30:
+        return 'baseline'
     digest = hashlib.sha256(f'{state.candidate}\0{customer_id}'.encode()).digest()
     bucket = int.from_bytes(digest[:8], 'big') % 10000
     return 'candidate' if bucket < state.percent * 100 else 'baseline'
@@ -138,16 +141,22 @@ def transition(state, window, *, now, resume=False):
         return ExposureDecision(state, 'overlapping_window')
     if any(row.artifact_id in state.used_artifacts for row in window.observations):
         return ExposureDecision(state, 'reused_artifact')
+    membership = canonical_hash((window.window_id, window.candidate, window.baseline,
+        window.exposure_revision, window.start, window.end,
+        sorted((row.customer_id, row.mature_at) for row in window.observations)))
+    if state.pending_window is not None and state.pending_window != membership:
+        return ExposureDecision(state, 'pending_cohort_mismatch')
+    held = replace(state, pending_window=membership)
     if any(row.mature_at > now for row in window.observations):
-        return ExposureDecision(state, 'waiting_for_maturity')
+        return ExposureDecision(held, 'waiting_for_maturity')
     if any(row.baseline_pass is None or row.candidate_pass is None for row in window.observations):
-        return ExposureDecision(state, 'missing_mature_label')
+        return ExposureDecision(held, 'missing_mature_label')
     if len(window.observations) < 2:
-        return ExposureDecision(state, 'insufficient_mature_evidence')
+        return ExposureDecision(held, 'insufficient_mature_evidence')
     # Illustrative paired point difference, NOT a non-inferiority confidence bound.
     loss = sum(int(row.baseline_pass) - int(row.candidate_pass)
                for row in window.observations) / len(window.observations)
-    updated = replace(state, revision=state.revision + 1, last_end=window.end,
+    updated = replace(state, revision=state.revision + 1, last_end=window.end, pending_window=None,
                       used_windows=(*state.used_windows, window.window_id),
                       used_artifacts=(*state.used_artifacts, *(row.artifact_id for row in window.observations)))
     if loss > 0.10:
