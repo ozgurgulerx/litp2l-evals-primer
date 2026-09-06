@@ -12,12 +12,12 @@ from cx_eval_lab.resolution_runner import make_manifest, run_paired_resolution
 from cx_eval_lab.semantic import CalibrationRegistry
 from cx_eval_lab.source_provenance import capture_source_inputs
 from tests.test_resolution_semantic import setup_stage, NOW
-from tests.test_source_provenance import SourceProvenanceTests
+from tests import test_source_provenance as source_fixtures
 
 
 class ReleaseNowTests(unittest.TestCase):
     def setUp(self):
-        self.source = SourceProvenanceTests()
+        self.source = source_fixtures.SourceProvenanceTests()
         self.source.setUp()
         self.addCleanup(self.source.doCleanups)
         self.stage = setup_stage()
