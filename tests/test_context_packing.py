@@ -129,3 +129,22 @@ class ContextPackingTests(unittest.TestCase):
             self.assertEqual(self.study(), json.loads(data))
             self.assertNotEqual(0, subprocess.run(cmd, capture_output=True, check=False).returncode)
             self.assertEqual(data, path.read_bytes())
+
+    def test_fixed_prefix_packing_does_not_evict_earlier_evidence(self):
+        from cx_eval_lab.context_packing import example_inputs, pack_passages, rank_passages
+        inputs = example_inputs()
+        by_id = {p['passage_id']: p for p in inputs['passages']}
+        ranking = rank_passages(inputs['query'], inputs['passages'])
+        ordered = [by_id[row['passage_id']] for row in ranking]
+        smaller, _, _ = pack_passages(ordered[:2], 240, recency_first=False)
+        larger, body, _ = pack_passages(ordered, 240, recency_first=False)
+        self.assertEqual(smaller, larger[:len(smaller)])
+        self.assertEqual(['window', 'window-copy', 'limit'], [p['passage_id'] for p in larger])
+        self.assertEqual(206, len(body.encode('utf-8')))
+
+    def test_retained_artifact_exactly_reexecutes(self):
+        from cx_eval_lab.context_packing import replay_study
+        path = Path(__file__).resolve().parents[1] / 'docs/assets/context-packing-v1.json'
+        retained = json.loads(path.read_text())
+        self.assertEqual(self.study(), retained)
+        self.assertEqual(24, len(replay_study(retained)))
