@@ -37,7 +37,7 @@ def log_evidence(k, n, *, margin=0.03, alternative=0.01):
     """Log of a fixed-alternative Bernoulli likelihood-ratio test martingale."""
     _counts(k, n)
     _design('likelihood_ratio', (n,), margin, alternative, 0.05)
-    return k * math.log(alternative / margin) + (n-k) * (
+    return k * (math.log(alternative) - math.log(margin)) + (n-k) * (
         math.log1p(-alternative) - math.log1p(-margin))
 
 
@@ -52,7 +52,7 @@ def should_stop(method, k, n, *, looks=LOOKS, margin=0.03, alternative=0.01, alp
     if n not in looks or (method == 'fixed_final' and n != looks[-1]):
         return False
     if method == 'likelihood_ratio':
-        return log_evidence(k, n, margin=margin, alternative=alternative) >= math.log(1/alpha)
+        return log_evidence(k, n, margin=margin, alternative=alternative) >= -math.log(alpha)
     tail_probability = math.fsum(_null_masses(n, margin)[:k+1])
     threshold = alpha / len(looks) if method == 'bonferroni' else alpha
     return tail_probability <= threshold
