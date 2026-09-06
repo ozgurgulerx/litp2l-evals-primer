@@ -51,6 +51,8 @@ jobs:
         run: uv run python -m cx_eval_lab.isolation_study --output ci-evidence/isolation.json
       - name: Exercise reviewed incident promotion and regression reruns
         run: uv run python -m cx_eval_lab.incident_regression --output ci-evidence/incident-regression.json
+      - name: Derive paired slice changes from replayed legacy executions
+        run: uv run python -m cx_eval_lab.paired_slices --output ci-evidence/paired-slices.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure

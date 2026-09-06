@@ -265,19 +265,19 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Course and project practice
 
-The research corpus recommends one evolving lab rather than unrelated notebooks. The book implements that through the CX Eval Lab and these projects:
+The research corpus recommends one evolving lab rather than unrelated notebooks. The CX Eval Lab is the implemented core; the projects below have different maturity levels. A required learning artifact is not automatically completed proof.
 
-| Project | Book home | Proof |
-| --- | --- | --- |
-| Failure-analysis lab | Dataset Design | Actionable taxonomy and promoted cases |
-| Golden-dataset lab | Dataset Design | Version, roles, access, health report |
-| Human-evaluation lab | Human Evaluation | Protocol, labels, agreement, adjudication |
-| Judge-calibration lab | LLM as a Judge | Confusion, slices, abstention, authority |
-| RAG evaluation lab | RAG & Research Evals | Retrieval and claim attribution |
-| Agent evaluation lab | Agent Evals; Build Lab | Seven-surface trace and state report |
-| Red-team lab | Robustness, Safety & Fairness | Threat-linked crossed suite |
-| Benchmark reproduction lab | Benchmark Reproducibility; System Studies | Cross-harness manifest and differences |
-| Production gate lab | Production; Release Gates | Shadow/canary simulation and incident receipt |
+| Project | Book home | Required learning artifact | Current evidence status |
+| --- | --- | --- | --- |
+| Failure-analysis lab | Dataset Design | Actionable taxonomy and promoted cases | Executed promotion of a predefined synthetic failure; mixed-trace discovery and taxonomy refinement still need a worked study |
+| Golden-dataset lab | Dataset Design | Version, roles, access, health report | Versioned local promotion and known protected-inventory checks; complete organizational lineage and access control unproven |
+| Human-evaluation lab | Human Evaluation | Protocol, labels, agreement, adjudication | Protocol and synthetic label records; quantitative rater-effect study and actual human pilot not demonstrated |
+| Judge-calibration lab | LLM as a Judge; Semantic Grading Lab | Confusion, slices, abstention, authority | Executed synthetic compilation, adapter and qualification controls; order/verbosity sensitivity and independent empirical qualification remain open |
+| RAG evaluation lab | RAG & Research Evals; Knowledge-to-Action Study | Retrieval and claim attribution | Executed two-document structured-policy retrieval/action controls; multi-evidence packing and complete long-report claim/citation evaluation remain open |
+| Agent evaluation lab | Agent Evals; Build Lab | Seven-surface trace and state report | Executed mock CX, recovery and joined evidence paths; not demonstrated across all seven surfaces in real model workflows |
+| Red-team lab | Robustness, Safety & Fairness | Threat-linked crossed suite | Threat models, fixtures and local integrity controls; adaptive model red-teaming and external risk transfer remain open |
+| Benchmark reproduction lab | Benchmark Reproducibility; System Studies | Cross-harness manifest and differences | Worked extractor counterexample and reproduction protocol; actual pinned LM Evaluation Harness/LightEval comparison not retained |
+| Production gate lab | Production; Release Gates | Shadow/canary simulation and incident receipt | Executed local exposure simulation, current decision composition and incident promotion; real traffic controller and observed cloud CI remain unverified |
 
 The [Courses & Learning Paths](courses.md) page adds the requested DeepLearning.AI courses and requires an artifact receipt for each.
 
@@ -305,16 +305,33 @@ The prose examples also have repository-local JSON companions. They are syntheti
 
 | Layer | Status | What remains before the complete system claim |
 | --- | --- | --- |
-| Concept explanation | Covered across Part I | Maintain the source audit as the field evolves |
-| Bite-sized synthetic examples | Covered in each deep chapter | Maintain visual/readability checks |
-| Templates and inspectable artifacts | Covered in Markdown plus nine tested JSON companions | Promote more examples only when they add teaching value |
+| Concept explanation | Broad treatment across Part I and later studies | Maintain source-by-source depth review; a chapter mapping alone is not completion |
+| Bite-sized synthetic examples | Examples and katas across the deep chapters | Close subject-specific worked-method gaps below; maintain visual/readability checks |
+| Templates and inspectable artifacts | Original JSON companions plus retained execution packets | Distinguish schema/fixture consistency from actual execution and empirical transfer |
 | Existing deterministic CX slice | Running | Preserve and reverify |
-| Replay source and input consistency | Optional source-checked replay verifies original committed Python bytes, dependency declarations, dataset/policy files and full retained case inputs; a 20-trial local packet and Katas 34–35 are retained | Authenticate provenance and installed environment; recompute outer release decisions; compose source checks with current calibration authority |
+| Replay source and input consistency | Source/input verification and historical replay now compose with current qualification, campaign accounting and outer decisions; Katas 49–50 and 58–59 retain the joined path | Authenticate provenance and installed environment, obtain authoritative current registry inputs and bind a decision atomically to real exposure |
 | Human annotation and judge calibration execution | Full design plus consistency-tested synthetic artifacts | Real reviewers/model runs are required before an empirical claim |
-| RAG and multi-turn agent execution | Atomic-claim logic runs in the CX slice; process recovery now has executed mock-payment evidence; persistence and knowledge/action scorer fixtures remain available | Run actual retrieval, compaction, agent-mediated restart, and multi-turn model trials before claiming system-level qualification |
+| RAG and multi-turn agent execution | Executed lexical retrieval/oracle/full-context controls, scripted clarification and process-level mock-payment recovery; atomic-claim examples remain synthetic | Extend to multi-evidence packing, full report evidence, compaction, agent-mediated restart and multi-turn model trials before claiming system-level qualification |
 | Statistical release evidence | Manifest, repeated paired runner, clustered teaching interval, minimum-evidence hold, and immutable receipt are executable | Replace teaching samples with a registered independent measured population and method appropriate to the release estimand |
-| Modern agent architectures | Skills, voice, multi-agent, serving, factorial, integrity, and simulator scorer contracts have tested hand-authored fixtures | Trace-emitting runners, live architecture comparisons, and field validation remain required |
-| Shadow/canary production control | Full design plus a tested synthetic rollback artifact | Implement a controller before claiming operational deployment capability |
+| Modern agent architectures | Skills, voice, multi-agent, serving, factorial and simulator scorer contracts have hand-authored fixtures; containment and cross-run cache studies now execute local mechanisms | Actual skill selection, delegation/merge and voice observations; matched-budget comparisons and field validation remain required |
+| Shadow/canary production control | Executed local cohort/exposure simulation plus configured CI conformance workflow | Connect approved evidence to a real application controller; observe cloud gates and rollback through the deployed path |
+
+## Dated depth audit — 7 September 2026
+
+This pass reread the four supplied editable reports (`deep-research-report-9`, `-10`, `-13`, `-15`) and the complete Code-First and Evals/Observability/Release-Gates Markdown reports. It compared their substantive learning requirements with current chapters and relevant code. It does not claim a new reread of every PDF/DOCX rendering or a fresh verification of every external claim. Earlier corpus mappings remain available above.
+
+| Source requirement | Current gap after the recent implementations | Next completion evidence |
+| --- | --- | --- |
+| Code-First: reporting fixed/regressed cases and comparisons by slice | [Katas 62–63](metrics.md#executed-paired-slice-comparison) now join and replay legacy artifacts into fixed/regressed lists, declared required/exploratory slices, missing-support holds and pair/customer denominators | Extend to native multi-order packets; authenticate preregistration; use representative observations and qualified uncertainty/multiplicity methods before a deployment claim |
+| Code-First: human-first error analysis | Incident promotion starts from one already-diagnosed mechanism | Mixed executed traces, separate observation/cause notes, unresolved diagnoses, session-aware counts, versioned taxonomy and a justified targeted repair |
+| Reports 9/10: human annotation and judge validation | Protocols and synthetic label compilation do not quantify rater severity or robustness to judging design | Item/rater-level agreement and uncertainty; order/rubric/verbosity sensitivity; independent empirical labels and actual model runs for qualification claims |
+| Reports 9/10: representative and adaptive sampling | Weighting is explained but the selection-to-estimate pipeline is not worked end to end | Known-population comparison of representative/risk-enriched samples, inclusion probabilities, uncertainty and raw-versus-weighted decision changes |
+| Code-First: retrieval interventions | Existing two-document top-one study does not exercise multiple required passages or packing loss | Ranked and packed evidence traces, top-k/reranking comparisons and a case where retrieval recall rises while usable evidence falls |
+| Report 13: research-agent construct validity and temporal fragility | Long-report scores and dated reference correction remain illustrative | Complete frozen report/corpus, claim/citation spans, adjudicated stale reference and preserved old/new grades |
+| Report 15: cross-harness reproduction | Exercise specifies the comparison but does not retain a completed external-framework run | Pinned model/task/prompts, per-item outputs and extractors across two harnesses, one default mismatch and its reconciliation |
+| Observability report: semantic telemetry through rollout | Local tool traces and exposure simulation do not operate a neutral telemetry/export/control stack | Privacy-aware span/feedback joins, exporter loss/error controls and a verified application rollout path |
+
+These are depth gaps in already-covered subjects, not reasons to discard the existing chapters. Prioritize paired slice reporting, mixed-trace error analysis and evidence packing as locally feasible work; keep external framework runs, actual reviewer studies and model-backed transfer scoped to their prerequisites. No single study closes the entire curriculum.
 
 This ledger distinguishes a comprehensive book from a fully implemented production platform. The book can explain and demonstrate synthetic artifacts before every platform feature is executable, but it must state that boundary honestly.
 

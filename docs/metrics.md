@@ -419,6 +419,108 @@ What can and cannot be claimed?
 
 The executable companion is `assess_non_inferiority` in `cx_eval_lab/gate.py`. Its regression test fixes the boundary convention: a lower bound equal to `−margin` qualifies; a lower bound below it does not. This helper interprets a supplied interval—it does not estimate one from point rates.
 
+## Executed paired slice comparison
+
+The candidate passes six of eight trials; the baseline passes two. Yet the candidate breaks both repetitions of the one required-slice case. Open the [retained packet and report](assets/paired-slices-v1.json) before calling the candidate an improvement.
+
+This study runs four invented refund cases through both deterministic controls, twice each: **16 agent executions, eight pairs, four cases and three customer clusters**. The tools execute the reference refund workflow in isolated mock state. The baseline deliberately gives an incorrect outcome enum on ordinary requests; the candidate moves that error to requests containing “special request.” Neither control consults the evaluator's expected answer. This is a visible-request-controlled bug, not measured model behavior or a demographic disparity study.
+
+| Population | Cases / pairs / customers | Baseline pass | Candidate pass | Trial-weighted change |
+| --- | --- | --- | --- | --- |
+| Overall | 4 / 8 / 3 | 2/8 | 6/8 | +50 percentage points |
+| `risk:general` — exploratory | 3 / 6 / 2 | 0/6 | 6/6 | +100 points |
+| `risk:protected` — required | 1 / 2 / 1 | 2/2 | 0/2 | −100 points |
+
+The report also includes an exploratory `all` slice identical to the overall population. Do not add these slice denominators: membership overlaps. The word *protected* is an invented policy label here, not a claim about a protected characteristic.
+
+### Kata 62: an overall improvement conceals a regression
+
+**Predict:** which pairs improved, which regressed, and why is the equal-customer-weighted difference not +50 points? What does the required slice justify concluding?
+
+Run from the repository root after installing the locked environment:
+
+```bash
+uv run python -m unittest tests.test_paired_slices tests.test_paired_slices_artifact -v
+uv run python -m cx_eval_lab.paired_slices --output /tmp/paired-slices-study.json
+```
+
+Choose a new output path if that file already exists; the CLI refuses to overwrite evidence. Latency and cost in this packet come from the **invented default measurement profile**. They are not measurements of the executed tools or estimates of model operating cost. The manifest deliberately says `working-tree-unpinned`; this packet is not a committed-source attestation.
+
+Inspect the retained evidence without trusting its report's pass flags:
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.paired_slices import derive_slice_report
+
+study = json.loads(Path("docs/assets/paired-slices-v1.json").read_text())
+report = derive_slice_report(study["packet"], ("risk:protected",))
+assert report == study["report"]
+assert report["overall"]["pair_count"] == 8
+assert report["overall"]["customer_count"] == 3
+assert len(report["overall"]["changes"]["fixed"]) == 6
+assert len(report["overall"]["changes"]["regressed"]) == 2
+for pair in report["pairs"]:
+    print(pair["case_id"], pair["trial_index"], pair["outcome"],
+          pair["candidate"]["failed_checks"])
+```
+
+`derive_slice_report` replays complete legacy trial artifacts, checks the manifest and pair joins, and requires the full case—including customer and slice membership—to agree across arms and repetitions. It also checks each retained agent input against its case and the reconstructed full case list against the manifest's dataset hash, preserving the baseline's repetition-zero execution order. This API requires a **canonical case-list hash**, not a raw dataset-file byte hash; missing or incompatible registration is rejected. It rejects changed grades inconsistent with replay. A caller's accepted semantic calibration hashes are separate inputs; a receipt's presence alone does not establish qualification. This API supports `refund-trial-v1`, not the newer native multi-order packet schema.
+
+??? success "Solution: inspect changes before interpreting the average"
+    `case-0`, `case-1` and `case-2` each contribute two fixed pairs. `case-3` contributes two regressed pairs. There are no unchanged pairs. On the failing arm the ledger contains the refund, but the enum says it did not happen; `claimed_outcome_matches_state` fails. The method therefore detects a concrete explanation/structure inconsistency rather than an absent transaction.
+
+    The pooled difference is `(6 − 2) / 8 = 0.50`. But `case-0` and `case-1` share a customer. Their four pairs contribute one customer's mean change, +1. The remaining customers contribute +1 and −1. Equal customer weighting gives `(1 + 1 − 1) / 3 = 1/3`, or approximately +33.3 points. These are different estimands, not competing calculations of the same estimand. Choose the target weighting before seeing results; neither is automatically the right population quantity.
+
+    The observed required-slice regression is real **within this constructed execution**. Its two repetitions do not create two independent customers. The slice has one customer, so the report supplies no interval. Overall there are only three clusters against the manifest's minimum of 30, so its teaching comparison is inconclusive too. The diagnostic returns `hold`, with `deployment_authorized=False`.
+
+    This diagnostic is not the full release gate: `hold` does not excuse known deterministic failures. A release policy that forbids the demonstrated claim/state contradiction must still block it. Likewise, a missing interval does not make the observed regression disappear. Preserve the failed pairs for diagnosis while withholding an unsupported population claim.
+
+**Interview answer criteria:** distinguish trial, case and customer; compute both weighted differences; identify the regressed pairs; separate observed defect, population uncertainty and deployment authority. Explain why repeating the same customer cannot repair weak independent support.
+
+### Kata 63: missing support is not zero performance
+
+**Predict:** what should the report say if a required language slice has no cases? What changes if the candidate supplies unqualified prose on every case? Can you delete a required slice after seeing the result?
+
+```python
+from cx_eval_lab.paired_slices import derive_slice_report, run_study
+
+missing = run_study(required_slices=("language:missing",))["report"]
+row = next(r for r in missing["slices"] if r["slice"] == "language:missing")
+assert row["pair_count"] == 0
+assert row["baseline_rate"] is None and row["candidate_rate"] is None
+assert row["status"] == "hold" and row["issues"] == ["missing_slice"]
+
+unknown = run_study(unqualified_candidate=True)["report"]
+assert len(unknown["overall"]["changes"]["unqualified"]) == 8
+assert unknown["overall"]["eligible_pair_count"] == 0
+assert unknown["overall"]["comparison"] is None
+assert unknown["status"] == "hold"
+
+original = run_study()
+try:
+    derive_slice_report(original["packet"], ())
+except ValueError:
+    print("Cannot silently drop the manifest-bound required slice.")
+else:
+    raise AssertionError("Required slice policy changed without rejection")
+```
+
+??? success "Solution: preserve unknowns and the declared population"
+    An empty required slice has no numerator or denominator from which to estimate performance. Its rates are `null`, not 0% or 100%, and it holds the diagnostic. Adding an unsupported required label before executing a new study is a useful negative control; it is not evidence that an earlier experiment tested that population.
+
+    In the unknown-prose control, the candidate returns a message outside the trusted templates without a qualifying semantic receipt. All eight pairs are labelled `unqualified`, not eight proven behavioral regressions. The report preserves each arm's failed checks: a known structural defect may coexist with an unknown semantic judgment. Nothing is relabelled as safe. Joint-quality inference is withheld rather than silently dropping these pairs.
+
+    When only some pairs are qualified, displayed rates describe that subset, with its denominator. They are not missingness-adjusted estimates for the original population. Inspect whether qualification failure is associated with difficult cases, languages or the candidate itself. A lower judge budget can change which outcomes are observable without improving the agent.
+
+    The sorted required-slice policy is hashed into the manifest before the local study runs. Passing a different list to this packet's report derivation is rejected. This establishes local content consistency, **not authenticated preregistration**: someone able to rewrite the whole packet and manifest can rewrite that declaration. Real confirmation needs independently controlled registration and source/evidence authority. Older packets with no slice-policy binding can be analysed exploratorily only, and still need the compatible full-dataset binding described above.
+
+    Exploratory rows do not change this diagnostic's gate status. If an exploratory finding motivates a new release requirement, register a new experiment and collect appropriate evidence; do not retrospectively present a selected slice as confirmatory. Overlapping slices share observations, and the current teaching intervals do not supply joint or multiplicity-adjusted guarantees.
+
+**Extend:** propose an untouched follow-up population for the failed slice, a method justified for its sampling design, and an independent check on semantic-label error. Explain why “collect 30 customers” is only a sample-count rule—not qualification of an interval method. Use the [statistical counterexamples](statistical-method-study.md) before assigning statistical authority.
+
+**Evidence boundary:** the retained artifact and tests exercise actual local mock-tool executions and replay-derived slice diagnostics. The cases, controls and measurement profile are synthetic. They do not establish real customer performance, current judge validity, authenticated execution history or deployment permission. The next implementation step is the same joined diagnostic for native multi-order evidence, followed by representative, independently qualified observations.
+
 ## Verification checklist
 
 - [ ] Every gating metric maps to a registered estimand and product claim.
