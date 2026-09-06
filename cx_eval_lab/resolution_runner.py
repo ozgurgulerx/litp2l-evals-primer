@@ -40,6 +40,8 @@ def run_paired_resolution(*, cases, baseline_agent, candidate_agent, manifest,
     registration = design(baseline_agent.name, candidate_agent.name)
     validate_registration(manifest, cases, registration)
     kind = 'measured' if measurement_profile is None else measurement_profile.evidence_kind
+    if measurement_profile is not None and kind != 'synthetic':
+        raise ValueError('measured resolution runs require wall-clock and runtime evidence')
     if kind != manifest.measurement_kind:
         raise ValueError('resolution measurement profile and manifest disagree')
     trials, artifacts = {'baseline': [], 'candidate': []}, []

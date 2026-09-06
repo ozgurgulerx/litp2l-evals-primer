@@ -5,7 +5,7 @@ import json
 import math
 
 from cx_eval_lab.evidence import canonical_hash
-from cx_eval_lab.models import AgentOutput, CheckResult, RuntimeEvidence
+from cx_eval_lab.models import AgentOutput, CheckResult, MeasurementProfile, RuntimeEvidence
 from cx_eval_lab.order_resolution import (
     MultiOrderWorld, OrderRecord, ResolutionCase, UnresolvedRequest, grade_resolution_execution,
 )
@@ -23,6 +23,8 @@ def _require(condition, message):
 
 
 def case_from_dict(raw):
+    _require(isinstance(raw, dict) and isinstance(raw.get('orders'), (list, tuple))
+             and 1 <= len(raw['orders']) <= 100, 'resolution case requires 1..100 orders')
     case = ResolutionCase(**{**raw, 'request': UnresolvedRequest(**raw['request']),
                               'orders': tuple(OrderRecord(**r) for r in raw['orders'])})
     _require(isinstance(case.case_id, str) and bool(case.case_id.strip()), 'invalid resolution case ID')
@@ -65,11 +67,20 @@ def validate_packet(packet, manifest):
     _require(artifacts and all(a['payload']['schema'] == SCHEMA for a in artifacts),
              'mixed or unsupported resolution artifact schemas')
     by_hash = {a['artifact_hash']: a['payload'] for a in artifacts}
+    _require(all(type(r['trial_index']) is int for arm in ('baseline', 'candidate')
+                 for r in packet[arm + '_trials']), 'invalid resolution trial index')
     population = [case_from_dict(by_hash[r['artifact_hash']]['case'])
                   for r in packet['baseline_trials'] if r['trial_index'] == 0]
     first = artifacts[0]['payload']
     validate_registration(manifest, population, first['design'])
     registered = {c.case_id: canonical_hash(asdict(c)) for c in population}
+    expected_sequence = [(c.case_id, index, arm) for index in range(manifest.repetitions)
+                         for position, c in enumerate(population)
+                         for arm in (('candidate', 'baseline') if (index + position) % 2
+                                     else ('baseline', 'candidate'))]
+    actual_sequence = [(a['payload']['identity']['case_id'], a['payload']['identity']['trial_index'],
+                        a['payload']['identity']['arm']) for a in artifacts]
+    _require(actual_sequence == expected_sequence, 'resolution artifact execution order mismatch')
     for artifact in artifacts:
         p = artifact['payload']
         identity = p['identity']
@@ -112,7 +123,9 @@ class ResolutionEvaluation:
 def evaluate_execution(payload):
     case = case_from_dict(payload['case'])
     data = payload['output']
+    _require(isinstance(data, dict), 'resolution output must be an object')
     runtime = data.get('runtime_evidence')
+    _require(runtime is None or isinstance(runtime, dict), 'resolution runtime must be an object')
     output = AgentOutput(**{**data, 'runtime_evidence': None if runtime is None else RuntimeEvidence(**runtime)})
     metrics = grade_resolution_execution(case, output, payload['orders'], payload['tool_events'],
                                          payload['execution_error'])
@@ -157,13 +170,38 @@ def regrade(payload):
              and payload['qualified_semantic_calibration_hashes'] == []
              and payload['semantic_stage'] is None, 'native resolution semantic qualification unsupported')
     _require(payload['authority'] == 'lab_only', 'resolution execution authority mismatch')
+    error = payload['execution_error']
+    _require(error is None or isinstance(error, str) and error.isidentifier(),
+             'resolution execution error must be an exception class name')
     _require(type(payload['latency_ms']) is int and payload['latency_ms'] >= 0,
              'invalid resolution latency')
     cost = payload['cost_usd']
     _require(cost is None or type(cost) in (int, float) and math.isfinite(cost) and cost >= 0,
              'invalid resolution cost')
+    _validate_measurements(payload)
     _replay_tools(case, payload)
     result = evaluate_execution(payload)
     for key, value in json.loads(result.metrics_json).items():
         _require(canonical_hash(payload[key]) == canonical_hash(value), 'resolution metrics mismatch')
     return result
+
+
+def _validate_measurements(payload):
+    elapsed = payload['elapsed_ms']
+    _require(type(elapsed) in (int, float) and math.isfinite(elapsed) and elapsed >= 0,
+             'invalid resolution elapsed measurement')
+    measurement = payload['measurement']
+    _require(isinstance(measurement, dict), 'resolution measurement must be an object')
+    if 'latency_ms' in measurement:
+        profile = MeasurementProfile(**measurement)
+        _require(profile.evidence_kind == 'synthetic', 'profile measurements must be synthetic')
+        latency, cost = profile.latency_ms, profile.cost_usd_per_case
+    else:
+        _require(measurement == {'evidence_kind': 'measured', 'source': 'runner wall-clock; runtime usage'},
+                 'unsupported resolution measurement source')
+        _require(isinstance(payload['output'], dict), 'resolution output must be an object')
+        runtime = payload['output'].get('runtime_evidence')
+        _require(runtime is None or isinstance(runtime, dict), 'resolution runtime must be an object')
+        latency, cost = round(elapsed), None if runtime is None else runtime['cost_usd']
+    _require(canonical_hash([payload['latency_ms'], payload['cost_usd']]) == canonical_hash([latency, cost]),
+             'resolution measurement differs from retained source')
