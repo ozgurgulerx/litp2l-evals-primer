@@ -114,6 +114,8 @@ def compile_calibration(annotations, *, policy, trusted_reviewers,
     if data['schema_version'] != 'calibration-annotations-v1':
         raise ValueError('unsupported annotation schema')
     _fields(policy, POLICY_FIELDS, 'qualification policy')
+    for field in ('issued_at', 'expires_at'):
+        _text(policy[field], field)
     _fields(data['scope'], {'dataset_version', 'policy_version', 'slices'}, 'scope')
     scope = data['scope']
     _text(scope['dataset_version'], 'dataset version')
