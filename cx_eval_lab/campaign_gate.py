@@ -143,7 +143,7 @@ def _execution_request(payload):
                 'eligible': case.eligible, 'approval_threshold_cents': case.approval_threshold_cents}}
 
 
-def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes):
+def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes, registered_configuration):
     stage = payload.get('semantic_stage') or {}
     if not stage.get('judgment') or not stage['judgment'].get('campaign_audit_json'):
         issues.add('campaign_judgment_missing')
@@ -170,6 +170,8 @@ def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes):
         issues.add('semantic_qualification_missing')
     request_hash = canonical_hash({'criterion': CRITERION, 'evidence': stage['request']})
     configuration = stage['qualification']['configuration_hash']
+    _require(registered_configuration is None or configuration == registered_configuration,
+             'registered_judge_configuration_mismatch')
     if row is not None:
         _require(row['request_hash'] == request_hash and row['configuration_hash'] == configuration,
                  'packet_campaign_evidence_mismatch')
@@ -182,6 +184,7 @@ def _join(payload, row, identifier, policy, issues, trusted_calibration_hashes):
     if audit['status'] == 'recorded':
         _require(row is not None and row['state'] != 'reserved' and admission['admitted'] is True,
                  'recorded_judgment_without_finalized_reservation')
+        _require(admission['reason'] == 'reserved', 'recorded_admission_reason_mismatch')
         _require(canonical_hash(audit['receipt']) == canonical_hash(_object(row['receipt_json'])),
                  'packet_campaign_receipt_mismatch')
         inner = {**stage['judgment'], 'campaign_audit_json': None}
@@ -229,7 +232,8 @@ def assess_campaign(packet, snapshot, *, expected_policy, trusted_packet_hash,
             identifier = canonical_hash([identity['manifest_hash'], identity['case_id'],
                                          identity['trial_index'], identity['arm']])
             expected[identifier] = payload
-            _join(payload, rows.get(identifier), identifier, expected_policy, issues, trusted_calibration_hashes)
+            _join(payload, rows.get(identifier), identifier, expected_policy, issues, trusted_calibration_hashes,
+                  dict(packet['manifest']['input_hashes']).get('judge-config'))
         _require(set(rows).issubset(expected), 'foreign_campaign_invocations')
         hard = {'reservation_overrun', 'deadline_reached', 'deadline_violation', 'clock_regression',
                 'admission_limit_exceeded', 'estimated_budget_exceeded'}
