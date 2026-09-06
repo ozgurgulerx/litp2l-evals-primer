@@ -36,6 +36,8 @@ def _validate(packet, required, trusted):
         payload = artifact['payload']
         if payload['schema'] != 'refund-trial-v1':
             raise ValueError('only refund-trial-v1 slice metadata is supported')
+        if type(payload['identity']['trial_index']) is not int:
+            raise ValueError('artifact trial index requires an exact integer')
         case = RefundCase.from_dict(payload['case'])
         if len(case.slices) != len(set(case.slices)):
             raise ValueError('case slice labels must be unique')
