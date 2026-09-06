@@ -1,0 +1,133 @@
+# Exposure control: evidence must change routing
+
+The candidate works in shadow, receives a canary cohort, and expands. A simulated service failure then prevents task completion, so its traffic is restricted. After two healthy windows and an explicit resume, it returns to canary. A wrong-order refund triggers rollback even though the ordinary outcome labels have not matured.
+
+This sequence now runs against the primer's actual mock-agent implementations and independent order ledgers. The [retained packet](assets/exposure-control-v1.json) contains **280 routed synthetic requests and 349 agent executions**: 280 baseline executions and 69 candidate executions, including shadow and counterfactual evaluations. Every execution is local. No customer traffic, money, deployment credentials or live model was involved.
+
+## The executed sequence
+
+| Window | Starting stage / nominal candidate share | Declared intervention | Candidate-served requests out of 40 | Paired observations | Resulting stage |
+| --- | --- | --- | ---: | ---: | --- |
+| 1 | Shadow / 0% | Healthy | 0 | 40 | Canary / 5% |
+| 2 | Canary / 5% | Healthy | 4 | 4 | Expanded / 25% |
+| 3 | Expanded / 25% | Service unavailable | 13 | 13 | Restricted / 5% |
+| 4 | Restricted / 5% | Healthy | 4 | 4 | Restricted / 5% |
+| 5 | Restricted / 5% | Healthy + explicit resume | 4 | 4 | Canary / 5% |
+| 6 | Canary / 5% | Wrong-order selection | 4 | 4 | Rolled back / 0% |
+| 7 | Rolled back / 0% | Healthy + attempted resume | 0 | 0 | Rolled back / 0% |
+
+The interventions are intentionally injected through one fixed test harness. They exercise the controller; they are not a measured history of one production model spontaneously changing behavior. Customer requests repeat a narrow synthetic scenario across separate mock worlds. These windows are not independent evidence of population reliability.
+
+The router designates which result is served. Baseline and candidate execute in separate disposable ledgers, so a shadow candidate cannot alter the baseline world. Running both arms in clones provides counterfactual outcomes unavailable for the same real customer in ordinary production. Actual shadowing must isolate or suppress external effects and document how that changes behavior.
+
+## The implemented contract
+
+`cx_eval_lab/exposure_control.py` owns the immutable state and decisions. `cx_eval_lab/exposure_study.py` executes the agent arms, records routing and full artifacts, derives observations from their grades, and applies the controller.
+
+| Control | Local rule | Boundary |
+| --- | --- | --- |
+| Identity | Candidate, baseline and exposure revision must match | Names in this study are trusted harness identifiers, not signed deployment attestations |
+| Cohort | Stable customer hash; expansion preserves the earlier cohort | Nominal percentages are not exact small-sample counts or hard financial caps |
+| Freshness | Router requires a clock; telemetry older than 30 simulation units routes to baseline | Clock and state distribution are trusted local inputs |
+| Campaign expiry | No candidate routing at or after time 120 | Fresh results do not automatically renew the campaign |
+| Maturity | Every submitted row must be mature and both outcomes present before quality-based progression | Maturity timestamps are artificial here, not observed seven-day follow-up outcomes |
+| Cohort completeness | A pending window's identity, bounds, customer membership and maturity schedule are pinned | The collector must still establish complete membership before the first submission |
+| Replay | Reject consumed windows, reused artifact references, overlap and wrong exposure revisions | Evidence authenticity and durable distributed deduplication are not implemented |
+| Hard stop | Observed wrong-order commits trigger rollback before maturity and ordinary replay checks | The study recognizes incidents only when a completed batch is inspected |
+| Quality restriction | Candidate pass rate below 90%, or paired point loss above 10 percentage points, restricts exposure | These are **illustrative policy thresholds**, not statistically qualified release tests |
+| Guard band | A positive loss up to 10 points, while meeting the floor, holds rather than expands | A guard band does not control repeated-testing error |
+| Recovery | Restricted state needs two healthy windows and explicit resume; it returns only to canary | Resume is a local simulation choice, not authenticated production approval |
+| Rollback | Latched at baseline; later green results cannot reactivate this state | Returning to baseline does not undo previously completed side effects |
+
+The minimum of two paired observations is deliberately small to exercise routing with forty synthetic requests. It is **not a sample-size recommendation**. Use the [statistical method study](statistical-method-study.md) and [evidence spine](evidence-spine.md) to see why sample counts and point differences cannot establish non-inferiority. Neither this controller nor the existing `lab_only` receipts grant production authority. `ExposureDecision` fixes `deployment_authorized=False` and does not accept a caller override.
+
+## Kata 24: five percent is not a hard cap
+
+**Know:** stable assignment, nominal allocation and actual exposure answer different questions.
+
+**Task:** before running the study, predict whether exactly two of forty customers must receive a nominal 5% canary. Check whether every member of the 5% cohort remains included at 25%.
+
+```bash
+uv run python -m cx_eval_lab.exposure_study \
+  --output /tmp/primer-exposure-my-first-run.json
+uv run python -m unittest tests.test_exposure_control -v
+```
+
+Choose a new output path for another run. The command refuses overwrite and makes no network or model calls.
+
+??? success "Solution: inspect actual routing, not only the configured weight"
+    In this fixed synthetic population, four customers fall into the nominal 5% bucket and thirteen into the 25% bucket. Stable hashing does not promise an exact fraction in a small population. Unequal customer activity can make the request fraction differ further from the customer fraction.
+
+    The hash uses customer and candidate identity; the threshold increases without rerandomizing the cohort. `test_shadow_canary_expansion_and_stable_nested_cohorts` verifies repeatability and nesting. Every request in the retained study records its selected arm and the actual arm executions.
+
+    A production exposure budget needs more than a percentage: cap distinct affected customers, request count, consequential writes, monetary value, concurrent actions and elapsed time as appropriate. Add those limits at the action/traffic boundary rather than assuming a load-balancer weight enforces them. This lab implements the campaign time limit, but not those other hard caps.
+
+**Interview answer:** “I record assignment and realized exposure separately. Sticky cohorts help interpretation, but a nominal percentage is not a hard cap on customers, requests or financial consequences.”
+
+## Kata 25: missing labels cannot disappear from the denominator
+
+A window contains two passing rows and one missing mature label. The controller holds. The collector resubmits the same window with only the two passing rows.
+
+**Task:** predict the result. Then keep all rows but fill the missing label. Finally stop delivering telemetry altogether.
+
+??? success "Solution: pin the cohort and expire the routing permission"
+    Dropping the row returns `pending_cohort_mismatch`; it cannot turn a hold into an expansion. The state binds the pending cohort before returning a maturity or missing-label hold. The same complete cohort can be assessed when its missing outcome arrives. A different window cannot silently skip that unresolved cohort.
+
+    No controller callback occurs if telemetry stops completely. Therefore `route(..., now=...)` independently checks freshness and sends new requests to baseline after the deadline. It also enforces the fixed campaign expiry even when telemetry stays healthy. Tests cover both failure paths.
+
+    Pending membership does not prove the first submission was complete. An external collector still needs a registered enrollment manifest and reconciliation against actual routed requests. Outcome revisions need auditable lineage. A content hash is not proof that an operator reported every failure.
+
+    A fixed cohort below the toy minimum remains held; it is not silently padded with new customers. Re-registering a study or replacing expired evidence requires an explicit new campaign process, which this local state machine does not implement.
+
+**Extend:** add a delayed repeat-contact failure, not merely a missing Boolean. Explain why pending outcomes cannot be treated as successes and why success-conditioned survey response is not random missingness.
+
+**Interview answer:** “I freeze the enrolled cohort, preserve missingness and label maturity, and reconcile it with routing. A deadline must be enforced by the serving path because a stalled controller cannot issue its own stop instruction.”
+
+## Kata 26: rollback is not containment or repair
+
+Window 6 contains four wrong-order commits. Its ordinary labels are scheduled to mature fifty simulation units later. The next window routes entirely to baseline.
+
+**Predict:** how many wrong-order commits occurred before rollback? Did rollback reverse any of them?
+
+??? success "Solution: four effects remain to be reconciled"
+    All four committed before the batch was evaluated. The controller immediately rolls back **when it receives that batch**, without waiting for ordinary label maturity. It does not interrupt the batch after the first bad action, cancel in-flight tasks or reverse a refund.
+
+    A hard-stop policy is not proof of timely containment. A production implementation needs an independent event-driven stop path, action-boundary enforcement, propagation to queued/delegated work and an incident reconciliation procedure. Measure detection time, interruption time and completed effects before containment; do not report only that the final stage says “rolled back.”
+
+    The unit tests also accept a severe incident report from an older exposure revision as a stop signal. Rejecting it as a stale quality window must not hide a newly learned consequential failure. Identity still has to match the candidate/baseline campaign.
+
+**Extend:** connect the affected order IDs to the [process-recovery study](process-recovery-study.md). Distinguish safe retry, compensation, refund reconciliation and customer notification. None is equivalent to sending future traffic to an older model.
+
+**Interview answer:** “Rollback controls future exposure. Containment stops active work, and remediation deals with effects already committed. I measure and test all three rather than use rollback as a synonym for recovery.”
+
+## Kata 27: recovery needs stronger evidence than a single green window
+
+The candidate fails at expanded exposure, improves in the next window, and asks to expand again. Separately, imagine both baseline and candidate fail every task: their paired difference is zero.
+
+**Task:** explain why neither observation is enough to expand. Test an explicit resume before and after the required healthy-window count. Try it after a hard rollback.
+
+??? success "Solution: absolute quality, hysteresis and a latched stop"
+    The controller evaluates the candidate's absolute floor as well as its paired point difference. Matching a failing baseline does not establish acceptable quality. `test_equally_bad_arms_do_not_earn_expansion` rejects that counterexample.
+
+    Restriction preserves a smaller nominal cohort. One healthy window does not restore exposure; two healthy windows plus explicit resume return the candidate only to canary. Replayed windows cannot increment the healthy streak, and a new non-green window resets it. This reduces oscillation but does not establish statistical error control.
+
+    Hard rollback is latched. A new campaign requires an explicit, separately reviewed initialization after investigation and requalification; a `resume=True` argument cannot revive the rolled-back state. The retained study's final window demonstrates that refusal.
+
+**Interview answer:** “I separate absolute acceptability, relative regression and operational recovery. Hysteresis prevents flapping; it does not replace uncertainty estimates or confer authority to restart after a serious incident.”
+
+## Connecting the lab to an application deployment
+
+Google's canary guidance connects limited exposure, evaluation and the release process; it also distinguishes canary behavior from service-wide averages. Use release-specific outcomes rather than allowing a large healthy baseline population to hide a small failing candidate cohort. [Google SRE Workbook: Canarying Releases](https://sre.google/workbook/canarying-releases/)
+
+Argo Rollouts provides a concrete orchestration example: analysis can succeed, fail or remain inconclusive; inconclusive analysis pauses for intervention. It supports failure limits and consecutive-success conditions. Dry-run metrics do not affect rollout status, so an observed failing metric may not actually block release. Verify those semantics instead of treating an existing dashboard or analysis object as enforcement. [Argo Rollouts analysis documentation](https://argo-rollouts.readthedocs.io/en/stable/features/analysis/)
+
+The following is the implementation handoff, **not an installed integration**:
+
+1. **Build and identify:** pin application image, model, prompt, tools, policy and harness. Verify deployed identities against the evaluated candidate and rollback target.
+2. **Qualify:** require scoped evidence with calibrated graders, complete artifacts and a justified statistical decision. The book's offline CI conformance job tests software; it does not produce this authority.
+3. **Route:** apply approved cohort rules, hard budgets and an expiry using an authenticated control-plane update. Verify the resulting routing configuration and actual traffic.
+4. **Collect:** join each served request to release identity, tool effects, mature outcomes, exclusions and independently owned traces. Account for missing or delayed events.
+5. **Decide and enforce:** map promote/hold/restrict/rollback to the orchestrator's real transitions. Test missing metrics, stale evidence, denied updates and unacknowledged routing changes. A successful API call is not proof that every worker stopped using the candidate.
+6. **Contain and repair:** stop consequential actions independently when required; reconcile prior effects; preserve the incident; add reviewed regression data; then repeat qualification before a new campaign.
+
+These interfaces still need an actual deployment target, authenticated authority model, action budgets, independent stop mechanism and cloud execution evidence. The local experiment does not configure Kubernetes, a load balancer or a production service. The [delivery map](primer-delivery-map.md) keeps that work open rather than relabeling simulation as deployment qualification.

@@ -45,6 +45,8 @@ Excluding a volatile ranking, price, star count, or copied quick-start is intent
 
 ## Recent capability addendum
 
+The [Exposure Control Lab](exposure-control-lab.md) adds an executed 280-request routing simulation and Katas 24–27 for stable cohorts, maturity, missing labels, expiry, quality restriction, recovery hysteresis and rollback. It retains 349 deterministic mock-agent executions. It does not confer statistical or deployment qualification, enforce monetary/request caps, interrupt active work or configure a cloud application router.
+
 The [Order Resolution Study](order-resolution-study.md) adds 16 executed deterministic trials with independent mock order ledgers, label-free unresolved inputs, customer corrections, scripted clarification and counterbalanced ordering. Katas 21–23 distinguish authorized wrong-object actions, retrospective clarification and rejected attempts hidden by later success. The live SDK path is contract-tested with a fake runner; live-model accuracy, question quality and qualified semantic grading remain unmeasured.
 
 The [CI Gate Lab](ci-gate-lab.md) adds locally executed pass/hold/block controls with full replayable packets and a configured read-only GitHub Actions workflow. Katas 16–17 separate conformance from candidate qualification and deployment. Cloud execution, branch-protection enforcement, and application canary control are not yet demonstrated.

@@ -309,6 +309,8 @@ These metrics should improve decision quality, not reward indiscriminate case cr
 
 ## Worked example: canary regression
 
+For an executed local routing example, use the [Exposure Control Lab](exposure-control-lab.md): 280 synthetic requests move through shadow, canary, expansion, restriction and rollback. Katas 24–27 cover cohort membership, maturity, stale telemetry, expiry and recovery. Its cloned ledgers and illustrative quality thresholds do not establish production or statistical qualification.
+
 Synthetic canary evidence after 1,000 matured eligible conversations in each arm (2,000 total):
 
 | Signal | Control | Candidate | Interpretation |

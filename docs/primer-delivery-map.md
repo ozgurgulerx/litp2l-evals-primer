@@ -26,7 +26,7 @@ For executable work, completion requires an inspectable chain from input through
 | Voice validity | Timeline scorer fixture exists | Recorded audio, synchronized action events and independent timing annotations |
 | Second domain | Domain comparison prose exists | Coding or artifact task with independent authoritative outcome and reproducible failure |
 | Frontier risk bridge | Source-verified worked safety case and Katas 13–15 separate capability, uplift, propensity, controls, internal deployment, human outcomes and useful autonomy | Execute local monitoring/isolation protocols; obtain relevant empirical transfer evidence; retain unresolved research limits |
-| Operational release curriculum | Runnable offline CI conformance, retained pass/hold/block packets, read-only workflow and book-publication dependency; Katas 16–17 | Observe GitHub workflow execution; implement application shadow/canary controller, expand/restrict/rollback exercises and incident-to-dataset loop |
+| Operational release curriculum | Runnable offline CI conformance and book-publication dependency; Katas 16–17; executed 280-request exposure simulation with 349 agent runs, pending-cohort checks, expiry, restriction and rollback; Katas 24–27 | Observe GitHub workflow execution; connect qualified evidence to a real application router and independent stop path; implement hard action budgets and incident-to-dataset automation |
 
 ## Whole-curriculum coverage requirements
 

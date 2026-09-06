@@ -124,6 +124,8 @@ Use a new output filename if it already exists: experiment artifacts cannot be o
 
 ## What comes next
 
+[Katas 24–27](exposure-control-lab.md) execute shadow/canary/expansion/restriction/rollback routing, preserve pending cohorts, expire stale routing and separate rollback from containment. The retained 280-request study is simulation-only.
+
 [Katas 21–23](order-resolution-study.md) execute real competing-order refunds, reject clarification after action and preserve rejected attempts. Their 16-trial study uses deterministic agents and scripted customers, not live-model qualification.
 
 [Katas 18–20](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) reconstruct calibration counts from retained rows, preserve adjudication, reject declared split leakage and connect incident learning to independent requalification. The executed four-row example is synthetic and remains unqualified.
