@@ -15,15 +15,15 @@ class ExposureControlTests(unittest.TestCase):
     def test_shadow_canary_expansion_and_stable_nested_cohorts(self):
         from cx_eval_lab.exposure_control import ExposureState, transition, route
         initial = ExposureState('candidate-v1', 'baseline-v1')
-        self.assertEqual({'baseline'}, {route(initial, f'user-{i}') for i in range(100)})
+        self.assertEqual({'baseline'}, {route(initial, f'user-{i}', now=0) for i in range(100)})
         canary = transition(initial, window(initial), now=10).state
         self.assertEqual(('canary', 5), (canary.stage, canary.percent))
         expanded = transition(canary, window(canary, 'w2', 10, 20, mature_at=20), now=20).state
         self.assertEqual(('expanded', 25), (expanded.stage, expanded.percent))
-        low = {i for i in range(1000) if route(canary, f'user-{i}') == 'candidate'}
-        high = {i for i in range(1000) if route(expanded, f'user-{i}') == 'candidate'}
+        low = {i for i in range(1000) if route(canary, f'user-{i}', now=20) == 'candidate'}
+        high = {i for i in range(1000) if route(expanded, f'user-{i}', now=20) == 'candidate'}
         self.assertTrue(low and low < high)
-        self.assertEqual(low, {i for i in range(1000) if route(canary, f'user-{i}') == 'candidate'})
+        self.assertEqual(low, {i for i in range(1000) if route(canary, f'user-{i}', now=20) == 'candidate'})
 
     def test_immature_and_small_windows_do_not_expand(self):
         from cx_eval_lab.exposure_control import ExposureState, transition
@@ -37,7 +37,7 @@ class ExposureControlTests(unittest.TestCase):
         state = ExposureState('candidate-v1', 'baseline-v1', stage='canary', percent=5)
         decision = transition(state, window(state, violation=True, mature_at=100), now=10)
         self.assertEqual(('rolled_back', 0), (decision.state.stage, decision.state.percent))
-        self.assertEqual('baseline', route(decision.state, 'customer'))
+        self.assertEqual('baseline', route(decision.state, 'customer', now=10))
         self.assertFalse(decision.deployment_authorized)
 
     def test_quality_restriction_needs_two_new_healthy_windows_and_explicit_resume(self):
@@ -80,6 +80,20 @@ class ExposureControlTests(unittest.TestCase):
         from cx_eval_lab.exposure_control import ExposureState, route
         state = ExposureState('candidate-v1', 'baseline-v1', stage='canary', percent=5, last_end=10)
         self.assertEqual({'baseline'}, {route(state, f'user-{i}', now=41) for i in range(1000)})
+        with self.assertRaises(TypeError):
+            route(state, 'customer')
+
+    def test_pending_cohort_cannot_drop_missing_labels_or_be_skipped(self):
+        from cx_eval_lab.exposure_control import ExposureState, transition
+        state = ExposureState('candidate-v1', 'baseline-v1')
+        original = window(state)
+        pending = replace(original, observations=(*original.observations[:-1],
+                          replace(original.observations[-1], candidate_pass=None)))
+        held = transition(state, pending, now=10).state
+        truncated = replace(pending, observations=pending.observations[:-1])
+        self.assertEqual('pending_cohort_mismatch', transition(held, truncated, now=10).reason)
+        self.assertEqual('pending_cohort_mismatch', transition(held, window(held, 'new', 10, 20), now=20).reason)
+        self.assertEqual('canary', transition(held, original, now=10).state.stage)
 
     def test_simulation_decision_cannot_claim_deployment_authority(self):
         from cx_eval_lab.exposure_control import ExposureState, ExposureDecision
