@@ -1,0 +1,7276 @@
+{
+  "schema": "synthetic-rater-study-v1",
+  "inputs": {
+    "source": {
+      "relative_path": "evals/cx-support/examples/human-annotations-v1.json",
+      "content_hash": "sha256:30b9b4f8d3483266414f559aed64282ea6e43f04e7850bdf3d7c82b2b162bf69"
+    },
+    "source_fixture": {
+      "artifact_type": "synthetic_human_annotation_study",
+      "study_id": "cx-resolution-pilot-v1",
+      "criterion": "resolution_explanation",
+      "labels": [
+        "pass",
+        "fail",
+        "unknown"
+      ],
+      "items": [
+        {
+          "case_id": "H01",
+          "situation": "eligible refund completed and clearly explained"
+        },
+        {
+          "case_id": "H02",
+          "situation": "agent claims success but no transaction exists"
+        },
+        {
+          "case_id": "H03",
+          "situation": "transaction pending but response says completed"
+        },
+        {
+          "case_id": "H04",
+          "situation": "policy evidence is missing"
+        },
+        {
+          "case_id": "H05",
+          "situation": "correct refusal with a concise reason"
+        },
+        {
+          "case_id": "H06",
+          "situation": "correct result with needlessly accusatory tone"
+        },
+        {
+          "case_id": "H07",
+          "situation": "Turkish response uses an ambiguous settlement term"
+        },
+        {
+          "case_id": "H08",
+          "situation": "correct escalation with an explicit next step"
+        }
+      ],
+      "annotations": [
+        {
+          "case_id": "H01",
+          "reviewer": "R1",
+          "label": "pass"
+        },
+        {
+          "case_id": "H01",
+          "reviewer": "R2",
+          "label": "pass"
+        },
+        {
+          "case_id": "H01",
+          "reviewer": "R3",
+          "label": "pass"
+        },
+        {
+          "case_id": "H02",
+          "reviewer": "R1",
+          "label": "fail"
+        },
+        {
+          "case_id": "H02",
+          "reviewer": "R2",
+          "label": "fail"
+        },
+        {
+          "case_id": "H02",
+          "reviewer": "R3",
+          "label": "fail"
+        },
+        {
+          "case_id": "H03",
+          "reviewer": "R1",
+          "label": "fail"
+        },
+        {
+          "case_id": "H03",
+          "reviewer": "R2",
+          "label": "fail"
+        },
+        {
+          "case_id": "H03",
+          "reviewer": "R3",
+          "label": "pass"
+        },
+        {
+          "case_id": "H04",
+          "reviewer": "R1",
+          "label": "unknown"
+        },
+        {
+          "case_id": "H04",
+          "reviewer": "R2",
+          "label": "unknown"
+        },
+        {
+          "case_id": "H04",
+          "reviewer": "R3",
+          "label": "fail"
+        },
+        {
+          "case_id": "H05",
+          "reviewer": "R1",
+          "label": "pass"
+        },
+        {
+          "case_id": "H05",
+          "reviewer": "R2",
+          "label": "pass"
+        },
+        {
+          "case_id": "H05",
+          "reviewer": "R3",
+          "label": "pass"
+        },
+        {
+          "case_id": "H06",
+          "reviewer": "R1",
+          "label": "fail"
+        },
+        {
+          "case_id": "H06",
+          "reviewer": "R2",
+          "label": "pass"
+        },
+        {
+          "case_id": "H06",
+          "reviewer": "R3",
+          "label": "fail"
+        },
+        {
+          "case_id": "H07",
+          "reviewer": "R1",
+          "label": "unknown"
+        },
+        {
+          "case_id": "H07",
+          "reviewer": "R2",
+          "label": "pass"
+        },
+        {
+          "case_id": "H07",
+          "reviewer": "R3",
+          "label": "unknown"
+        },
+        {
+          "case_id": "H08",
+          "reviewer": "R1",
+          "label": "pass"
+        },
+        {
+          "case_id": "H08",
+          "reviewer": "R2",
+          "label": "pass"
+        },
+        {
+          "case_id": "H08",
+          "reviewer": "R3",
+          "label": "pass"
+        }
+      ],
+      "adjudications": [
+        {
+          "case_id": "H03",
+          "label": "fail",
+          "reason": "submitted and settled are different states"
+        },
+        {
+          "case_id": "H04",
+          "label": "unknown",
+          "reason": "required policy evidence is absent"
+        },
+        {
+          "case_id": "H06",
+          "label": "fail",
+          "reason": "criterion mixes factual status and interaction quality and must be split"
+        },
+        {
+          "case_id": "H07",
+          "label": "unknown",
+          "reason": "requires a Turkish-language anchor or specialist review"
+        }
+      ],
+      "synthetic": true,
+      "release_evidence": false
+    },
+    "rubric_version": "resolution-explanation-v1",
+    "raters": [
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "item_evidence": [
+      {
+        "item_id": "H01",
+        "case_id": "H01",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H01",
+        "evidence": {
+          "case_id": "H01",
+          "situation": "eligible refund completed and clearly explained"
+        },
+        "evidence_hash": "sha256:652a535f838a50f47ba17df48382cbd9e78aabe17e4bf95c38450af4c19dff58",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H02",
+        "case_id": "H02",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H02",
+        "evidence": {
+          "case_id": "H02",
+          "situation": "agent claims success but no transaction exists"
+        },
+        "evidence_hash": "sha256:9cdd606e7391aaee3e033ee9aa9dfa94e0853b2f82bfbc8049b85d0d9dbf45c5",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H03",
+        "case_id": "H03",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H03",
+        "evidence": {
+          "case_id": "H03",
+          "situation": "transaction pending but response says completed"
+        },
+        "evidence_hash": "sha256:9a2c61e37b0bfea6c2848471522b9960d2f65690d702d0df5d160d372178bd26",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H04",
+        "case_id": "H04",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H04",
+        "evidence": {
+          "case_id": "H04",
+          "situation": "policy evidence is missing"
+        },
+        "evidence_hash": "sha256:816ece8ba6bef618096564f481ce8f9d816a0f29341a5d57973a108b9c14ec63",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H05",
+        "case_id": "H05",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H05",
+        "evidence": {
+          "case_id": "H05",
+          "situation": "correct refusal with a concise reason"
+        },
+        "evidence_hash": "sha256:09055595a539580fa6a5ddec9e5df32684d415c2a8f8ea7c12d80edb1549df60",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H06",
+        "case_id": "H06",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H06",
+        "evidence": {
+          "case_id": "H06",
+          "situation": "correct result with needlessly accusatory tone"
+        },
+        "evidence_hash": "sha256:be08dc742198037e14aa83d0c92b71902986817dabd6bbcbb96cdff34c4c21fd",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H07",
+        "case_id": "H07",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H07",
+        "evidence": {
+          "case_id": "H07",
+          "situation": "Turkish response uses an ambiguous settlement term"
+        },
+        "evidence_hash": "sha256:84d25efb845ebe4dd4c47636c9bfa30bd81d4e931aabc3e91a076c5863506a81",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      },
+      {
+        "item_id": "H08",
+        "case_id": "H08",
+        "rubric_version": "resolution-explanation-v1",
+        "evidence_ref": "synthetic-description/H08",
+        "evidence": {
+          "case_id": "H08",
+          "situation": "correct escalation with an explicit next step"
+        },
+        "evidence_hash": "sha256:94e0524deeb6e251fa503fe03c6835169af1a18b5a2071cf943a1007ff8e47fb",
+        "evidence_kind": "authored situation only; no supplied raw conversation"
+      }
+    ],
+    "bootstrap_pair": [
+      "R1",
+      "R2"
+    ],
+    "assignment_control": [
+      {
+        "case_id": "C1",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 0.",
+            "content_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 0.",
+            "content_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "pass",
+            "candidate": "pass"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      },
+      {
+        "case_id": "C2",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 1.",
+            "content_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 1.",
+            "content_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "pass",
+            "candidate": "pass"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      },
+      {
+        "case_id": "C3",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 2.",
+            "content_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 2.",
+            "content_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "fail",
+            "candidate": "fail"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      },
+      {
+        "case_id": "C4",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 3.",
+            "content_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 3.",
+            "content_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "fail",
+            "candidate": "fail"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      }
+    ]
+  },
+  "protocol": {
+    "labels": [
+      "pass",
+      "fail",
+      "unknown"
+    ],
+    "missing": "None excludes affected pair only, with explicit denominator",
+    "bootstrap": "exact item-level empirical bootstrap; finite kappa percentiles conditional on defined values",
+    "assignment": "authored full potential table, confounded and crossed deterministic observation selectors",
+    "authority": "synthetic annotation analysis only"
+  },
+  "registration_hash": "sha256:f289db8caea6ab2672273d8041ba482f611c348718c5cb06756b13223f512d47",
+  "pair_metrics": {
+    "R1:R2": {
+      "full": {
+        "n": 8,
+        "item_ids": [
+          "H01",
+          "H02",
+          "H03",
+          "H04",
+          "H05",
+          "H06",
+          "H07",
+          "H08"
+        ],
+        "item_coverage": 1.0,
+        "confusion": {
+          "pass": {
+            "pass": 3,
+            "fail": 0,
+            "unknown": 0
+          },
+          "fail": {
+            "pass": 1,
+            "fail": 2,
+            "unknown": 0
+          },
+          "unknown": {
+            "pass": 1,
+            "fail": 0,
+            "unknown": 1
+          }
+        },
+        "marginals": {
+          "left": {
+            "pass": 3,
+            "fail": 3,
+            "unknown": 2
+          },
+          "right": {
+            "pass": 5,
+            "fail": 2,
+            "unknown": 1
+          }
+        },
+        "observed_agreement": 0.75,
+        "expected_agreement": 0.359375,
+        "expected_agreement_exact": "23/64",
+        "kappa": 0.6097560975609756,
+        "kappa_exact": "25/41",
+        "pass_propensity_on_same_items": {
+          "left": 0.375,
+          "right": 0.625
+        }
+      },
+      "binary_decidable": {
+        "n": 6,
+        "item_ids": [
+          "H01",
+          "H02",
+          "H03",
+          "H05",
+          "H06",
+          "H08"
+        ],
+        "item_coverage": 0.75,
+        "confusion": {
+          "pass": {
+            "pass": 3,
+            "fail": 0
+          },
+          "fail": {
+            "pass": 1,
+            "fail": 2
+          }
+        },
+        "marginals": {
+          "left": {
+            "pass": 3,
+            "fail": 3
+          },
+          "right": {
+            "pass": 4,
+            "fail": 2
+          }
+        },
+        "observed_agreement": 0.8333333333333334,
+        "expected_agreement": 0.5,
+        "expected_agreement_exact": "1/2",
+        "kappa": 0.6666666666666666,
+        "kappa_exact": "2/3",
+        "pass_propensity_on_same_items": {
+          "left": 0.5,
+          "right": 0.6666666666666666
+        },
+        "estimand": "agreement conditional on both ratings being pass or fail"
+      },
+      "missing_item_ids": [],
+      "missing_rating_count": 0,
+      "unknown_item_ids": [
+        "H04",
+        "H07"
+      ],
+      "unknown_rating_count": 3,
+      "agreement_interval_iid_assumption": {
+        "lower": 0.34914420558717585,
+        "upper": 0.9681459737500557,
+        "confidence_level": 0.95,
+        "assumption": "IID sampled paired items for agreement indicator; not a kappa interval",
+        "fixture_does_not_establish_sampling": true,
+        "coverage_qualified_for_fixture": false
+      }
+    },
+    "R1:R3": {
+      "full": {
+        "n": 8,
+        "item_ids": [
+          "H01",
+          "H02",
+          "H03",
+          "H04",
+          "H05",
+          "H06",
+          "H07",
+          "H08"
+        ],
+        "item_coverage": 1.0,
+        "confusion": {
+          "pass": {
+            "pass": 3,
+            "fail": 0,
+            "unknown": 0
+          },
+          "fail": {
+            "pass": 1,
+            "fail": 2,
+            "unknown": 0
+          },
+          "unknown": {
+            "pass": 0,
+            "fail": 1,
+            "unknown": 1
+          }
+        },
+        "marginals": {
+          "left": {
+            "pass": 3,
+            "fail": 3,
+            "unknown": 2
+          },
+          "right": {
+            "pass": 4,
+            "fail": 3,
+            "unknown": 1
+          }
+        },
+        "observed_agreement": 0.75,
+        "expected_agreement": 0.359375,
+        "expected_agreement_exact": "23/64",
+        "kappa": 0.6097560975609756,
+        "kappa_exact": "25/41",
+        "pass_propensity_on_same_items": {
+          "left": 0.375,
+          "right": 0.5
+        }
+      },
+      "binary_decidable": {
+        "n": 6,
+        "item_ids": [
+          "H01",
+          "H02",
+          "H03",
+          "H05",
+          "H06",
+          "H08"
+        ],
+        "item_coverage": 0.75,
+        "confusion": {
+          "pass": {
+            "pass": 3,
+            "fail": 0
+          },
+          "fail": {
+            "pass": 1,
+            "fail": 2
+          }
+        },
+        "marginals": {
+          "left": {
+            "pass": 3,
+            "fail": 3
+          },
+          "right": {
+            "pass": 4,
+            "fail": 2
+          }
+        },
+        "observed_agreement": 0.8333333333333334,
+        "expected_agreement": 0.5,
+        "expected_agreement_exact": "1/2",
+        "kappa": 0.6666666666666666,
+        "kappa_exact": "2/3",
+        "pass_propensity_on_same_items": {
+          "left": 0.5,
+          "right": 0.6666666666666666
+        },
+        "estimand": "agreement conditional on both ratings being pass or fail"
+      },
+      "missing_item_ids": [],
+      "missing_rating_count": 0,
+      "unknown_item_ids": [
+        "H04",
+        "H07"
+      ],
+      "unknown_rating_count": 3,
+      "agreement_interval_iid_assumption": {
+        "lower": 0.34914420558717585,
+        "upper": 0.9681459737500557,
+        "confidence_level": 0.95,
+        "assumption": "IID sampled paired items for agreement indicator; not a kappa interval",
+        "fixture_does_not_establish_sampling": true,
+        "coverage_qualified_for_fixture": false
+      }
+    },
+    "R2:R3": {
+      "full": {
+        "n": 8,
+        "item_ids": [
+          "H01",
+          "H02",
+          "H03",
+          "H04",
+          "H05",
+          "H06",
+          "H07",
+          "H08"
+        ],
+        "item_coverage": 1.0,
+        "confusion": {
+          "pass": {
+            "pass": 3,
+            "fail": 1,
+            "unknown": 1
+          },
+          "fail": {
+            "pass": 1,
+            "fail": 1,
+            "unknown": 0
+          },
+          "unknown": {
+            "pass": 0,
+            "fail": 1,
+            "unknown": 0
+          }
+        },
+        "marginals": {
+          "left": {
+            "pass": 5,
+            "fail": 2,
+            "unknown": 1
+          },
+          "right": {
+            "pass": 4,
+            "fail": 3,
+            "unknown": 1
+          }
+        },
+        "observed_agreement": 0.5,
+        "expected_agreement": 0.421875,
+        "expected_agreement_exact": "27/64",
+        "kappa": 0.13513513513513514,
+        "kappa_exact": "5/37",
+        "pass_propensity_on_same_items": {
+          "left": 0.625,
+          "right": 0.5
+        }
+      },
+      "binary_decidable": {
+        "n": 6,
+        "item_ids": [
+          "H01",
+          "H02",
+          "H03",
+          "H05",
+          "H06",
+          "H08"
+        ],
+        "item_coverage": 0.75,
+        "confusion": {
+          "pass": {
+            "pass": 3,
+            "fail": 1
+          },
+          "fail": {
+            "pass": 1,
+            "fail": 1
+          }
+        },
+        "marginals": {
+          "left": {
+            "pass": 4,
+            "fail": 2
+          },
+          "right": {
+            "pass": 4,
+            "fail": 2
+          }
+        },
+        "observed_agreement": 0.6666666666666666,
+        "expected_agreement": 0.5555555555555556,
+        "expected_agreement_exact": "5/9",
+        "kappa": 0.25,
+        "kappa_exact": "1/4",
+        "pass_propensity_on_same_items": {
+          "left": 0.6666666666666666,
+          "right": 0.6666666666666666
+        },
+        "estimand": "agreement conditional on both ratings being pass or fail"
+      },
+      "missing_item_ids": [],
+      "missing_rating_count": 0,
+      "unknown_item_ids": [
+        "H04",
+        "H07"
+      ],
+      "unknown_rating_count": 2,
+      "agreement_interval_iid_assumption": {
+        "lower": 0.15701277048705808,
+        "upper": 0.8429872295129419,
+        "confidence_level": 0.95,
+        "assumption": "IID sampled paired items for agreement indicator; not a kappa interval",
+        "fixture_does_not_establish_sampling": true,
+        "coverage_qualified_for_fixture": false
+      }
+    }
+  },
+  "registered_pair_bootstrap": {
+    "raters": [
+      "R1",
+      "R2"
+    ],
+    "resampling_unit": "whole paired item, not individual rating",
+    "complete_item_ids": [
+      "H01",
+      "H02",
+      "H03",
+      "H04",
+      "H05",
+      "H06",
+      "H07",
+      "H08"
+    ],
+    "excluded_missing_item_ids": [],
+    "occupied_cells": [
+      {
+        "left": "fail",
+        "right": "fail",
+        "count": 2
+      },
+      {
+        "left": "fail",
+        "right": "pass",
+        "count": 1
+      },
+      {
+        "left": "pass",
+        "right": "pass",
+        "count": 3
+      },
+      {
+        "left": "unknown",
+        "right": "pass",
+        "count": 1
+      },
+      {
+        "left": "unknown",
+        "right": "unknown",
+        "count": 1
+      }
+    ],
+    "count_vector_count": 495,
+    "ordered_resample_count": 16777216,
+    "count_vectors": [
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          8
+        ],
+        "multiplicity": 1,
+        "kappa_exact": null
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          1,
+          7
+        ],
+        "multiplicity": 8,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          2,
+          6
+        ],
+        "multiplicity": 28,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          3,
+          5
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          4,
+          4
+        ],
+        "multiplicity": 70,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          5,
+          3
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          6,
+          2
+        ],
+        "multiplicity": 28,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          7,
+          1
+        ],
+        "multiplicity": 8,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          0,
+          8,
+          0
+        ],
+        "multiplicity": 1,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          0,
+          7
+        ],
+        "multiplicity": 24,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          1,
+          6
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          2,
+          5
+        ],
+        "multiplicity": 504,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          3,
+          4
+        ],
+        "multiplicity": 840,
+        "kappa_exact": "1/4"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          4,
+          3
+        ],
+        "multiplicity": 840,
+        "kappa_exact": "3/19"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          5,
+          2
+        ],
+        "multiplicity": 504,
+        "kappa_exact": "1/11"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          6,
+          1
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "1/25"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          1,
+          7,
+          0
+        ],
+        "multiplicity": 24,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          0,
+          6
+        ],
+        "multiplicity": 252,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          1,
+          5
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "5/7"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          2,
+          4
+        ],
+        "multiplicity": 3780,
+        "kappa_exact": "1/2"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          3,
+          3
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          4,
+          2
+        ],
+        "multiplicity": 3780,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          5,
+          1
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "1/11"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          2,
+          6,
+          0
+        ],
+        "multiplicity": 252,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          3,
+          0,
+          5
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          3,
+          1,
+          4
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "3/4"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          3,
+          2,
+          3
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "9/17"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          3,
+          3,
+          2
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          3,
+          4,
+          1
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "3/19"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          3,
+          5,
+          0
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          4,
+          0,
+          4
+        ],
+        "multiplicity": 5670,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          4,
+          1,
+          3
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "3/4"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          4,
+          2,
+          2
+        ],
+        "multiplicity": 34020,
+        "kappa_exact": "1/2"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          4,
+          3,
+          1
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "1/4"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          4,
+          4,
+          0
+        ],
+        "multiplicity": 5670,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          5,
+          0,
+          3
+        ],
+        "multiplicity": 13608,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          5,
+          1,
+          2
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "5/7"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          5,
+          2,
+          1
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          5,
+          3,
+          0
+        ],
+        "multiplicity": 13608,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          6,
+          0,
+          2
+        ],
+        "multiplicity": 20412,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          6,
+          1,
+          1
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          6,
+          2,
+          0
+        ],
+        "multiplicity": 20412,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          7,
+          0,
+          1
+        ],
+        "multiplicity": 17496,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          7,
+          1,
+          0
+        ],
+        "multiplicity": 17496,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          0,
+          8,
+          0,
+          0
+        ],
+        "multiplicity": 6561,
+        "kappa_exact": null
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          0,
+          7
+        ],
+        "multiplicity": 8,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          1,
+          6
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          2,
+          5
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "5/29"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          3,
+          4
+        ],
+        "multiplicity": 280,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          4,
+          3
+        ],
+        "multiplicity": 280,
+        "kappa_exact": "3/43"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          5,
+          2
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "1/25"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          6,
+          1
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "1/57"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          0,
+          7,
+          0
+        ],
+        "multiplicity": 8,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          0,
+          6
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "9/13"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          1,
+          5
+        ],
+        "multiplicity": 1008,
+        "kappa_exact": "15/31"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          2,
+          4
+        ],
+        "multiplicity": 2520,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          3,
+          3
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "9/41"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          4,
+          2
+        ],
+        "multiplicity": 2520,
+        "kappa_exact": "3/23"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          5,
+          1
+        ],
+        "multiplicity": 1008,
+        "kappa_exact": "1/17"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          1,
+          6,
+          0
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          2,
+          0,
+          5
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "25/33"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          2,
+          1,
+          4
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          2,
+          3,
+          2
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "5/21"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          2,
+          4,
+          1
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          2,
+          5,
+          0
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          3,
+          0,
+          4
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "7/9"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          3,
+          1,
+          3
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "21/37"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          3,
+          2,
+          2
+        ],
+        "multiplicity": 45360,
+        "kappa_exact": "7/19"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          3,
+          3,
+          1
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "7/39"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          3,
+          4,
+          0
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          4,
+          0,
+          3
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "27/35"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          4,
+          1,
+          2
+        ],
+        "multiplicity": 68040,
+        "kappa_exact": "9/17"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          4,
+          2,
+          1
+        ],
+        "multiplicity": 68040,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          4,
+          3,
+          0
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          5,
+          0,
+          2
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "11/15"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          5,
+          1,
+          1
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "11/27"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          5,
+          2,
+          0
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          6,
+          0,
+          1
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          6,
+          1,
+          0
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          1,
+          7,
+          0,
+          0
+        ],
+        "multiplicity": 17496,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          0,
+          6
+        ],
+        "multiplicity": 28,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          1,
+          5
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "5/17"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          2,
+          4
+        ],
+        "multiplicity": 420,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          3,
+          3
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "3/23"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          4,
+          2
+        ],
+        "multiplicity": 420,
+        "kappa_exact": "1/13"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          5,
+          1
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "1/29"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          0,
+          6,
+          0
+        ],
+        "multiplicity": 28,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          1,
+          0,
+          5
+        ],
+        "multiplicity": 504,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          1,
+          1,
+          4
+        ],
+        "multiplicity": 2520,
+        "kappa_exact": "2/5"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          1,
+          2,
+          3
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          1,
+          3,
+          2
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "1/6"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          1,
+          4,
+          1
+        ],
+        "multiplicity": 2520,
+        "kappa_exact": "1/13"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          1,
+          5,
+          0
+        ],
+        "multiplicity": 504,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          2,
+          0,
+          4
+        ],
+        "multiplicity": 3780,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          2,
+          1,
+          3
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          2,
+          3,
+          1
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "3/23"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          2,
+          4,
+          0
+        ],
+        "multiplicity": 3780,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          3,
+          0,
+          3
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          3,
+          1,
+          2
+        ],
+        "multiplicity": 45360,
+        "kappa_exact": "2/5"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          3,
+          2,
+          1
+        ],
+        "multiplicity": 45360,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          3,
+          3,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          4,
+          0,
+          2
+        ],
+        "multiplicity": 34020,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          4,
+          1,
+          1
+        ],
+        "multiplicity": 68040,
+        "kappa_exact": "5/17"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          4,
+          2,
+          0
+        ],
+        "multiplicity": 34020,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          5,
+          0,
+          1
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          5,
+          1,
+          0
+        ],
+        "multiplicity": 40824,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          2,
+          6,
+          0,
+          0
+        ],
+        "multiplicity": 20412,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          0,
+          0,
+          5
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          0,
+          1,
+          4
+        ],
+        "multiplicity": 280,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          0,
+          2,
+          3
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "9/49"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          0,
+          3,
+          2
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          0,
+          4,
+          1
+        ],
+        "multiplicity": 280,
+        "kappa_exact": "3/59"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          0,
+          5,
+          0
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          1,
+          0,
+          4
+        ],
+        "multiplicity": 840,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          1,
+          1,
+          3
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "15/47"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          1,
+          2,
+          2
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          1,
+          3,
+          1
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "5/53"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          1,
+          4,
+          0
+        ],
+        "multiplicity": 840,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          2,
+          0,
+          3
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          2,
+          1,
+          2
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          2,
+          2,
+          1
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "7/47"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          2,
+          3,
+          0
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          3,
+          0,
+          2
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          3,
+          1,
+          1
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "9/41"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          3,
+          2,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          4,
+          0,
+          1
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "11/35"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          4,
+          1,
+          0
+        ],
+        "multiplicity": 22680,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          3,
+          5,
+          0,
+          0
+        ],
+        "multiplicity": 13608,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          0,
+          0,
+          4
+        ],
+        "multiplicity": 70,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          0,
+          1,
+          3
+        ],
+        "multiplicity": 280,
+        "kappa_exact": "3/13"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          0,
+          2,
+          2
+        ],
+        "multiplicity": 420,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          0,
+          3,
+          1
+        ],
+        "multiplicity": 280,
+        "kappa_exact": "1/15"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          0,
+          4,
+          0
+        ],
+        "multiplicity": 70,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          1,
+          0,
+          3
+        ],
+        "multiplicity": 840,
+        "kappa_exact": "9/25"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          1,
+          1,
+          2
+        ],
+        "multiplicity": 2520,
+        "kappa_exact": "3/13"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          1,
+          2,
+          1
+        ],
+        "multiplicity": 2520,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          1,
+          3,
+          0
+        ],
+        "multiplicity": 840,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          2,
+          0,
+          2
+        ],
+        "multiplicity": 3780,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          2,
+          1,
+          1
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "1/6"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          2,
+          2,
+          0
+        ],
+        "multiplicity": 3780,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          3,
+          0,
+          1
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "5/21"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          3,
+          1,
+          0
+        ],
+        "multiplicity": 7560,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          4,
+          4,
+          0,
+          0
+        ],
+        "multiplicity": 5670,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          0,
+          0,
+          3
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          0,
+          1,
+          2
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "5/29"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          0,
+          2,
+          1
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "5/61"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          0,
+          3,
+          0
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          1,
+          0,
+          2
+        ],
+        "multiplicity": 504,
+        "kappa_exact": "7/27"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          1,
+          1,
+          1
+        ],
+        "multiplicity": 1008,
+        "kappa_exact": "7/55"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          1,
+          2,
+          0
+        ],
+        "multiplicity": 504,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          2,
+          0,
+          1
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "9/49"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          2,
+          1,
+          0
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          5,
+          3,
+          0,
+          0
+        ],
+        "multiplicity": 1512,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          6,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 28,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          0,
+          6,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 56,
+        "kappa_exact": "3/31"
+      },
+      {
+        "counts": [
+          0,
+          6,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 28,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          6,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          0,
+          6,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 168,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          6,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 252,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          7,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 8,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          0,
+          7,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 8,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          7,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 24,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          0,
+          8,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 1,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          7
+        ],
+        "multiplicity": 16,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          1,
+          6
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          2,
+          5
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          3,
+          4
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "11/35"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          4,
+          3
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "5/21"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          5,
+          2
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "9/49"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          6,
+          1
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          0,
+          7,
+          0
+        ],
+        "multiplicity": 16,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          0,
+          6
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          1,
+          5
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "23/31"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          2,
+          4
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          3,
+          3
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          4,
+          2
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          5,
+          1
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          1,
+          6,
+          0
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          2,
+          0,
+          5
+        ],
+        "multiplicity": 3024,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          2,
+          1,
+          4
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "29/37"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          2,
+          2,
+          3
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          2,
+          3,
+          2
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "19/43"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          2,
+          4,
+          1
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          2,
+          5,
+          0
+        ],
+        "multiplicity": 3024,
+        "kappa_exact": "9/49"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          3,
+          0,
+          4
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          3,
+          1,
+          3
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "31/39"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          3,
+          2,
+          2
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          3,
+          3,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          3,
+          4,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "5/21"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          4,
+          0,
+          3
+        ],
+        "multiplicity": 45360,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          4,
+          1,
+          2
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "29/37"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          4,
+          2,
+          1
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          4,
+          3,
+          0
+        ],
+        "multiplicity": 45360,
+        "kappa_exact": "11/35"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          5,
+          0,
+          2
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          5,
+          1,
+          1
+        ],
+        "multiplicity": 163296,
+        "kappa_exact": "23/31"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          5,
+          2,
+          0
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          6,
+          0,
+          1
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          6,
+          1,
+          0
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          1,
+          0,
+          7,
+          0,
+          0
+        ],
+        "multiplicity": 34992,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          0,
+          6
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "9/13"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          1,
+          5
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "1/2"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          2,
+          4
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "7/19"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          3,
+          3
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          4,
+          2
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          5,
+          1
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          0,
+          6,
+          0
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "3/31"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          1,
+          0,
+          5
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "27/35"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          1,
+          1,
+          4
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "23/39"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          1,
+          2,
+          3
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "19/43"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          1,
+          3,
+          2
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "15/47"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          1,
+          4,
+          1
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          1,
+          5,
+          0
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "7/55"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          2,
+          0,
+          4
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "4/5"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          2,
+          1,
+          3
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          2,
+          2,
+          2
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          2,
+          3,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          2,
+          4,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1/6"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          3,
+          0,
+          3
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "33/41"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          3,
+          1,
+          2
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "25/41"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          3,
+          2,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          3,
+          3,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "9/41"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          4,
+          0,
+          2
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "15/19"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          4,
+          1,
+          1
+        ],
+        "multiplicity": 272160,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          4,
+          2,
+          0
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "5/17"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          5,
+          0,
+          1
+        ],
+        "multiplicity": 163296,
+        "kappa_exact": "23/31"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          5,
+          1,
+          0
+        ],
+        "multiplicity": 163296,
+        "kappa_exact": "11/27"
+      },
+      {
+        "counts": [
+          1,
+          1,
+          6,
+          0,
+          0
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          0,
+          0,
+          5
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          0,
+          1,
+          4
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          0,
+          2,
+          3
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          0,
+          3,
+          2
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          0,
+          4,
+          1
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          0,
+          5,
+          0
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "5/61"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          1,
+          0,
+          4
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          1,
+          1,
+          3
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          1,
+          2,
+          2
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          1,
+          3,
+          1
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          1,
+          4,
+          0
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          2,
+          0,
+          3
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          2,
+          1,
+          2
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          2,
+          2,
+          1
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          2,
+          3,
+          0
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "7/47"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          3,
+          0,
+          2
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          3,
+          1,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          3,
+          2,
+          0
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          4,
+          0,
+          1
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          4,
+          1,
+          0
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          1,
+          2,
+          5,
+          0,
+          0
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          0,
+          0,
+          4
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          0,
+          1,
+          3
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          0,
+          2,
+          2
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "3/13"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          0,
+          3,
+          1
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          0,
+          4,
+          0
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "1/15"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          1,
+          0,
+          3
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "23/47"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          1,
+          1,
+          2
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "17/49"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          1,
+          2,
+          1
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          1,
+          3,
+          0
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "5/53"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          2,
+          0,
+          2
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "11/23"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          2,
+          1,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          2,
+          2,
+          0
+        ],
+        "multiplicity": 30240,
+        "kappa_exact": "3/23"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          3,
+          0,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          3,
+          1,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "7/39"
+      },
+      {
+        "counts": [
+          1,
+          3,
+          4,
+          0,
+          0
+        ],
+        "multiplicity": 45360,
+        "kappa_exact": "1/4"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          0,
+          0,
+          3
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "9/25"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          0,
+          1,
+          2
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "13/53"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          0,
+          2,
+          1
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          0,
+          3,
+          0
+        ],
+        "multiplicity": 560,
+        "kappa_exact": "3/59"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          1,
+          0,
+          2
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "9/25"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          1,
+          1,
+          1
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          1,
+          2,
+          0
+        ],
+        "multiplicity": 5040,
+        "kappa_exact": "1/13"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          2,
+          0,
+          1
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          2,
+          1,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          1,
+          4,
+          3,
+          0,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "3/19"
+      },
+      {
+        "counts": [
+          1,
+          5,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "7/27"
+      },
+      {
+        "counts": [
+          1,
+          5,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          5,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "1/29"
+      },
+      {
+        "counts": [
+          1,
+          5,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          1,
+          5,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "1/17"
+      },
+      {
+        "counts": [
+          1,
+          5,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 3024,
+        "kappa_exact": "1/11"
+      },
+      {
+        "counts": [
+          1,
+          6,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          1,
+          6,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "1/57"
+      },
+      {
+        "counts": [
+          1,
+          6,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 336,
+        "kappa_exact": "1/25"
+      },
+      {
+        "counts": [
+          1,
+          7,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 16,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          0,
+          6
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          1,
+          5
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "11/15"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          2,
+          4
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          3,
+          3
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          4,
+          2
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          5,
+          1
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "7/27"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          0,
+          6,
+          0
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          1,
+          0,
+          5
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          1,
+          1,
+          4
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "15/19"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          1,
+          2,
+          3
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          1,
+          3,
+          2
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "11/23"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          1,
+          4,
+          1
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "9/25"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          1,
+          5,
+          0
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "7/27"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          2,
+          0,
+          4
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          2,
+          1,
+          3
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "17/21"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          2,
+          2,
+          2
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          2,
+          3,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "11/23"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          2,
+          4,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          3,
+          0,
+          3
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          3,
+          1,
+          2
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "17/21"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          3,
+          2,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          3,
+          3,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          4,
+          0,
+          2
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          4,
+          1,
+          1
+        ],
+        "multiplicity": 272160,
+        "kappa_exact": "15/19"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          4,
+          2,
+          0
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          5,
+          0,
+          1
+        ],
+        "multiplicity": 163296,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          5,
+          1,
+          0
+        ],
+        "multiplicity": 163296,
+        "kappa_exact": "11/15"
+      },
+      {
+        "counts": [
+          2,
+          0,
+          6,
+          0,
+          0
+        ],
+        "multiplicity": 81648,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          0,
+          0,
+          5
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "25/33"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          0,
+          1,
+          4
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "11/19"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          0,
+          2,
+          3
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "19/43"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          0,
+          3,
+          2
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          0,
+          4,
+          1
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "13/53"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          0,
+          5,
+          0
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "5/29"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          1,
+          0,
+          4
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "4/5"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          1,
+          1,
+          3
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "27/43"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          1,
+          2,
+          2
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "11/23"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          1,
+          3,
+          1
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "17/49"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          1,
+          4,
+          0
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "3/13"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          2,
+          0,
+          3
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "35/43"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          2,
+          1,
+          2
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          2,
+          2,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          2,
+          3,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          3,
+          0,
+          2
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "17/21"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          3,
+          1,
+          1
+        ],
+        "multiplicity": 362880,
+        "kappa_exact": "25/41"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          3,
+          2,
+          0
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "2/5"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          4,
+          0,
+          1
+        ],
+        "multiplicity": 272160,
+        "kappa_exact": "29/37"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          4,
+          1,
+          0
+        ],
+        "multiplicity": 272160,
+        "kappa_exact": "9/17"
+      },
+      {
+        "counts": [
+          2,
+          1,
+          5,
+          0,
+          0
+        ],
+        "multiplicity": 163296,
+        "kappa_exact": "5/7"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          0,
+          0,
+          4
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          0,
+          1,
+          3
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          0,
+          2,
+          2
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          0,
+          3,
+          1
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "3/13"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          0,
+          4,
+          0
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/7"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          1,
+          0,
+          3
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          1,
+          1,
+          2
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "11/23"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          1,
+          2,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          1,
+          3,
+          0
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          2,
+          0,
+          2
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          2,
+          1,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          0
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          3,
+          0,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          3,
+          1,
+          0
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "7/19"
+      },
+      {
+        "counts": [
+          2,
+          2,
+          4,
+          0,
+          0
+        ],
+        "multiplicity": 136080,
+        "kappa_exact": "1/2"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          0,
+          0,
+          3
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          0,
+          1,
+          2
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          0,
+          2,
+          1
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "11/51"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          0,
+          3,
+          0
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          1,
+          0,
+          2
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "11/23"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          1,
+          1,
+          1
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "15/47"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          1,
+          2,
+          0
+        ],
+        "multiplicity": 20160,
+        "kappa_exact": "1/6"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          2,
+          0,
+          1
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "19/43"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          2,
+          1,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "5/21"
+      },
+      {
+        "counts": [
+          2,
+          3,
+          3,
+          0,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          4,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          2,
+          4,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 3360,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          2,
+          4,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 1680,
+        "kappa_exact": "1/13"
+      },
+      {
+        "counts": [
+          2,
+          4,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          2,
+          4,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 10080,
+        "kappa_exact": "3/23"
+      },
+      {
+        "counts": [
+          2,
+          4,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 15120,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          2,
+          5,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "9/49"
+      },
+      {
+        "counts": [
+          2,
+          5,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 672,
+        "kappa_exact": "1/25"
+      },
+      {
+        "counts": [
+          2,
+          5,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 2016,
+        "kappa_exact": "1/11"
+      },
+      {
+        "counts": [
+          2,
+          6,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 112,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          0,
+          0,
+          5
+        ],
+        "multiplicity": 448,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          0,
+          1,
+          4
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "27/35"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          0,
+          2,
+          3
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          0,
+          3,
+          2
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          0,
+          4,
+          1
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "9/25"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          0,
+          5,
+          0
+        ],
+        "multiplicity": 448,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          1,
+          0,
+          4
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          1,
+          1,
+          3
+        ],
+        "multiplicity": 26880,
+        "kappa_exact": "33/41"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          1,
+          2,
+          2
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          1,
+          3,
+          1
+        ],
+        "multiplicity": 26880,
+        "kappa_exact": "23/47"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          1,
+          4,
+          0
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "9/25"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          2,
+          0,
+          3
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          2,
+          1,
+          2
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "35/43"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          2,
+          2,
+          1
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "7/11"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          2,
+          3,
+          0
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          3,
+          0,
+          2
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          3,
+          1,
+          1
+        ],
+        "multiplicity": 241920,
+        "kappa_exact": "33/41"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          3,
+          2,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          4,
+          0,
+          1
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          4,
+          1,
+          0
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "27/35"
+      },
+      {
+        "counts": [
+          3,
+          0,
+          5,
+          0,
+          0
+        ],
+        "multiplicity": 108864,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          0,
+          0,
+          4
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "7/9"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          0,
+          1,
+          3
+        ],
+        "multiplicity": 8960,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          0,
+          2,
+          2
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          0,
+          3,
+          1
+        ],
+        "multiplicity": 8960,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          0,
+          4,
+          0
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "3/13"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          1,
+          0,
+          3
+        ],
+        "multiplicity": 26880,
+        "kappa_exact": "33/41"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          1,
+          1,
+          2
+        ],
+        "multiplicity": 80640,
+        "kappa_exact": "27/43"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          1,
+          2,
+          1
+        ],
+        "multiplicity": 80640,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          1,
+          3,
+          0
+        ],
+        "multiplicity": 26880,
+        "kappa_exact": "15/47"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          2,
+          0,
+          2
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "17/21"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          2,
+          1,
+          1
+        ],
+        "multiplicity": 241920,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          2,
+          2,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          3,
+          0,
+          1
+        ],
+        "multiplicity": 241920,
+        "kappa_exact": "31/39"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          3,
+          1,
+          0
+        ],
+        "multiplicity": 241920,
+        "kappa_exact": "21/37"
+      },
+      {
+        "counts": [
+          3,
+          1,
+          4,
+          0,
+          0
+        ],
+        "multiplicity": 181440,
+        "kappa_exact": "3/4"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          0,
+          0,
+          3
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          0,
+          1,
+          2
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "19/43"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          0,
+          2,
+          1
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "7/23"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          0,
+          3,
+          0
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "9/49"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          1,
+          0,
+          2
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "multiplicity": 80640,
+        "kappa_exact": "19/43"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          1,
+          2,
+          0
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          2,
+          0,
+          1
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          2,
+          1,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          3,
+          2,
+          3,
+          0,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "9/17"
+      },
+      {
+        "counts": [
+          3,
+          3,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          3,
+          3,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 8960,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          3,
+          3,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "3/23"
+      },
+      {
+        "counts": [
+          3,
+          3,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 26880,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          3,
+          3,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 26880,
+        "kappa_exact": "9/41"
+      },
+      {
+        "counts": [
+          3,
+          3,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          3,
+          4,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "5/21"
+      },
+      {
+        "counts": [
+          3,
+          4,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 2240,
+        "kappa_exact": "3/43"
+      },
+      {
+        "counts": [
+          3,
+          4,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "3/19"
+      },
+      {
+        "counts": [
+          3,
+          5,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 448,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          0,
+          0,
+          4
+        ],
+        "multiplicity": 1120,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          0,
+          1,
+          3
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "7/9"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          0,
+          2,
+          2
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          0,
+          3,
+          1
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          0,
+          4,
+          0
+        ],
+        "multiplicity": 1120,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          1,
+          0,
+          3
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          1,
+          1,
+          2
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "4/5"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          1,
+          2,
+          1
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          1,
+          3,
+          0
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "5/11"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          2,
+          0,
+          2
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          2,
+          1,
+          1
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "4/5"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          2,
+          2,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          3,
+          0,
+          1
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          3,
+          1,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "7/9"
+      },
+      {
+        "counts": [
+          4,
+          0,
+          4,
+          0,
+          0
+        ],
+        "multiplicity": 90720,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          0,
+          0,
+          3
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "27/35"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          0,
+          1,
+          2
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "11/19"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          0,
+          2,
+          1
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "17/41"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          0,
+          3,
+          0
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          1,
+          0,
+          2
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "15/19"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          1,
+          1,
+          1
+        ],
+        "multiplicity": 80640,
+        "kappa_exact": "23/39"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          1,
+          2,
+          0
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "2/5"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          2,
+          0,
+          1
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "29/37"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          2,
+          1,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          4,
+          1,
+          3,
+          0,
+          0
+        ],
+        "multiplicity": 120960,
+        "kappa_exact": "3/4"
+      },
+      {
+        "counts": [
+          4,
+          2,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          4,
+          2,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "7/19"
+      },
+      {
+        "counts": [
+          4,
+          2,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 6720,
+        "kappa_exact": "1/5"
+      },
+      {
+        "counts": [
+          4,
+          2,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          4,
+          2,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 40320,
+        "kappa_exact": "1/3"
+      },
+      {
+        "counts": [
+          4,
+          2,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 60480,
+        "kappa_exact": "1/2"
+      },
+      {
+        "counts": [
+          4,
+          3,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "11/35"
+      },
+      {
+        "counts": [
+          4,
+          3,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 4480,
+        "kappa_exact": "1/9"
+      },
+      {
+        "counts": [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 13440,
+        "kappa_exact": "1/4"
+      },
+      {
+        "counts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 1120,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          0,
+          0,
+          3
+        ],
+        "multiplicity": 1792,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          0,
+          1,
+          2
+        ],
+        "multiplicity": 5376,
+        "kappa_exact": "25/33"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          0,
+          2,
+          1
+        ],
+        "multiplicity": 5376,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          0,
+          3,
+          0
+        ],
+        "multiplicity": 1792,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          1,
+          0,
+          2
+        ],
+        "multiplicity": 16128,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          1,
+          1,
+          1
+        ],
+        "multiplicity": 32256,
+        "kappa_exact": "27/35"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          1,
+          2,
+          0
+        ],
+        "multiplicity": 16128,
+        "kappa_exact": "5/9"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          2,
+          0,
+          1
+        ],
+        "multiplicity": 48384,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          2,
+          1,
+          0
+        ],
+        "multiplicity": 48384,
+        "kappa_exact": "25/33"
+      },
+      {
+        "counts": [
+          5,
+          0,
+          3,
+          0,
+          0
+        ],
+        "multiplicity": 48384,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          5,
+          1,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 5376,
+        "kappa_exact": "11/15"
+      },
+      {
+        "counts": [
+          5,
+          1,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 10752,
+        "kappa_exact": "1/2"
+      },
+      {
+        "counts": [
+          5,
+          1,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 5376,
+        "kappa_exact": "5/17"
+      },
+      {
+        "counts": [
+          5,
+          1,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 32256,
+        "kappa_exact": "23/31"
+      },
+      {
+        "counts": [
+          5,
+          1,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 32256,
+        "kappa_exact": "15/31"
+      },
+      {
+        "counts": [
+          5,
+          1,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 48384,
+        "kappa_exact": "5/7"
+      },
+      {
+        "counts": [
+          5,
+          2,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 5376,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          5,
+          2,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 5376,
+        "kappa_exact": "5/29"
+      },
+      {
+        "counts": [
+          5,
+          2,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 16128,
+        "kappa_exact": "5/13"
+      },
+      {
+        "counts": [
+          5,
+          3,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 1792,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          6,
+          0,
+          0,
+          0,
+          2
+        ],
+        "multiplicity": 1792,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          6,
+          0,
+          0,
+          1,
+          1
+        ],
+        "multiplicity": 3584,
+        "kappa_exact": "9/13"
+      },
+      {
+        "counts": [
+          6,
+          0,
+          0,
+          2,
+          0
+        ],
+        "multiplicity": 1792,
+        "kappa_exact": "3/7"
+      },
+      {
+        "counts": [
+          6,
+          0,
+          1,
+          0,
+          1
+        ],
+        "multiplicity": 10752,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          6,
+          0,
+          1,
+          1,
+          0
+        ],
+        "multiplicity": 10752,
+        "kappa_exact": "9/13"
+      },
+      {
+        "counts": [
+          6,
+          0,
+          2,
+          0,
+          0
+        ],
+        "multiplicity": 16128,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          6,
+          1,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 3584,
+        "kappa_exact": "13/21"
+      },
+      {
+        "counts": [
+          6,
+          1,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 3584,
+        "kappa_exact": "3/11"
+      },
+      {
+        "counts": [
+          6,
+          1,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 10752,
+        "kappa_exact": "3/5"
+      },
+      {
+        "counts": [
+          6,
+          2,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 1792,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          7,
+          0,
+          0,
+          0,
+          1
+        ],
+        "multiplicity": 1024,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          7,
+          0,
+          0,
+          1,
+          0
+        ],
+        "multiplicity": 1024,
+        "kappa_exact": "7/15"
+      },
+      {
+        "counts": [
+          7,
+          0,
+          1,
+          0,
+          0
+        ],
+        "multiplicity": 3072,
+        "kappa_exact": "1"
+      },
+      {
+        "counts": [
+          7,
+          1,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 1024,
+        "kappa_exact": "0"
+      },
+      {
+        "counts": [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        "multiplicity": 256,
+        "kappa_exact": null
+      }
+    ],
+    "distribution": [
+      {
+        "kappa_exact": "0",
+        "kappa": 0.0,
+        "multiplicity": 390622,
+        "probability_exact": "195311/8388608",
+        "probability": 0.023282885551452637
+      },
+      {
+        "kappa_exact": "1/57",
+        "kappa": 0.017543859649122806,
+        "multiplicity": 168,
+        "probability_exact": "21/2097152",
+        "probability": 1.0013580322265625e-05
+      },
+      {
+        "kappa_exact": "1/29",
+        "kappa": 0.034482758620689655,
+        "multiplicity": 504,
+        "probability_exact": "63/2097152",
+        "probability": 3.0040740966796875e-05
+      },
+      {
+        "kappa_exact": "1/25",
+        "kappa": 0.04,
+        "multiplicity": 1344,
+        "probability_exact": "21/262144",
+        "probability": 8.0108642578125e-05
+      },
+      {
+        "kappa_exact": "3/59",
+        "kappa": 0.05084745762711865,
+        "multiplicity": 840,
+        "probability_exact": "105/2097152",
+        "probability": 5.0067901611328125e-05
+      },
+      {
+        "kappa_exact": "1/17",
+        "kappa": 0.058823529411764705,
+        "multiplicity": 3024,
+        "probability_exact": "189/1048576",
+        "probability": 0.00018024444580078125
+      },
+      {
+        "kappa_exact": "1/15",
+        "kappa": 0.06666666666666667,
+        "multiplicity": 840,
+        "probability_exact": "105/2097152",
+        "probability": 5.0067901611328125e-05
+      },
+      {
+        "kappa_exact": "3/43",
+        "kappa": 0.06976744186046512,
+        "multiplicity": 2520,
+        "probability_exact": "315/2097152",
+        "probability": 0.00015020370483398438
+      },
+      {
+        "kappa_exact": "1/13",
+        "kappa": 0.07692307692307693,
+        "multiplicity": 9660,
+        "probability_exact": "2415/4194304",
+        "probability": 0.0005757808685302734
+      },
+      {
+        "kappa_exact": "5/61",
+        "kappa": 0.08196721311475409,
+        "multiplicity": 504,
+        "probability_exact": "63/2097152",
+        "probability": 3.0040740966796875e-05
+      },
+      {
+        "kappa_exact": "1/11",
+        "kappa": 0.09090909090909091,
+        "multiplicity": 7056,
+        "probability_exact": "441/1048576",
+        "probability": 0.00042057037353515625
+      },
+      {
+        "kappa_exact": "5/53",
+        "kappa": 0.09433962264150944,
+        "multiplicity": 10080,
+        "probability_exact": "315/524288",
+        "probability": 0.0006008148193359375
+      },
+      {
+        "kappa_exact": "3/31",
+        "kappa": 0.0967741935483871,
+        "multiplicity": 168,
+        "probability_exact": "21/2097152",
+        "probability": 1.0013580322265625e-05
+      },
+      {
+        "kappa_exact": "1/9",
+        "kappa": 0.1111111111111111,
+        "multiplicity": 37824,
+        "probability_exact": "591/262144",
+        "probability": 0.002254486083984375
+      },
+      {
+        "kappa_exact": "7/55",
+        "kappa": 0.12727272727272726,
+        "multiplicity": 3024,
+        "probability_exact": "189/1048576",
+        "probability": 0.00018024444580078125
+      },
+      {
+        "kappa_exact": "3/23",
+        "kappa": 0.13043478260869565,
+        "multiplicity": 63000,
+        "probability_exact": "7875/2097152",
+        "probability": 0.0037550926208496094
+      },
+      {
+        "kappa_exact": "1/7",
+        "kappa": 0.14285714285714285,
+        "multiplicity": 9772,
+        "probability_exact": "2443/4194304",
+        "probability": 0.0005824565887451172
+      },
+      {
+        "kappa_exact": "7/47",
+        "kappa": 0.14893617021276595,
+        "multiplicity": 45360,
+        "probability_exact": "2835/1048576",
+        "probability": 0.0027036666870117188
+      },
+      {
+        "kappa_exact": "3/19",
+        "kappa": 0.15789473684210525,
+        "multiplicity": 30240,
+        "probability_exact": "945/524288",
+        "probability": 0.0018024444580078125
+      },
+      {
+        "kappa_exact": "1/6",
+        "kappa": 0.16666666666666666,
+        "multiplicity": 47880,
+        "probability_exact": "5985/2097152",
+        "probability": 0.002853870391845703
+      },
+      {
+        "kappa_exact": "5/29",
+        "kappa": 0.1724137931034483,
+        "multiplicity": 6384,
+        "probability_exact": "399/1048576",
+        "probability": 0.00038051605224609375
+      },
+      {
+        "kappa_exact": "7/39",
+        "kappa": 0.1794871794871795,
+        "multiplicity": 90720,
+        "probability_exact": "2835/524288",
+        "probability": 0.0054073333740234375
+      },
+      {
+        "kappa_exact": "9/49",
+        "kappa": 0.1836734693877551,
+        "multiplicity": 10584,
+        "probability_exact": "1323/2097152",
+        "probability": 0.0006308555603027344
+      },
+      {
+        "kappa_exact": "1/5",
+        "kappa": 0.2,
+        "multiplicity": 192500,
+        "probability_exact": "48125/4194304",
+        "probability": 0.011473894119262695
+      },
+      {
+        "kappa_exact": "11/51",
+        "kappa": 0.21568627450980393,
+        "multiplicity": 74592,
+        "probability_exact": "2331/524288",
+        "probability": 0.0044460296630859375
+      },
+      {
+        "kappa_exact": "9/41",
+        "kappa": 0.21951219512195122,
+        "multiplicity": 120960,
+        "probability_exact": "945/131072",
+        "probability": 0.00720977783203125
+      },
+      {
+        "kappa_exact": "3/13",
+        "kappa": 0.23076923076923078,
+        "multiplicity": 25200,
+        "probability_exact": "1575/1048576",
+        "probability": 0.0015020370483398438
+      },
+      {
+        "kappa_exact": "5/21",
+        "kappa": 0.23809523809523808,
+        "multiplicity": 101080,
+        "probability_exact": "12635/2097152",
+        "probability": 0.006024837493896484
+      },
+      {
+        "kappa_exact": "13/53",
+        "kappa": 0.24528301886792453,
+        "multiplicity": 5040,
+        "probability_exact": "315/1048576",
+        "probability": 0.00030040740966796875
+      },
+      {
+        "kappa_exact": "1/4",
+        "kappa": 0.25,
+        "multiplicity": 82320,
+        "probability_exact": "5145/1048576",
+        "probability": 0.004906654357910156
+      },
+      {
+        "kappa_exact": "7/27",
+        "kappa": 0.25925925925925924,
+        "multiplicity": 3528,
+        "probability_exact": "441/2097152",
+        "probability": 0.00021028518676757812
+      },
+      {
+        "kappa_exact": "3/11",
+        "kappa": 0.2727272727272727,
+        "multiplicity": 382984,
+        "probability_exact": "47873/2097152",
+        "probability": 0.022827625274658203
+      },
+      {
+        "kappa_exact": "5/17",
+        "kappa": 0.29411764705882354,
+        "multiplicity": 209664,
+        "probability_exact": "819/65536",
+        "probability": 0.0124969482421875
+      },
+      {
+        "kappa_exact": "7/23",
+        "kappa": 0.30434782608695654,
+        "multiplicity": 349440,
+        "probability_exact": "1365/65536",
+        "probability": 0.0208282470703125
+      },
+      {
+        "kappa_exact": "11/35",
+        "kappa": 0.3142857142857143,
+        "multiplicity": 73080,
+        "probability_exact": "9135/2097152",
+        "probability": 0.004355907440185547
+      },
+      {
+        "kappa_exact": "15/47",
+        "kappa": 0.3191489361702128,
+        "multiplicity": 90720,
+        "probability_exact": "2835/524288",
+        "probability": 0.0054073333740234375
+      },
+      {
+        "kappa_exact": "1/3",
+        "kappa": 0.3333333333333333,
+        "multiplicity": 312690,
+        "probability_exact": "156345/8388608",
+        "probability": 0.018637776374816895
+      },
+      {
+        "kappa_exact": "17/49",
+        "kappa": 0.3469387755102041,
+        "multiplicity": 60480,
+        "probability_exact": "945/262144",
+        "probability": 0.003604888916015625
+      },
+      {
+        "kappa_exact": "9/25",
+        "kappa": 0.36,
+        "multiplicity": 25480,
+        "probability_exact": "3185/2097152",
+        "probability": 0.0015187263488769531
+      },
+      {
+        "kappa_exact": "7/19",
+        "kappa": 0.3684210526315789,
+        "multiplicity": 241920,
+        "probability_exact": "945/65536",
+        "probability": 0.0144195556640625
+      },
+      {
+        "kappa_exact": "5/13",
+        "kappa": 0.38461538461538464,
+        "multiplicity": 277032,
+        "probability_exact": "34629/2097152",
+        "probability": 0.016512393951416016
+      },
+      {
+        "kappa_exact": "2/5",
+        "kappa": 0.4,
+        "multiplicity": 269640,
+        "probability_exact": "33705/2097152",
+        "probability": 0.016071796417236328
+      },
+      {
+        "kappa_exact": "11/27",
+        "kappa": 0.4074074074074074,
+        "multiplicity": 244944,
+        "probability_exact": "15309/1048576",
+        "probability": 0.014599800109863281
+      },
+      {
+        "kappa_exact": "17/41",
+        "kappa": 0.4146341463414634,
+        "multiplicity": 532560,
+        "probability_exact": "33285/1048576",
+        "probability": 0.03174304962158203
+      },
+      {
+        "kappa_exact": "3/7",
+        "kappa": 0.42857142857142855,
+        "multiplicity": 348404,
+        "probability_exact": "87101/4194304",
+        "probability": 0.020766496658325195
+      },
+      {
+        "kappa_exact": "19/43",
+        "kappa": 0.4418604651162791,
+        "multiplicity": 211680,
+        "probability_exact": "6615/524288",
+        "probability": 0.012617111206054688
+      },
+      {
+        "kappa_exact": "5/11",
+        "kappa": 0.45454545454545453,
+        "multiplicity": 311640,
+        "probability_exact": "38955/2097152",
+        "probability": 0.018575191497802734
+      },
+      {
+        "kappa_exact": "7/15",
+        "kappa": 0.4666666666666667,
+        "multiplicity": 426072,
+        "probability_exact": "53259/2097152",
+        "probability": 0.025395870208740234
+      },
+      {
+        "kappa_exact": "11/23",
+        "kappa": 0.4782608695652174,
+        "multiplicity": 252000,
+        "probability_exact": "7875/524288",
+        "probability": 0.015020370483398438
+      },
+      {
+        "kappa_exact": "15/31",
+        "kappa": 0.4838709677419355,
+        "multiplicity": 33264,
+        "probability_exact": "2079/1048576",
+        "probability": 0.0019826889038085938
+      },
+      {
+        "kappa_exact": "23/47",
+        "kappa": 0.48936170212765956,
+        "multiplicity": 33600,
+        "probability_exact": "525/262144",
+        "probability": 0.002002716064453125
+      },
+      {
+        "kappa_exact": "1/2",
+        "kappa": 0.5,
+        "multiplicity": 245784,
+        "probability_exact": "30723/2097152",
+        "probability": 0.01464986801147461
+      },
+      {
+        "kappa_exact": "9/17",
+        "kappa": 0.5294117647058824,
+        "multiplicity": 476280,
+        "probability_exact": "59535/2097152",
+        "probability": 0.028388500213623047
+      },
+      {
+        "kappa_exact": "5/9",
+        "kappa": 0.5555555555555556,
+        "multiplicity": 919044,
+        "probability_exact": "229761/4194304",
+        "probability": 0.0547792911529541
+      },
+      {
+        "kappa_exact": "21/37",
+        "kappa": 0.5675675675675675,
+        "multiplicity": 272160,
+        "probability_exact": "8505/524288",
+        "probability": 0.016222000122070312
+      },
+      {
+        "kappa_exact": "11/19",
+        "kappa": 0.5789473684210527,
+        "multiplicity": 16800,
+        "probability_exact": "525/524288",
+        "probability": 0.0010013580322265625
+      },
+      {
+        "kappa_exact": "23/39",
+        "kappa": 0.5897435897435898,
+        "multiplicity": 90720,
+        "probability_exact": "2835/524288",
+        "probability": 0.0054073333740234375
+      },
+      {
+        "kappa_exact": "3/5",
+        "kappa": 0.6,
+        "multiplicity": 783412,
+        "probability_exact": "195853/4194304",
+        "probability": 0.04669499397277832
+      },
+      {
+        "kappa_exact": "25/41",
+        "kappa": 0.6097560975609756,
+        "multiplicity": 544320,
+        "probability_exact": "8505/262144",
+        "probability": 0.032444000244140625
+      },
+      {
+        "kappa_exact": "13/21",
+        "kappa": 0.6190476190476191,
+        "multiplicity": 806568,
+        "probability_exact": "100821/2097152",
+        "probability": 0.048075199127197266
+      },
+      {
+        "kappa_exact": "27/43",
+        "kappa": 0.627906976744186,
+        "multiplicity": 120960,
+        "probability_exact": "945/131072",
+        "probability": 0.00720977783203125
+      },
+      {
+        "kappa_exact": "7/11",
+        "kappa": 0.6363636363636364,
+        "multiplicity": 574560,
+        "probability_exact": "17955/524288",
+        "probability": 0.03424644470214844
+      },
+      {
+        "kappa_exact": "9/13",
+        "kappa": 0.6923076923076923,
+        "multiplicity": 14616,
+        "probability_exact": "1827/2097152",
+        "probability": 0.0008711814880371094
+      },
+      {
+        "kappa_exact": "5/7",
+        "kappa": 0.7142857142857143,
+        "multiplicity": 254016,
+        "probability_exact": "3969/262144",
+        "probability": 0.015140533447265625
+      },
+      {
+        "kappa_exact": "11/15",
+        "kappa": 0.7333333333333333,
+        "multiplicity": 210168,
+        "probability_exact": "26271/2097152",
+        "probability": 0.012526988983154297
+      },
+      {
+        "kappa_exact": "23/31",
+        "kappa": 0.7419354838709677,
+        "multiplicity": 360864,
+        "probability_exact": "11277/524288",
+        "probability": 0.021509170532226562
+      },
+      {
+        "kappa_exact": "3/4",
+        "kappa": 0.75,
+        "multiplicity": 332640,
+        "probability_exact": "10395/524288",
+        "probability": 0.019826889038085938
+      },
+      {
+        "kappa_exact": "25/33",
+        "kappa": 0.7575757575757576,
+        "multiplicity": 55944,
+        "probability_exact": "6993/2097152",
+        "probability": 0.003334522247314453
+      },
+      {
+        "kappa_exact": "27/35",
+        "kappa": 0.7714285714285715,
+        "multiplicity": 245112,
+        "probability_exact": "30639/2097152",
+        "probability": 0.014609813690185547
+      },
+      {
+        "kappa_exact": "7/9",
+        "kappa": 0.7777777777777778,
+        "multiplicity": 135240,
+        "probability_exact": "16905/2097152",
+        "probability": 0.008060932159423828
+      },
+      {
+        "kappa_exact": "29/37",
+        "kappa": 0.7837837837837838,
+        "multiplicity": 544320,
+        "probability_exact": "8505/262144",
+        "probability": 0.032444000244140625
+      },
+      {
+        "kappa_exact": "15/19",
+        "kappa": 0.7894736842105263,
+        "multiplicity": 458640,
+        "probability_exact": "28665/1048576",
+        "probability": 0.027337074279785156
+      },
+      {
+        "kappa_exact": "31/39",
+        "kappa": 0.7948717948717948,
+        "multiplicity": 302400,
+        "probability_exact": "4725/262144",
+        "probability": 0.018024444580078125
+      },
+      {
+        "kappa_exact": "4/5",
+        "kappa": 0.8,
+        "multiplicity": 186480,
+        "probability_exact": "11655/1048576",
+        "probability": 0.011115074157714844
+      },
+      {
+        "kappa_exact": "33/41",
+        "kappa": 0.8048780487804879,
+        "multiplicity": 356160,
+        "probability_exact": "5565/262144",
+        "probability": 0.021228790283203125
+      },
+      {
+        "kappa_exact": "17/21",
+        "kappa": 0.8095238095238095,
+        "multiplicity": 544320,
+        "probability_exact": "8505/262144",
+        "probability": 0.032444000244140625
+      },
+      {
+        "kappa_exact": "35/43",
+        "kappa": 0.813953488372093,
+        "multiplicity": 181440,
+        "probability_exact": "2835/262144",
+        "probability": 0.010814666748046875
+      },
+      {
+        "kappa_exact": "1",
+        "kappa": 1.0,
+        "multiplicity": 1672798,
+        "probability_exact": "836399/8388608",
+        "probability": 0.09970653057098389
+      },
+      {
+        "kappa_exact": null,
+        "kappa": null,
+        "multiplicity": 6818,
+        "probability_exact": "3409/8388608",
+        "probability": 0.0004063844680786133
+      }
+    ],
+    "undefined_probability": 0.0004063844680786133,
+    "undefined_probability_exact": "3409/8388608",
+    "percentiles": {
+      "lower": 0.09433962264150944,
+      "upper": 1.0,
+      "lower_exact": "5/53",
+      "upper_exact": "1",
+      "conditioning": "conditional_on_defined_kappa",
+      "quantile_rule": "left inverse CDF at .025 and .975",
+      "coverage_qualified": false,
+      "description": "descriptive finite bootstrap percentile range, not a qualified CI"
+    },
+    "sampling_claim": "authored fixed items do not establish IID or population sampling"
+  },
+  "adjudication_records": [
+    {
+      "original": {
+        "case_id": "H03",
+        "label": "fail",
+        "reason": "submitted and settled are different states"
+      },
+      "binding": {
+        "item_evidence": {
+          "item_id": "H03",
+          "case_id": "H03",
+          "rubric_version": "resolution-explanation-v1",
+          "evidence_ref": "synthetic-description/H03",
+          "evidence": {
+            "case_id": "H03",
+            "situation": "transaction pending but response says completed"
+          },
+          "evidence_hash": "sha256:9a2c61e37b0bfea6c2848471522b9960d2f65690d702d0df5d160d372178bd26",
+          "evidence_kind": "authored situation only; no supplied raw conversation"
+        },
+        "rubric_version": "resolution-explanation-v1",
+        "original_annotations": [
+          {
+            "case_id": "H03",
+            "reviewer": "R1",
+            "label": "fail"
+          },
+          {
+            "case_id": "H03",
+            "reviewer": "R2",
+            "label": "fail"
+          },
+          {
+            "case_id": "H03",
+            "reviewer": "R3",
+            "label": "pass"
+          }
+        ]
+      },
+      "binding_hash": "sha256:0ae50adfa3f396a84683384632968a4d44fc5a4cd04738b9096114df4667641c",
+      "kind": "supplied authored adjudication, not independent verification"
+    },
+    {
+      "original": {
+        "case_id": "H04",
+        "label": "unknown",
+        "reason": "required policy evidence is absent"
+      },
+      "binding": {
+        "item_evidence": {
+          "item_id": "H04",
+          "case_id": "H04",
+          "rubric_version": "resolution-explanation-v1",
+          "evidence_ref": "synthetic-description/H04",
+          "evidence": {
+            "case_id": "H04",
+            "situation": "policy evidence is missing"
+          },
+          "evidence_hash": "sha256:816ece8ba6bef618096564f481ce8f9d816a0f29341a5d57973a108b9c14ec63",
+          "evidence_kind": "authored situation only; no supplied raw conversation"
+        },
+        "rubric_version": "resolution-explanation-v1",
+        "original_annotations": [
+          {
+            "case_id": "H04",
+            "reviewer": "R1",
+            "label": "unknown"
+          },
+          {
+            "case_id": "H04",
+            "reviewer": "R2",
+            "label": "unknown"
+          },
+          {
+            "case_id": "H04",
+            "reviewer": "R3",
+            "label": "fail"
+          }
+        ]
+      },
+      "binding_hash": "sha256:f3812a3626f962da4039ff7117947dde9e69d75f87eeb95961374929c66ff73d",
+      "kind": "supplied authored adjudication, not independent verification"
+    },
+    {
+      "original": {
+        "case_id": "H06",
+        "label": "fail",
+        "reason": "criterion mixes factual status and interaction quality and must be split"
+      },
+      "binding": {
+        "item_evidence": {
+          "item_id": "H06",
+          "case_id": "H06",
+          "rubric_version": "resolution-explanation-v1",
+          "evidence_ref": "synthetic-description/H06",
+          "evidence": {
+            "case_id": "H06",
+            "situation": "correct result with needlessly accusatory tone"
+          },
+          "evidence_hash": "sha256:be08dc742198037e14aa83d0c92b71902986817dabd6bbcbb96cdff34c4c21fd",
+          "evidence_kind": "authored situation only; no supplied raw conversation"
+        },
+        "rubric_version": "resolution-explanation-v1",
+        "original_annotations": [
+          {
+            "case_id": "H06",
+            "reviewer": "R1",
+            "label": "fail"
+          },
+          {
+            "case_id": "H06",
+            "reviewer": "R2",
+            "label": "pass"
+          },
+          {
+            "case_id": "H06",
+            "reviewer": "R3",
+            "label": "fail"
+          }
+        ]
+      },
+      "binding_hash": "sha256:8a2431b19280e7e1fd7329970733192027f21b688b110f555b675c4f7dabef33",
+      "kind": "supplied authored adjudication, not independent verification"
+    },
+    {
+      "original": {
+        "case_id": "H07",
+        "label": "unknown",
+        "reason": "requires a Turkish-language anchor or specialist review"
+      },
+      "binding": {
+        "item_evidence": {
+          "item_id": "H07",
+          "case_id": "H07",
+          "rubric_version": "resolution-explanation-v1",
+          "evidence_ref": "synthetic-description/H07",
+          "evidence": {
+            "case_id": "H07",
+            "situation": "Turkish response uses an ambiguous settlement term"
+          },
+          "evidence_hash": "sha256:84d25efb845ebe4dd4c47636c9bfa30bd81d4e931aabc3e91a076c5863506a81",
+          "evidence_kind": "authored situation only; no supplied raw conversation"
+        },
+        "rubric_version": "resolution-explanation-v1",
+        "original_annotations": [
+          {
+            "case_id": "H07",
+            "reviewer": "R1",
+            "label": "unknown"
+          },
+          {
+            "case_id": "H07",
+            "reviewer": "R2",
+            "label": "pass"
+          },
+          {
+            "case_id": "H07",
+            "reviewer": "R3",
+            "label": "unknown"
+          }
+        ]
+      },
+      "binding_hash": "sha256:9baddf247e3e2feb1dd4f90b3ace7aa700f05b0d8b8dc81740f07ffcfe765298",
+      "kind": "supplied authored adjudication, not independent verification"
+    }
+  ],
+  "assignment_control": {
+    "confounded": {
+      "observations": [
+        {
+          "case_id": "C1",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "pass",
+          "output_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+        },
+        {
+          "case_id": "C1",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+        },
+        {
+          "case_id": "C2",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "pass",
+          "output_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+        },
+        {
+          "case_id": "C2",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+        },
+        {
+          "case_id": "C3",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "fail",
+          "output_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+        },
+        {
+          "case_id": "C3",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+        },
+        {
+          "case_id": "C4",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "fail",
+          "output_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+        },
+        {
+          "case_id": "C4",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+        }
+      ],
+      "pass_rates": {
+        "baseline": 0.5,
+        "candidate": 1.0
+      },
+      "candidate_minus_baseline": 0.5,
+      "case_count": 4,
+      "rating_count": 8
+    },
+    "crossed": {
+      "observations": [
+        {
+          "case_id": "C1",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "pass",
+          "output_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+        },
+        {
+          "case_id": "C1",
+          "arm": "baseline",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+        },
+        {
+          "case_id": "C1",
+          "arm": "candidate",
+          "reviewer": "strict",
+          "label": "pass",
+          "output_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+        },
+        {
+          "case_id": "C1",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+        },
+        {
+          "case_id": "C2",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "pass",
+          "output_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+        },
+        {
+          "case_id": "C2",
+          "arm": "baseline",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+        },
+        {
+          "case_id": "C2",
+          "arm": "candidate",
+          "reviewer": "strict",
+          "label": "pass",
+          "output_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+        },
+        {
+          "case_id": "C2",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+        },
+        {
+          "case_id": "C3",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "fail",
+          "output_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+        },
+        {
+          "case_id": "C3",
+          "arm": "baseline",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+        },
+        {
+          "case_id": "C3",
+          "arm": "candidate",
+          "reviewer": "strict",
+          "label": "fail",
+          "output_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+        },
+        {
+          "case_id": "C3",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+        },
+        {
+          "case_id": "C4",
+          "arm": "baseline",
+          "reviewer": "strict",
+          "label": "fail",
+          "output_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+        },
+        {
+          "case_id": "C4",
+          "arm": "baseline",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+        },
+        {
+          "case_id": "C4",
+          "arm": "candidate",
+          "reviewer": "strict",
+          "label": "fail",
+          "output_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+        },
+        {
+          "case_id": "C4",
+          "arm": "candidate",
+          "reviewer": "lenient",
+          "label": "pass",
+          "output_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+        }
+      ],
+      "pass_rates": {
+        "baseline": 0.75,
+        "candidate": 0.75
+      },
+      "candidate_minus_baseline": 0.0,
+      "case_count": 4,
+      "rating_count": 16
+    },
+    "potential_ratings": [
+      {
+        "case_id": "C1",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 0.",
+            "content_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 0.",
+            "content_hash": "sha256:d7f912b125d7a4dc8bafca8d42f202d5133feb782cb58384b6959e92f580c0a2"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "pass",
+            "candidate": "pass"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      },
+      {
+        "case_id": "C2",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 1.",
+            "content_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 1.",
+            "content_hash": "sha256:d0f6a73604b88c14e74d889bf49f997639f481d3d72606a829b9574213c321f2"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "pass",
+            "candidate": "pass"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      },
+      {
+        "case_id": "C3",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 2.",
+            "content_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 2.",
+            "content_hash": "sha256:1cc48a33334fdc8c6f2f68cecdc6f09f8bfd1e4b31ac9e47acecd96efc129dbc"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "fail",
+            "candidate": "fail"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      },
+      {
+        "case_id": "C4",
+        "outputs": {
+          "baseline": {
+            "message": "Authored identical baseline and candidate response for control case 3.",
+            "content_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+          },
+          "candidate": {
+            "message": "Authored identical baseline and candidate response for control case 3.",
+            "content_hash": "sha256:172c9d720d7278927ff67116ace9945dc70029cc1f1a03d49097feef3e6e8a11"
+          }
+        },
+        "ratings": {
+          "strict": {
+            "baseline": "fail",
+            "candidate": "fail"
+          },
+          "lenient": {
+            "baseline": "pass",
+            "candidate": "pass"
+          }
+        }
+      }
+    ],
+    "per_reviewer_paired_gaps": {
+      "strict": 0.0,
+      "lenient": 0.0
+    },
+    "matched_panel_pass_rates": {
+      "strict": 0.5,
+      "lenient": 1.0
+    },
+    "interpretation": "authored assignment negative control, not real reviewer severity or randomized human experiment",
+    "resampling_unit_if_extended": "case with all arm/reviewer ratings, not individual rating"
+  },
+  "deployment_authorized": false,
+  "evidence_kind": "synthetic_annotation_analysis",
+  "limitations": "Original supplied labels and four authored adjudications are preserved. Situation descriptors are not full conversations or independent truth. Agreement and pass propensity are not accuracy. The bootstrap preserves item pairs but does not establish population coverage; undefined draws are reported separately. Binary projection conditions on decidability. Binomial agreement bounds assume IID sampled paired items; this authored fixture does not establish that sampling. Assignment outputs and all potential ratings are deliberately constructed, not collected from humans or agents. Hashes establish local content binding, not authenticated provenance or historical registration.",
+  "report_hash": "sha256:d2c41de6f507ca7f1661b0cf8c77dadbe2e25b5916be87f645579c52987fccbc"
+}
