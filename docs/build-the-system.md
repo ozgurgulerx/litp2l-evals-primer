@@ -23,7 +23,7 @@ The first local vertical slice is executable without an API key or network acces
 | Lab gate | Versioned hard invariants, an illustrative scalar point floor, slice floors, latency, and cost bounds | Produces a reasoned `block` or `lab_pass` action without claiming statistical non-inferiority |
 | Live runtime | An opt-in OpenAI Agents SDK adapter over the same tools | Introduces model behavior without changing the case or grader contract |
 
-The live adapter deliberately fails closed if `OPENAI_API_KEY` or `OPENAI_MODEL` is missing. It does not retain or print the key. Cost accounting for live model runs is the next instrumentation task; until it is available, the operational cost rule remains unresolved and the gate blocks.
+The live adapter deliberately fails closed if `OPENAI_API_KEY` or `OPENAI_MODEL` is missing. It does not retain or print the key. It normalizes response identifiers and SDK usage into a runtime-evidence record. Cost remains unknown unless the experiment also registers explicit input and output token rates; an unknown operational cost makes the lab gate block.
 
 ## The first five cases
 
@@ -150,6 +150,8 @@ The same five cases can be sent through the model-backed runtime without connect
 ```bash
 export OPENAI_API_KEY="..."
 export OPENAI_MODEL="<the model pinned for this experiment>"
+export CXLAB_INPUT_USD_PER_MILLION_TOKENS="<registered input rate>"
+export CXLAB_OUTPUT_USD_PER_MILLION_TOKENS="<registered output rate>"
 
 uv run --extra openai python -m cx_eval_lab eval \
   --agent openai \
@@ -158,7 +160,7 @@ uv run --extra openai python -m cx_eval_lab eval \
 
 This is a paid, opt-in experiment. Parallel tool calls are disabled because identity, policy, approval, and payment form a causal sequence. SDK tracing is off by default; if explicitly enabled, sensitive trace fields remain excluded. The resolved model, SDK version, prompts, application version, dataset, policy, runtime limits, and tracing choice must eventually be recorded together in the experiment manifest. The provider-neutral case and evaluation contracts remain the source of truth. The model returns a typed `claimed_outcome`, but that claim is compared with mock payment state; it is not proof by itself. Natural-language truthfulness, tone, and explanation quality will be measured separately by calibrated semantic graders rather than an English-only keyword check.
 
-For a live run, the harness measures elapsed time itself. Until model usage is normalized into a trusted cost calculation, cost remains unknown and the release gate fails closed. A model response can never supply either number.
+For a live run, the harness measures elapsed time itself and the adapter records SDK input, output, and total tokens plus response identifiers. Cost is computed only from explicitly registered per-million-token rates and is labelled `registered_token_rates`; it stays unknown if usage or either rate is missing. Tool, retrieval, simulator, judge, human, and infrastructure costs are not yet included, so even a computed model-token cost is incomplete. A model response can never award itself a latency or cost value.
 
 ## Calibration enters in layers
 

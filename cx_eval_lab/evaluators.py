@@ -165,6 +165,7 @@ def evaluate_case(
         human_intervention_count=human_intervention_count,
         unresolved_work_count=unresolved_work_count,
         resolution_status=resolution_status,
+        runtime_evidence=output.runtime_evidence,
     )
 
 

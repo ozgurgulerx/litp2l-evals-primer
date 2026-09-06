@@ -174,9 +174,25 @@ class ResolutionResponse:
 
 
 @dataclass(frozen=True)
+class RuntimeEvidence:
+    provider: str
+    model_id: str
+    response_ids: tuple[str, ...]
+    input_tokens: int | None
+    output_tokens: int | None
+    total_tokens: int | None
+    cost_usd: float | None
+    cost_source: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {**asdict(self), "response_ids": list(self.response_ids)}
+
+
+@dataclass(frozen=True)
 class AgentOutput:
     message: str
     claimed_outcome: str
+    runtime_evidence: RuntimeEvidence | None = None
 
     def __post_init__(self) -> None:
         if self.claimed_outcome not in VALID_CLAIMED_OUTCOMES:
@@ -243,6 +259,7 @@ class CaseEvaluation:
     human_intervention_count: int = 0
     unresolved_work_count: int = 0
     resolution_status: str = "resolved"
+    runtime_evidence: RuntimeEvidence | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -265,6 +282,11 @@ class CaseEvaluation:
             "human_intervention_count": self.human_intervention_count,
             "unresolved_work_count": self.unresolved_work_count,
             "resolution_status": self.resolution_status,
+            "runtime_evidence": (
+                None
+                if self.runtime_evidence is None
+                else self.runtime_evidence.to_dict()
+            ),
         }
 
 

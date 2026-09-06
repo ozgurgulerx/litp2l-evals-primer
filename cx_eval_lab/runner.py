@@ -207,7 +207,13 @@ def _evaluate_isolated(
         else measurement_profile.latency_ms
     )
     cost_usd = (
-        None if measurement_profile is None else measurement_profile.cost_usd_per_case
+        output.runtime_evidence.cost_usd
+        if measurement_profile is None and output.runtime_evidence is not None
+        else (
+            None
+            if measurement_profile is None
+            else measurement_profile.cost_usd_per_case
+        )
     )
     return evaluate_case(
         case,

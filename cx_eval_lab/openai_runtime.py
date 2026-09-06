@@ -6,7 +6,12 @@ import json
 import os
 from dataclasses import dataclass
 
-from cx_eval_lab.models import AgentOutput, RefundAgentInput, ResolutionResponse
+from cx_eval_lab.models import (
+    AgentOutput,
+    RefundAgentInput,
+    ResolutionResponse,
+    RuntimeEvidence,
+)
 from cx_eval_lab.world import RefundTools, ToolTimeout
 
 
@@ -19,7 +24,21 @@ class OpenAIAgentsRuntime:
     """Run a model against the same guarded mock tools as deterministic agents."""
 
     model: str
+    input_cost_per_million_tokens: float | None = None
+    output_cost_per_million_tokens: float | None = None
     name: str = "openai-agents-sdk"
+
+    def __post_init__(self) -> None:
+        rates = (
+            self.input_cost_per_million_tokens,
+            self.output_cost_per_million_tokens,
+        )
+        if (rates[0] is None) != (rates[1] is None):
+            raise RuntimeConfigurationError(
+                "both input and output token rates are required for cost accounting"
+            )
+        if any(rate is not None and rate < 0 for rate in rates):
+            raise RuntimeConfigurationError("token rates cannot be negative")
 
     @classmethod
     def from_environment(cls) -> OpenAIAgentsRuntime:
@@ -32,7 +51,20 @@ class OpenAIAgentsRuntime:
             raise RuntimeConfigurationError(
                 "OPENAI_MODEL is required so each experiment pins its model"
             )
-        return cls(model=model)
+        input_rate = os.environ.get("CXLAB_INPUT_USD_PER_MILLION_TOKENS")
+        output_rate = os.environ.get("CXLAB_OUTPUT_USD_PER_MILLION_TOKENS")
+        try:
+            return cls(
+                model=model,
+                input_cost_per_million_tokens=(
+                    None if input_rate is None else float(input_rate)
+                ),
+                output_cost_per_million_tokens=(
+                    None if output_rate is None else float(output_rate)
+                ),
+            )
+        except ValueError as error:
+            raise RuntimeConfigurationError("token rates must be numeric") from error
 
     def run(self, request: RefundAgentInput, tools: RefundTools) -> AgentOutput:
         try:
@@ -154,4 +186,56 @@ class OpenAIAgentsRuntime:
         return AgentOutput(
             message=result.final_output.message,
             claimed_outcome=result.final_output.claimed_outcome,
+            runtime_evidence=self._runtime_evidence(result),
         )
+
+    def _runtime_evidence(self, result) -> RuntimeEvidence:
+        usage = getattr(getattr(result, "context_wrapper", None), "usage", None)
+        if usage is None:
+            usage = getattr(result, "usage", None)
+        input_tokens = _optional_int(usage, "input_tokens")
+        output_tokens = _optional_int(usage, "output_tokens")
+        total_tokens = _optional_int(usage, "total_tokens")
+        if total_tokens is None and input_tokens is not None and output_tokens is not None:
+            total_tokens = input_tokens + output_tokens
+        response_ids = tuple(
+            str(response_id)
+            for response in getattr(result, "raw_responses", ())
+            if (
+                response_id := getattr(
+                    response,
+                    "response_id",
+                    getattr(response, "id", None),
+                )
+            )
+        )
+        cost_usd = None
+        cost_source = "unavailable"
+        if (
+            input_tokens is not None
+            and output_tokens is not None
+            and self.input_cost_per_million_tokens is not None
+            and self.output_cost_per_million_tokens is not None
+        ):
+            cost_usd = (
+                input_tokens * self.input_cost_per_million_tokens
+                + output_tokens * self.output_cost_per_million_tokens
+            ) / 1_000_000
+            cost_source = "registered_token_rates"
+        return RuntimeEvidence(
+            provider="openai",
+            model_id=self.model,
+            response_ids=response_ids,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            cost_usd=cost_usd,
+            cost_source=cost_source,
+        )
+
+
+def _optional_int(value, attribute: str) -> int | None:
+    observed = getattr(value, attribute, None) if value is not None else None
+    if observed is None:
+        return None
+    return int(observed)
