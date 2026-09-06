@@ -52,13 +52,25 @@ class OpenAIAgentsRuntimeTests(unittest.TestCase):
         fake_agents = self._fake_agents_module()
 
         with patch.dict("sys.modules", {"agents": fake_agents}):
-            output = OpenAIAgentsRuntime(model="test-model").run(
+            output = OpenAIAgentsRuntime(
+                model="test-model",
+                input_cost_per_million_tokens=1.0,
+                output_cost_per_million_tokens=2.0,
+            ).run(
                 case.agent_input,
                 tools,
             )
 
         self.assertEqual("Refund confirmed.", output.message)
         self.assertEqual("refunded", output.claimed_outcome)
+        self.assertIsNotNone(output.runtime_evidence)
+        self.assertEqual("test-model", output.runtime_evidence.model_id)
+        self.assertEqual(("resp_test",), output.runtime_evidence.response_ids)
+        self.assertEqual(120, output.runtime_evidence.input_tokens)
+        self.assertEqual(30, output.runtime_evidence.output_tokens)
+        self.assertEqual(150, output.runtime_evidence.total_tokens)
+        self.assertAlmostEqual(0.00018, output.runtime_evidence.cost_usd)
+        self.assertEqual("registered_token_rates", output.runtime_evidence.cost_source)
         self.assertEqual(1, world.snapshot.refund_transaction_count)
         self.assertEqual(
             ("verify_identity", "get_order", "consult_refund_policy", "issue_refund"),
@@ -99,7 +111,15 @@ class OpenAIAgentsRuntimeTests(unittest.TestCase):
                     final_output=ResolutionResponse(
                         message="Refund confirmed.",
                         claimed_outcome="refunded",
-                    )
+                    ),
+                    raw_responses=(SimpleNamespace(response_id="resp_test"),),
+                    context_wrapper=SimpleNamespace(
+                        usage=SimpleNamespace(
+                            input_tokens=120,
+                            output_tokens=30,
+                            total_tokens=150,
+                        )
+                    ),
                 )
 
         fake_module.Agent = FakeAgent
