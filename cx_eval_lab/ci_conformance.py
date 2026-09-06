@@ -5,9 +5,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 from cx_eval_lab.artifacts import replay_packet
 from cx_eval_lab.evidence import canonical_hash
@@ -49,7 +49,7 @@ def _text(value):
 
 def _execute(command, record_path, expected_exit, revision):
     try:
-        completed = subprocess.run(command, capture_output=True, text=True, timeout=30,
+        completed = subprocess.run(command, capture_output=True, text=True, timeout=30, check=False,
                                    env={**os.environ, 'CXLAB_CODE_REVISION': revision})
     except (subprocess.TimeoutExpired, OSError) as error:
         record = {'returncode': None, 'expected_returncode': expected_exit,
