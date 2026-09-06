@@ -1,9 +1,9 @@
 """Local synthetic incident -> reviewed regression, never acceptance promotion."""
-from dataclasses import asdict, dataclass, replace
 import argparse
 import json
-from pathlib import Path
 import re
+from dataclasses import asdict, dataclass, replace
+from pathlib import Path
 
 from cx_eval_lab.agents import MutantSupportAgent, ReferenceSupportAgent
 from cx_eval_lab.evaluators import evaluate_case
@@ -32,7 +32,7 @@ def _hash(value):
 def _object(value):
     parsed = json.loads(value)
     if not isinstance(parsed, dict):
-        raise ValueError('evidence must be a finite JSON object')
+        raise ValueError('evidence must be a finite JSON object')  # noqa: TRY004 -- parsed evidence violates the value schema
     _json(parsed)
     return parsed
 
@@ -140,7 +140,7 @@ class Inventory:
         for field in ('groups', 'source_hashes', 'content_hashes'):
             values = getattr(self, field)
             if not isinstance(values, tuple):
-                raise ValueError('inventory entries must be immutable tuples')
+                raise ValueError('inventory entries must be immutable tuples')  # noqa: TRY004 -- uniform validation contract
             for value in values:
                 (_identifier if field == 'groups' else _hash)(value)
 
@@ -171,7 +171,7 @@ class RegressionRelease:
             for field in ('source_incident_hash', 'proposal_hash', 'review_hash'):
                 _hash(row[field])
             if not isinstance(row['diff'], dict):
-                raise ValueError('invalid retained transformation diff')
+                raise ValueError('invalid retained transformation diff')  # noqa: TRY004 -- invalid decoded evidence value
         if (len({row['content_hash'] for row in rows}) != len(rows)
                 or len({row['case']['case_id'] for row in rows}) != len(rows)):
             raise ValueError('duplicate parent entries')

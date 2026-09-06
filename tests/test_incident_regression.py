@@ -1,15 +1,21 @@
 """Synthetic incident promotion uses executed failures and bound review."""
-from dataclasses import FrozenInstanceError, replace
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import FrozenInstanceError, replace
+from pathlib import Path
 
 from cx_eval_lab.incident_regression import (
-    Inventory, RegressionRelease, Review, capture_incident, promote,
-    propose_regression, replay_study, run_study,
+    Inventory,
+    RegressionRelease,
+    Review,
+    capture_incident,
+    promote,
+    propose_regression,
+    replay_study,
+    run_study,
 )
 
 
@@ -85,10 +91,10 @@ class IncidentRegressionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             output = Path(root) / 'study.json'
             args = [sys.executable, '-m', 'cx_eval_lab.incident_regression', '--output', str(output)]
-            result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+            result = subprocess.run(args, capture_output=True, text=True, timeout=30, check=False)
             self.assertEqual(0, result.returncode, result.stderr)
             saved = output.read_bytes()
-            self.assertNotEqual(0, subprocess.run(args, capture_output=True, timeout=30).returncode)
+            self.assertNotEqual(0, subprocess.run(args, capture_output=True, timeout=30, check=False).returncode)
             self.assertEqual(saved, output.read_bytes())
 
     def test_protected_source_and_candidate_content_cannot_be_renamed_away(self):
