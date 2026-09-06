@@ -6,7 +6,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from tests.test_openai_runtime import OpenAIAgentsRuntimeTests
+from tests import test_openai_runtime as runtime_tests
 
 
 class OrderResolutionTests(unittest.TestCase):
@@ -16,7 +16,8 @@ class OrderResolutionTests(unittest.TestCase):
         for case in cases:
             request = asdict(case.request)
             self.assertEqual({'utterance', 'customer_id'}, set(request))
-            self.assertNotIn(case.expected_order_id, json.dumps(request)) if case.expected_order_id else None
+            if case.expected_order_id:
+                self.assertNotIn(case.expected_order_id, json.dumps(request))
             for reverse in (False, True):
                 result = run_case(case, DescriptiveResolver(), reverse=reverse)
                 self.assertTrue(result['passed'], result)
@@ -58,12 +59,11 @@ class OrderResolutionTests(unittest.TestCase):
         self.assertEqual(0, sum(row['state']['refund_transaction_count'] for row in unresolved['orders']))
 
     def test_unresolved_runtime_uses_real_tools_without_target_field(self):
-        from cx_eval_lab.order_resolution import example_cases, MultiOrderWorld
+        from cx_eval_lab.order_resolution import example_cases, run_case
         from cx_eval_lab.openai_runtime import OpenAIAgentsRuntime
         from cx_eval_lab.models import ResolutionResponse
         case = example_cases()[0]
-        world = MultiOrderWorld(case)
-        fake = OpenAIAgentsRuntimeTests._fake_agents_module()
+        fake = runtime_tests.OpenAIAgentsRuntimeTests._fake_agents_module()
         captured = {}
         def run_sync(agent, payload, **kwargs):
             captured.update(json.loads(payload))
@@ -79,9 +79,31 @@ class OrderResolutionTests(unittest.TestCase):
                                    claimed_outcome='refunded'), raw_responses=())
         fake.Runner.run_sync = run_sync
         with patch.dict('sys.modules', {'agents': fake}):
-            OpenAIAgentsRuntime(model='test-only').run_unresolved(case.request, world.tools())
+            result = run_case(case, OpenAIAgentsRuntime(model='test-only'))
         self.assertEqual({'utterance', 'customer_id'}, set(captured))
-        self.assertEqual(1, world.total_commits)
+        self.assertTrue(result['passed'], result)
+
+    def test_rejected_amount_attempt_is_not_erased_by_later_success(self):
+        from cx_eval_lab.order_resolution import example_cases, run_case, DescriptiveResolver
+        class BadAmount(DescriptiveResolver):
+            def run(self, request, tools):
+                tools.verify_identity(request.customer_id, 'order-b')
+                tools.consult_refund_policy('order-b')
+                tools.issue_refund('order-b', 1, 'EUR', None, 'bad-amount')
+                return super().run(request, tools)
+        result = run_case(example_cases()[0], BadAmount())
+        self.assertFalse(result['passed'])
+        self.assertEqual(1, result['denied_attempts'])
+
+    def test_mutating_tool_response_cannot_rewrite_retained_event(self):
+        from cx_eval_lab.order_resolution import example_cases, run_case, DescriptiveResolver
+        class MutateResponse(DescriptiveResolver):
+            def run(self, request, tools):
+                orders = tools.list_orders(request.customer_id)
+                orders.clear()
+                return super().run(request, tools)
+        result = run_case(example_cases()[0], MutateResponse())
+        self.assertEqual(2, len(result['tool_events'][0]['result']))
 
 
 if __name__ == '__main__':
