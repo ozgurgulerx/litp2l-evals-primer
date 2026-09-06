@@ -17,6 +17,8 @@ POLICY = {'policy': 'synthetic-shared-readonly-v1'}
 QUERY = 'What is the status of my synthetic case?'
 STRATEGIES = ('query-only', 'scoped')
 CONTEXTS = ('fresh-workers', 'reused-worker', 'concurrent-threads')
+WORKERS = {'fresh-workers': ('worker-1', 'worker-2', 'worker-3'),
+           'reused-worker': ('worker-shared',) * 3, 'concurrent-threads': ('worker-A', 'worker-B', 'worker-A')}
 TIMEOUT = 5
 
 
@@ -164,9 +166,40 @@ def _execute(store, mode):
 def registration():
     return {'runs': ['run-A', 'run-B'], 'query': QUERY, 'strategies': list(STRATEGIES),
         'worker_contexts': list(CONTEXTS), 'shared_policy': POLICY,
+        'phase_assignments': {mode: list(zip(('A-first', 'B-first', 'A-repeat'), ('run-A', 'run-B', 'run-A'), workers))
+                              for mode, workers in WORKERS.items()},
         'sharing_contract': {'private_cache': 'same-run-only', 'shared_policy': 'read-only-for-both-runs'},
         'schedule': 'A first write; B same-query read; A repeat; concurrent threads overlap at barriers',
         'identity': 'operator-issued contexts; user query is not a run selector'}
+
+
+def _phase_calls(calls, responses, mode):
+    cursor = 2 if mode == 'concurrent-threads' else 0
+    threads = {}
+    for call in calls[:cursor]:
+        expected = 'worker-A' if call['run_id'] == 'run-A' else 'worker-B'
+        if call['operation'] != 'worker_ready' or call['worker_id'] != expected:
+            raise ValueError('invalid registered concurrent worker readiness')
+        threads[call['run_id']] = call['thread_id']
+    if cursor and (set(threads) != {'run-A', 'run-B'} or len(set(threads.values())) != 2):
+        raise ValueError('distinct concurrent workers required')
+    for index, (response, run_id, worker_id) in enumerate(zip(responses, ('run-A', 'run-B', 'run-A'), WORKERS[mode])):
+        operations = ['policy_read', 'policy_write_denied', 'private_read'] if index < 2 else ['private_read']
+        read_position = cursor + len(operations) - 1
+        if read_position >= len(calls) or response['read_sequence'] != calls[read_position]['sequence']:
+            raise ValueError('registered response read ordering differs')
+        if calls[read_position]['value'] is None:
+            operations.append('private_write')
+        segment = calls[cursor:cursor + len(operations)]
+        if len(segment) != len(operations) or response['worker_id'] != worker_id:
+            raise ValueError('registered worker lifecycle differs')
+        for call, operation in zip(segment, operations):
+            if (call['operation'] != operation or call['run_id'] != run_id or call['worker_id'] != worker_id
+                    or (threads and call['thread_id'] != threads[run_id])):
+                raise ValueError('registered phase/context/thread differs')
+        cursor += len(operations)
+    if cursor != len(calls):
+        raise ValueError('unexpected extra cache operations')
 
 
 def regrade(comparison):
@@ -201,6 +234,7 @@ def regrade(comparison):
     responses = comparison['responses']
     if [r['step'] for r in responses] != ['A-first', 'B-first', 'A-repeat']:
         raise ValueError('required response/utility controls are missing')
+    _phase_calls(calls, responses, mode)
     reads = []
     for response, run_id in zip(responses, ('run-A', 'run-B', 'run-A')):
         read = calls[response['read_sequence'] - 1]
@@ -279,7 +313,8 @@ def replay_study(report):
     try:
         owned = json.loads(json.dumps(report, allow_nan=False))
         if (owned['report_hash'] != canonical_hash({k: v for k, v in owned.items() if k != 'report_hash'})
-                or owned['registration'] != registration() or owned['registration_hash'] != canonical_hash(registration())
+                or canonical_hash(owned['registration']) != canonical_hash(registration())
+                or owned['registration_hash'] != canonical_hash(registration())
                 or owned['deployment_authorized'] is not False or owned['schema'] != 'isolation-study-v1'):
             raise ValueError('study registration or receipt mismatch')
         comparisons = owned['comparisons']

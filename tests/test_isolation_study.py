@@ -126,6 +126,50 @@ class IsolationStudyTests(unittest.TestCase):
             self.assertNotEqual(0, subprocess.run(command, capture_output=True, check=False).returncode)
             self.assertEqual(saved, output.read_bytes())
 
+    def test_rehashed_concurrent_calls_must_join_the_ready_thread(self):
+        from cx_eval_lab.isolation_study import replay_study, run_study
+        report = run_study()
+        comparison = report['comparisons'][5]
+        a_thread = next(call['thread_id'] for call in comparison['calls']
+                        if call['operation'] == 'worker_ready' and call['run_id'] == 'run-A')
+        for call in comparison['calls']:
+            if call['operation'] != 'worker_ready':
+                call['thread_id'] = a_thread
+        self._rehash(report, comparison)
+        with self.assertRaisesRegex(ValueError, 'phase/context/thread'):
+            replay_study(report)
+
+    def test_rehashed_scoped_write_cannot_move_after_b_read(self):
+        from cx_eval_lab.isolation_study import replay_study, run_study
+        report = run_study()
+        comparison = report['comparisons'][3]
+        calls = comparison['calls']
+        a_write = next(call for call in calls
+                       if call['operation'] == 'private_write' and call['run_id'] == 'run-A')
+        calls.remove(a_write)
+        b_write_index = next(index for index, call in enumerate(calls)
+                             if call['operation'] == 'private_write' and call['run_id'] == 'run-B')
+        calls.insert(b_write_index + 1, a_write)
+        renumber = {call['sequence']: index for index, call in enumerate(calls, 1)}
+        for call in calls:
+            call['sequence'] = renumber[call['sequence']]
+        for response in comparison['responses']:
+            for field in ('read_sequence', 'write_sequence'):
+                if response[field] is not None:
+                    response[field] = renumber[response[field]]
+        # Scoped reads, final state, response links, grades, and both hashes remain
+        # internally consistent; only the registered cross-run schedule is false.
+        self._rehash(report, comparison)
+        with self.assertRaisesRegex(ValueError, 'phase/context/thread'):
+            replay_study(report)
+
+    @staticmethod
+    def _rehash(report, comparison):
+        comparison['receipt_hash'] = canonical_hash({key: value for key, value in comparison.items()
+                                                     if key != 'receipt_hash'})
+        report['report_hash'] = canonical_hash({key: value for key, value in report.items()
+                                                if key != 'report_hash'})
+
 
 if __name__ == '__main__':
     unittest.main()
