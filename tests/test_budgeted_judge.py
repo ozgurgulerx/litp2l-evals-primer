@@ -81,6 +81,18 @@ class BudgetedJudgeTests(unittest.TestCase):
         self.assertEqual('abstain', self.judge.evaluate(self.request(evidence='{"changed":true}')).verdict)
         self.assertEqual(1, len(self.client.calls))
 
+    def test_non_cost_nonfinite_runtime_does_not_poison_packet_serialization(self):
+        from dataclasses import asdict
+        from cx_eval_lab.semantic import SemanticJudgment
+        from cx_eval_lab.models import RuntimeEvidence
+        malformed = SemanticJudgment('pass', 'fixture', RuntimeEvidence(
+            'fixture', 'fixture', (), float('nan'), 1, 2, 0.0001, 'fixture'), '{}')
+        with patch.object(type(self.inner), 'evaluate', return_value=malformed):
+            result = self.judge.evaluate(self.request())
+        self.assertEqual('abstain', result.verdict)
+        self.assertIsNone(result.runtime_evidence)
+        json.dumps(asdict(result), allow_nan=False)
+
     def test_paired_invocations_are_distinct_reproducible_and_replayable(self):
         from cx_eval_lab.artifacts import replay_packet
         from cx_eval_lab.dataset import load_refund_cases
