@@ -22,7 +22,8 @@ class ResolutionPairedStudyTests(unittest.TestCase):
             self.assertEqual(1, row['release_receipt']['comparison']['independent_cluster_count'])
             self.assertEqual(16, row['unqualified_message_trials'])
         self.assertEqual([2, 8], [r['candidate_contract_passes'] for r in report['comparisons']])
-        self.assertEqual([4, 6], [r['candidate_completed_tasks'] for r in report['comparisons']])
+        # Three right-order endpoints for the mutant, but one acted before clarification.
+        self.assertEqual([3, 6], [r['candidate_completed_tasks'] for r in report['comparisons']])
 
     def test_cli_rejects_overwrite_and_ci_retains_its_report(self):
         with tempfile.TemporaryDirectory() as temporary:
