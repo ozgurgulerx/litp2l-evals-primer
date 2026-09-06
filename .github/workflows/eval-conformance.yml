@@ -25,12 +25,12 @@ jobs:
           python-version: '3.12'
           enable-cache: false
       - name: Install locked development dependencies
-        run: uv sync --frozen --group dev
+        run: uv sync --frozen --group dev --extra openai
       - name: Unit, integration, and local CLI conformance tests
         run: |
-          uv run coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
-          uv run coverage report --fail-under=80
-          uv run coverage xml -o coverage.xml
+          uv run --extra openai coverage run --branch --source=cx_eval_lab -m unittest discover -s tests
+          uv run --extra openai coverage report --fail-under=80
+          uv run --extra openai coverage xml -o coverage.xml
       - name: Exercise lab pass, insufficient-evidence hold, and policy block
         run: uv run python -m cx_eval_lab.ci_conformance --output-dir ci-evidence --code-revision "$CXLAB_CODE_REVISION"
       - name: Build book with strict validation

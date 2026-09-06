@@ -227,6 +227,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 [Katas 08–10](semantic-grading-lab.md) now exercise calibration bounds, scoped qualification, negative versus unknown judgments, and retained judge evidence. Their judge is a synthetic control double; live semantic accuracy remains unmeasured.
 
+[Katas 36–37](semantic-grading-lab.md#kata-36-a-passing-json-verdict-is-not-a-usable-judgment) exercise the optional provider adapter through fake envelopes, the installed SDK's in-memory HTTP transport, and paired-run replay. They distinguish refusal/incomplete responses from negative judgments, reproduce endpoint drift and malformed metering, and calculate known versus unknown evaluation cost. These are offline software tests, not a live judge qualification study.
+
 [Katas 05–07](statistical-method-study.md) now cover statistical false promotion, unequal-cluster estimands, and biased judge labels, with executed enumeration results and worked solutions.
 
 The [delivery map](primer-delivery-map.md) tracks the complete book and interview-preparation objective. Upcoming katas deepen dataset improvement, human annotation, empirical judge calibration, general clustered/sequential inference, retrieval, process recovery, CI/CD, canary exposure, and frontier-risk decisions. Those further exercises remain pending until their runnable checks and worked solutions exist.

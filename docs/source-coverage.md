@@ -15,6 +15,8 @@ The [statistical method study](statistical-method-study.md) now supplies full co
 
 The [Semantic Grading Lab](semantic-grading-lab.md) adds tested runner integration and Katas 08–10 for scoped qualification, class-error bounds, abstention, configuration drift, expiry/revocation, and retained judge evidence. Katas 18–20 add an executed row-derived annotation compiler, a retained four-row synthetic packet, independent-adjudicator checks and declared split-leakage controls. Fixture judges, synthetic labels and reviewer identifiers are control tests, not human calibration or live-model accuracy evidence. Authenticated human annotation provenance, representative data collection and live semantic studies remain open.
 
+Katas 36–37 add the optional Responses judge adapter: strict verdict parsing, incomplete/refusal abstention, effective-endpoint checks, defensive usage validation and retained raw response evidence. The installed SDK is exercised through an in-memory HTTP transport; four synthetic paired judgments are retained and replayed. No live semantic accuracy is established. Judge costs remain separate audit overhead, and hard campaign budgets/cancellation and reviewed live calibration are still open.
+
 | Research source | Primary contribution | Canonical treatment |
 | --- | --- | --- |
 | Best GitHub Repositories for LLM Evaluation in 2026 | Tool categories, quick starts, licensing, portability, model/application/production layers | System Studies, Benchmark Reproducibility, Courses |

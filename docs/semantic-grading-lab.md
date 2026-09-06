@@ -4,7 +4,7 @@ The runner now has an evaluator-owned semantic stage. A `SemanticJudge` receives
 
 **Implemented:** scoped registry checks, class-conditional calibration bounds, abstention limits, expiry/revocation controls, single-run and paired-run integration, retained request/judgment evidence, and offline replay with externally supplied trust.
 
-**Not demonstrated:** a live model judge's accuracy, human-reviewed calibration, representative slice coverage, or qualification for production. The executable exercises use a clearly labeled fixture judge and synthetic calibration counts. A fixture that returns `pass` proves wiring, not that prose is true. A paid adapter and an independently reviewed calibration study remain delivery requirements.
+**Not demonstrated:** a live model judge's accuracy, human-reviewed calibration, representative slice coverage, or qualification for production. The executable exercises use a clearly labeled fixture judge and synthetic calibration counts. A fixture that returns `pass` proves wiring, not that prose is true. An optional provider adapter is now implemented and exercised offline in Katas 36–37 below; a metered live study and independently reviewed calibration remain delivery requirements.
 
 ## The execution contract
 
@@ -179,3 +179,52 @@ You discover the same customer session in development and calibration. Its text 
 ### What this addition proves—and leaves open
 
 The compiler and CLI are executed local implementations, and the four-row artifact can be reconstructed from its retained labels. They close the manual-count reproducibility gap for this ingestion path. They do not authenticate reviewer identities, enforce pre-registration timestamps, validate reference-label accuracy, discover hidden lineage, or supply a live judge study. Existing direct construction of operator-trusted records remains supported; production registry admission must require independently verified artifacts rather than treat either a content hash or a caller's `human_reviewed` string as proof.
+
+## Kata 36: a passing JSON verdict is not a usable judgment
+
+A provider response contains `{"verdict":"pass","explanation":"supported"}`. Its envelope says `incomplete`. Another returns the same JSON from an unregistered model. A third includes a refusal alongside the JSON. Which judgments may the evaluator use?
+
+**Know:** inspect the provider envelope before interpreting the verdict. Parsing JSON establishes a data shape, not a completed request, the identity of the instrument, or factual accuracy.
+
+The optional `OpenAIResponsesJudge` in `cx_eval_lab/openai_judge.py` implements `SemanticJudge`. Its configuration requires an explicit model. The adapter sends one non-streaming request with a strict verdict schema, no tools, disabled input truncation, an output-token limit, and SDK retries set to zero. It rechecks the effective client endpoint before sending. These are inspectable implementation choices, not a recommendation to use an unspecified model.
+
+**Run offline:** install the optional SDK to exercise its actual serialization through an in-memory HTTP transport. The test supplies a clearly synthetic credential to that transport; it neither reads a real key for the request nor sends network traffic to a model.
+
+```bash
+uv sync --frozen --group dev --extra openai
+uv run --extra openai python -m unittest tests.test_openai_judge -v
+```
+
+**Task:** predict the result for each envelope above. Then try missing usage, duplicate `verdict` JSON keys, and a changed client endpoint after constructing the judge. Does any transport test establish the truth of “the refund has settled”?
+
+??? success "Solution: retain the response, abstain on an unusable instrument result"
+    Incomplete responses, refusals, model mismatch, malformed verdicts and invalid usage abstain. A changed effective endpoint blocks before sending. No provider `pass` becomes a qualifying receipt directly: the evaluator-owned stage must separately check the operator-selected calibration record and bind the judgment to case evidence.
+
+    Where a usable response envelope exists, the adapter retains its full serialized body in `provider_audit_json`, alongside configuration identity and a cost-unknown flag. Missing or oversized envelopes are explicitly marked `response_not_retained`; they do not acquire a pass. An oversized serializable response retains a content hash, not a replayable replacement for its missing body.
+
+    The integration test runs two repetitions for each of two arms: four synthetic provider calls, four retained trial artifacts, and four replayed grades. Its registry and verdicts are synthetic. That proves stage/runner/artifact plumbing, not semantic accuracy, independent human review, or authenticated execution provenance.
+
+**Extend:** change the rubric, model or timeout while keeping the old registry record. The configuration hash changes. The stage must reject that old qualification before calling the newly configured judge. In a real study, pin the approved model identity; a returned identity mismatch deliberately abstains rather than silently treating an alias change as equivalent.
+
+**Interview answer:** “I distinguish a syntactically valid verdict, a usable provider response, and a currently qualified judgment. I retain rejected evidence, and I do not turn infrastructure uncertainty into either a factual pass or a factual failure.”
+
+## Kata 37: timeout does not mean free—and token cost is not total cost
+
+The fixture reports 100 input tokens and 20 output tokens. For arithmetic only, the test supplies invented rates of $2 and $8 per million tokens. A second request times out before returning usage. A third claims `10**400` input tokens.
+
+**Task:** compute the first estimate. Should the timeout contribute zero dollars? Should malformed metering crash the whole experiment or discard the response that exposed it?
+
+??? success "Solution: compute the known estimate and preserve missingness"
+    The first estimate is `(100 × 2 + 20 × 8) / 1,000,000 = $0.00036`. These are fixture prices, not current provider prices. The result is an operator-supplied, undiscounted token-cost estimate; cache discounts, service-tier differences and operational costs are excluded.
+
+    The timeout abstains, records the exception type without copying potentially sensitive exception text, and marks cost unknown. The adapter performs no retry. The provider might still have processed the request; absence of returned usage does not prove zero expenditure or server cancellation.
+
+    The extreme integer response abstains while preserving its raw usage in the audit. Parsed token fields and cost remain unknown. A defensive one-billion-token envelope bound prevents malformed metering arithmetic; it is not a model context limit, a pricing rule, or a campaign budget. Unrepresentable numeric configuration is rejected before a request.
+
+    The paired runner's `cost_usd` currently represents agent cost. Judge cost and elapsed time remain separate in semantic audit. Summing them for a complete experiment budget, handling unknown-cost requests, and enforcing a campaign reservation/stop policy remain implementation work. Do not describe the current packet's agent-cost column as total spend.
+
+**Limits to know:** `max_input_bytes` bounds the supplied evidence JSON, not the rubric/schema/full request. `max_response_bytes` checks retention after SDK download and deserialization; it is not a network-memory limit. A transport timeout is not a hard experiment deadline. The SDK/client and operator registry remain trusted dependencies; endpoint checking is not network attestation. `store=False` is a request setting, not proof of zero provider retention. Full provider bodies can contain sensitive customer material: protect real artifacts, and publish only reviewed synthetic or appropriately redacted examples.
+
+**Before a live run:** select an approved agent and judge model, freeze the configuration and dataset, obtain a total spend cap, establish independent calibration evidence, and configure an operator-owned stage with synthetic admission disabled. The existing Python runner accepts that stage; the CLI does not silently create one. These offline exercises require none of those paid calls and do not stand in for them.
+
+**Interview answer:** “I account separately for application cost, evaluation overhead, and unknown expenditure. A timeout cannot clear a spend gate merely because its response is missing. Likewise, a valid cost estimate cannot qualify the judge's factual accuracy.”

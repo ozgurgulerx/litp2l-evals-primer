@@ -20,6 +20,8 @@ make test
 make build
 ```
 
+`make test` includes the optional OpenAI SDK for offline transport-contract tests. The tests use an in-memory HTTP transport and synthetic credentials; they do not make paid model calls or establish model quality. For coverage, install `uv sync --frozen --group dev --extra openai` and run `uv run --extra openai coverage run --branch --source=cx_eval_lab -m unittest discover -s tests`, then `uv run --extra openai coverage report --fail-under=80`.
+
 The strict build catches broken navigation and configuration problems. Every push to `main` publishes the latest book through GitHub Pages.
 
 ## Add a chapter

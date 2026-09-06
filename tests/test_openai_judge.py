@@ -26,7 +26,7 @@ class FakeClient:
     base_url = 'https://api.openai.com/v1/'
 
     def __init__(self, payload=None, error=None):
-        self.payload, self.error = payload or response(), error
+        self.payload, self.error = response() if payload is None else payload, error
         self.options, self.calls = [], []
         self.responses = SimpleNamespace(create=self.create)
 
@@ -184,6 +184,51 @@ class OpenAIJudgeTests(unittest.TestCase):
             self.assertEqual(512, body['max_output_tokens'])
             self.assertFalse(body['store'])
             self.assertEqual('pass' if status == 200 else 'abstain', result.verdict)
+
+    def test_invalid_envelopes_and_output_shapes_abstain(self):
+        payloads = [[], {'bad': float('nan')}, response(id=''), response(output=[]),
+                    response(output=[{'type': 'tool_call'}]), response(output=None),
+                    response(output=[{'type': 'reasoning'}])]
+        for content in ([], [{'type': 'output_text', 'text': 42}],
+                        [{'type': 'output_text', 'text': '[]'}],
+                        [{'type': 'output_text', 'text': '{"verdict":"pass","explanation":""}'}],
+                        [{'type': 'output_text', 'text': 'NaN'}]):
+            payloads.append(response(output=[{'type': 'message', 'role': 'assistant',
+                                             'status': 'completed', 'content': content}]))
+        for payload in payloads:
+            with self.subTest(payload=payload):
+                result = self.judge(FakeClient(payload)).evaluate(SemanticRequest('{}'))
+                self.assertEqual('abstain', result.verdict)
+        result = self.judge(max_response_bytes=10).evaluate(SemanticRequest('{}'))
+        self.assertEqual('response_not_retained', json.loads(result.provider_audit_json)['status'])
+
+    def test_bad_requests_and_constructor_validation_do_not_send(self):
+        from cx_eval_lab.openai_judge import JudgeConfig, OpenAIResponsesJudge
+        client = FakeClient()
+        for request in (None, SemanticRequest('[]'), SemanticRequest('not json'),
+                        SemanticRequest('{}', criterion_id='not-registered')):
+            self.assertEqual('abstain', self.judge(client).evaluate(request).verdict)
+        self.assertEqual([], client.calls)
+        with self.assertRaises(ValueError):
+            OpenAIResponsesJudge(None, client)
+        client.base_url = 'https://example.invalid/v1'
+        with self.assertRaises(ValueError):
+            OpenAIResponsesJudge(JudgeConfig(model='fixture'), client)
+        with patch.dict(os.environ, {'OPENAI_API_KEY': ''}), self.assertRaises(ValueError):
+            OpenAIResponsesJudge.from_environment(JudgeConfig(model='fixture'))
+        with patch.dict(os.environ, {'OPENAI_API_KEY': 'fixture-not-a-real-key'}), \
+                patch('openai.OpenAI', return_value=FakeClient()) as constructor:
+            judge = OpenAIResponsesJudge.from_environment(JudgeConfig(model='fixture'))
+            self.assertEqual([], judge.client.calls)
+            self.assertEqual(0, constructor.call_args.kwargs['max_retries'])
+
+    def test_unpriced_and_nonrepresentable_estimates_stay_unknown(self):
+        for rates in ((None, None), (10**308, 10**308)):
+            result = self.judge(input_usd_per_million=rates[0],
+                                output_usd_per_million=rates[1]).evaluate(SemanticRequest('{}'))
+            self.assertEqual('pass', result.verdict)
+            self.assertIsNone(result.runtime_evidence.cost_usd)
+            self.assertTrue(json.loads(result.provider_audit_json)['cost_unknown'])
 
 
 if __name__ == '__main__':
