@@ -3,13 +3,14 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import json
+import math
 import re
 import time
 from typing import Callable
 
 from cx_eval_lab.evaluators import hash_customer_message, hash_structured_claims
 from cx_eval_lab.evidence import canonical_hash
-from cx_eval_lab.models import AgentOutput, SemanticEvaluationReceipt
+from cx_eval_lab.models import AgentOutput, RuntimeEvidence, SemanticEvaluationReceipt
 from cx_eval_lab.resolution_evidence import DATASET, SLICES
 from cx_eval_lab.semantic import CalibrationRegistry, SemanticJudgment, SemanticRequest
 
@@ -69,6 +70,32 @@ def receipt_for(execution, record, verdict):
         verdict == 'pass', verdict == 'abstain', context_hash(execution))
 
 
+def validated_judgment(data):
+    require(isinstance(data, dict) and set(data) == {'verdict', 'explanation', 'runtime_evidence',
+            'provider_audit_json', 'campaign_audit_json'}, 'invalid native judgment shape')
+    require(isinstance(data['explanation'], str) and 1 <= len(data['explanation'].strip()) <= 4096,
+            'invalid native judgment explanation')
+    runtime = data['runtime_evidence']
+    if runtime is not None:
+        require(isinstance(runtime, dict), 'invalid native judge runtime')
+        runtime = RuntimeEvidence(**runtime)
+        tokens = (runtime.input_tokens, runtime.output_tokens, runtime.total_tokens)
+        require(all(n is None for n in tokens) or all(type(n) is int and 0 <= n <= 10**9 for n in tokens)
+                and tokens[0] + tokens[1] == tokens[2], 'invalid native judge token usage')
+        require(runtime.cost_usd is None or type(runtime.cost_usd) in (int, float)
+                and math.isfinite(runtime.cost_usd) and 0 <= runtime.cost_usd <= 10**6,
+                'invalid native judge cost')
+        require(all(isinstance(s, str) and s for s in (runtime.provider, runtime.model_id, runtime.cost_source))
+                and isinstance(runtime.response_ids, (list, tuple))
+                and all(isinstance(s, str) and s for s in runtime.response_ids), 'invalid native runtime identity')
+    for key in ('provider_audit_json', 'campaign_audit_json'):
+        require(data[key] is None or isinstance(data[key], str), 'invalid native audit encoding')
+        if data[key] is not None:
+            require(isinstance(json.loads(data[key]), dict), 'native provider audit must be an object')
+    json.dumps(data, allow_nan=False)
+    return SemanticJudgment(**{**data, 'runtime_evidence': runtime})
+
+
 def rejection(record, judge, now, *, measurement_kind, allow_synthetic):
     return record.rejection(judge, NativeScope(), POLICY, now,
         allow_synthetic and measurement_kind == 'synthetic', criterion_id=CRITERION)
@@ -112,7 +139,7 @@ class ResolutionSemanticStage:
         try:
             judgment = self.judge.evaluate(request)
             require(isinstance(judgment, SemanticJudgment), 'invalid native judgment')
-            json.dumps(asdict(judgment), allow_nan=False)
+            judgment = validated_judgment(asdict(judgment))
         except Exception as error:
             judgment = SemanticJudgment('abstain', f'judge_error:{type(error).__name__}')
         completed = timestamp(self.clock().isoformat())

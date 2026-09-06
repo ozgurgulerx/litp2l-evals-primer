@@ -7,6 +7,7 @@ from cx_eval_lab.evidence import canonical_hash
 from cx_eval_lab.models import CheckResult
 from cx_eval_lab.resolution_semantic import (
     EVALUATOR, judge_request, receipt_for, rejection, require, timestamp, validate_registration,
+    validated_judgment,
 )
 from cx_eval_lab.semantic import CalibrationRecord
 
@@ -19,12 +20,46 @@ class SemanticStatus:
     reason: str | None
 
 
-def verify_semantics(payload, trusted_calibration_hashes):
-    registration = payload['design']['semantic_qualification']
-    validate_registration(registration)
+def _audit(payload, registration):
     audit = payload['semantic_stage']
     require(isinstance(audit, dict) and audit.get('registration') == registration,
             'native semantic audit registration mismatch')
+    base = {'status', 'reason', 'registration', 'invocation_id', 'started_at'}
+    full = base | {'completed_at', 'qualification', 'request', 'request_hash', 'judgment',
+                   'judge_latency_ms', 'error_bounds', 'authority'}
+    require(set(audit) in (base, full), 'native audit must distinguish predispatch from completed call')
+    started = timestamp(audit['started_at'])
+    if set(audit) == base:
+        require(audit['status'] == 'unqualified' and isinstance(audit['reason'], str) and audit['reason'],
+                'predispatch rejection requires an explanation')
+        return None, None, audit['reason']
+    require(type(audit['judge_latency_ms']) is int and audit['judge_latency_ms'] >= 0
+            and audit['authority'] == 'lab_only', 'invalid native audit latency or authority')
+    record = CalibrationRecord(**audit['qualification'])
+    require(record.content_hash == registration['calibration_hash'], 'native qualification hash mismatch')
+    request = judge_request(payload)
+    require(canonical_hash(audit['request']) == canonical_hash(request)
+            and audit['request_hash'] == canonical_hash(request), 'native semantic request differs from execution')
+    judgment = validated_judgment(audit['judgment'])
+    require(canonical_hash(audit['error_bounds']) == canonical_hash(record.error_bounds),
+            'native calibration bounds mismatch')
+    judge = SimpleNamespace(evaluator_version=registration['evaluator_version'],
+                            configuration_hash=registration['configuration_hash'])
+    args = dict(measurement_kind=payload['measurement']['evidence_kind'],
+                allow_synthetic=registration['allow_synthetic'])
+    require(rejection(record, judge, started, **args) is None, 'native dispatch began outside qualified scope')
+    completed = timestamp(audit['completed_at'])
+    reason = 'semantic_clock_regression' if completed < started else rejection(record, judge, completed, **args)
+    require(audit['reason'] == reason and audit['status'] == ('unqualified' if reason else 'graded'),
+            'native postdispatch qualification status mismatch')
+    return record, judgment, reason
+
+
+def verify_semantics(payload, trusted_calibration_hashes):
+    registration = payload['design']['semantic_qualification']
+    validate_registration(registration)
+    record, judgment, reason = _audit(payload, registration)
+    audit = payload['semantic_stage']
     identity = payload['identity']
     expected_id = canonical_hash([identity['manifest_hash'], identity['case_id'],
                                   identity['trial_index'], identity['arm']])
@@ -32,33 +67,15 @@ def verify_semantics(payload, trusted_calibration_hashes):
     receipt = payload['semantic_evaluation_receipt']
     accepted = payload['qualified_semantic_calibration_hashes']
     if receipt is None:
-        require(accepted == [] and audit.get('status') == 'unqualified'
-                and isinstance(audit.get('reason'), str) and audit['reason'], 'missing native qualification reason')
-        return SemanticStatus(False, False, False, audit['reason'])
+        require(accepted == [] and reason is not None, 'missing native qualification reason')
+        return SemanticStatus(False, False, False, reason)
     require(accepted == [registration['calibration_hash']]
             and registration['calibration_hash'] in trusted_calibration_hashes,
             'native replay requires independently trusted calibration')
-    record = CalibrationRecord(**audit['qualification'])
-    require(record.content_hash == registration['calibration_hash'], 'native qualification hash mismatch')
-    judge = SimpleNamespace(evaluator_version=registration['evaluator_version'],
-                            configuration_hash=registration['configuration_hash'])
-    require(audit['status'] == 'graded' and audit['reason'] is None, 'native graded status mismatch')
-    started, completed = timestamp(audit['started_at']), timestamp(audit['completed_at'])
-    require(started <= completed, 'native semantic clock regression')
-    for instant in (started, completed):
-        require(rejection(record, judge, instant, measurement_kind=payload['measurement']['evidence_kind'],
-                          allow_synthetic=registration['allow_synthetic']) is None,
-                'native historical qualification outside registered scope')
-    request = judge_request(payload)
-    require(canonical_hash(audit['request']) == canonical_hash(request)
-            and audit['request_hash'] == canonical_hash(request), 'native semantic request differs from execution')
-    verdict = audit['judgment']['verdict']
-    require(verdict in {'pass', 'fail', 'abstain'}, 'invalid native verdict')
-    require(canonical_hash(audit['error_bounds']) == canonical_hash(record.error_bounds),
-            'native calibration bounds mismatch')
-    require(canonical_hash(receipt) == canonical_hash(receipt_for(payload, record, verdict).to_dict()),
+    require(reason is None and record is not None and judgment is not None, 'native graded status mismatch')
+    require(canonical_hash(receipt) == canonical_hash(receipt_for(payload, record, judgment.verdict).to_dict()),
             'native semantic receipt or verdict mismatch')
-    return SemanticStatus(True, verdict == 'pass', verdict == 'abstain', None)
+    return SemanticStatus(True, judgment.verdict == 'pass', judgment.verdict == 'abstain', None)
 
 
 @dataclass(frozen=True)
