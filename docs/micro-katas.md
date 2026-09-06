@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 66–67](dataset-design.md#mixed-trace-workshop-observations-before-causes) use eight mixed traces to distinguish observable defects, untested cause hypotheses, clean controls and unresolved work. Count overlapping categories without inventing independent incidents, then choose a repair and a discriminating check before publishing regressions.
+
 [Katas 64–65](order-resolution-study.md#native-paired-diagnostics-separate-the-action-from-the-explanation) derive native structural and joint changes from retained multi-order executions. Distinguish a qualified semantic failure from abstention, locate clarification and ordering failures, and reject retrospective promotion of exploratory feature slices to required gates.
 
 [Katas 62–63](metrics.md#executed-paired-slice-comparison) reconstruct fixed and regressed pairs from full legacy executions, compare trial and customer weighting, and hold missing or unqualified required-slice evidence. The retained study improves overall while regressing its required slice; its teaching intervals do not authorize release.

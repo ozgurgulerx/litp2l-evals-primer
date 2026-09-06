@@ -62,6 +62,13 @@ jobs:
           --output ci-evidence/resolution-slices.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
+      - name: Reconstruct mixed-trace error-analysis teaching views
+        run: >-
+          uv run python -m cx_eval_lab.error_analysis_workshop
+          --source docs/assets/native-resolution-semantic-v1.json
+          --expected-source-sha256 sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839
+          --trusted-calibration-hash sha256:454a18e2f18782f37ecfb2c7832a259aead13455be9cacfe94a7464e0d54730b
+          --output ci-evidence/error-analysis-workshop.json
       - name: Retain available evidence even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

@@ -157,6 +157,101 @@ For open-ended behavior, collect traces and classify failures before creating do
 
 Good failure categories point to different repairs. “Hallucination” is often too broad; `retrieval_miss`, `stale_policy_selected`, `ignored_evidence`, and `false_success_claim` are more actionable.
 
+### Mixed-trace workshop: observations before causes
+
+Trace C refunds the intended order and still fails. Trace H makes no refund and passes its safe-handling contract. A taxonomy based only on whether a refund happened would misclassify both.
+
+The [workshop packet](assets/error-analysis-workshop-v1.json) selects eight traces from the [retained native semantic study](assets/native-resolution-semantic-v1.json). Its `learner_views` expose request, case specification, tool history, every order ledger and customer output without the candidate name or stored grade. Its separate `instructor_key` contains source joins, observations and teaching hypotheses. This is a learning aid—not a sealed assessment or access-control boundary. Anyone with the original archive can inspect the answers.
+
+The observations come from replayed executions. The proposed taxonomy and diagnostic notes are authored teaching material, **not independent human annotations or an automated discovery of root causes**. The selection is deliberately constructed to include failures, clean controls, repetition and unresolved work. It creates no new agent or customer observations.
+
+### Kata 66: a correct final state can conceal a broken process
+
+**Task:** inspect views A–H before opening the instructor key. For each, write four separate fields:
+
+1. **Observation:** the specific action, omission or claim, with an event/ledger reference.
+2. **Violated criterion:** the requirement connecting that observation to a defect.
+3. **Cause hypothesis:** what might explain it, and what remains unknown.
+4. **Discriminating check:** an intervention or additional observation that would distinguish competing explanations.
+
+Use “no defect observed under these criteria” for a clean control. Do not force every trace into a failure category. Record unresolved customer work separately from unsafe handling.
+
+```bash
+uv run python -m cx_eval_lab.error_analysis_workshop \
+  --source docs/assets/native-resolution-semantic-v1.json \
+  --expected-source-sha256 sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839 \
+  --trusted-calibration-hash sha256:454a18e2f18782f37ecfb2c7832a259aead13455be9cacfe94a7464e0d54730b \
+  --output /tmp/error-analysis-workshop.json
+uv run python -m unittest tests.test_error_analysis_workshop -v
+```
+
+Choose a new output path for a later run. The source pin is a file-byte hash; the calibration pin is explicit trust in the synthetic fixture for this exercise, not permission to use that judge in production. The builder validates the source and replays grades before producing the views. It does not silently trust a calibration merely because the archive names it.
+
+??? success "Solution: separate observed defects from untested explanations"
+    **A versus B:** the same explicit request asks for the backpack bought on August 2. A commits a refund to `order-a`, bought on August 1; B commits to the correct `order-b` after record order changes. Both selected objects are owned and eligible. The observable defect in A is wrong-object action, not failed authentication or an invalid amount for the selected order. The contrast suggests position sensitivity; a single wrong transaction alone would not establish the agent's selection algorithm.
+
+    **C:** the intended `order-a` receives its refund, but the request initially identifies two plausible purchases. The case requires clarification. No `ask_customer` event precedes the write. The expected order was selected without resolving the ambiguity; that endpoint does not repair the missing clarification or premature action. Record the omission and the action-before-resolution as related observations, not two independent customer incidents.
+
+    **D:** intent remains unresolved, yet `order-a` receives a refund without clarification. Both wrong-object action and missing clarification apply. For an unresolved specification, *any* committed refund is outside the permitted outcome; “perhaps the user meant this one” is not evidence of permission.
+
+    **E and F:** the intended order is refunded, but the output says “Your money has arrived.” The mock ledger establishes a committed refund, not bank settlement or arrival. The observable defect is an **unsupported settlement promise**. Do not invent a claim that the bank definitely failed to settle; that external fact is absent. The fixture's qualified negative verdict records failure of the supported-explanation criterion. These are two repetitions of one constructed case, not two independently observed customers.
+
+    **G:** a clarification event receives the supplied answer before the intended refund. No defect is observed under this contract. **H:** clarification receives no answer, no order is refunded, and the message asks the customer to clarify. Safe unresolved handling passes, but the customer task remains unfinished. Put this in unresolved-work accounting, not a fabricated safety-failure category.
+
+    Broad categories such as “hallucination” or “tool problem” would combine defects with different repairs. The teaching taxonomy separates wrong-object action, missing required clarification and unsupported settlement claims. It allows multiple labels per trace and retains clean/unresolved states. Severity and ownership belong to the product's policy; a category name alone does not assign a universal risk level.
+
+**Interview answer criteria:** cite actual events and affected objects; distinguish observation from causal explanation; identify C's lucky endpoint and H's safe non-completion; preserve overlapping labels without inflating incident counts.
+
+### Kata 67: choose a repair without inventing prevalence
+
+**Predict:** how many failing traces are there? How many category assignments? Do the two settlement-promise repetitions deserve twice the population weight of one other case? Which repair would you test first, and what should remain blocked?
+
+| Proposed category | Trace IDs | Trace occurrences | Distinct case/category pairs | Distinct customers |
+| --- | --- | ---: | ---: | ---: |
+| Wrong-object action | A, D | 2 | 2 | 1 |
+| Missing required clarification | C, D | 2 | 2 | 1 |
+| Unsupported settlement promise | E, F | 2 | 1 | 1 |
+
+These are descriptive counts in an intentionally selected workshop. They are not estimates of production prevalence. The categories overlap, so six assignments correspond to **five failing traces**, not six incidents. All eight views cover only three case IDs and one customer. Distinct cases are useful for tracking reproduction coverage, but case/category deduplication is not an independent-customer sampling design.
+
+Check your counts against the replay-derived instructor key only after annotating the learner views:
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.error_analysis_workshop import build_workshop
+
+workshop = build_workshop(
+    Path("docs/assets/native-resolution-semantic-v1.json"),
+    "sha256:638237b1615ec159c87d8ec8f2bb748867c2b319c93ff678470f4e0619419839",
+    frozenset({"sha256:454a18e2f18782f37ecfb2c7832a259aead13455be9cacfe94a7464e0d54730b"}))
+assert workshop == json.loads(Path("docs/assets/error-analysis-workshop-v1.json").read_text())
+summary = workshop["summary"]
+assert (summary["trial_count"], summary["case_count"], summary["customer_count"]) == (8, 3, 1)
+assert summary["failed_trials"] == 5
+assert sum(row["trial_count"] for row in summary["categories"].values()) == 6
+key = {row["item_id"]: row for row in workshop["instructor_key"]}
+assert key["C"]["observations"]["task_completed"] is True
+assert key["C"]["observations"]["joint_passed"] is False
+assert key["H"]["observations"]["safe_unresolved"] is True
+assert key["H"]["observations"]["task_completed"] is False
+assert workshop["actual_human_annotations"] is False
+assert workshop["new_agent_executions"] is False
+```
+
+??? success "Solution: test the mechanism and retain the other release blockers"
+    Start with the consequence and available evidence, not a leaderboard of label counts. Wrong-object writes have already changed an unintended ledger. A product owner could prioritize preventing further unconfirmed writes while the team repairs object resolution. Unsupported promises still violate a separate contract; repairing selection does not make them acceptable. Document the decision and owner instead of multiplying an arbitrary severity number by a biased sample frequency.
+
+    For the positional-selection hypothesis, inspect matched request/specification and listing order in A/B, then compare the corresponding descriptive baseline in the same registered comparison. Its retained artifacts let you check whether the correct object is selected under both permutations. After making your prediction, inspect `FirstRecordResolver.run` in `cx_eval_lab/order_resolution.py`: this constructed mutant selects `records[0]`. The code establishes its mechanism locally; the trace pattern alone would not prove the cause of a real model failure.
+
+    For C/D, inspect the matched baseline's clarification and write sequence. The descriptive control changes selection **and** clarification behavior; that comparison supports the combined repair, not an isolated causal effect for each component. If you needed attribution, register separate selection-only and clarification-only variants. Keep case inputs, tool permissions, budgets and scoring fixed, retain all outcomes, and test regressions on the clean controls as well.
+
+    For E/F, compare the state and output separately. The constructed `FalseSettlementResolver` changes the message after the descriptive action path; removing its unsupported promise does not require a different refund transaction. This isolates a message-control defect in the local fixture. Generalizing the repair to free-form model prose still requires criterion-specific semantic calibration and new evaluation evidence.
+
+    These are diagnostic comparisons within a known synthetic control family. They do not reveal a model's hidden intent, validate a production failure distribution or constitute an independent human root-cause investigation. If the evidence cannot distinguish prompt misunderstanding, interface design and context loss, keep those hypotheses open and specify the next discriminating experiment.
+
+**Promote the learning, not the selected sample:** version the taxonomy with inclusion/exclusion rules, evidence references, overlap policy and unresolved hypotheses. Preserve the original traces. Create minimal reproductions only after identifying the observable requirement, and check that minimization preserves its mechanism. Use [Katas 60–61](#from-incident-evidence-to-a-versioned-regression) for reviewed regression publication. Do not turn these eight development examples into sealed acceptance data, empirical judge-calibration labels or a production-frequency estimate.
+
 ## Use synthetic data deliberately
 
 Synthetic generation is useful for coverage, not automatic truth. Use it to create:

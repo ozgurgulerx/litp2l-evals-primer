@@ -124,6 +124,8 @@ assert all(d["deployment_authorized"] is False for d in decisions.values())
 
 ## What to do next
 
+To turn trace inspection into a failure taxonomy and repair decision, use [Katas 66–67](dataset-design.md#mixed-trace-workshop-observations-before-causes). The mixed-trace workshop keeps observations separate from proposed causes and demonstrates why safe non-completion, lucky endpoints and repeated symptoms need different treatment.
+
 For pair-level diagnosis of the native workflow, continue with [Katas 64–65](order-resolution-study.md#native-paired-diagnostics-separate-the-action-from-the-explanation). They replay the retained semantic controls into separate structural and joint comparisons and exploratory clarification slices, without rewriting the original evidence or release decisions.
 
 Use [dataset design](dataset-design.md) to replace constructed cases with a versioned, reviewed sampling plan; use [semantic grading](semantic-grading-lab.md) to qualify the instrument; use [statistical studies](statistical-method-study.md) to challenge the proposed inference. Then take an approved application through [CI gates](ci-gate-lab.md) and the [exposure-control protocol](exposure-control-lab.md). The local demonstration supplies a working evidence chain and inspectable failure controls. The empirical qualification and real deployment remain work to perform, not authority inherited from this book.
