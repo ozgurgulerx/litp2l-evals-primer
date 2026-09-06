@@ -31,7 +31,7 @@ class CampaignStudyTests(unittest.TestCase):
     def test_all_known_costs_and_invalid_artifacts(self):
         from cx_eval_lab.campaign_study import run_study
         from cx_eval_lab.cost_accounting import summarize_packet_costs
-        report = run_study(unknown_second=False)
+        report = run_study(unknown_second=False, budget_micro_usd=2000)
         self.assertEqual(321440, report['costs']['complete_selected_estimate_micro_usd'])
         self.assertEqual(0, report['costs']['unknown_component_count'])
         report['packet']['trial_artifacts'][0]['payload']['cost_usd'] = 999
