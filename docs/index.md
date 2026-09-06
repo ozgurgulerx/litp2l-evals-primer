@@ -60,6 +60,8 @@ The order is deliberate: establish why the evaluation exists, decide what eviden
 
 ## Part II · Build the CX evaluation system
 
+Use the [Micro-katas](micro-katas.md) to predict, reproduce and repair small evaluation failures. Each includes runnable checks, a solution, the key interview explanation, and the limits of its evidence. The [delivery map](primer-delivery-map.md) tracks the remaining work toward the complete practitioner curriculum.
+
 The first runnable slice now exists locally. It includes five synthetic refund cases, a resettable mock world, a safe reference agent, deliberately broken agents, deterministic graders, and a release gate that treats safety, quality, protected slices, latency, and cost as separate rules. [Open the CX Eval Lab →](build-the-system.md)
 
 The [Evidence Spine](evidence-spine.md) continues the build from isolated cases to versioned manifests, repeated paired trials, minimum evidence, confidence-bound decisions, and immutable authority receipts.
