@@ -37,6 +37,8 @@ jobs:
         run: uv run python -m cx_eval_lab.campaign_conformance --output ci-evidence/campaign-conformance.json
       - name: Replay paired multi-order executions and reject unqualified release
         run: uv run python -m cx_eval_lab.resolution_paired_study --output ci-evidence/resolution-paired.json
+      - name: Replay row-derived native semantic controls without deployment authority
+        run: uv run python -m cx_eval_lab.resolution_semantic_study --output ci-evidence/resolution-semantic.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
       - name: Retain available evidence even on failure
