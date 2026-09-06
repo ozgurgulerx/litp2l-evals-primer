@@ -1,6 +1,5 @@
 """Native multi-order executions must survive paired projection and re-grading."""
 
-import copy
 import unittest
 from unittest.mock import patch
 
@@ -139,6 +138,63 @@ class ResolutionEvidenceTests(unittest.TestCase):
         packet['baseline_trials'][0]['trial_index'] = False
         with self.assertRaises(ValueError):
             replay_packet(packet)
+
+    def test_measured_mock_execution_binds_elapsed_time_and_unknown_runtime_cost(self):
+        from dataclasses import replace
+        from cx_eval_lab.resolution_runner import make_manifest, run_paired_resolution
+        cases, agent = example_cases(), DescriptiveResolver()
+        manifest = replace(make_manifest(cases, agent.name, agent.name),
+                           measurement_kind='measured', code_revision='local-test-fixture')
+        packet = run_paired_resolution(cases=cases, baseline_agent=agent, candidate_agent=agent,
+                                      manifest=manifest, measurement_profile=None).to_dict()
+        results = replay_packet(packet)
+        self.assertTrue(all(r.cost_usd is None for r in results))
+        payload = packet['trial_artifacts'][0]['payload']
+        payload['elapsed_ms'] += 100
+        rehash(packet)
+        with self.assertRaisesRegex(ValueError, 'measurement'):
+            replay_packet(packet)
+
+    def test_native_prose_cannot_self_qualify_and_current_assessment_reports_gap(self):
+        from datetime import datetime, timezone
+        from cx_eval_lab.replay_authority import assess_replay
+        from cx_eval_lab.semantic import CalibrationRegistry
+        packet = packet_for()
+        assessment = assess_replay(packet, trusted_packet_hash=canonical_hash(packet),
+            historical_calibration_hashes=frozenset(), registry=CalibrationRegistry(()),
+            now=datetime(2026, 9, 6, tzinfo=timezone.utc))
+        self.assertEqual(16, assessment.unqualified_message_trials)
+        self.assertEqual('not_applicable', assessment.calibration_status)
+        packet['trial_artifacts'][0]['payload']['semantic_message_qualified'] = True
+        rehash(packet)
+        with self.assertRaisesRegex(ValueError, 'semantic qualification unsupported'):
+            replay_packet(packet)
+
+    def test_denial_survives_replay_after_a_correct_action(self):
+        class DeniedThenCorrect(DescriptiveResolver):
+            name = 'denied-then-correct'
+            def run(self, request, tools):
+                try:
+                    tools.get_order('order-c')
+                except PermissionError:
+                    pass
+                return super().run(request, tools)
+        packet = packet_for(DeniedThenCorrect())
+        results = replay_packet(packet)[8:]
+        self.assertTrue(all(not r.passed for r in results))
+        self.assertTrue(all(not next(c for c in r.checks if c.name == 'denied_attempts').passed
+                            for r in results))
+
+    def test_ineligible_expected_refund_does_not_disappear_from_paired_evidence(self):
+        from dataclasses import replace
+        from cx_eval_lab.resolution_runner import make_manifest, run_paired_resolution
+        case = example_cases()[0]
+        case = replace(case, orders=tuple(replace(r, eligible=False) for r in case.orders))
+        agent = DescriptiveResolver()
+        manifest = make_manifest((case,), agent.name, agent.name)
+        packet = run_paired_resolution(cases=(case,), baseline_agent=agent, candidate_agent=agent,
+                                      manifest=manifest).to_dict()
+        self.assertTrue(all(not r.passed for r in replay_packet(packet)))
 
 
 if __name__ == '__main__':
