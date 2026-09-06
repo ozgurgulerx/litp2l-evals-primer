@@ -56,6 +56,7 @@ nav:
       - 11. Release Gates & Shipping: checklist.md
   - Part II · Build the CX evaluation system:
       - The CX Eval Lab: build-the-system.md
+      - Follow One CX Packet: cx-evidence-walkthrough.md
       - Evidence Spine: evidence-spine.md
       - Semantic Grading Lab: semantic-grading-lab.md
       - CI Gate Lab: ci-gate-lab.md

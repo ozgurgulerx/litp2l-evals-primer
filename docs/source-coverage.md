@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Integrated CX evidence walkthrough
+
+[Katas 58–59](cx-evidence-walkthrough.md) connect the existing native multi-order, semantic, campaign and release implementations through one retained v2 packet. The Python inspection blocks were executed; a separate clean local clone at `4ed96a7` with a newly installed locked environment reproduced the current study's diagnostic hold and six blocks. This strengthens the reproducible learner path, not model-quality evidence: the agent, judge responses, calibration, clocks, prices and prerequisite assertions remain synthetic. No independent human qualification or application exposure was performed.
+
 ### Executed cross-run cache controls
 
 The [Cross-Run Isolation Study](cross-run-isolation-study.md) and Katas 56–57 execute six SQLite-backed comparisons: query-only versus run-scoped keys, each with fresh worker objects, a reused object and two concurrent threads. The [retained packet](assets/isolation-study-v1.json) contains 18 responses and 55 operations. The buggy key exposes one foreign marker in each worker mode; scoped keys expose none while preserving same-run hits, both shared-policy reads and two overwrite refusals. Replay binds phases, worker identities, concurrent thread identities and causal order to the registered contract. This is application-level cooperative-code evidence—not hostile-worker isolation, authenticated logs, model behavior or a population leakage rate.

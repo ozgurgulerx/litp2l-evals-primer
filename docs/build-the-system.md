@@ -1,6 +1,9 @@
 # Build the CX evaluation system
 
-This is the primer's running implementation. We will begin with a very small customer-support system, prove that its measurements work, and then increase the sophistication of both the agent and its eval system. The tools and customer data are synthetic; the model-backed runtime uses the official OpenAI Agents SDK but calls only the same in-memory services as the deterministic agent.
+This is the primer's running implementation. We begin with a small customer-support system, test its measurements, and then increase the sophistication of both the agent and its eval system. The business tools and customer data are synthetic. The optional model-backed runtime uses the official OpenAI Agents SDK: business actions stay in mock services, but model inference makes external, paid calls when explicitly enabled.
+
+!!! tip "Two practical entry points"
+    Use [Run it locally](#run-it-locally) for your first five-case grader and controlled mutants. Use [Follow One CX Packet](cx-evidence-walkthrough.md) for the integrated multi-order route: execution → semantic qualification → full artifacts → replay → current release decision. That second command exercises the SDK with mocked HTTP responses and makes no paid model calls. Neither route authorizes deployment.
 
 ## The product promise
 
@@ -14,7 +17,7 @@ The first local vertical slice is executable without an API key or network acces
 
 | Component | Current implementation | Why it exists |
 | --- | --- | --- |
-| Product under test | A deterministic refund agent | Gives us a known-safe reference before model variance enters the picture |
+| Product under test | A deterministic refund agent | Provides a reference exercised against the registered cases before model variance enters the picture |
 | Environment | Resettable in-memory identity, policy, approval, order-state, and typed refund tools | Makes argument choice, authorization, side effects, and each case observable |
 | Dataset | Five versioned, synthetic refund cases | Covers the happy path and four meaningful boundaries |
 | Trace | Ordered tool events plus final world state | Lets us grade steps, trajectory, and outcome separately |
@@ -200,6 +203,8 @@ Any change to a rubric, judge model, prompt, threshold, simulator, or dataset cr
 ## How the system grows
 
 Product capability and evaluation capability advance together.
+
+The exposure column below describes conditional roadmap targets, not permissions granted by the current commands. Each transition requires application-specific qualification and release authority; implementing a stage alone does not establish shadow or canary eligibility.
 
 | Stage | Product increment | Eval-system increment | Maximum exposure |
 | --- | --- | --- | --- |

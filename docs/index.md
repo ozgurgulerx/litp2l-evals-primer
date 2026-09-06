@@ -54,6 +54,8 @@ Carry one customer workflow through this route. At each checkpoint, produce the 
 
 For interview preparation, close the solution and defend each artifact against a changed assumption: a stale approval, correlated customer sessions, a revoked judge, missing outcomes or an interrupted write. Use [Interview & Design Drills](interview-drills.md) for broader prompts. Completing the route is practice, not an automatic certification; the [delivery map](primer-delivery-map.md) lists the still-missing live and operational evidence.
 
+**Follow one complete local evidence path:** [Katas 58–59](cx-evidence-walkthrough.md) connect checkpoints 4–6 using one retained multi-order CX packet. Inspect the request, clarification, ledger, semantic receipt and paired result, then explain the [current release hold](cx-evidence-walkthrough.md#kata-59-all-trials-passwhat-may-we-release). The walkthrough distinguishes first-grader exercises, SDK mock-transport integration and still-required empirical model qualification.
+
 The order is deliberate: establish why the evaluation exists, decide what evidence it measures, learn how to read the scores, build human evidence, calibrate model graders, test robustness and safety, evaluate retrieval and agents, reproduce benchmarks, watch the system live, and finally enforce the release decision.
 
 <div class="chapter-grid" markdown>

@@ -1,5 +1,7 @@
 # Evidence spine: from run to release authority
 
+For one concrete execution connecting these interfaces, start with [Follow One CX Packet](cx-evidence-walkthrough.md). Katas 58–59 inspect an ambiguous refund, join its full artifact to the paired row, and explain why passing trials still produce a release hold. This chapter supplies the deeper contracts behind that walkthrough.
+
 An evaluation result earns authority only when another person can reconstruct what ran, recompute the result from raw records, and see which decision rule was applied. This chapter turns that principle into an executable chain:
 
 `case → isolated trial → paired experiment → statistical comparison → evidence receipt → release action`
@@ -100,7 +102,7 @@ replayed 20 trials; authority: lab_only; no model calls
 
 These identities are published teaching references, not a signed independent attestation. In an operating service, the producer records the packet digest outside the candidate's write scope; the verifier receives it through a trusted channel. Calculating a digest from an untrusted packet and immediately declaring that value trusted establishes no provenance.
 
-The verifier checks that the manifest revision, operator revision and checkout HEAD agree; source inventory is complete; source bytes match both the manifest and original committed Git objects; and every non-source input has an operator-supplied file mapping and matching raw bytes. Git replacement refs are disabled. Source-tree symlinks and symlinks in supplied input paths are rejected. Files are limited to 64 MiB each. A later checkout—even one with only documentation commits—must not masquerade as the recorded revision: use the exact source checkout or create a new experiment.
+In this legacy file-backed CLI example, the verifier checks that the manifest revision, operator revision and checkout HEAD agree; source inventory is complete; source bytes match both the manifest and original committed Git objects; and every non-source input has an operator-supplied file mapping and matching raw bytes. Native value-backed studies additionally use the explicit `input_values` map described in Kata 49 below; files and canonical values are distinct representations. Git replacement refs are disabled. Source-tree symlinks and symlinks in supplied input paths are rejected. Files are limited to 64 MiB each. A later checkout—even one with only documentation commits—must not masquerade as the recorded revision: use the exact source checkout or create a new experiment.
 
 After file verification, every retained case must match the supplied dataset in full, not merely in case ID, customer and slices. The check also compares the original agent input and complete case membership. This catches an altered refund amount or eligibility flag that would survive an IDs-only population check. Trial repetition/arm completeness and grading are then checked by replay.
 

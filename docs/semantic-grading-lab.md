@@ -17,6 +17,8 @@ The runner now has an evaluator-owned semantic stage. A `SemanticJudge` receives
 
 `SemanticStage` in `cx_eval_lab/semantic.py` implements this path. Both `evaluate_agent(..., semantic_stage=stage)` and `run_paired_experiment(..., semantic_stage=stage)` support it. No judge runs unless a stage is supplied. The current command-line agent runner does not configure a live judge automatically.
 
+Those are the original single-order APIs. The native multi-order path uses `ResolutionSemanticStage` and `run_paired_resolution`; its request and artifact schemas are different. [Follow One CX Packet](cx-evidence-walkthrough.md) traces the native path through the retained v2 execution and current release decision. Do not pass a native multi-order case to the legacy runner merely because both support semantic grading.
+
 ## What a calibration record means
 
 | Field or rule | Why it matters |
@@ -63,6 +65,8 @@ uv run python -m unittest tests.test_semantic_stage -v
 ## Kata 09: false, unknown, and unqualified are different
 
 **Know:** the measurement instrument's qualification is separate from its answer.
+
+The table below describes the original single-order report counters. In the native multi-order path, a qualified judge's abstention remains a qualified abstention and need not increment `unqualified_message_count`; it still cannot pass the joint evaluation. Inspect the explicit qualification, abstention and verdict fields rather than treating counter names across schemas as interchangeable.
 
 | Stage outcome for free-form prose | Report interpretation |
 | --- | --- |
