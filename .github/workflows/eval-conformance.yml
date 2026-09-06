@@ -62,6 +62,8 @@ jobs:
           --output ci-evidence/resolution-slices.json
       - name: Build book with strict validation
         run: uv run mkdocs build --strict
+      - name: Execute bounded multi-evidence context packing and action controls
+        run: uv run python -m cx_eval_lab.context_packing --output ci-evidence/context-packing.json
       - name: Reconstruct mixed-trace error-analysis teaching views
         run: >-
           uv run python -m cx_eval_lab.error_analysis_workshop

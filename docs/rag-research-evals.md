@@ -99,6 +99,100 @@ High recall can still damage generation when the context contains contradictions
 
 Test context perturbations: remove the decisive passage, add a plausible stale policy, reorder evidence, or insert irrelevant instructions. The answer should change only when the evidence or correct decision changes.
 
+### Executed study: retrieved evidence that never reaches the agent
+
+The retriever finds both current policy facts, but the agent receives neither. A recent promotional passage occupies the context budget before the policy passages are considered.
+
+The [retained context-packing study](assets/context-packing-v1.json) separates four stages: lexical ranking, candidate selection, context packing and final action. Its five-passage corpus contains a current refund-window rule, an exact duplicate of that passage, a current maximum-refund rule, a stale rule and a long recent promotion. The two current rules are separate required **evidence units**. Two copies of the window rule still supply only one unit.
+
+The deterministic policy control requires the complete two-fact bundle before deciding. It parses structured fields in the actual packed JSON body; it does not understand natural-language policy prose. Missing or conflicting facts cause abstention. The bundle requirement is this exercise's registered contract, not a theorem that every denial needs both facts: a different contract might permit a justified short-circuit denial, which would need its own evidence rules.
+
+Three constructed requests exercise an allowed refund, a purchase outside the refund window and an amount above the permitted maximum. Every trial starts with an empty mock ledger. The backend independently enforces both limits; neither a favorable retrieval score nor the agent's intended action can alter those checks.
+
+Four arms times two controls times three cases produce **24 deterministic local executions**. The three customer IDs are constructed examples, not a sampled customer population. The promotion uses deliberate multibyte padding to make byte accounting observable; this is not a natural-language relevance benchmark.
+
+### Kata 68: why did increasing top-k reduce packed evidence?
+
+**Predict:** a fixed lexical ranking is used in both arms. Top-2 returns two copies of the window passage; top-5 additionally returns the limit, stale rule and promotion. Can packed evidence get worse if the packer processes the original ranking in order? What changes when it first sorts selected passages by recency?
+
+```bash
+uv run python -m cx_eval_lab.context_packing --output /tmp/context-packing-study.json
+uv run python -m unittest tests.test_context_packing -v
+```
+
+Use a new output path for a subsequent run. Inspect the rankings, selected candidates, packing decisions, exact serialized body and final ledger—not just the grade. This study makes no model calls, uses no production traffic and reports no inference-cost or service-latency result.
+
+| Arm | Retrieved current evidence units | Packed current evidence units | Correct-control contracts |
+| --- | --- | --- | --- |
+| Top-2, recency-first packing | 1/2 | 1/2 | 0/3 |
+| Top-5, same recency-first packing | 2/2 | 0/2 | 0/3 |
+| Top-5, metadata filtering and exact deduplication | 2/2 | 2/2 | 3/3 |
+| Oracle evidence, same context budget | 2/2 | 2/2 | 3/3 |
+
+These are evidence-unit recalls within this constructed corpus, not document-level Recall@k estimates for a retrieval service. The oracle row describes supplied reference evidence rather than the quality of an operational search algorithm.
+
+The shared body budget is **240 UTF-8 bytes**. Top-2 packs `window-copy` and `window` in 141 bytes; top-5 packs only `promo` in 191 bytes. The repair and oracle each pack `limit` and `window` in 136 bytes. After packing the promotion, adding the limit would require 256 bytes; adding a window passage would require 261 bytes. The exclusion is visible in the packing trace rather than inferred from the final answer.
+
+```python
+import json
+from pathlib import Path
+from cx_eval_lab.context_packing import pack_passages, rank_passages, replay_study
+
+study = json.loads(Path("docs/assets/context-packing-v1.json").read_text())
+assert len(replay_study(study)) == 24
+trials = {t["payload"]["arm"]: t["payload"] for t in study["trials"]
+          if t["payload"]["agent"] == "policy-control" and t["payload"]["case_id"] == "eligible"}
+for arm in ("top2", "top5", "filtered-top5", "oracle"):
+    trial = trials[arm]
+    body_bytes = len(trial["agent_input"]["context_body"].encode("utf-8"))
+    assert body_bytes == trial["packed_bytes"] <= study["inputs"]["budget_bytes"]
+    print(arm, trial["packed_ids"], body_bytes, trial["decision"]["action"])
+assert trials["top5"]["grade"]["retrieved_evidence_unit_recall"] == 1
+assert trials["top5"]["grade"]["packed_evidence_unit_recall"] == 0
+
+# Component-level counterfactual: preserve the original ranking instead of reordering.
+inputs = study["inputs"]
+lookup = {p["passage_id"]: p for p in inputs["passages"]}
+ranked = [lookup[r["passage_id"]] for r in rank_passages(inputs["query"], inputs["passages"])]
+short, _, _ = pack_passages(ranked[:2], inputs["budget_bytes"], recency_first=False)
+long, _, _ = pack_passages(ranked[:5], inputs["budget_bytes"], recency_first=False)
+assert {p["passage_id"] for p in short}.issubset({p["passage_id"] for p in long})
+```
+
+The last check is a packing-component counterfactual, not a fifth registered end-to-end arm. It changes ordering alone to test the proposed explanation; it does not collect an additional model observation.
+
+??? success "Solution: identify the packing interaction, not an inevitable top-k penalty"
+    Under a fixed ranking and an append-only packer with the same budget, extending the candidate prefix cannot evict a passage already accepted from the earlier prefix. It may add nothing, but previously packed evidence stays packed. An observed loss therefore needs an explanation: reordering, changed chunk allocation, truncation, a different filter, or some other change to context construction.
+
+    Here the policy is explicitly **recency-first after retrieval**. The top-5 candidate set introduces a long promotional passage with the highest recency. It is processed first and fits. Remaining space cannot hold the other whole passages. The top-2 candidate set does not contain that promotion, so its window passages survive. Increasing k improves retrieved-unit recall from one-half to one while reducing packed-unit recall from one-half to zero **under this packing policy**. Neither incomplete context earns a successful policy decision.
+
+    The duplicate passage inflates a document count without adding a distinct policy condition. The stale rule cannot substitute for the current window unit, even if its wording overlaps the query. Record source identity, content identity, version and the reference evidence unit separately. Otherwise duplication and stale evidence can make “coverage” look better while leaving the task unsupported.
+
+    The budget measures UTF-8 bytes of the serialized document body, including structured fields and JSON syntax. It is not a model-token budget or a total prompt budget; request text and any outer prompt wrapper are outside this quantity. The retained body lets a reader recompute it. A real model experiment must account for the provider's actual input format and tokenizer, plus request, tool definitions and other context.
+
+**Interview answer criteria:** distinguish retrieved from packed evidence; explain the prefix-monotonicity condition; identify recency reordering as the interaction; define what the budget includes; avoid counting an exact duplicate as new evidence.
+
+### Kata 69: repair packing without giving the retriever the answers
+
+**Predict:** how can the non-oracle repair retain both policy units under the same budget? Once both facts are present, must the final action be correct?
+
+The repair uses configured source metadata: the active policy version and authoritative source kind. It excludes stale and promotional material, then deduplicates identical content before packing. These are harness inputs that must be maintained and trusted; they are not an automatic discovery of authority. The repair does not use the evaluator's reference evidence units or expected decisions. The oracle arm does use reference evidence and is labelled as a diagnostic intervention.
+
+??? success "Solution: distinguish an evidence repair from an action repair"
+    First check the rejection trace. Stale-version and non-authoritative-source exclusions should be attributable to registered metadata rules. A repeated content body should be marked as a duplicate, not counted as an additional policy unit. Then verify the remaining serialized context fits the same budget and actually contains both facts. A report that lists the right passage IDs while omitting their content does not establish that the agent received them.
+
+    Metadata filtering and deduplication repair this constructed packing failure. The correct control then refunds the eligible request and denies the two ineligible ones. Its success is supported by observed decision and final state, not by the mere presence of the reference passages.
+
+    The ignore-limit mutant receives the same complete context but ignores the maximum-refund condition. Its excessive request is blocked by the independent backend. That is successful boundary enforcement and a failed agent contract—not a successful refund or proof that evidence packing failed. Oracle evidence cannot repair a downstream control that ignores a supplied condition.
+
+    Both repaired and oracle contexts therefore require action-level evaluation. Keep missing evidence, conflicting evidence, an incorrect decision, a rejected attempt and an incorrect final state distinct. An unchanged ledger may mean a correct denial, a cautious abstention or a blocked invalid attempt; the trajectory determines which happened.
+
+    This repair combines metadata filtering and exact deduplication. Its result does not identify the separate effect of each component. For attribution, add matched filter-only and dedup-only arms, keep the corpus, case, budget and downstream control fixed, and compare the extracted packing and action outcomes. Do not quietly replace these operational filters with gold relevance labels and call the result a better retriever.
+
+**Extend:** introduce two different sufficient evidence sets, a partial passage that cuts off a decisive qualifier, or a wrongly labelled source version. Specify how admissible evidence changes before evaluating the result. Replace the byte budget with a measured model-token budget only when the complete serialized request and tokenizer are available. A model-backed study must separately test whether the model interprets and uses the packed text correctly.
+
+**Evidence boundary:** this is an executed local ranking/packing/structured-decision experiment with mock state changes. Its synthetic cases and supplied metadata do not qualify real retrieval relevance, natural-language reasoning, authority discovery or production reliability. Replay checks the retained inputs, packing decisions, outputs and effects against local re-execution; it does not authenticate historical execution. The earlier [knowledge-to-action study](knowledge-action-study.md) remains the simpler retrieval/oracle/full-context introduction.
+
 ## Decompose answers into atomic claims
 
 A long answer can mix supported and unsupported statements. Split it into the smallest independently verifiable propositions.

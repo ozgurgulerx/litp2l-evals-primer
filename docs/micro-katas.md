@@ -211,6 +211,8 @@ uv run python -m unittest tests.test_source_replay_cli.SourceCaseBindingTests -v
 
 ## Further practice
 
+[Katas 68–69](rag-research-evals.md#executed-study-retrieved-evidence-that-never-reaches-the-agent) trace multi-passage evidence from lexical retrieval through byte-bounded packing and mock action. Diagnose duplicate coverage, stale sources and recency-driven eviction, then separate an evidence repair from a downstream decision repair.
+
 [Katas 66–67](dataset-design.md#mixed-trace-workshop-observations-before-causes) use eight mixed traces to distinguish observable defects, untested cause hypotheses, clean controls and unresolved work. Count overlapping categories without inventing independent incidents, then choose a repair and a discriminating check before publishing regressions.
 
 [Katas 64–65](order-resolution-study.md#native-paired-diagnostics-separate-the-action-from-the-explanation) derive native structural and joint changes from retained multi-order executions. Distinguish a qualified semantic failure from abstention, locate clarification and ordering failures, and reject retrospective promotion of exploratory feature slices to required gates.

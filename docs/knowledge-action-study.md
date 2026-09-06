@@ -4,6 +4,8 @@ A refund agent receives the right policy, computes the right decision, and sends
 
 This study separates those outcomes by executing local document retrieval, policy interpretation and mock ledger operations. The downstream agents are deliberately simple deterministic controls. The experiment teaches attribution and evidence extraction; it does not measure a language model's knowledge, reasoning or production reliability.
 
+For a multi-passage extension under a fixed serialized-context budget, continue with [Katas 68–69](rag-research-evals.md#executed-study-retrieved-evidence-that-never-reaches-the-agent). They retain the ranking-to-packing trace and distinguish retrieved evidence, packed evidence and the resulting action. The original two-document comparison below remains the introductory experiment.
+
 ## What the comparison changes
 
 Hold the case, corpus, downstream agent and backend contract fixed within each comparison. Change only the evidence-access arm:
