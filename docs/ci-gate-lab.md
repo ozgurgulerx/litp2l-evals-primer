@@ -179,6 +179,8 @@ uv run mkdocs build --strict
 
 The test suite includes actual child-process recovery and fresh-process CLI checks. Coverage is scoped to application code, not inflated by counting test files as covered production code. Some subprocess execution is not included in the parent coverage counters; executed behavior and instrumented coverage remain distinct evidence.
 
+The book also treats missing Markdown link anchors as warnings, so `--strict` fails when a worked-solution heading disappears. `tests/test_link_validation.py` builds isolated tiny sites using the repository's actual validation settings: a valid exercise link succeeds, while a missing page or anchor fails. This checks reader navigation, not lesson correctness, remote source availability or application release authority. Raw HTML links and rendered assets still need separate inspection; do not describe the Markdown validation setting as a complete web crawler.
+
 The statistical artifact regression compares numerical results to twelve decimal places to allow platform-level floating-point rounding, while preserving exact structure, counts, and decisions. This is not permission to tolerate a changed release verdict.
 
 ## What remains before calling this an operated release pipeline

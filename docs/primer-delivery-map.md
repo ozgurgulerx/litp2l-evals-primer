@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Book navigation enforcement checkpoint — 7 September 2026
+
+A rendered local scan checked 43 HTML pages and 5,624 relative link occurrences, including target anchors, with no missing targets. The scan did not check external URLs, root-relative links, images or scripts. It exposed a prevention gap in the build configuration: a missing Markdown exercise anchor was informational and still passed `--strict`. RED checkpoint `6ad0df7` reproduces that behavior in a tiny isolated site; GREEN `942494c` makes anchor warnings fail strict builds. The valid-anchor control and missing-page control distinguish the intended failure from a generally broken build.
+
+All 29 scaffold and link-validation tests pass, as do the full strict book build, targeted Ruff/Pyright and installed dependency audit. No new full runtime-suite or coverage result is claimed for this configuration change. The gate checks target existence, not substantive coverage, working external references, accessibility, live browser layout or production authority. Cloud CI execution and publication remain unobserved, and the broader curriculum and empirical requirements remain open.
+
 ### Shipping shortcut counterexample checkpoint — 7 September 2026
 
 [Kata 93](checklist.md#kata-93-a-comparison-is-not-evidence-validation) repairs a teaching mismatch without removing the original example. The short `release_action` function is now warned as intentionally unsafe: all-`NaN` measurements and unsupported finite reports both yield its misleading `canary` string, whereas missing cost represented by `None` blocks. The worked solution separates representation, measurement and authority, with an implementation handoff to the existing evidence, CI, exposure, containment and recovery labs. No production runtime was repaired or deployment authorized by this documentation change.
