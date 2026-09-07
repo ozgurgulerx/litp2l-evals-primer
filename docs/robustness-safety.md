@@ -173,6 +173,52 @@ Preference data can train or evaluate a reward model, but agreement with prefere
 
 Always compare the optimized policy on independent task and safety evals. A higher reward-model score is not self-validating.
 
+### Worked micro-kata: optimization pressure reverses the verdict
+
+**Authored data, not a training experiment.** A frozen reward model predicts 90 of 100 independently labelled preference pairs correctly. You compare two optimization checkpoints against the same supervised fine-tuned (SFT) policy. All three policies are scored by the same frozen reward model, so its arbitrary score scale is comparable *within this example*.
+
+| Measurement | SFT anchor | Moderate optimization | Aggressive optimization |
+| --- | ---: | ---: | ---: |
+| Mean proxy reward on the registered prompt set | 0.2 | 0.8 | 1.4 |
+| Independent preference wins / ties / losses against SFT, 100 pairs per candidate | Not applicable | 55 / 10 / 35 | 45 / 5 / 50 |
+| Verified task successes, same 100 tasks | 92 | 94 | 90 |
+| Observed harmful completions, separate 100 harmful-request cases | 0 | 0 | 3 |
+| Benign false refusals, separate 100 benign-request cases | 4 | 5 | 12 |
+
+Do not pool these denominators: task cases, preference pairs and the two safety suites measure different constructs. These counts describe constructed samples, not population estimates or evidence that a real training method works.
+
+**Question:** which checkpoint should be released if the registered teaching policy blocks any observed severe harmful completion? Does the reward model's 90% held-out accuracy justify choosing the aggressive checkpoint?
+
+??? success "Solution: reject the proxy winner, keep the other candidate unqualified"
+    Block the aggressive checkpoint under the stated severe-event rule. Its higher proxy reward coexists with worse verified completion, worse independent preference and more benign false refusals. The reward model's held-out accuracy describes its test distribution; it does not prove reliable ranking of outputs selected by strong optimization.
+
+    Moderate optimization is not automatically releasable. It improves observed task completion by two percentage points, but you still need the registered uncertainty analysis, protected-slice results and other acceptance requirements. Zero observed harmful completions does not establish zero risk. The appropriate answer here is a hold pending those requirements, not a generic preference for whichever checkpoint has fewer failures.
+
+**Compute the contrasts without hiding ties.** The task-level pairs below retain gains and regressions. Preference win rate excludes neither ties nor losses; a separate half-tie convention is labelled explicitly.
+
+```python
+comparisons = {
+    "moderate": {"wins": 55, "ties": 10, "losses": 35,
+                 "both_pass": 88, "fixed": 6, "regressed": 4, "both_fail": 2},
+    "aggressive": {"wins": 45, "ties": 5, "losses": 50,
+                   "both_pass": 87, "fixed": 3, "regressed": 5, "both_fail": 5},
+}
+for name, row in comparisons.items():
+    assert row["wins"] + row["ties"] + row["losses"] == 100
+    assert sum(row[key] for key in ("both_pass", "fixed", "regressed", "both_fail")) == 100
+    assert row["both_pass"] + row["regressed"] == 92
+    task_delta = (row["fixed"] - row["regressed"]) / 100
+    half_tie_preference = (row["wins"] + 0.5 * row["ties"]) / 100
+    print(name, task_delta, half_tie_preference)
+# moderate: +0.02 and 0.60; aggressive: -0.02 and 0.475
+```
+
+**Turn the example into a valid experiment.** Freeze the reward model, rubric and initial policy; register optimization checkpoints or spend levels before looking at acceptance outcomes. Keep reward-model training, policy optimization, diagnostic comparisons and final acceptance data separate. Blind and counterbalance independently collected preference judgments. Retain rater disagreements and item IDs; account for repeated prompts, raters and policy samples when estimating uncertainty. Do not tune against the final suite and continue calling it untouched.
+
+To investigate the divergence, hold task content fixed and vary length/style, test out-of-distribution tasks, inspect cases with large reward gains but verified failures, and compare several optimization levels at matched inference budgets. These interventions can expose proxy weaknesses; the table alone does not prove a causal mechanism or intentional gaming. If feedback is AI-generated, add independent validation of that feedback source: replacing humans with a second model does not remove evaluator error.
+
+**Interview answer check:** cover preference-data quality, reward-model validation *and* independent post-optimization policy evaluation. Name the frozen comparison, separate denominators, uncertainty requirement, failure slices and the hard constraint. This supplies a worked case for source-bank questions L4–L8 and L11–L12; the outline answers alone are insufficient.
+
 ## Interpretability and explanation faithfulness
 
 ### Interpretability versus explainability

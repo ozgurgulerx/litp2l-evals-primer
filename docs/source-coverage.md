@@ -115,6 +115,8 @@ This second map checks the structure of each source, not only the combined topic
 
 **Interview-bank preservation check:** the [complete appendix](interview-question-bank.md) now retains all 118 unique canonical IDs across thirteen themes, with every supplied question/variant, level and answer outline checked against `deep-research-report-10.md`. The condensed drills remain available. This proves question/outline preservation, not that every outline is itself a full worked solution; deeper teaching remains in the mapped chapters, exercises and capstone.
 
+**Reward-model depth check:** source-bank L4–L8 and L11–L12 now have a [worked optimization-pressure case](robustness-safety.md#worked-micro-kata-optimization-pressure-reverses-the-verdict), with separate preference/task/safety denominators, paired counts, executable arithmetic, a block/hold solution and an experiment protocol. This closes the identified checklist-only treatment in that section; the data are authored, not empirical RLHF results.
+
 ### Input identity check — 7 September 2026
 
 The six supplied Markdown files were found locally; their actual first-line titles match the six corresponding corpus rows above. The numbered filenames resolve as follows. Fingerprints identify the inspected input version, not the quality or completeness of its treatment.

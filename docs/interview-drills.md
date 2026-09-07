@@ -184,6 +184,8 @@ No, unless the method has validated causal and predictive linkage for the decisi
 
 ### 13. Safety, RLHF & alignment
 
+Work through [optimization pressure reverses the verdict](robustness-safety.md#worked-micro-kata-optimization-pressure-reverses-the-verdict): compute paired task changes and preference conventions, reject the proxy winner, and explain why the alternative still needs qualification.
+
 **Prompt:** How do you know RLHF improved the system?
 
 Compare against the base/SFT system on held-out preference evidence plus independent capability, factuality, fairness, harmful-compliance, false-refusal, robustness, and production-shaped tasks. Validate the reward model separately and look for reward overoptimisation.
