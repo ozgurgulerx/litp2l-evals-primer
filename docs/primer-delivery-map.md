@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Learner entry-point checkpoint — 7 September 2026
+
+The [homepage portfolio route](index.md#make-a-portfolio-not-a-reading-log) now names seven learner outputs, concrete checks and remedial chapter links. It connects numerical calibration to the existing seven-checkpoint route and requires a coding or research-report outcome for cross-domain practice. Independent review caught and corrected a distinction: knowledge-to-action and process recovery extend the CX domain; they are not second application domains. Homepage architecture cards now distinguish recorded local controls from still-unproven model and distributed-system transfer instead of describing all trace-producing work as pending.
+
+The strict site build, whitespace check and installed-environment dependency audit pass. All 149 local homepage links and anchors resolve; the new domain-transfer link navigates to its rendered heading, and the desktop document has no horizontal overflow. These are curriculum-entry and local site checks, not a full-book usability audit, mobile/Safari verification, new runtime-test run or publication. Learning statuses and portfolio completion confer no application authority. The full empirical and operational requirements remain open.
+
 ### Numerical calibration decision checkpoint — 7 September 2026
 
 [Katas 90–92](calibration-decision-workshop.md) connect criterion-specific judge errors, abstention, dataset sampling, exact zero-event uncertainty, hypothetical prevalence shift and human-review capacity in one worked qualification HOLD. Three executable examples distinguish 95% agreement from a 25% unsafe false-pass rate, derive the 13.91% upper bound for zero events in twenty independent unsafe trials, and compute the selective judge's hypothetical 90.28% nominal review-capacity load. A must-hit interview rubric connects the calculations to owner-specific next evidence. Existing lessons and source mappings remain intact.
