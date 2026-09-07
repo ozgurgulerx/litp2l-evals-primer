@@ -164,11 +164,43 @@ print({"served": served, "completed": completed, "denied": denied,
 
 **Boundary tests:** `uv run python -m unittest tests.test_action_budget tests.test_reference_denial -v` exercises concurrent attempts for the last unit, currency isolation, authorization failure, fault seams, timeout/replay, reset and ambiguous accounting. An exact replay is free; a new-key retry is a new effect. Consumed worlds cannot reset, and an unknown accounting/effect failure retains its reservation and latches further new effects rather than releasing possibly spent capacity.
 
-**Limits:** the budget and effect state are in memory under one shared lock. They are not durable across interpreter loss, a distributed service, an authenticated campaign registry, an in-flight concurrency limit or protection against hostile Python code with process access. The snippet creates new execution records in memory; it does not publish a new retained, independently replayable budgeted release packet. The historical v1 artifact is unchanged. Durable enforcement and a versioned budgeted packet remain required follow-up work.
+**Limits:** the budget and effect state are in memory under one shared lock. They are not durable across interpreter loss, a distributed service, an authenticated campaign registry, an in-flight concurrency limit or protection against hostile Python code with process access. This snippet creates records in memory; Kata 96 adds a separately versioned retained packet. The historical unbudgeted v1 artifact is unchanged. Durable enforcement remains required follow-up work.
+
+### Kata 96: a hash is not a replay
+
+**Question:** someone changes a denied refund into a success and recomputes the report hash. What evidence lets a reviewer detect the change? Start with the [retained budgeted campaign](assets/budgeted-exposure-v1.json), not its summary alone.
+
+The fixed local study executes three windows using one shared two-effect, EUR 9,000-cent budget. Each window registers forty requests. Baseline counterfactuals and shadow executions use isolated mock effects; only served candidate effects consume campaign allowance.
+
+| Entering stage | Served candidate requests | Candidate completions | Cumulative charged effects | Cumulative budget denials |
+| --- | ---: | ---: | ---: | ---: |
+| Shadow | 0 | 40 shadow completions | 0 | 0 |
+| Canary | 4 | 2 | 2 | 2 |
+| Restricted | 4 | 0 | 2 | 6 |
+
+Restriction does not replenish the budget. Forty baseline controls complete in each window. Shadow completions are not served successes and must not inflate the canary denominator.
+
+Generate a fresh packet at a new path, then verify it in the same source/interpreter environment:
+
+```sh
+uv run python -m cx_eval_lab.budgeted_exposure_study --output /tmp/my-budgeted-campaign.json
+uv run python -m cx_eval_lab.budgeted_exposure_study --verify /tmp/my-budgeted-campaign.json
+```
+
+The output command refuses an existing destination. The packet retains case records, messages, tool events, order ledgers, execution namespaces, scope labels, before/after budget balances, charges, denials, controller observations and decisions. Source and interpreter fingerprints bind the comparison environment.
+
+??? success "Solution: compare complete executions, not self-consistent summaries"
+    Verification first checks the current source/interpreter inventory and outer hash, then re-executes the fixed evaluator-owned program. It compares the complete normalized packet, including evidence and decisions. It does not run code, select an agent or accept policy configuration from the submitted packet. Changing a tool result, scope, charge or decision and recomputing the outer hash is insufficient: the fixed replay must agree too.
+
+    Only registered per-trial `elapsed_ms` fields are normalized for replay, after requiring finite nonnegative numbers. The outer hash still covers their retained values. Timing measurements naturally vary between executions; this verification does not establish their truth or performance significance. Boolean substitutions for integer counts, missing records and extra fields are not equivalent JSON evidence.
+
+    Try changing a denial to success in a copy and recomputing `report_hash` with `canonical_hash`. Verification should reject it. Then change only a valid elapsed time and recompute the hash: replay may accept that timing-only change. Explain why neither result authenticates who originally ran the experiment.
+
+**Portability and authority:** exact replay requires the recorded source bytes and interpreter identity. A retained macOS packet may correctly fail verification on Linux or after a source change. Generate and verify a new packet there; do not rewrite the old inventory and call it reproduced. Hashes and local replay establish consistency with this fixed mock program, not signed provenance, human calibration, model quality, durable enforcement or production qualification. `deployment_authorized` remains false.
 
 ### Hard action budgets: implementation contract
 
-**Status: first in-process boundary implemented; durable enforcement and a retained budgeted release packet remain open.** A 5% cohort cannot enforce a two-refund cap. Nor can a post-return counter account safely for a tool that committed a refund and then timed out. Kata 95 joins budget accounting to the effect boundary while preserving the unbudgeted historical study. The design requirements below remain the contract for reviewing this implementation and its remaining extensions.
+**Status: first in-process boundary and retained replayable packet implemented; durable enforcement remains open.** A 5% cohort cannot enforce a two-refund cap. Nor can a post-return counter account safely for a tool that committed a refund and then timed out. Katas 95–96 join budget accounting to the effect boundary and retain replayable evidence while preserving the unbudgeted historical study. The design requirements below remain the contract for reviewing this implementation and its remaining extensions.
 
 The existing path is `execute_window` → `run_case` → `MultiOrderWorld` → `RefundWorld._commit_refund`. The last function updates the authoritative mock refund keys and is also reached by the deliberately unsafe test seams. Enforcing only in `route`, the agent or the normal tool wrapper would leave other effect paths uncovered.
 

@@ -7,9 +7,13 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Retained budgeted campaign replay
+
+[Kata 96](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) retains complete three-window execution evidence in a separately versioned budgeted packet. Fixed-builtin replay compares tool events, ledgers, namespaces, scope, budget accounting and controller decisions rather than trusting rehashed summaries. Only finite nonnegative trial timing is normalized. Exact source/interpreter matching deliberately limits portability; hashes and replay do not authenticate original execution. This closes the retained-packet follow-up below, not durable enforcement, actual model evaluation or deployment authority.
+
 ### In-process campaign action budgets
 
-[Kata 95](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent) now injects a shared count/per-currency allowance through the existing exposure/case/world path to the actual mock commit boundary. It separates served-candidate effects from baseline/shadow controls, enforces replay/namespace/reset rules, tests concurrent final-unit attempts and conservatively latches unknown accounting failures. The reference response path now reconciles unexpected tool status instead of blindly claiming a refund. This is single-process in-memory enforcement; the historical unbudgeted packet and CLI remain unchanged. Durable enforcement, a retained budgeted replay packet and real application integration remain open.
+[Kata 95](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent) now injects a shared count/per-currency allowance through the existing exposure/case/world path to the actual mock commit boundary. It separates served-candidate effects from baseline/shadow controls, enforces replay/namespace/reset rules, tests concurrent final-unit attempts and conservatively latches unknown accounting failures. The reference response path now reconciles unexpected tool status instead of blindly claiming a refund. This is single-process in-memory enforcement; the historical unbudgeted packet and CLI remain unchanged. Kata 96 supplies the retained budgeted replay packet; durable enforcement and real application integration remain open.
 
 ### Historical judge example: scope and denominator clarification
 

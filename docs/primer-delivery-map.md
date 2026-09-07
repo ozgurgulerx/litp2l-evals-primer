@@ -6,6 +6,14 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Retained budgeted campaign checkpoint — 7 September 2026
+
+[Kata 96](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) adds a versioned packet and fixed-builtin replay for the existing budget boundary. Three executed windows retain complete cases, tool events, ledgers, scope labels, namespaces, budget snapshots and decision inputs. Shadow/canary/restricted windows produce cumulative charges 0/2/2 and denials 0/2/6. Restriction does not mint new allowance. The original unbudgeted study remains unchanged.
+
+Implementation through `a4be341` includes RED/GREEN tests for rehashed evidence mutations, strict JSON types, timing validation, immutable output and interpreter portability. Independent review found no additional blockers. Retained replay, 25 targeted tests, strict book build, dependency audit and desktop solution expansion pass. A fresh source-checked current-release packet reports conformance true and deployment authorization false.
+
+The final full suite passes all 593 tests in 77.575 seconds with 90% overall branch-inclusive coverage. This closes the earlier retained-packet follow-up. Replay checks consistency with fixed code in an exact source/interpreter environment, not authenticated provenance or real-world reproducibility. Dedicated cloud-CI wiring for this command, durable transactional budgets, live application integration, human calibration and model-backed qualification remain open. Nothing was pushed or deployed.
+
 ### In-process hard-budget implementation checkpoint — 7 September 2026
 
 [Kata 95](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent) now executes an optional campaign budget through `execute_window`, `run_case`, `MultiOrderWorld` and the authoritative refund commit boundary. A shared lock covers normal authorization changes/checks, replay, count/per-currency accounting and effects. Served-candidate scope excludes baseline/shadow counterfactuals. The worked window selects four candidate requests, commits two EUR 4,500 refunds, denies two and retains all four outcomes; forty baseline executions do not consume the allowance. Independent namespaces prevent false cross-world deduplication. Consumed worlds cannot reset; uncertain accounting/effect failures retain capacity and latch new effects.
