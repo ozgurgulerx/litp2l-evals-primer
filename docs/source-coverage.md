@@ -117,6 +117,12 @@ The supplied PDF and DOCX files have corresponding research titles, but title ag
 
 ## Section-level completeness audit
 
+### Companion source-recovery receipt
+
+The [extracted companion reference index](assets/companion-source-links.json) preserves 198 within-document distinct URL strings across the four PDFs and two matching DOCX files, with source filenames, SHA-256 fingerprints and extraction method. URLs can recur across documents. This is a recovery index, not a new bibliography endorsement: extraction may stop at a wrapped line, and each recovered URL still needs resolution and claim-level attribution before it supports a new factual statement. Existing references remain unchanged.
+
+The two DOCX/Markdown comparisons also show why both formats should be retained. Markdown contains Mermaid diagrams and equation source omitted by plain-text DOCX extraction; DOCX text contains numbered reference URLs in addition to the prose. Normalized word-sequence similarity was approximately 92.5% for Code-First and 93.0% for Evals/Observability, but those values are diagnostic only—not completeness scores. These checks do not establish that every short wording change is immaterial or that diagram images are absent from the original documents. Do not discard either source on this evidence.
+
 **Later DOCX project-depth check:** section 13's Judge Lineage Auditor now has a [worked anonymous-output/name-intervention comparison](llm-as-a-judge.md#worked-micro-kata-hiding-the-name-does-not-test-every-preference-leak). Its synthetic counts distinguish identity intervention, non-causal generator-group association, shared panel errors, abstention and conditional error. This closes a worked-example gap, not empirical lineage attribution or a full reread/verification of the DOCX's 46 ranked research claims.
 
 This second map checks the structure of each source, not only the combined topic taxonomy.
