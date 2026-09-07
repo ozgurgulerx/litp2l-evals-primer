@@ -180,6 +180,29 @@ At \(p=0.8\), `pass@3 = 0.992`, while `pass^3 = 0.512`. The same agent can look 
 
 The independence assumption is often imperfect: trials share cases, prompts, tools, and infrastructure. Report the empirical distribution and clustered design rather than using the formulas blindly.
 
+### Worked micro-kata: estimate pass@k from generated candidates
+
+For one task, retain `n` generated candidates, of which `c` pass the fixed executable tests. Among all equally likely subsets of `k` distinct candidates, there are `comb(n, k)` subsets in total and `comb(n-c, k)` containing only failures. Therefore the fraction containing at least one success is:
+
+`pass_at_k = 1 - comb(n-c, k) / comb(n, k)`, for `1 <= k <= n`.
+
+If fewer than `k` failures exist, the numerator is zero. This subset fraction is computable without knowing the generator's true success probability. Under iid candidate sampling for a fixed task and fixed success definition, its expectation equals that task's probability of at least one success in `k` draws. Adaptive retries, shared-state changes or changing sampling settings need a different justification.
+
+**Exercise:** ten retained candidates contain two successes. Estimate pass@3 and compare with substituting `c/n` into the known-probability formula.
+
+```python
+from math import comb
+
+n, c, k = 10, 2, 3
+estimate = 1 - comb(n - c, k) / comb(n, k)
+plug_in = 1 - (1 - c / n)**k
+print(round(estimate, 6), round(plug_in, 6))  # 0.533333 0.488
+```
+
+**Solution:** `1 - 56/120 = 8/15`, approximately 53.33%. The plug-in result is 48.8%; the nonlinear transformation of an estimated probability is not the same estimator. Neither number guarantees the next three attempts succeed. For a task suite, compute task-level estimates first and use the declared task weighting; pooling all candidates can overweight tasks with more samples.
+
+The evaluator's tests identify a passing candidate retrospectively. A deployed agent may lack that success oracle, so pass@k does not establish that it can select the successful answer, afford the retries or undo failed side effects. Preserve generated candidates, test outcomes, invalid attempts, sampling parameters and selection policy. State `n`, `c` and `k`; do not report an unsupported `k > n`. Add independent-task uncertainty and the all-attempt reliability measure when the product needs dependable repeated execution. This is authored combinatorics, not a measured coding-model score.
+
 ## Units and dependence
 
 Possible units include:

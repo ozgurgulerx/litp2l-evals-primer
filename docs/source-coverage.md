@@ -202,6 +202,17 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: benchmarks
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| B1–B4 | [Benchmark construct map](benchmark-reproducibility.md#model-application-and-system-benchmarks), [five validity threats](benchmark-reproducibility.md#five-forms-of-validity), [benchmark decision exercise](benchmark-reproducibility.md#exercise-audit-a-benchmark-claim) | Benchmark definitions and concrete product-transfer counterexamples; a model score is not a refund-system release gate. |
+| B5, B8 | [Integrity threat and receipt](benchmark-reproducibility.md#worked-threat-answer-key-retrieval), [exposed-case rejection](dataset-design.md#kata-61-a-new-case-id-does-not-make-a-fresh-holdout) | Worked provenance/access and contamination decisions; no single black-box probe establishes absence of memorization. |
+| B6 | [Saturation and contamination](benchmark-reproducibility.md#contamination-and-saturation), [dataset lifecycle](dataset-design.md#improve-datasets-through-a-controlled-lifecycle), [weak-set redesign](dataset-design.md#exercise-improve-a-weak-dataset) | Concrete refresh, role separation and preserved-regression design. No promise that any finite benchmark resists saturation indefinitely. |
+| B7 | [Finite-candidate pass@k derivation](metrics.md#worked-micro-kata-estimate-passk-from-generated-candidates) | Added missing subset estimator, ten-candidate numerical example, assumptions and selection-oracle limitation. |
+
+This B1–B8 audit checks teaching coverage. It does not claim new benchmark model runs or close the separately listed cross-framework reproduction experiment.
+
 ### Item-level teaching audit: fundamentals
 
 | Source IDs | Inspected teaching evidence | Finding |

@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Finite-candidate pass@k](metrics.md#worked-micro-kata-estimate-passk-from-generated-candidates) | Distinguish a subset estimator from plug-in probability and deployable retry success. |
 | [One deleted word reverses the claim](metrics.md#worked-micro-kata-deleting-one-word-reverses-the-claim) | Reject high lexical overlap as proof of factual correctness. |
 | [Lower perplexity, worse service](metrics.md#worked-micro-kata-lower-perplexity-worse-service) | Keep reference-token likelihood separate from application quality and hard invariants. |
 | [Few-shot examples versus ordering](benchmark-reproducibility.md#worked-micro-kata-the-examples-or-their-order) | Separate a selected winner from an order-robust demonstration-set improvement. |
