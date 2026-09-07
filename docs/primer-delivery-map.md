@@ -6,6 +6,20 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Final book acceptance checkpoint — 7 September 2026
+
+The later source-depth pass has closed the **named teaching gaps** in the consolidated checkpoint below. The source ledger now maps all 118 interview questions, the eight course labs and all 46 ranked frontier-review entries to practice. Added worked solutions cover evaluation budgets, trajectory comparison modes, judgment-versus-ranking validity, adaptive item selection and uncertainty-wording interventions. Existing sources, chapters and historical evidence remain retained.
+
+| Requirement | Final evidence and boundary |
+| --- | --- |
+| Concepts, examples and interview preparation | Source-family audits, numbered micro-katas, supplementary solved exercises and the capstone decision defense; source routes are not independent replications of every cited paper. |
+| Dataset improvement and calibrated measurement | Executed sampling, annotation, judge qualification, artifact replay and incident-promotion controls; synthetic labels remain visibly separate from independent human evidence. |
+| Productionization teaching | CI conformance, paired evidence, shadow/canary, exposure budgets, restriction, process interruption and rollback studies, with explicit application-integration prerequisites. |
+| Software and navigation | Existing 679-test conformance baseline; subsequent hosted conformance passed through `f7b9f65`; the final local build has 44 pages and 6,907 checked local links with zero errors. |
+| Delivery | Final coverage-map and wording-exercise changes still require their own successful hosted publication receipt. |
+
+This is a book and worked-lab acceptance checkpoint, not an independently awarded A+ grade, a production safety certification or a claim that the learner's live-model, human-annotation and external-harness projects have been performed. The historical platform and empirical-study limitations below remain valid at their stated scopes; they do not authorize further scope expansion during this finishing pass.
+
 ### Consolidated acceptance status — 7 September 2026
 
 This table supersedes the **current-status interpretation** of older checkpoints below; their historical evidence and limitations remain intact. It does not certify an A+ grade or erase uncompleted experiments.
