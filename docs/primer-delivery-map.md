@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable campaign integration architecture checkpoint — 7 September 2026
+
+Source inspection of `execute_window`, `run_case`, `MultiOrderWorld`, `RefundWorld`, grading and recovery storage established why the two budget implementations cannot simply be joined: the campaign's authoritative effect and authorization snapshot remain in memory. The [integration contract](exposure-control-lab.md#durable-campaign-integration-contract) now specifies one durable owner for seed/authority/effect/event state, mutually exclusive backends, served-only accounting, stable reopen identity, consistent grader projections and request/window recovery checkpoints. It preserves the existing public authorization-first tool behavior and separates historical reconciliation.
+
+The five-step handoff starts with durable storage/world tests, then existing-path wiring, process recovery, retained evidence and CI. Agent continuation and grading across interrupted attempts remain explicit decisions before claiming full campaign recovery. This is an implementation-ready architecture contract, not a completed integration or another standalone payment demonstration. No new runtime performance, model quality or deployment result is claimed.
+
 ### Durable payment-budget checkpoint — 7 September 2026
 
 [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) extends the existing SQLite recovery boundary with optional fixed database-owned policy. New effects automatically check count/currency capacity inside the same transaction as approval and payment insertion. Consumption comes from committed payments; exact historical replay remains free. Separate spawned processes compete for the last unit, and owned-worker kills before/after commit test rollback versus preserved consumption. The original recovery artifact and unbudgeted behavior remain intact.

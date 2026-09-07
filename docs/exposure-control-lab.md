@@ -250,7 +250,43 @@ Google's canary guidance connects limited exposure, evaluation and the release p
 
 Argo Rollouts provides a concrete orchestration example: analysis can succeed, fail or remain inconclusive; inconclusive analysis pauses for intervention. It supports failure limits and consecutive-success conditions. Dry-run metrics do not affect rollout status, so an observed failing metric may not actually block release. Verify those semantics instead of treating an existing dashboard or analysis object as enforcement. [Argo Rollouts analysis documentation](https://argo-rollouts.readthedocs.io/en/stable/features/analysis/)
 
-The following is the implementation handoff, **not an installed integration**:
+### Durable campaign integration contract
+
+**Status: implementation-ready architecture contract, not an implemented durable exposure campaign.** [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) proves a bounded cap at the separate recovery payment boundary. The campaign still calls `RefundWorld._apply_refund_effect`, which changes an in-memory snapshot. Calling the SQLite budget first and then changing that snapshot would create two failure boundaries, not one atomic effect.
+
+**Capability:** the evaluator must resume the same campaign after worker loss, preserve its spent allowance and committed refunds, reconstruct the evidence used by the existing graders, and continue the existing exposure decision path. A new standalone capped-payment demo does not meet this requirement.
+
+**Fixed constraints:** preserve the existing unbudgeted and in-memory modes and historical packets. Add a separately named durable mode; reject simultaneous in-memory and durable backends. Only served-candidate effects consume the durable campaign allowance. Baseline and shadow controls remain explicitly separate simulations. A restart reopens an existing campaign; initialization cannot silently replace policy, seeds, consumed identity or predecessor state.
+
+| Current seam | Required integration | Regression that must fail first |
+| --- | --- | --- |
+| `execute_window` creates independent case worlds | Thread an evaluator-owned durable backend through `run_case` and `MultiOrderWorld`; never expose backend selection to candidate tools | Omitting a per-call budget cannot uncap an already configured durable campaign |
+| `RefundWorld` keeps seed, authority and effects in memory | Persist immutable seed identity, current authorization state, refund keys and ordered events; snapshots after reopen come from durable state | Restart cannot restore revoked authority, forget a committed refund or bind the same namespace to a changed amount/currency/customer |
+| `_refund_authorization_failure` precedes `_commit_refund` | Revalidate current persisted authorization and capacity inside the transaction that inserts the durable effect | Revocation ordered before a new commit blocks it; two processes cannot spend the final unit twice |
+| `_unsafe_issue_refund_for_test` deliberately bypasses authorization | Keep the mutation explicit, while routing its effect through the same durable ledger/cap; do not accidentally repair the mutant or let it bypass accounting | Authorization mutant still yields inspectable bad behavior, but cannot escape the hard campaign cap |
+| `inspect_order_status`, `snapshot` and `artifacts` read local state | Project ledger and events from one consistent read; distinguish committed effect from lost reply | Kill after commit before tool return still yields one effect and a truthful reconciliation response |
+| `run_case` returns only after execution | Persist request identity, attempt boundaries and completion evidence; unfinished attempts remain unfinished | Crash after effect but before returned artifact does not lose the request, grade an invented response or duplicate the effect |
+| Controller state lives in the driver | Persist accepted predecessor revision and window identity; reject duplicate/out-of-order application of a decision | Replaying a completed window cannot advance exposure twice or create a new campaign allowance |
+
+**Data ownership and identity:** use an operator-created campaign identity and immutable policy/configuration digest, then scope request and order identities beneath it. The current synthetic namespace includes window/customer/order because each case owns an independent mock world. Preserve that experimental meaning; do not present window-scoped keys as safe idempotency for a real order that can recur across windows. Reopening an execution must verify its original seed digest rather than insert another world with the same name. A production adapter needs a stable business-operation identity and separate authorization to perform a genuinely new refund.
+
+**State transitions and evidence:** distinguish request registered, attempt started, effect committed, response recorded, grade completed and window decision applied. A payment may be committed while the response and grade remain missing. On recovery, reconcile the effect first; retain the interrupted attempt rather than fabricate a completed trace. Completed requests can reuse their retained evidence only after identity checks. Unfinished requests require an explicit resume policy and a new linked attempt; do not concatenate two attempts into an apparently uninterrupted trajectory or discard failed attempts from the denominator.
+
+**Replay compatibility decision:** keep the current public `RefundWorld.issue_refund` contract, which validates authorization before issuing an action. Its durable transaction order is current authorization → exact replay or key conflict → capacity for a new effect → insertion and commit. Thus an authorized exact replay stays free at exhaustion. Use authoritative status reconciliation to report historical refunds after revocation; do not silently import the recovery worker's replay-first public behavior into every caller. The storage transaction must still bind duplicate keys to the exact original effect. Whichever interface performs historical lookup must be documented separately from permission for a new action, with tests for both.
+
+**Delivery sequence:**
+
+1. Add the optional durable world backend and its persisted seed/authority/effect/event contract. Prove reopen, identity conflict, revocation and competing-commit behavior before connecting routing.
+2. Wire the same backend through the existing multi-order and exposure call chain. Re-run healthy, wrong-order, timeout and budget-denial controls; keep legacy shapes unchanged when durable mode is absent.
+3. Add durable request/attempt and window checkpoints. Kill an actual campaign worker after a refund commit but before artifact completion, then resume the same request and inspect the final ledger, missing-response handling and outcome denominator.
+4. Publish a new versioned packet retaining process boundaries, full trial evidence, durable policy/balances, controller predecessors and source identity. Re-grade from retained facts; distinguish internal consistency from authenticated provenance.
+5. Add fresh generation/replay to CI and a worked learner exercise. Passing local software controls still grants no production authority.
+
+**Non-goals of this local integration:** multi-host consensus, an external payment API, hostile-process isolation, authenticated operator identity, power-loss qualification and human/model qualification. Direct filesystem/database access remains a trusted harness capability, not a safe permission to give an adversarial agent. Busy, missing-database or schema errors must stop the durable path, never fall back to uncapped memory.
+
+**Open decisions before the recovery phase:** specify the supported agent continuation/checkpoint contract and the grader's treatment of a recovered response with an interrupted prior attempt. An arbitrary LLM session cannot be reconstructed from payment state alone. These decisions do not block storage-boundary tests, but they do block claiming an end-to-end resumed agent campaign. The next handoff is TDD implementation of step 1, followed by integration—not another detached study.
+
+The following is the application deployment handoff, **not an installed integration**:
 
 1. **Build and identify:** pin application image, model, prompt, tools, policy and harness. Verify deployed identities against the evaluated candidate and rollback target.
 2. **Qualify:** require scoped evidence with calibrated graders, complete artifacts and a justified statistical decision. The book's offline CI conformance job tests software; it does not produce this authority.
