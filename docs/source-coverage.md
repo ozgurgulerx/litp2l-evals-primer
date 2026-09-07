@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Probability calibration versus useful decisions
+
+[Kata 94](metrics.md#kata-94-zero-ece-no-useful-ranking) extends the existing ten-row probability artifact without replacing it. A hindsight constant illustrates zero empirical ECE with no ranking, worse Brier/log loss and undefined selective risk at zero coverage. The solution distinguishes label reuse, held-out recalibration, threshold changes and review workload. Guo et al.'s primary calibration paper supplies methodological context, not local model evidence or a universal recipe for verbal confidence.
+
 ### Shipping-example validity and authority
 
 [Kata 93](checklist.md#kata-93-a-comparison-is-not-evidence-validation) closes a teaching mismatch in the release chapter: its original short function is preserved as an explicitly unsafe counterexample, with executable `NaN`, unsupported-finite and missing-cost probes. The worked answer connects input validation, evidence qualification and current release authority to CI, routing, containment and recovery labs. This is a documentation/test repair, not a replacement production gate or deployed integration.

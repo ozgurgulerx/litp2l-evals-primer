@@ -6,6 +6,8 @@ Each kata asks you to predict a result, run a small experiment, explain the fail
 
 These first three katas exercise real defects found in the refund grader. They use synthetic customers and local code; no model key is needed. Run commands from the repository root after `uv sync --group dev`.
 
+[Kata 94](metrics.md#kata-94-zero-ece-no-useful-ranking) reuses the ten probability-calibration examples: a hindsight constant gets zero empirical ECE while losing ranking, worsening Brier/log loss and automating nothing at the original threshold. The solution distinguishes calibration, discrimination, label reuse and operational utility.
+
 [Kata 93](checklist.md#kata-93-a-comparison-is-not-evidence-validation) preserves and probes the shipping chapter's unsafe numerical shortcut. `NaN` and unsupported finite reports both produce its misleading `canary` string; the solution separates representation, measurement and authority, then maps the repair to existing labs and outstanding application integration.
 
 [Katas 90–92](calibration-decision-workshop.md) connect judge confusion matrices, abstention, zero-event uncertainty, prevalence shift and human-review workload. Compute the supplied teaching scenario, defend the qualification HOLD, and specify the missing data instead of treating overall agreement as a release rule.

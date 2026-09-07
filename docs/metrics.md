@@ -313,6 +313,57 @@ Raising the threshold lowers coverage and the observed error count here, but ten
 
 The inspectable companion is `evals/cx-support/examples/probability-calibration-v1.json`. Its test recomputes Brier, NLL, ECE, and the threshold order from the row-level synthetic data.
 
+### Kata 94: zero ECE, no useful ranking
+
+**Predict:** keep the same ten outcomes but replace every confidence with `0.6`, their observed success fraction. What happens to ECE, Brier score, log loss and automation at threshold `0.8`? Does zero ECE mean the system is ready to automate?
+
+This is a hindsight diagnostic using the existing authored artifact, not a fitted model evaluated on independent data. The constant is computed from the very labels used to score it. Do not call that construction held-out calibration or use it as an unbiased deployment estimate. Run from the repository root:
+
+```python
+import json
+import math
+from pathlib import Path
+
+data = json.loads(Path(
+    "evals/cx-support/examples/probability-calibration-v1.json"
+).read_text())
+rows = data["predictions"]
+y = [row["correct"] for row in rows]
+base_rate = sum(y) / len(y)
+for name, scores in (
+    ("original", [row["confidence"] for row in rows]),
+    ("hindsight_constant", [base_rate] * len(rows)),
+):
+    brier = sum((p - label) ** 2 for p, label in zip(scores, y)) / len(y)
+    nll = -sum(label * math.log(p) + (1 - label) * math.log1p(-p)
+               for p, label in zip(scores, y)) / len(y)
+    ece = 0.0
+    for interval in data["reliability_bins"]:
+        members = [(p, label) for p, label in zip(scores, y)
+                   if interval["lower"] <= p and
+                   (p < interval["upper"] or
+                    (interval["upper_inclusive"] and p == interval["upper"]))]
+        if members:
+            ece += abs(sum(p - label for p, label in members)) / len(y)
+    selected = [label for p, label in zip(scores, y) if p >= 0.8]
+    risk = sum(1 - label for label in selected) / len(selected) if selected else None
+    print(name, f"Brier={brier:.5f}", f"NLL={nll:.6f}", f"ECE={ece:.3f}",
+          f"automated={len(selected)}/{len(y)}", f"risk={risk}")
+```
+
+??? success "Solution: calibration does not replace discrimination or utility"
+    The original produces `Brier=0.23725`, `NLL=0.663855`, `ECE=0.075`, four automated cases and selective risk `0.25`. The hindsight constant produces `Brier=0.24000`, `NLL=0.673012`, `ECE=0.000`, no automated cases and `risk=None`.
+
+    Every constant score falls into the same bin. Its mean score equals the observed success fraction, so the empirical reliability gap is zero. It cannot rank one case above another. The unchanged `0.8` automation threshold accepts nothing; selective risk is undefined, not a demonstrated zero-error service. Lowering the threshold to `0.6` accepts all ten cases, including four wrong outcomes: coverage becomes 100% and observed selective risk 40%.
+
+    Brier score and log loss worsen slightly in this sample even while ECE improves. Neither this small difference nor the zero ECE establishes a population result. Proper probability scores evaluate more than the chosen bins' average agreement; they do not remove the need to examine discrimination, action outcomes, support and uncertainty.
+
+    The constant construction uses evaluation labels and is not an independently validated recalibrator. For an actual recalibration experiment, fit the transformation on a separate calibration split, freeze it and the action policy, then evaluate on untouched cases. Retain the original and transformed probabilities alongside outcomes. Check action-critical slices, ranking, risk–coverage and human-review workload; compare the same registered task identities. If the threshold changes too, label that as a policy intervention rather than attributing every change to probability calibration.
+
+**Source connection:** Guo and colleagues study post-processing calibration, including temperature scaling, on classification datasets. That supports treating probability calibration as its own problem; it does not establish that temperature scaling qualifies a generative model's verbal confidence for this refund workflow. The numerical counterexample above is local and authored, not a reproduction of their experiment. [On Calibration of Modern Neural Networks](https://proceedings.mlr.press/v70/guo17a.html)
+
+**Interview must-hit points:** distinguish empirical calibration from ranking; identify label reuse; report undefined risk when coverage is zero; freeze the transformation and policy before held-out evaluation; connect the accepted/reviewed population to capacity and error costs. For the review-workload calculation, continue with [Katas 90–92](calibration-decision-workshop.md).
+
 ### Calibration failure modes
 
 | Failure | Why it matters | Repair |

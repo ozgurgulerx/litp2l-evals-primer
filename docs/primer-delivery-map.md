@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Probability-calibration decision checkpoint — 7 September 2026
+
+[Kata 94](metrics.md#kata-94-zero-ece-no-useful-ranking) deepens the existing probability-calibration example using the unchanged ten-row artifact. Its executable hindsight-constant comparison yields ECE zero but Brier 0.24000, log loss 0.673012 and zero accepted cases at threshold 0.8; selective risk is undefined. The worked solution explains why calibration, ranking, label independence and action utility are separate requirements, and links to the review-workload workshop. The constant uses the scored labels and is explicitly not a held-out model result.
+
+The published Python example executes, all twelve book-example/link-validation tests pass, the strict book build and dependency audit pass, and the new worked solution expands without horizontal desktop overflow. These checks do not claim a new full runtime-suite run, actual recalibration experiment, mobile/Safari review, deployment or completion of the broader curriculum goal.
+
 ### Book navigation enforcement checkpoint — 7 September 2026
 
 A rendered local scan checked 43 HTML pages and 5,624 relative link occurrences, including target anchors, with no missing targets. The scan did not check external URLs, root-relative links, images or scripts. It exposed a prevention gap in the build configuration: a missing Markdown exercise anchor was informational and still passed `--strict`. RED checkpoint `6ad0df7` reproduces that behavior in a tiny isolated site; GREEN `942494c` makes anchor warnings fail strict builds. The valid-anchor control and missing-page control distinguish the intended failure from a generally broken build.
