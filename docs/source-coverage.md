@@ -9,6 +9,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ### Course-report project sequence checked against the book
 
+**Teaching acceptance check — 7 September 2026:** report 15's eight-row project table was compared directly with the course page's eight-lab map. Every project retains its learning purpose, worked preparation and learner receipt, including the original human-annotation and cross-framework execution requirements. No additional course-topic chapter is needed. This accepts the learning route, not completion of the learner's experiments or independent human qualification.
+
+**Repository-report teaching check:** report 9's comparison, licensing, specialized-tool and architecture requirements map to System Studies' inventory, portability contract, same-refund-case comparison, judge-adapter example and solved stack-selection exercise. Vendor quick-start snippets remain in the supplied source rather than being represented as tested current commands. Tool adoption still requires the dated version/license/data-boundary checks in the study checklist. This accepts the architecture teaching coverage, not execution of every vendor integration or validation of snapshot rankings.
+
 The source report's eight practical projects now have an explicit [lab-to-exercise and receipt map](courses.md#the-supplied-reports-eight-lab-completion-path): failure analysis, golden datasets, human evaluation, judge calibration, RAG, agents, red teaming and benchmark reproducibility. The map preserves the source's practice sizes while rejecting their use as qualification thresholds. It identifies independent annotation and the named two-framework execution as learner evidence still required, rather than substituting authored controls. This verifies the eight-project section's teaching route, not the entire supplied corpus's depth or completion of those empirical labs.
 
 ### Durable window membership before execution
