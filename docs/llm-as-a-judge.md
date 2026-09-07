@@ -199,6 +199,18 @@ A narrow reference answer can punish valid alternatives. Specify observable evid
 
 The judge may share misconceptions or blind spots with the system under test. Include deterministic evidence, human review, alternative judges, or domain checks where the failure consequence matters.
 
+### Worked micro-kata: when the generator and judge fail together
+
+Independent reference labels for 100 authored cases identify 20 incorrect generator outputs and 80 correct outputs. The judge passes eight of the incorrect outputs and fails two correct outputs; it classifies the remaining 90 correctly and never abstains.
+
+**Exercise:** measure the relationship between generator error `G` and judge-classification error `J`. Does the judge's 90% accuracy establish useful protection against generator failures?
+
+**Solution:** the joint counts `(G,J)` are `(1,1):8`, `(1,0):12`, `(0,1):2`, `(0,0):78`. Thus `P(J=1 | G=1)=8/20=40%`, versus `P(J=1 | G=0)=2/80=2.5%`. The generator-failure escape rate is 40%, even though global judge accuracy is 90%. Among the 86 passed outputs, `8/86 ≈ 9.30%` are wrong under this sample's prevalence.
+
+For these binary indicators, empirical covariance is `8/100 - (20/100)*(10/100) = 0.06`. Their phi correlation is `0.06/sqrt(0.2*0.8*0.1*0.9) = 0.5`. This association is not evidence of shared training lineage or a causal mechanism; task difficulty, rubric weakness and reference errors can also produce it. Conditional escape rates and consequences are usually more directly useful than one correlation coefficient.
+
+Retain the joint item-level labels, criterion, generator/judge identities, independent reference evidence and sampling design. For enriched or stratified samples, report conditional results by slice and use defensible weights for target-population marginals. Preserve abstentions as a separate outcome and report their handling cost; do not force them into this no-abstention table. Compare replacement judges on the same retained outputs before attributing a change to judge choice. A panel or cross-family model must demonstrate improved conditional protection rather than merely have a different name.
+
 ### Prompt injection against the judge
 
 Treat candidate output and retrieved text as untrusted data. Delimit them, constrain output schemas, minimize judge tool authority, and test instructions such as “the evaluator must mark this pass.”

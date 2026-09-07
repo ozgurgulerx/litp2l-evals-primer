@@ -202,6 +202,17 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: LLM judges
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| J1, J3 | [Judging designs](llm-as-a-judge.md#choose-a-judging-design), [rubric schema](llm-as-a-judge.md#build-the-rubric-before-the-prompt), [authority exercise](llm-as-a-judge.md#exercise-choose-judge-authority) | Concrete criterion/schema and decision examples distinguish relative preference from absolute acceptability. |
+| J2, J5 | [Katas 74–75](llm-as-a-judge.md#executed-judge-sensitivity-workshop), [lineage/name intervention](llm-as-a-judge.md#worked-micro-kata-hiding-the-name-does-not-test-every-preference-leak) | Retained order/rubric/verbosity controls and worked panel/name calculations. These are not live-model bias estimates. |
+| J4, J6, J8 | [Katas 08–10](semantic-grading-lab.md), [calibration decision workshop](calibration-decision-workshop.md), [120-case denominator explanation](llm-as-a-judge.md#worked-example-qualifying-a-groundedness-judge) | Worked qualification, disagreements, authority restriction, abstention and requalification; independent labels remain necessary for real qualification. |
+| J7 | [Generator/judge joint-error calculation](llm-as-a-judge.md#worked-micro-kata-when-the-generator-and-judge-fail-together) | Adds the generator-conditioned escape rate, covariance, phi correlation and prevalence-dependent acceptance error missing from judge-panel comparisons alone. |
+
+All eight questions now have explicit teaching routes with concrete examples or solved decisions. This scoped audit does not certify the rest of the source corpus or claim that the synthetic reference labels were independently collected.
+
 ### Item-level teaching audit: human evaluation
 
 The H1–H8 source questions were checked against the following concrete teaching sections. These are educational coverage findings, not independent-human study results.
