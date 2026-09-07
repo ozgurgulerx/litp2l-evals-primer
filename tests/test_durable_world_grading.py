@@ -20,7 +20,7 @@ class DurableWorldGradingTests(unittest.TestCase):
         for timeout in (False, True):
             with self.subTest(timeout=timeout), tempfile.TemporaryDirectory() as directory:
                 case = replace(base, simulate_timeout_after_commit=timeout)
-                policy = dict(campaign_id='grading', max_actions=1, currency_caps={'USD': 4000})
+                policy = {'campaign_id': 'grading', 'max_actions': 1, 'currency_caps': {'USD': 4000}}
                 path = Path(directory) / 'campaign.sqlite'
                 campaign = DurableCampaign.initialize(path, **policy)
                 durable = RefundWorld(case.world_seed, durable_campaign=campaign,
@@ -36,9 +36,11 @@ class DurableWorldGradingTests(unittest.TestCase):
                 reopened = RefundWorld(case.world_seed,
                     durable_campaign=DurableCampaign.open(path, **policy), execution_namespace='request-1')
                 self.assertEqual(durable.events, reopened.events)
+                state, events = reopened.durable_state()
+                self.assertEqual((state, events), (reopened.snapshot, reopened.events))
                 self.assertEqual(hash_evidence_context(case, durable.events, durable.snapshot),
-                                 hash_evidence_context(case, reopened.events, reopened.snapshot))
-                regraded = evaluate_case(case, outputs[1], reopened.events, reopened.snapshot, 10, 0.001)
+                                 hash_evidence_context(case, events, state))
+                regraded = evaluate_case(case, outputs[1], events, state, 10, 0.001)
                 self.assertEqual(asdict(original), asdict(regraded))
                 self.assertEqual(campaign.snapshot()['charged_actions'], 1)
 
@@ -50,14 +52,18 @@ class DurableWorldGradingTests(unittest.TestCase):
         for fault in ('identity-revoked-before-commit', 'policy-invalid-before-commit'):
             with self.subTest(fault=fault), tempfile.TemporaryDirectory() as directory:
                 path = Path(directory) / 'campaign.sqlite'
-                policy = dict(campaign_id='unsafe-grading', max_actions=1, currency_caps={'USD': 4000})
+                policy = {'campaign_id': 'unsafe-grading', 'max_actions': 1, 'currency_caps': {'USD': 4000}}
                 campaign = DurableCampaign.initialize(path, **policy)
                 world = RefundWorld(case.world_seed, durable_campaign=campaign, execution_namespace='request')
                 output = ReferenceSupportAgent().run(case.agent_input, RefundTools(world, fault_mode=fault))
                 reopened = RefundWorld(case.world_seed,
                     durable_campaign=DurableCampaign.open(path, **policy), execution_namespace='request')
-                grade = evaluate_case(case, output, reopened.events, reopened.snapshot, 10, 0.001)
+                state, events = reopened.durable_state()
+                grade = evaluate_case(case, output, events, state, 10, 0.001)
                 self.assertFalse(grade.passed)
+                self.assertEqual(grade.unauthorized_action_count, 1)
+                self.assertFalse(next(check.passed for check in grade.checks
+                                      if check.name == 'no_unauthorized_action'))
                 self.assertEqual(reopened.snapshot.refund_transaction_count, 1)
                 self.assertEqual(campaign.snapshot()['charged_actions'], 1)
                 self.assertTrue(any(event.status == 'committed' for event in reopened.events))
