@@ -29,7 +29,7 @@ class FaultInjectedCandidate:
         return agent.run(request, tools)
 
 
-def execute_window(state, number, fault_mode, *, immature=False):
+def execute_window(state, number, fault_mode, *, immature=False, action_budget=None):
     start, end = (number - 1) * 10, number * 10
     artifacts, observations = [], []
     candidate_count = 0
@@ -44,11 +44,17 @@ def execute_window(state, number, fault_mode, *, immature=False):
         served = route(state, customer, now=start)
         candidate_count += served == 'candidate'
         baseline = run_case(case, DescriptiveResolver())
-        candidate = (run_case(case, FaultInjectedCandidate(fault_mode))
+        candidate = (run_case(case, FaultInjectedCandidate(fault_mode),
+                             action_budget=action_budget if served == 'candidate' else None)
                      if state.stage == 'shadow' or served == 'candidate' else None)
         artifact = {'customer_id': customer, 'served': served,
                     'baseline': baseline, 'candidate': candidate,
                     'fault_intervention': fault_mode}
+        if action_budget is not None:
+            artifact = {**artifact, 'effect_scopes': {
+                'baseline': 'isolated_baseline_counterfactual',
+                'candidate': ('served_candidate_campaign' if served == 'candidate'
+                              else 'isolated_shadow' if candidate is not None else 'not_executed')}}
         artifacts.append(artifact)
         if candidate is not None:
             observations.append(Observation(customer, baseline['passed'], candidate['passed'],

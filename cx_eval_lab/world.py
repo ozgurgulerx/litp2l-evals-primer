@@ -3,8 +3,20 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from functools import wraps
+from threading import RLock
+from uuid import uuid4
 
+from cx_eval_lab.action_budget import ActionBudget
 from cx_eval_lab.models import RefundCase, RefundWorldSeed, ToolEvent, WorldSnapshot
+
+
+def _serialized(method):
+    @wraps(method)
+    def invoke(self, *args, **kwargs):
+        with self._lock:
+            return method(self, *args, **kwargs)
+    return invoke
 
 
 class ToolTimeout(RuntimeError):
@@ -14,7 +26,13 @@ class ToolTimeout(RuntimeError):
 class RefundWorld:
     """Authoritative state. The runner owns it; agents never receive this object."""
 
-    def __init__(self, seed: RefundWorldSeed) -> None:
+    def __init__(self, seed: RefundWorldSeed, *, action_budget: ActionBudget | None = None,
+                 execution_namespace: str | None = None) -> None:
+        self._action_budget = action_budget
+        self._lock = action_budget._lock if action_budget is not None else RLock()
+        self.execution_namespace = uuid4().hex if execution_namespace is None else execution_namespace
+        if action_budget is not None:
+            action_budget._bind(self.execution_namespace)
         self._seed = seed
         self._initial_snapshot = WorldSnapshot()
         self._snapshot = self._initial_snapshot
@@ -32,7 +50,13 @@ class RefundWorld:
     def events(self) -> tuple[ToolEvent, ...]:
         return self._events
 
+    @_serialized
     def reset(self) -> None:
+        if self._action_budget is not None and (
+            self._snapshot.refund_transaction_count or any(
+                row[0] == self.execution_namespace for row in self._action_budget._charges)
+        ):
+            raise RuntimeError('cannot reset a budgeted world with consumed effect identity')
         self._snapshot = self._initial_snapshot
         self._events = ()
 
@@ -50,6 +74,7 @@ class RefundWorld:
         )
         self._events = (*self._events, event)
 
+    @_serialized
     def verify_identity(self, customer_id: str, order_id: str) -> bool:
         verified = (
             customer_id == self._seed.customer_id and order_id == self._seed.order_id
@@ -88,6 +113,7 @@ class RefundWorld:
             "currency": self._seed.currency,
         }
 
+    @_serialized
     def consult_refund_policy(self, order_id: str) -> dict[str, int | bool]:
         if order_id != self._seed.order_id:
             self._record("consult_refund_policy", "not_found")
@@ -108,6 +134,7 @@ class RefundWorld:
             "approval_threshold_cents": self._seed.approval_threshold_cents,
         }
 
+    @_serialized
     def request_refund_approval(
         self,
         order_id: str,
@@ -162,6 +189,7 @@ class RefundWorld:
             "refund_transaction_count": self._snapshot.refund_transaction_count,
         }
 
+    @_serialized
     def issue_refund(
         self,
         order_id: str,
@@ -194,6 +222,7 @@ class RefundWorld:
 
         return self._commit_refund(order_id, idempotency_key)
 
+    @_serialized
     def _invalidate_policy_for_test(self) -> None:
         self._snapshot = replace(self._snapshot, policy_consulted=False)
         self._record("consult_refund_policy", "service_error")
@@ -236,6 +265,7 @@ class RefundWorld:
                 return "approval_mismatch"
         return None
 
+    @_serialized
     def _commit_refund(
         self,
         order_id: str,
@@ -244,7 +274,7 @@ class RefundWorld:
         if order_id != self._seed.order_id:
             self._record("issue_refund", "not_found", idempotency_key=idempotency_key)
             raise ValueError("order not found")
-        if not idempotency_key:
+        if not isinstance(idempotency_key, str) or not idempotency_key.strip():
             raise ValueError("idempotency key is required")
         if idempotency_key in self._snapshot.refund_idempotency_keys:
             self._record(
@@ -253,6 +283,24 @@ class RefundWorld:
                 idempotency_key=idempotency_key,
             )
             return {"status": "already_committed"}
+
+        if self._action_budget is not None:
+            reason = self._action_budget._consume(self.execution_namespace, order_id,
+                idempotency_key, self._seed.amount_cents, self._seed.currency)
+            if reason is not None:
+                self._record('issue_refund', 'blocked_budget', reason=reason,
+                             idempotency_key=idempotency_key)
+                return {'status': 'blocked', 'reason': reason}
+        try:
+            return self._apply_refund_effect(idempotency_key)
+        except ToolTimeout:
+            raise
+        except BaseException:
+            if self._action_budget is not None:
+                self._action_budget._uncertain = True
+            raise
+
+    def _apply_refund_effect(self, idempotency_key: str) -> dict[str, str]:
 
         authorization_details = {
             "identity_verified": self._snapshot.identity_verified,

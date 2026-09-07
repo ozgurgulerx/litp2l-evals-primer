@@ -69,7 +69,8 @@ class ResolutionCase:
 class MultiOrderWorld:
     """Independent real mock ledgers; evaluator target is never used by tools."""
 
-    def __init__(self, case, reverse=False):
+    def __init__(self, case, reverse=False, *, action_budget=None):
+        self._action_budget = action_budget
         self._customer = case.request.customer_id
         self._reply = case.clarification_reply
         self._records = tuple(reversed(case.orders)) if reverse else case.orders
@@ -77,7 +78,7 @@ class MultiOrderWorld:
             customer_id=record.customer_id, order_id=record.order_id,
             amount_cents=record.amount_cents, currency=record.currency,
             eligible=record.eligible, approval_threshold_cents=10000,
-            simulate_timeout_after_commit=False)) for record in case.orders}
+            simulate_timeout_after_commit=False), action_budget=action_budget) for record in case.orders}
         self._events = ()
         self._clarifications = 0
 
@@ -89,7 +90,9 @@ class MultiOrderWorld:
         return sum(world.snapshot.refund_transaction_count for world in self._worlds.values())
 
     def artifacts(self):
-        return [{'order': asdict(record), 'state': {
+        return [{**({'execution_namespace': self._worlds[record.order_id].execution_namespace}
+                    if self._action_budget is not None else {}),
+                 'order': asdict(record), 'state': {
                     **asdict(self._worlds[record.order_id].snapshot),
                     'refund_transaction_count': self._worlds[record.order_id].snapshot.refund_transaction_count},
                  'events': [event.to_dict() for event in self._worlds[record.order_id].events]}
@@ -192,8 +195,9 @@ class FirstRecordResolver(DescriptiveResolver):
             tuple(row['order_id'] for row in records)), tools)
 
 
-def run_case(case, agent, *, reverse=False):
-    world = MultiOrderWorld(case, reverse)
+def run_case(case, agent, *, reverse=False, action_budget=None):
+    before = action_budget.snapshot() if action_budget is not None else None
+    world = MultiOrderWorld(case, reverse, action_budget=action_budget)
     started = time.perf_counter()
     error = None
     try:
@@ -204,7 +208,9 @@ def run_case(case, agent, *, reverse=False):
         output = AgentOutput(message='Execution failed.', claimed_outcome='needs_review')
     orders = world.artifacts()
     metrics = grade_resolution_execution(case, output, orders, world._events, error)
-    return {'case': asdict(case), 'agent': agent.name, 'reverse': reverse,
+    return {**({'action_budget': {'before': before, 'after': action_budget.snapshot()}}
+               if action_budget is not None else {}),
+            'case': asdict(case), 'agent': agent.name, 'reverse': reverse,
             'agent_input': asdict(case.request), 'orders': orders, 'tool_events': list(world._events),
             'output': asdict(output), 'execution_error': error,
             'elapsed_ms': (time.perf_counter() - started) * 1000,
