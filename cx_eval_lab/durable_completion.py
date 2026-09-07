@@ -106,10 +106,10 @@ class CompletionJournal:
             raise ValueError('completion artifact is not canonical JSON')
         identity = json.loads(row['input'])
         if (not isinstance(value, dict)
-                or value.get('case') != identity['case']
-                or value.get('agent') != identity['agent']
-                or value.get('reverse') != identity['reverse']
-                or value.get('agent_input') != identity['case']['request']
+                or _json(value.get('case')) != _json(identity['case'])
+                or _json(value.get('agent')) != _json(identity['agent'])
+                or _json(value.get('reverse')) != _json(identity['reverse'])
+                or _json(value.get('agent_input')) != _json(identity['case']['request'])
                 or not isinstance(value.get('output'), dict)
                 or not isinstance(value.get('orders'), list)
                 or not isinstance(value.get('tool_events'), list)
@@ -152,10 +152,12 @@ class CompletionJournal:
         result = run_case(case, agent, reverse=reverse, execution_namespace=namespace,
                           durable_campaign=self.campaign)
         serialized = _json(result)
+        validated = self._artifact({'artifact': serialized, 'artifact_hash': _hash(serialized),
+                                    'input': identity, 'namespace': namespace})
         with self._transaction(write=True) as db:
             changed = db.execute("UPDATE requests SET status='completed', artifact=?, artifact_hash=? "
                                  "WHERE namespace=? AND input=? AND status='started'",
                                  (serialized, _hash(serialized), namespace, identity)).rowcount
             if changed != 1:
                 raise ValueError('completion publication conflict')
-        return json.loads(serialized)
+        return validated

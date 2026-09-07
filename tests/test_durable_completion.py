@@ -218,9 +218,9 @@ class CompletionTests(unittest.TestCase):
             self.execute()
 
     def test_invalid_initial_result_is_not_published(self):
-        with patch('cx_eval_lab.durable_completion.run_case', return_value={}):
-            with self.assertRaisesRegex(ValueError, 'binding'):
-                self.execute()
+        with (patch('cx_eval_lab.durable_completion.run_case', return_value={}),
+              self.assertRaisesRegex(ValueError, 'binding')):
+            self.execute()
         self.assertEqual(self.journal.inspect('request')['status'], 'started')
         with self.assertRaisesRegex(ValueError, 'incomplete'):
             self.execute()
