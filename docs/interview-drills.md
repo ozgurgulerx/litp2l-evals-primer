@@ -100,6 +100,8 @@ Place adversarial instructions in retrieved or tool-returned content under a sta
 
 ### 6. Bias & fairness
 
+Compute [the raw and standardized language gap](robustness-safety.md#worked-micro-kata-a-raw-gap-and-a-case-mix-explanation), then defend why neither result alone establishes fairness.
+
 **Prompt:** Global task success is 90%. Is the system fair?
 
 The aggregate cannot answer. Define the relevant outcome and groups, inspect language/workflow/risk intersections with support and uncertainty, control for case mix where appropriate, and examine worst-slice failure mechanisms. Attribute use must satisfy privacy and governance requirements.

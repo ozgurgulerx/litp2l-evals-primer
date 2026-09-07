@@ -145,6 +145,40 @@ A raw gap can reflect different case difficulty or policy eligibility. That does
 
 An English/Turkish aggregate can conceal a failure affecting Turkish high-value timeout cases. Pre-register the intersections that carry material risk, then use exploratory analysis to discover new ones. Avoid publishing unstable rankings for tiny groups without uncertainty and privacy review.
 
+### Worked micro-kata: a raw gap and a case-mix explanation
+
+The following counts are **authored teaching data**, not a measured language disparity. All requests are eligible; easy/hard strata were assigned before observing outcomes.
+
+| Language | Easy successes / requests | Hard successes / requests | All successes / requests |
+| --- | ---: | ---: | ---: |
+| English | 90 / 100 | 30 / 50 | 120 / 150 = 80% |
+| Turkish | 45 / 50 | 60 / 100 | 105 / 150 = 70% |
+
+**Question:** is the ten-percentage-point raw gap evidence that the model handles otherwise comparable Turkish requests worse? May you remove the language slice after adjustment?
+
+```python
+groups = {
+    "English": {"easy": (90, 100), "hard": (30, 50)},
+    "Turkish": {"easy": (45, 50), "hard": (60, 100)},
+}
+weights = {"easy": 0.5, "hard": 0.5}  # Declared common target mix.
+for language, strata in groups.items():
+    raw = sum(p for p, n in strata.values()) / sum(n for p, n in strata.values())
+    standardized = sum(weights[s] * p / n for s, (p, n) in strata.items())
+    assert abs(standardized - 0.75) < 1e-12
+    print(language, raw, standardized)
+# English 0.8 0.75; Turkish 0.7 0.75
+```
+
+??? success "Solution: report both estimands, erase neither"
+    Both groups have 90% easy-case success and 60% hard-case success. The observed raw gap is explained arithmetically by different case mixtures: Turkish requests are more often hard. Under the declared equal-weight target mix, both standardized rates are 75%.
+
+    This does not make the actual 70% delivered service disappear or establish fairness. Report raw outcomes for the populations served and standardized outcomes for the common target mixture. Investigate why the populations face different workflows or difficulties. Adjustment can hide harm if the adjusted variable is itself affected by unequal treatment. The table does not identify a causal effect of language or rule out unmeasured confounding, label bias or inequity inside the broad strata.
+
+For real data, retain request-level outcomes and cluster IDs, justify the common weights, and estimate uncertainty for both contrasts using the actual sampling and dependence structure. Do not compare unadjusted confidence intervals as a substitute for estimating the gap. When a group has no support in a stratum, the common-mixture comparison is not identified by these data; do not silently assign zero success, borrow the other group's rate or drop that stratum without changing the declared target.
+
+**Intersection follow-up:** equal hard-case averages may still hide Turkish high-value timeout failures offset by other hard cases. Register materially important intersections, report their support and severe-event counts, and retain small groups as uncertain rather than safe. The mitigation could involve routing, data coverage or policy access as well as the model. Source-bank BF5–BF8 require this reasoning, not merely naming a fairness metric.
+
 ## Reward hacking and proxy failure
 
 When an optimizer sees a metric, the metric becomes part of the environment. A candidate can improve the proxy without improving the product.
