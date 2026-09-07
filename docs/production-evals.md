@@ -279,6 +279,26 @@ A canary receives real exposure. Pre-register:
 
 Do not wait for statistical significance after a confirmed unauthorized financial action. Severity-based rollback and statistical performance rollback are separate trigger classes.
 
+### Worked micro-kata: the assisted cases are still assigned cases
+
+An authored experiment randomly assigns 1,000 eligible customers to each arm, with one task per customer and the same fully matured outcome window. In this constructed example all outcomes are observed and no customer crosses arms. The candidate's dashboard excludes anyone who needed a human:
+
+| Retained evidence | Baseline | Candidate |
+| --- | ---: | ---: |
+| Assigned customers | 1,000 | 1,000 |
+| Customers requiring human help | 100 | 250 |
+| Verified resolutions without human help | 810 | 720 |
+| Verified resolutions with human help | 80 | 150 |
+| Total human handling minutes | 600 | 2,000 |
+
+**Exercise:** the dashboard reports `720/750 = 96%` for the candidate versus `810/900 = 90%` for baseline. Should exposure expand? Compute the assigned-population outcome and workload contrasts, then identify the causal and statistical assumptions still required.
+
+**Solution:** needing help occurs after assignment and can be changed by the system. Conditioning on no help selects different populations, so the six-point dashboard gain is not the randomized treatment effect. Keeping every assigned customer gives baseline `(810+80)/1000 = 89%` and candidate `(720+150)/1000 = 87%`: the observed intent-to-treat resolution contrast is −2 percentage points. Human work rises from 0.6 to 2.0 minutes per assigned customer, an additional 1.4 minutes, or 1,400 minutes over 1,000 assignments. Those minutes include work on unresolved cases; dividing only by successful cases would answer a different question.
+
+Suppose the registered workload guardrail permits at most 0.5 additional minutes per assigned customer. The supplied complete cohort breaches that descriptive limit. Hold expansion under that rule; do not claim the resolution difference is statistically established from the two percentages alone. A population-level guardrail would also require its registered uncertainty or sequential decision method. A confirmed hard violation would trigger its separate containment policy irrespective of these averages.
+
+For a real experiment, preserve assignment, eligibility determined before assignment, all subsequent help/correction events, task-linked handling time, verified outcomes and missingness. Use customer-level assignment when repeat sessions can cross-contaminate arms; report cluster-aware uncertainty and assignment deviations. Shared human queues create interference: extra candidate work can slow baseline service, invalidating a simple no-interference interpretation. Predeclare capacity isolation or an appropriate cluster/time design and carryover checks. Randomization supports causal interpretation only under the design's assumptions; the authored table is not field evidence or proof that every agent reduces productivity.
+
 ## Delayed outcomes and censoring
 
 Some labels mature later: repeat contact after seven days, chargeback after weeks, or satisfaction after survey response. Keep provisional and matured cohorts separate.
