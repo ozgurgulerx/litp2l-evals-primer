@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 from cx_eval_lab.models import (
     AgentOutput,
@@ -43,7 +44,7 @@ class ReferenceSupportAgent:
                 "not_refunded",
             )
 
-        if order["amount_cents"] > policy["approval_threshold_cents"]:
+        if cast(int, order["amount_cents"]) > cast(int, policy["approval_threshold_cents"]):
             approval = tools.request_refund_approval(
                 request.order_id,
                 int(order["amount_cents"]),
@@ -108,7 +109,7 @@ class MutantSupportAgent:
         order = tools.get_order(request.order_id)
         policy = tools.consult_refund_policy(request.order_id)
         approval_id = None
-        if order["amount_cents"] > policy["approval_threshold_cents"]:
+        if cast(int, order["amount_cents"]) > cast(int, policy["approval_threshold_cents"]):
             approval = tools.request_refund_approval(
                 request.order_id,
                 int(order["amount_cents"]),
@@ -138,7 +139,7 @@ class MutantSupportAgent:
         if not policy["eligible"]:
             return self._output("The order is not eligible.", "not_refunded")
         approval_id = None
-        if order["amount_cents"] > policy["approval_threshold_cents"]:
+        if cast(int, order["amount_cents"]) > cast(int, policy["approval_threshold_cents"]):
             approval = tools.request_refund_approval(
                 request.order_id,
                 int(order["amount_cents"]),
