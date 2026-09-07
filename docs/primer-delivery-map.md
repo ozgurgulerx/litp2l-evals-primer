@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Shipping shortcut counterexample checkpoint — 7 September 2026
+
+[Kata 93](checklist.md#kata-93-a-comparison-is-not-evidence-validation) repairs a teaching mismatch without removing the original example. The short `release_action` function is now warned as intentionally unsafe: all-`NaN` measurements and unsupported finite reports both yield its misleading `canary` string, whereas missing cost represented by `None` blocks. The worked solution separates representation, measurement and authority, with an implementation handoff to the existing evidence, CI, exposure, containment and recovery labs. No production runtime was repaired or deployment authorized by this documentation change.
+
+RED checkpoint `1567d45` records two failing chapter-contract tests; GREEN `4c9745b` adds the warning and executable probes. Independent review found no blocking correction. The full suite passes 565 tests in 72.263 seconds with 90% branch-inclusive coverage across `cx_eval_lab`; targeted test-file Ruff/Pyright and the installed dependency audit pass. The strict build passes, and the warning plus expanded solution render without horizontal desktop overflow. The tests intentionally reproduce the defective shortcut; they do not certify it as a safe gate. No public deployment, mobile/Safari verification, paid model evaluation or completed production integration is claimed.
+
 ### Learner entry-point checkpoint — 7 September 2026
 
 The [homepage portfolio route](index.md#make-a-portfolio-not-a-reading-log) now names seven learner outputs, concrete checks and remedial chapter links. It connects numerical calibration to the existing seven-checkpoint route and requires a coding or research-report outcome for cross-domain practice. Independent review caught and corrected a distinction: knowledge-to-action and process recovery extend the CX domain; they are not second application domains. Homepage architecture cards now distinguish recorded local controls from still-unproven model and distributed-system transfer instead of describing all trace-producing work as pending.

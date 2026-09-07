@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Shipping-example validity and authority
+
+[Kata 93](checklist.md#kata-93-a-comparison-is-not-evidence-validation) closes a teaching mismatch in the release chapter: its original short function is preserved as an explicitly unsafe counterexample, with executable `NaN`, unsupported-finite and missing-cost probes. The worked answer connects input validation, evidence qualification and current release authority to CI, routing, containment and recovery labs. This is a documentation/test repair, not a replacement production gate or deployed integration.
+
 ### Numerical qualification and interview decision workshop
 
 [Katas 90–92](calibration-decision-workshop.md) connect the question bank's calibration, uncertainty, data-curation and operational themes through supplied confusion matrices and executable calculations. The solutions distinguish conditional error from agreement, classification coverage from automatic acceptance, a fixed-sample zero-event bound from sequential stopping, and enriched-class sampling from representative within-class sampling. A hypothetical prevalence/queue calculation culminates in a qualification HOLD. This is an authored reasoning exercise, not new human labels, empirical model qualification or observed production staffing performance.
