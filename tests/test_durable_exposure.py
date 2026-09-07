@@ -70,19 +70,20 @@ class DurableExposureTests(unittest.TestCase):
         self.assertEqual(counts, [0, 4, 4])
         self.assertEqual(state.stage, 'restricted')
 
-    def test_same_window_reexecution_replays_effects_without_controller_claim(self):
+    def test_same_window_cannot_fabricate_complete_grade_from_prior_effects(self):
         state = ExposureState('cx-simulation-v1', 'baseline-v1', stage='canary', percent=5)
-        first = execute_window(state, 2, 'healthy', durable_campaign=self.campaign, execution_namespace='fixed')[1]
-        second = execute_window(state, 2, 'healthy', durable_campaign=DurableCampaign.open(self.path, **POLICY),
-                                execution_namespace='fixed')[1]
+        execute_window(state, 2, 'healthy', durable_campaign=self.campaign, execution_namespace='fixed')
+        with self.assertRaisesRegex(ValueError, 'prior execution evidence'):
+            execute_window(state, 2, 'healthy', durable_campaign=DurableCampaign.open(self.path, **POLICY),
+                           execution_namespace='fixed')
         self.assertEqual(self.campaign.snapshot()['charged_actions'], 2)
-        for left, right in zip(first, second, strict=True):
-            if left['served'] == 'candidate':
-                self.assertEqual([row['execution_namespace'] for row in left['candidate']['orders']],
-                                 [row['execution_namespace'] for row in right['candidate']['orders']])
-        replays = [event for row in second if row['served'] == 'candidate' for order in row['candidate']['orders']
-                   for event in order['events'] if event['status'] == 'idempotent_replay']
-        self.assertEqual(len(replays), 2)
+
+    def test_reused_case_evidence_is_rejected_before_agent(self):
+        self.run_case('used')
+        with patch.object(DescriptiveResolver, 'run') as run, self.assertRaisesRegex(ValueError, 'prior execution evidence'):
+            self.run_case('used')
+        run.assert_not_called()
+        self.assertEqual(self.campaign.snapshot()['charged_actions'], 1)
 
     def test_invalid_backend_combinations_stop_before_baseline_or_agent(self):
         variants = ({'durable_campaign': self.campaign},
