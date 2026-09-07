@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable payment-budget checkpoint — 7 September 2026
+
+[Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) extends the existing SQLite recovery boundary with optional fixed database-owned policy. New effects automatically check count/currency capacity inside the same transaction as approval and payment insertion. Consumption comes from committed payments; exact historical replay remains free. Separate spawned processes compete for the last unit, and owned-worker kills before/after commit test rollback versus preserved consumption. The original recovery artifact and unbudgeted behavior remain intact.
+
+RED `061e434`, GREEN `a5441fb` and reviewed cleanup `9feeb94` preserve explicit checkpoints. Twenty durable/legacy recovery tests pass; targeted Ruff/Pyright checks are clean. The published snippet runs, the practice catalog contains 99 unique entries, and fresh source-checked release controls and fresh budgeted replay pass locally with deployment authorization false. Historical v1 budget bytes are pinned rather than regenerated when source inventory changes.
+
+At final runtime revision `9feeb94`, all 603 tests pass in 79.247 seconds with 90% overall branch-inclusive coverage. Strict build, dependency audit, desktop solution expansion and rendered 99-entry catalog checks pass. Independent code and teaching reviews found no blockers.
+
+This establishes a bounded durable mock payment cap, not a durable integration of the exposure campaign, a retained process-budget study packet, authenticated policy ownership, hostile-process isolation or remote payment atomicity. Those remain required extensions, along with model/human qualification and actual deployment evidence. Nothing was pushed or deployed.
+
 ### Advanced capstone integration checkpoint — 7 September 2026
 
 The [advanced defense round](capstone.md#advanced-defense-budget-replay-and-consequential-risk) connects budgeted execution, replay/CI evidence and consequential-risk dependence to the final learner assessment. Three pressure variants have complete worked answers and a noncompensatory rubric. Eight exact pointers locate the newer budget evidence; the original three-artifact exercise, reference index and answer key remain unchanged. Learners must preserve separate study identities and defend unfinished work, current authority and causal assumptions.

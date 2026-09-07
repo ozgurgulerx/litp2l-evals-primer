@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Durable local payment allowance
+
+[Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) adds optional database-owned policy to the existing recovery payment boundary. Approval, capacity and effect insertion share a write transaction; consumption derives from committed payments. Separate processes test competition for the final unit and worker loss before/after commit. This is a bounded local database implementation, not a durable integration of the multi-window exposure campaign or a remote payment system. Historical unbudgeted artifacts remain unchanged. The historical budgeted-packet test now pins its original file bytes and expects exact replay refusal after source/interpreter drift; fresh-packet replay remains required.
+
 ### Dependence between attempts and safeguard failures
 
 [Kata 98](frontier-risk-decisions.md#kata-98-identical-component-scores-one-hundred-times-the-failures) turns the existing warning about multiplied risk scores into an executable finite-population counterexample. Identical 1% marginals permit zero, one or one hundred joint failures per 10,000 opportunities. The solution separates conditional effectiveness, compatible populations, logical bounds, sampling uncertainty and consequence assumptions. These are synthetic labels and exact arithmetic, not measured harmful propensity, frontier-company risk estimates or release qualification.

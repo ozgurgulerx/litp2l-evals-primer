@@ -78,10 +78,78 @@ Use a new filename for another run. Output is never overwritten. The runner crea
 
 **Interview answer:** “Revocation prevents future effects; it cannot erase a completed effect. I distinguish historical reconciliation from new authorization and bind idempotency to the exact action parameters.”
 
+## Kata 99: the process died, but the allowance did not reset
+
+**Know:** a workflow checkpoint is not a payment ledger or a budget ledger. The optional budget extension now stores a fixed count/per-currency policy in the same database as payments. Existing unbudgeted trials and their retained artifact remain unchanged.
+
+Run the process-level regression checks:
+
+```sh
+uv run python -m unittest tests.test_recovery_budget tests.test_process_recovery -v
+```
+
+Then inspect one bounded payment and its exact replay:
+
+```python
+# kata99-start: local mock payments only
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from cx_eval_lab.recovery_worker import initialize, issue_payment, budget_snapshot
+
+with TemporaryDirectory() as directory:
+    database = Path(directory) / "payments.sqlite"
+    initialize(database, max_actions=1, currency_caps={"USD": 4000})
+    assert issue_payment(database, "original") == "committed"
+    assert issue_payment(database, "original") == "already_committed"
+    try:
+        issue_payment(database, "new-key")
+    except PermissionError as error:
+        assert str(error) == "budget_action_limit"
+    else:
+        raise AssertionError("new effect exceeded campaign capacity")
+    state = budget_snapshot(database)
+    assert state["charged_actions"] == 1
+    assert state["charged_cents"] == {"USD": 4000}
+    assert state["remaining_actions"] == 0
+    assert state["deployment_authorized"] is False
+    print(state)
+# kata99-end
+```
+
+**Predict:** what should remain after killing the worker just after payment insertion but before commit? What changes when it dies after commit but before its checkpoint? Why must the competing-process test inspect the final ledger rather than count successful process exits?
+
+??? success "Solution: consumption follows committed effects"
+    Before transaction commit, the inserted row is not a completed payment. The controlled kill-and-reopen test finds no committed payment and no consumed allowance; a new worker can perform the authorized action. After commit, the payment remains even without a workflow checkpoint. Restarting with the exact action key returns `already_committed`, with one payment and one consumed unit—not a replenished budget.
+
+    Two spawned processes synchronize before requesting different keys against the last available unit. One commits and the other is denied. Both consult persisted policy and payment consumption inside their write transactions; no caller-supplied campaign identifier or optional payment-call budget can bypass the configured database policy. Currency caps remain separate; zero is a valid cap, Boolean and out-of-range values are not.
+
+    Historical replay is checked before current approval and capacity because it creates no new effect. A changed action under the same key is a conflict. A fresh key still needs current approval and remaining capacity. The tests preserve the legacy mutant that duplicates payments without a cap; configuring a cap changes the permitted effects, not the meaning of idempotency.
+
+**Evidence limit:** these are executed regression tests against owned temporary databases, not a new retained multi-window budget packet or a live-agent evaluation. The earlier exposure campaign still uses its in-memory boundary. Integrating this durable service with that campaign, retaining a full process-level packet, and enforcing authenticated ownership remain separate work. Direct database access is trusted; this code is not a hostile-agent sandbox. No real money moves.
+
+### Durable budget contract: put the allowance beside the effect
+
+The historical experiment above has no campaign cap: its new-key mutant can create a second payment. Preserve that result. The extension joins an optional fixed policy to the existing database before any payment, rather than trusting each caller to supply an allowance.
+
+The intended transaction order is **historical replay → current approval for a new action → campaign capacity → payment insertion → commit**. Consumption is derived from committed payment rows; there is no separately persisted counter to reconcile. A workflow checkpoint remains a different transaction. Resetting or losing that checkpoint must not reset the allowance.
+
+| Failure boundary | Required payment state after reopening the database | Required allowance behavior |
+| --- | --- | --- |
+| Worker dies before payment transaction commits | No new committed payment | No consumption from the uncommitted row |
+| Worker dies after payment commit, before checkpoint | Original payment remains | Original effect still consumes capacity; exact replay consumes nothing more |
+| Two processes compete for the last effect | At most one new payment | The second transaction observes committed consumption and refuses a new effect |
+| Approval revoked after an earlier payment | Earlier payment remains | Historical reconciliation is allowed; new effects still require approval |
+
+These acceptance conditions are now exercised by the extension's process-level regressions; they are not additional results in the historical 21-trial artifact. Inspect the database, not just process exit codes.
+
+SQLite allows one simultaneous write transaction, and `BEGIN IMMEDIATE` requests that transaction before reading the allowance. Contention can fail with a busy error; failure must not switch to an uncapped path. This is a single-database ordering boundary, not a distributed payment guarantee. [SQLite transaction documentation](https://www.sqlite.org/lang_transaction.html).
+
+The atomic-commit guarantee also has filesystem and hardware assumptions. Killing an owned worker tests process interruption, not power-loss behavior, damaged storage or a remote payment provider. If the real effect lives outside this transaction, a separate reconciliation protocol is required; a successful local budget update does not make a remote charge atomic. [SQLite atomic-commit documentation](https://www.sqlite.org/atomiccommit.html).
+
 ## Evidence boundary and next experiment
 
 **Adopt:** process-level fault injection, authoritative-state grading, stable operation identity, and separate workflow/effect records. **Reject:** new-key retry based only on absent workflow completion.
 
-This worker is a deterministic harness component, not a persistent LLM agent. It uses a local database rather than a distributed payment API and pauses at selected boundaries rather than randomly corrupting execution. It does not establish correctness for context compaction, long conversations, concurrent workers, eventual consistency, approval expiry, code-version drift, provider failover, power loss, or customer notification. Those remain separate experiments.
+This worker is a deterministic harness component, not a persistent LLM agent. It uses a local database rather than a distributed payment API and pauses at selected boundaries rather than randomly corrupting execution. The historical study does not establish correctness for context compaction, long conversations, concurrent workers, eventual consistency, approval expiry, code-version drift, provider failover, power loss, or customer notification. Kata 99 adds a bounded competing-process budget test; the other transfer claims and broader concurrency behavior remain separate experiments.
 
 The next transfer step is to route an actual agent's tool calls through a durable boundary and repeat the same interventions with retained trajectories. The broader [long-running systems chapter](long-running-serving.md) and [delivery map](primer-delivery-map.md) preserve those requirements. No result here grants production or canary authority.
