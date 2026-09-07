@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Course-report project sequence checked against the book
+
+The source report's eight practical projects now have an explicit [lab-to-exercise and receipt map](courses.md#the-supplied-reports-eight-lab-completion-path): failure analysis, golden datasets, human evaluation, judge calibration, RAG, agents, red teaming and benchmark reproducibility. The map preserves the source's practice sizes while rejecting their use as qualification thresholds. It identifies independent annotation and the named two-framework execution as learner evidence still required, rather than substituting authored controls. This verifies the eight-project section's teaching route, not the entire supplied corpus's depth or completion of those empirical labs.
+
 ### Durable window membership before execution
 
 [Kata 103](exposure-control-lab.md#kata-103-keep-the-cohort-when-the-worker-disappears) preserves all forty planned requests through a real worker kill before the first agent call. The existing execution path consumes registered cases/routes/scopes; conflicting registrations fail before work. A worked routing counterexample changes nine assignments when a canary predecessor is incorrectly replaced with expanded state. This closes immutable registration, not controller acceptance, attempt resumption or safety-stop enforcement. The registry binds a local campaign and caller-supplied manifest; hashes are consistency checks, not authenticated provenance.

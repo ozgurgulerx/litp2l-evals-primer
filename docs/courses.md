@@ -193,6 +193,25 @@ The book still owns the deeper treatment of:
 
 ## Course-completion template
 
+## The supplied report's eight-lab completion path
+
+The supplied *Best Courses and YouTube Resources for Learning LLM Evaluation* report proposes eight projects in one progressively developed repository. Use the existing book exercises below as preparation, then keep each lab's receipt in the same experiment history. The report's sample counts are practice targets, not statistical qualification thresholds.
+
+| Source lab | Existing worked practice | Receipt required from the learner |
+| --- | --- | --- |
+| Failure analysis | [Mixed-trace workshop, Katas 66–67](dataset-design.md#mixed-trace-workshop-observations-before-causes) | Cluster the proposed 200 outputs/traces; retain raw observations, taxonomy revisions and ambiguous assignments. Explain why an enriched failure sample cannot establish prevalence. |
+| Golden dataset | [Incident-to-regression, Katas 60–61](dataset-design.md#from-incident-evidence-to-a-versioned-regression) | Version 50–100 representative failures plus normal controls; record provenance, development/holdout roles, deduplication and access history. Reject a renamed exposed case as a fresh holdout. |
+| Human evaluation | [Human Evaluation](human-evaluation.md) | Obtain 2–3 independent annotations for approximately 100 outputs, preserve pre-adjudication labels, calculate agreement and retain disagreement reasons. Authored labels do not satisfy independent annotation. |
+| Judge calibration | [Decision workshop, Katas 90–92](calibration-decision-workshop.md) and [LLM judges](llm-as-a-judge.md) | Compare pointwise and pairwise judgments with independent human labels; report false passes, false fails, ties, abstentions and slice support. Qualify each intended use rather than transferring one agreement score to every criterion. |
+| RAG evaluation | [Knowledge-to-action, Katas 51–53](knowledge-action-study.md) | Compare retrieval, oracle-document and full-context arms; inspect retrieved evidence, generated claims and final state separately. Explain why fixing retrieval need not fix action selection. |
+| Agent evaluation | [Integrated CX walkthrough, Katas 58–59](cx-evidence-walkthrough.md) | Retain outcome, tool/trajectory violations, message evidence, latency and cost provenance. Keep unfinished attempts in the denominator; distinguish synthetic measurements from observed usage. |
+| Red teaming | [Robustness and Safety](robustness-safety.md), [Cross-run Isolation](cross-run-isolation-study.md) and [CI Gate Lab](ci-gate-lab.md) | Use harmless synthetic secrets and permitted mock tools to exercise injection, exfiltration and unsafe-action controls. Retain successful attacks and benign controls; demonstrate the CI verdict without claiming population safety. |
+| Benchmark reproducibility | [Cross-tool reproduction exercise](benchmark-reproducibility.md#reproduction-exercise-across-tools) | Run the report's LM Evaluation Harness/LightEval comparison on identical pinned tasks and model settings. Compare per-item rendered input, extraction and scoring before aggregate scores. A local illustrative harness comparison is preparation, not proof that these two frameworks were run. |
+
+**Completion defense:** “All eight chapters exist, so all eight labs are complete.” Reject this claim. Chapter presence establishes navigation. Worked solutions teach the method. A learner's retained execution and annotation receipts establish what that learner actually performed. In particular, scripted reviewers cannot close the human lab, local built-in agents cannot establish model quality, and a configured workflow is not a successful hosted CI run. Missing receipts remain explicitly unfinished; they do not invalidate the methods already taught.
+
+### Record a completed course
+
 For any new course, add a record only after verifying its official page.
 
 ```yaml
