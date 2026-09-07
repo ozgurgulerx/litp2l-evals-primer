@@ -206,3 +206,21 @@ class CompletionTests(unittest.TestCase):
                        (serialized, hashlib.sha256(serialized.encode()).hexdigest()))
         with self.assertRaisesRegex(ValueError, 'binding'):
             self.execute()
+
+    def test_cached_identity_preserves_json_types(self):
+        result = self.execute()
+        result['reverse'] = 0
+        serialized = json.dumps(result, sort_keys=True, separators=(',', ':'), allow_nan=False)
+        with sqlite3.connect(self.journal_path) as db:
+            db.execute('UPDATE requests SET artifact=?, artifact_hash=?',
+                       (serialized, hashlib.sha256(serialized.encode()).hexdigest()))
+        with self.assertRaisesRegex(ValueError, 'binding'):
+            self.execute()
+
+    def test_invalid_initial_result_is_not_published(self):
+        with patch('cx_eval_lab.durable_completion.run_case', return_value={}):
+            with self.assertRaisesRegex(ValueError, 'binding'):
+                self.execute()
+        self.assertEqual(self.journal.inspect('request')['status'], 'started')
+        with self.assertRaisesRegex(ValueError, 'incomplete'):
+            self.execute()
