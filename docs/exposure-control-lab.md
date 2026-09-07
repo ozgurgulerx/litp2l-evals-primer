@@ -41,6 +41,8 @@ The router designates which result is served. Baseline and candidate execute in 
 
 The minimum of two paired observations is deliberately small to exercise routing with forty synthetic requests. It is **not a sample-size recommendation**. Use the [statistical method study](statistical-method-study.md) and [evidence spine](evidence-spine.md) to see why sample counts and point differences cannot establish non-inferiority. Neither this controller nor the existing `lab_only` receipts grant production authority. `ExposureDecision` fixes `deployment_authorized=False` and does not accept a caller override.
 
+The retained v1 sequence above remains unbudgeted. [Kata 95](#kata-95-two-refunds-is-not-five-percent) now injects an optional shared action/currency budget through the same execution path. It is a separate in-process experiment, not a retroactive property of the original packet.
+
 ## Kata 24: five percent is not a hard cap
 
 **Know:** stable assignment, nominal allocation and actual exposure answer different questions.
@@ -60,7 +62,7 @@ Choose a new output path for another run. The command refuses overwrite and make
 
     The hash uses customer and candidate identity; the threshold increases without rerandomizing the cohort. `test_shadow_canary_expansion_and_stable_nested_cohorts` verifies repeatability and nesting. Every request in the retained study records its selected arm and the actual arm executions.
 
-    A production exposure budget needs more than a percentage: cap distinct affected customers, request count, consequential writes, monetary value, concurrent actions and elapsed time as appropriate. Add those limits at the action/traffic boundary rather than assuming a load-balancer weight enforces them. This lab implements the campaign time limit, but not those other hard caps.
+    A production exposure budget needs more than a percentage: cap distinct affected customers, request count, consequential writes, monetary value, concurrent actions and elapsed time as appropriate. Add those limits at the action/traffic boundary rather than assuming a load-balancer weight enforces them. The retained v1 study implements the campaign time limit, but not those other hard caps. Kata 95 adds optional in-process refund count/currency caps; customer, request and in-flight concurrency caps remain unimplemented.
 
 **Interview answer:** “I record assignment and realized exposure separately. Sticky cohorts help interpretation, but a nominal percentage is not a hard cap on customers, requests or financial consequences.”
 
@@ -117,9 +119,56 @@ The candidate fails at expanded exposure, improves in the next window, and asks 
 
 ## Connecting the lab to an application deployment
 
+### Kata 95: two refunds is not five percent
+
+**Predict:** run the existing healthy candidate at a nominal 5% canary, but allow only two served-candidate refunds and EUR 9,000 cents across the campaign. The selected order costs EUR 4,500 cents. Do baseline counterfactuals consume the allowance? What does the customer receive after the cap is exhausted?
+
+Run from the repository root; no model or external payment service is called:
+
+```python
+from cx_eval_lab.action_budget import ActionBudget
+from cx_eval_lab.exposure_control import ExposureState, transition
+from cx_eval_lab.exposure_study import execute_window
+
+budget = ActionBudget(2, {"EUR": 9000})
+state = ExposureState("cx-simulation-v1", "baseline-v1", stage="canary",
+                      percent=5, last_end=10)
+window, artifacts, served = execute_window(state, 2, "healthy", action_budget=budget)
+candidate = [row["candidate"] for row in artifacts if row["served"] == "candidate"]
+completed = sum(row["task_completed"] for row in candidate)
+denied = sum(row["denied_attempts"] for row in candidate)
+snapshot = budget.snapshot()
+decision = transition(state, window, now=20)
+assert (served, completed, denied) == (4, 2, 2)
+assert snapshot["charged_actions"] == 2
+assert snapshot["charged_cents"] == {"EUR": 9000}
+assert snapshot["remaining_actions"] == 0
+assert sum(row["baseline"]["task_completed"] for row in artifacts) == 40
+assert [row["output"]["claimed_outcome"] for row in candidate] == [
+    "refunded", "refunded", "needs_review", "needs_review",
+]
+assert decision.state.stage == "restricted"
+assert decision.deployment_authorized is False
+print({"served": served, "completed": completed, "denied": denied,
+       "charged_cents": snapshot["charged_cents"], "stage": decision.state.stage})
+```
+
+??? success "Solution: enforce effects and preserve unfinished work"
+    Four of forty requests are selected, as in the fixed cohort example. Only two candidate refunds commit; the other two hit `budget_action_limit`. Forty baseline counterfactuals still complete in their isolated worlds without spending candidate allowance. Per-row `effect_scopes` distinguish baseline, shadow and served-candidate execution. EUR 9,000 cents is €90, not a price estimate or a currency-converted global budget.
+
+    Inspect `candidate[i]["action_budget"]` for before/after accounting and each order's `execution_namespace`, events and final state. The shared budget's snapshot contains charges and denials. Repeated order/key strings in independent worlds do not deduplicate each other: the evaluator creates distinct namespaces. Exact replay within the original world consumes no additional allowance. Reconstructing a new world with an already-bound namespace fails closed rather than inventing historical effect evidence.
+
+    The reference agent previously ignored a returned `blocked` status and falsely claimed a refund. It now accepts `committed` or `already_committed`, and inspects authoritative order state for any other returned status, just as it does after timeout. No recorded refund means the existing unconfirmed message and `needs_review`; a recorded commit can be reported even if its acknowledgement was ambiguous. These response-path tests do not replace independent grading of the resulting message and ledger.
+
+    Completion among selected requests is `2/4`, not `2/2` after discarding denials. The unchanged illustrative controller calls this `illustrative_quality_regression` and restricts exposure. Its reason describes delivered outcomes under the capped policy, not proof of an intrinsic model-quality regression. Investigate the policy constraint separately; report unfinished work and review burden. Do not quietly remove denied cases or mint a fresh campaign allowance to improve the score.
+
+**Boundary tests:** `uv run python -m unittest tests.test_action_budget tests.test_reference_denial -v` exercises concurrent attempts for the last unit, currency isolation, authorization failure, fault seams, timeout/replay, reset and ambiguous accounting. An exact replay is free; a new-key retry is a new effect. Consumed worlds cannot reset, and an unknown accounting/effect failure retains its reservation and latches further new effects rather than releasing possibly spent capacity.
+
+**Limits:** the budget and effect state are in memory under one shared lock. They are not durable across interpreter loss, a distributed service, an authenticated campaign registry, an in-flight concurrency limit or protection against hostile Python code with process access. The snippet creates new execution records in memory; it does not publish a new retained, independently replayable budgeted release packet. The historical v1 artifact is unchanged. Durable enforcement and a versioned budgeted packet remain required follow-up work.
+
 ### Hard action budgets: implementation contract
 
-**Status: designed from the existing code, not implemented.** A 5% cohort cannot enforce a two-refund cap. Nor can a post-return counter account safely for a tool that committed a refund and then timed out. The next change must join budget accounting to the effect boundary, while preserving the unbudgeted historical study above.
+**Status: first in-process boundary implemented; durable enforcement and a retained budgeted release packet remain open.** A 5% cohort cannot enforce a two-refund cap. Nor can a post-return counter account safely for a tool that committed a refund and then timed out. Kata 95 joins budget accounting to the effect boundary while preserving the unbudgeted historical study. The design requirements below remain the contract for reviewing this implementation and its remaining extensions.
 
 The existing path is `execute_window` → `run_case` → `MultiOrderWorld` → `RefundWorld._commit_refund`. The last function updates the authoritative mock refund keys and is also reached by the deliberately unsafe test seams. Enforcing only in `route`, the agent or the normal tool wrapper would leave other effect paths uncovered.
 
@@ -153,4 +202,4 @@ The following is the implementation handoff, **not an installed integration**:
 5. **Decide and enforce:** map promote/hold/restrict/rollback to the orchestrator's real transitions. Test missing metrics, stale evidence, denied updates and unacknowledged routing changes. A successful API call is not proof that every worker stopped using the candidate.
 6. **Contain and repair:** stop consequential actions independently when required; reconcile prior effects; preserve the incident; add reviewed regression data; then repeat qualification before a new campaign.
 
-These interfaces still need an actual deployment target, authenticated authority model, action budgets, independent stop mechanism and cloud execution evidence. The local experiment does not configure Kubernetes, a load balancer or a production service. The [delivery map](primer-delivery-map.md) keeps that work open rather than relabeling simulation as deployment qualification.
+These interfaces still need an actual deployment target, authenticated authority model, durable production action budgets, independent stop mechanism and cloud execution evidence. The local experiment does not configure Kubernetes, a load balancer or a production service. The [delivery map](primer-delivery-map.md) keeps that work open rather than relabeling simulation as deployment qualification.

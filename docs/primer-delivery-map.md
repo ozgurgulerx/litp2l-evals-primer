@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### In-process hard-budget implementation checkpoint — 7 September 2026
+
+[Kata 95](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent) now executes an optional campaign budget through `execute_window`, `run_case`, `MultiOrderWorld` and the authoritative refund commit boundary. A shared lock covers normal authorization changes/checks, replay, count/per-currency accounting and effects. Served-candidate scope excludes baseline/shadow counterfactuals. The worked window selects four candidate requests, commits two EUR 4,500 refunds, denies two and retains all four outcomes; forty baseline executions do not consume the allowance. Independent namespaces prevent false cross-world deduplication. Consumed worlds cannot reset; uncertain accounting/effect failures retain capacity and latch new effects.
+
+Budget RED/GREEN checkpoints `530e942` / `85fc054`, accounting-exception RED/GREEN `652156c` / `7a5a7d2`, cleanup `008d3a4`. Main response-path RED/GREEN `5da0be4` / `fd60407` repaired blind confirmation after returned denial; `809fac7` / `3877fe1` added ledger reconciliation for ambiguous returned status. A confirmed historical refund is distinct from a new effect caused by the latest attempt. Independent code/security review found no blocking defect within the trusted-harness, single-process mock scope.
+
+At code revision `3877fe1`, all 584 tests pass in 73.204 seconds: 90% overall branch-inclusive coverage, 94% across the five affected runtime modules and 97% for `action_budget.py`. Targeted Ruff/Pyright, the installed dependency audit, published Python example, strict build and desktop solution expansion pass. A fresh source-checked current-release run retains one HOLD and six BLOCK controls with deployment authorization false. Historical artifacts remain unchanged.
+
+This closes the first in-process effect-cap integration, not the full hard-budget contract. The existing CLI and retained v1 exposure packet remain unbudgeted; the new snippet keeps its execution records in memory. A versioned retained budgeted study with independent replay, durable transactional enforcement, authenticated campaign ownership, additional request/customer/in-flight caps and real application rollout remain open. No paid model run, human qualification, cloud CI execution, mobile/Safari verification or production deployment is claimed.
+
 ### Hard-budget integration design checkpoint — 7 September 2026
 
 Read-only tracing of `exposure_study`, `order_resolution`, `world` and `recovery_worker` identified the actual effect hooks and three integration hazards: baseline/shadow controls can consume the wrong budget scope; repeated order/key strings in independent worlds can cause false deduplication; and commit-before-timeout accounting cannot wait for tool success. The [hard-budget implementation contract](exposure-control-lab.md#hard-action-budgets-implementation-contract) now defines served-candidate scope, campaign ownership, authoritative per-currency amounts, replay identity, concurrent final-unit tests, reset/timeout behavior and outcome denominators. Historical artifacts remain unchanged.

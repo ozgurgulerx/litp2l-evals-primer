@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### In-process campaign action budgets
+
+[Kata 95](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent) now injects a shared count/per-currency allowance through the existing exposure/case/world path to the actual mock commit boundary. It separates served-candidate effects from baseline/shadow controls, enforces replay/namespace/reset rules, tests concurrent final-unit attempts and conservatively latches unknown accounting failures. The reference response path now reconciles unexpected tool status instead of blindly claiming a refund. This is single-process in-memory enforcement; the historical unbudgeted packet and CLI remain unchanged. Durable enforcement, a retained budgeted replay packet and real application integration remain open.
+
 ### Historical judge example: scope and denominator clarification
 
 The [120-case groundedness example](llm-as-a-judge.md#worked-example-qualifying-a-groundedness-judge) now separates an imagined independent-review assumption from actual annotation evidence. Its original English qualification labels and companion JSON remain preserved as hypothetical values, explicitly not established by the aggregate table or valid for production-registry ingestion. The worked denominator comparison distinguishes `4/32`, `4/40` and `4/74`, plus classification coverage versus automatic acceptance and review load. No new calibration evidence is claimed.
