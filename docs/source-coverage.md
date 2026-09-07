@@ -115,6 +115,8 @@ The PDF and DOCX files supplied with the corpus are companion renderings of the 
 
 ## Section-level completeness audit
 
+**Later DOCX project-depth check:** section 13's Judge Lineage Auditor now has a [worked anonymous-output/name-intervention comparison](llm-as-a-judge.md#worked-micro-kata-hiding-the-name-does-not-test-every-preference-leak). Its synthetic counts distinguish identity intervention, non-causal generator-group association, shared panel errors, abstention and conditional error. This closes a worked-example gap, not empirical lineage attribution or a full reread/verification of the DOCX's 46 ranked research claims.
+
 This second map checks the structure of each source, not only the combined topic taxonomy.
 
 **Interview-bank preservation check:** the [complete appendix](interview-question-bank.md) now retains all 118 unique canonical IDs across thirteen themes, with every supplied question/variant, level and answer outline checked against `deep-research-report-10.md`. The condensed drills remain available. This proves question/outline preservation, not that every outline is itself a full worked solution; deeper teaching remains in the mapped chapters, exercises and capstone.

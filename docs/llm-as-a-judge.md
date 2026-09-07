@@ -170,6 +170,27 @@ Compare semantically equivalent concise and verbose answers. Tell the judge to i
 
 Blind model identity, provider, prompt, and metadata unless they are part of the criterion. Avoid using the candidate model as its sole release judge.
 
+### Worked micro-kata: hiding the name does not test every preference leak
+
+The supplied research review proposes a **Judge Lineage Auditor**. Start by separating two hypotheses: visible identity changes a judgment; or anonymous outputs associated with a related generator receive different judgments. The second association does not, by itself, establish that training lineage caused it.
+
+Consider this authored audit. Every pair has one independently verified correct answer and one incorrect answer. Items, answer order and correctness direction are balanced across the two groups. Counts are judge choices of the **incorrect** answer:
+
+| Anonymous answer group | Judge A | Judge B | Both judges wrong |
+| --- | ---: | ---: | ---: |
+| Incorrect answer from an A-related generator, 40 pairs | 18 | 6 | 5 |
+| Incorrect answer from an unrelated generator, 40 pairs | 6 | 8 | 4 |
+
+In a separate intervention on 20 fixed answer pairs, change only the displayed model names; Judge A changes its selected answer on 7 pairs. Neither table represents collected model evidence.
+
+**Exercise:** calculate Judge A's group error gap, the name-intervention flip rate and the two-judge automatic-acceptance risk. Has a diverse panel eliminated the problem? Has lineage been shown to cause it?
+
+**Worked solution:** Judge A's observed error rates are `18/40 = 45%` and `6/40 = 15%`, a 30-point gap. The name-intervention flip rate is `7/20 = 35%`; a flip is not necessarily a newly wrong answer. If the panel accepts only when both judges select the same answer, then related-group disagreements are `18 + 6 - 2*5 = 14`. It agrees on 26 pairs, including 5 wrong choices: coverage is `26/40 = 65%`, conditional error is `5/26 ≈ 19.2%`, and wrong automatic choices per input are `5/40 = 12.5%`. For the unrelated group, these quantities are 85%, `4/34 ≈ 11.8%`, and 10%. Combining both groups gives 20 abstentions, 51 correct agreements and 9 wrong agreements across 80 inputs—not independent evidence from 160 cases.
+
+The panel reduces wrong automatic choices relative to Judge A in this constructed sample, but leaves shared failures and increases human review. The group gap can still reflect task difficulty, style, reference quality or generator selection; relatedness is not randomized. The name intervention isolates displayed identity only if every other input is fixed and stochastic variation is controlled through repeated, counterbalanced calls. It does not isolate training-data inheritance.
+
+For a real audit, retain the exact anonymous outputs, independent correctness evidence, known/unknown generator provenance, judge versions, name/order interventions and item-level paired judgments. Cross judge families with generator groups on held-out tasks, register the target criterion and decision rule, and report uncertainty and review load. Do not infer independence from different provider names or tune away this gap on the same labels used to qualify the repaired judge.
+
 ### Reference anchoring
 
 A narrow reference answer can punish valid alternatives. Specify observable evidence and multiple acceptable outcomes.
