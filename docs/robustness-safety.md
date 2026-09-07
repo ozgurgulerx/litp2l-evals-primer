@@ -221,6 +221,8 @@ Mitigate with independent outcome verification, hidden or rotating acceptance da
 
 ## Preference and reward-model evaluation
 
+**RLHF evaluation spans several objects.** A common workflow starts with supervised fine-tuning on demonstrations, collects human comparisons, fits a reward model and optimizes a policy using that reward. Evaluate the demonstrations/preferences, reward model and resulting policy separately; a good score at one stage does not validate the next. RLAIF uses AI-generated feedback for some of this supervision, adding a feedback-model qualification problem rather than removing the need for independent evaluation. In principle-guided AI feedback, record the principles and critique/revision procedure as versioned inputs, then test held-out principle adherence, useful task completion, false refusal and regressions independently. The worked comparison below concerns evaluation of these stages, not an implementation or empirical comparison of training algorithms.
+
 Preference data can train or evaluate a reward model, but agreement with preferences is not identical to truth, safety, or task completion. Evaluate:
 
 - held-out preference prediction;

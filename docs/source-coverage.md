@@ -202,6 +202,16 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: safety and alignment
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| L1, L4–L8, L11–L12 | [Preference/reward workflow](robustness-safety.md#preference-and-reward-model-evaluation), [optimization-pressure example and solution](robustness-safety.md#worked-micro-kata-optimization-pressure-reverses-the-verdict), [reviewer-effects exercise](human-evaluation.md#worked-micro-kata-separate-the-reviewer-from-the-treatment) | Separates supervision quality, reward prediction and post-optimization behavior; worked proxy/preference/task/safety contrasts and independent-evaluation protocol. No actual RLHF/RLAIF training comparison is claimed. |
+| L2, L10 | [Threat manifest](robustness-safety.md#build-adversarial-cases-from-threat-models), [adaptive-budget calculation](robustness-safety.md#worked-micro-kata-an-adaptive-attacker-gets-more-than-one-try) | Explicit attacker capability, budget, stopping, denominators and validity limitations. |
+| L3, L9 | [Crossed harmful/benign evaluation](robustness-safety.md#measure-safety-in-both-directions), [optimization decision](robustness-safety.md#worked-micro-kata-optimization-pressure-reverses-the-verdict), [noncompensable constraints](robustness-safety.md#severity-and-non-compensable-invariants) | Concrete harmful-compliance/false-refusal separation and block/hold solution; neither the refusal count nor proxy reward alone decides release. |
+
+The L1–L12 questions have explicit worked teaching routes using existing examples. Population safety, feedback validity and generalization beyond the supplied controls remain empirical claims requiring separate evidence, not properties granted by an alignment-method name.
+
 ### Item-level teaching audit: interpretability
 
 | Source IDs | Inspected teaching evidence | Finding |
