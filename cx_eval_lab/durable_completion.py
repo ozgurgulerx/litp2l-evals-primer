@@ -130,6 +130,37 @@ class CompletionJournal:
                     'response_present': row is not None and row['status'] == 'completed',
                     'response_scope': 'persisted_completion_evidence_only', 'worker_liveness': 'unknown'}
 
+    def inspect_many(self, bindings):
+        """Bound read-only batch snapshot; missing records do not prove no work.
+
+        Each binding contains namespace, case, agent name, reverse, and the
+        caller-owned execution/grading manifest digest. No agent is invoked.
+        """
+        identities = []
+        for binding in bindings:
+            namespace = binding['namespace']
+            _namespace(namespace)
+            _namespace(binding['agent'])
+            digest = binding['manifest_digest']
+            if not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None:
+                raise ValueError('explicit SHA-256 execution/grading manifest digest required')
+            if type(binding['reverse']) is not bool:
+                raise ValueError('reverse must be boolean')
+            identities.append((namespace, _json({'case': asdict(binding['case']),
+                'agent': binding['agent'], 'reverse': binding['reverse'], 'manifest_digest': digest})))
+        if len({namespace for namespace, _ in identities}) != len(identities):
+            raise ValueError('duplicate batch request namespace')
+        with self._transaction() as db:
+            results = []
+            for namespace, identity in identities:
+                row = db.execute('SELECT * FROM requests WHERE namespace=?', (namespace,)).fetchone()
+                if row is not None and row['input'] != identity:
+                    raise ValueError('request execution or grading identity conflict')
+                results.append({'namespace': namespace, 'status': 'missing' if row is None else row['status'],
+                    'artifact': self._artifact(row) if row is not None and row['status'] == 'completed' else None,
+                    'worker_liveness': 'unknown'})
+            return results
+
     def execute(self, case, agent, *, namespace, manifest_digest, reverse=False):
         """Return saved evidence, or reserve once and execute the existing runner."""
         _namespace(namespace)
