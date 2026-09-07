@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Historical judge example: scope and denominator clarification
+
+The [120-case groundedness example](llm-as-a-judge.md#worked-example-qualifying-a-groundedness-judge) now separates an imagined independent-review assumption from actual annotation evidence. Its original English qualification labels and companion JSON remain preserved as hypothetical values, explicitly not established by the aggregate table or valid for production-registry ingestion. The worked denominator comparison distinguishes `4/32`, `4/40` and `4/74`, plus classification coverage versus automatic acceptance and review load. No new calibration evidence is claimed.
+
 ### Probability calibration versus useful decisions
 
 [Kata 94](metrics.md#kata-94-zero-ece-no-useful-ranking) extends the existing ten-row probability artifact without replacing it. A hindsight constant illustrates zero empirical ECE with no ranking, worse Brier/log loss and undefined selective risk at zero coverage. The solution distinguishes label reuse, held-out recalibration, threshold changes and review workload. Guo et al.'s primary calibration paper supplies methodological context, not local model evidence or a universal recipe for verbal confidence.

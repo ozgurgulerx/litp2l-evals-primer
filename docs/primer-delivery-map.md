@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Judge scope-evidence clarification checkpoint — 7 September 2026
+
+Audit of the older [groundedness example](llm-as-a-judge.md#worked-example-qualifying-a-groundedness-judge) found wording that described synthetic cases as independently reviewed and listed English scopes as qualified without the required scoped evidence. The revision preserves the original counts, hypothetical decisions and companion artifact, but explicitly identifies the missing provenance, slice denominators, error bounds and authority. It concludes that no production qualification is established by the supplied table. Three false-pass estimands and the acceptance/review workload are now worked separately.
+
+Independent review found no blocking correction. The numerical probe, all 35 book-example/scaffold tests, strict build, whitespace check and dependency audit pass. The rendered warning and qualification limit are visible in the desktop page without horizontal overflow. This is a substantive teaching-claim repair, not new human review, a runtime authority change, a full-suite rerun or publication. Broader empirical qualification and curriculum completeness remain open.
+
 ### Probability-calibration decision checkpoint — 7 September 2026
 
 [Kata 94](metrics.md#kata-94-zero-ece-no-useful-ranking) deepens the existing probability-calibration example using the unchanged ten-row artifact. Its executable hindsight-constant comparison yields ECE zero but Brier 0.24000, log loss 0.673012 and zero accepted cases at threshold 0.8; selective risk is undefined. The worked solution explains why calibration, ranking, label independence and action utility are separate requirements, and links to the review-workload workshop. The constant uses the scored labels and is explicitly not a held-out model result.

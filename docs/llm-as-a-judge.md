@@ -350,7 +350,7 @@ Run a proposed version in shadow against the current judge. Review disagreements
 
 ## Worked example: qualifying a groundedness judge
 
-Synthetic qualification set: 120 independently reviewed cases.
+Authored qualification scenario: 120 synthetic cases with supplied reference labels. Independent review is an assumption of the imagined scenario, not an annotation study performed for this book. The table contains aggregate counts, not reviewer provenance or item-level calibration evidence.
 
 The positive class is `fail`—a material unsupported or contradicted claim.
 
@@ -369,7 +369,19 @@ On automated decisions only:
 - abstention: 12/120 = 10%;
 - automated coverage: 108/120 = 90%.
 
-But the slice review shows all four false passes are Turkish timeout-status cases. The global result does **not** qualify the judge for Turkish release blocking. Possible decision:
+Here “automated coverage” means **nonabstained classification coverage**, not automatic acceptance. The judge labels 108 cases pass or fail, but only 74 receive `pass`. If both failures and abstentions require human review, automatic acceptance is `74/120 ≈ 61.67%` and the review queue is `46/120 ≈ 38.33%`. If `fail` instead automatically blocks, that is a different operating policy whose false-block consequences must be evaluated.
+
+Three denominators answer different questions:
+
+| Quantity | Calculation | Interpretation |
+| --- | ---: | --- |
+| False pass among nonabstained reference failures | `4/(28+4) = 12.5%` | Error conditional on the judge making a pass/fail classification for a reference-failing case |
+| Pass given a reference failure, including abstentions in the population | `4/(28+4+8) = 10%` | Probability of the `pass` event among all forty supplied reference-failing cases |
+| Reference failure among pass decisions | `4/74 ≈ 5.41%` | Contamination of the accepted set under this teaching sample's class mix |
+
+The companion `evals/cx-support/examples/judge-calibration-v1.json` preserves the original `false_pass_rate: 0.125` field. Its estimand is the **first** row, not the second or third. Its `coverage: 0.9` is nonabstained classification coverage. Preserve the original record when interpreting it; do not silently change denominators or compare it with an all-input event rate under the same label. [Katas 90–92](calibration-decision-workshop.md) show how those distinctions change uncertainty and workload decisions.
+
+The scenario additionally stipulates that all four false passes are Turkish timeout-status cases; that slice assignment cannot be recovered from the aggregate table. This is reason to investigate and withhold unearned scope, not evidence that the remaining English cases are qualified. The original hypothetical decision is retained below:
 
 ```text
 English groundedness monitoring: qualified
@@ -379,7 +391,8 @@ Turkish release blocking: not qualified
 High-risk financial status: human escalation
 ```
 
-The numbers are synthetic. The authority reasoning is the example.
+!!! warning "Illustrative scope decisions, not qualifications established by this table"
+    The English `qualified` entries describe a possible outcome **only if separate, sufficient in-scope evidence and approvals exist**. None is supplied here. The global table lacks language/risk denominators, independent-unit information, scoped error bounds, registered tolerances and reviewer provenance. Even zero English false passes would not establish a required error ceiling without the relevant support and sampling assumptions. The actual evidentiary conclusion from this authored example is **qualification not established for any production scope**. Turkish shadowing and human escalation also require their own authorized workflows; they are not permissions obtained by writing these labels.
 
 ## Artifact: calibration report
 
@@ -408,7 +421,9 @@ The numbers are synthetic. The authority reasoning is the example.
 }
 ```
 
-Store case-level predictions and human labels behind appropriate access controls. The public report can summarize results without exposing sealed examples.
+This JSON is also an illustrative report shape. Its `authority` values preserve the hypothetical scenario above; they are not machine-verifiable qualifications and must not be ingested into a production authority registry. The retained companion artifact's `synthetic: true` flag is important context, not a substitute for consumer-side authority checks.
+
+Store case-level predictions and human labels behind appropriate access controls. The public report can summarize results without exposing sealed examples. A real qualification must link those records, the frozen judge and rubric, target population, independent-unit/sampling design, scope-specific analysis, expiry/revocation status and authorized review. A name containing `human-gold` does not establish that independent humans supplied its labels.
 
 ## Failure modes
 
