@@ -6,6 +6,21 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Consolidated acceptance status — 7 September 2026
+
+This table supersedes the **current-status interpretation** of older checkpoints below; their historical evidence and limitations remain intact. It does not certify an A+ grade or erase uncompleted experiments.
+
+| Acceptance requirement | Inspected evidence | Verdict / remaining action |
+| --- | --- | --- |
+| Preserve the supplied curriculum | Six Markdown inputs are fingerprinted; all 118 interview IDs, question variants and answer outlines are retained; companion PDFs preserve those IDs; six companion files have a reference-recovery index | Preservation checks pass at these stated scopes. Sentence/example-level equivalence and claim-linked recovery of companion references remain unverified. |
+| Explain concepts through worked practice | Numbered kata sequence, retained studies, complete capstone solutions and indexed additional exercises for judge lineage, skills, voice timing and human workload | Substantial worked coverage exists. The remaining content audit must map each substantive source requirement to an actual explanation and solution, not count headings or demand invented field results. |
+| Demonstrate evaluation-to-decision mechanics | Paired artifacts, grader qualification controls, uncertainty studies, durable effect/completion/window/controller stores and an executed incident-to-rollback packet | Local mechanics are demonstrated under their documented contracts. Generic interrupted-agent continuation and ownership fencing are not implemented. Do not advertise a fully recoverable production application. |
+| Run the software and deliver the book | 679 local tests passed; hosted Publish book run `34090136429` succeeded for `aed856e164528089946ffb63e5e0ed7dc9aac2f1`, including conformance and Pages deployment | Hosted delivery is verified for that revision. Subsequent documentation changes require publication, not another unchanged local full-suite run. |
+| Make learning material reachable and readable | A built-site check inspected 44 HTML pages and 6,345 relative local links/anchors with zero errors; published judge/recovery pages had no desktop overflow and Capstone Solution G expanded | These checks pass for the inspected build/pages. They do not establish mobile, Safari or every-page visual quality. New links still need the normal strict build. |
+| Distinguish teaching from empirical qualification | Chapters label synthetic inputs, fixed controls, source consistency, independent review requirements and deployment authority separately | No actual model-quality, independently human-calibrated or live application-release claim is earned by the local controls. Such claims require their own approved data, reviewers, budgets and deployment environment. |
+
+**Bounded remaining book work:** complete the source-requirement-to-worked-solution audit, repair only the concrete gaps it identifies, and publish the resulting documentation with a successful hosted receipt. Do not add new topics or commission optional empirical studies merely to improve a completeness label. Preserve existing named experimental commitments as unfinished until their own acceptance evidence exists; explaining their protocol is not executing them. The objective remains active because the source-depth acceptance is not yet proved.
+
 ### Publication preflight — 7 September 2026
 
 The current local suite passes **679 tests in 63.089 seconds** at `acefbc0`; this is software conformance, not model or deployment qualification. The publication-range whitespace check identified only a trailing blank line in the preserved interview appendix, now corrected. The remote `main` and latest successful Publish book run (`34047693398`) remain at `019ee70a0bb48930c24afc5704e7b27b6e729547`. Therefore that hosted success does not verify the newer local content or recovery integration. The configured Pages workflow now depends on evaluation conformance before deployment. Final publication still requires review of the pending public change set, push, successful hosted execution for the exact revision and rendered-page verification; the local tests must not be reported as those receipts.
