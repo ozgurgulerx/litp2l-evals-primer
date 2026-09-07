@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Accurate judgments, reversed ranking](llm-as-a-judge.md#micro-kata-accurate-judgments-can-reverse-a-system-ranking) | Qualify system selection separately from pooled answer-label accuracy. |
 | [Trajectory comparison contracts](agent-evals.md#micro-kata-choose-the-trajectory-comparison-contract) | Explain false passes from subset/superset matching and the limits of strict matching. |
 | [Budget the evaluation workload](build-the-system.md#micro-kata-budget-the-evaluation-workload) | Include baseline and sampling costs without confusing spending with qualified evidence. |
 | [One retrieval hit is not complete evidence](rag-research-evals.md#worked-micro-kata-one-hit-is-not-complete-evidence) | Compare recall, reciprocal rank and graded relevance on the same ranked results. |

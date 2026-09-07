@@ -1,5 +1,23 @@
 # LLM as a Judge
 
+## Micro-kata: accurate judgments can reverse a system ranking
+
+Two systems answer the same 100 tasks. Independent executable checks label A correct on 90 and B on 80. An authored judge falsely rejects ten of A's correct answers and falsely accepts ten of B's incorrect answers, with no other errors.
+
+**Exercise:** calculate pooled judgment accuracy and the resulting system ranking.
+
+**Solution:** the judge gets `180/200 = 90%` of answer labels right, but reports A at 80% and B at 90%, reversing the reference ranking. Its errors are distributed differently across candidate systems. Pooled agreement therefore does not qualify a judge to select the best system.
+
+```python
+truth = {"A": 90, "B": 80}
+judged = {"A": truth["A"] - 10, "B": truth["B"] + 10}
+assert (200 - 20) / 200 == .90
+assert max(truth, key=truth.get) == "A"
+assert max(judged, key=judged.get) == "B"
+```
+
+For a system-selection decision, validate candidate-level error patterns and ranking stability alongside item-level quality. Preserve paired task outcomes for uncertainty; these aggregate counts alone do not supply a paired interval. Repeating the same biased judge does not remove systematic error. This constructed counterexample teaches the supplied review's instance-versus-ranking distinction; it is not a reproduction of JuStRank or evidence of real model-family bias.
+
 Model-based graders can scale nuanced evaluation, but their output is measurement—not ground truth.
 
 !!! important "This chapter owns judge calibration"
