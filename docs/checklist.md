@@ -172,6 +172,9 @@ Later success does not erase an earlier blocker.
 
 ## Deterministic policy example
 
+!!! danger "Known-bad teaching example—not a deployment gate"
+    The original shortcut below is preserved for diagnosis. Its `canary` string is not authority: the function does not validate its inputs, evidence completeness, statistical method, grader qualification, current identities or approvals. Do not connect it to a router. Kata 93 reproduces two false promotions before mapping the repair to the existing labs.
+
 ```python
 def release_action(report, policy):
     failures = []
@@ -190,7 +193,62 @@ def release_action(report, policy):
     return {"action": "block" if failures else "canary", "failures": failures}
 ```
 
-The policy consumes a report; it does not rerun graders or reinterpret traces. Keep measurement and decision boundaries testable.
+The useful architectural idea is that policy consumes a report rather than rerunning graders or reinterpreting traces. That separation does not make an unchecked report trustworthy. Keep measurement and decision boundaries testable, including the validation and authority checks omitted here.
+
+## Kata 93: a comparison is not evidence validation
+
+**Predict:** run the original function with unknown measurements represented by `NaN`. Then supply ordinary finite numbers but no case identities, trial evidence, qualified statistical method or approval. Which inputs produce `canary`?
+
+Execute the function above and this block in the same Python session. The inputs and limits are authored teaching values; no release is requested or performed.
+
+```python
+from types import SimpleNamespace
+
+policy = SimpleNamespace(
+    max_unauthorized_actions=0, max_duplicate_transactions=0,
+    non_inferiority_margin=0.03, max_p95_latency_ms=3000,
+    max_cost_per_success_usd=0.80,
+)
+values = dict(
+    unauthorized_actions=0, duplicate_transactions=0,
+    quality_ci_low=-0.02, p95_latency_ms=1000,
+    cost_per_success_usd=0.40,
+)
+nan_report = SimpleNamespace(**{name: float("nan") for name in values})
+nan_result = release_action(nan_report, policy)
+unqualified_result = release_action(SimpleNamespace(**values), policy)
+missing_cost_result = release_action(
+    SimpleNamespace(**{**values, "cost_per_success_usd": None}), policy,
+)
+assert nan_result == {"action": "canary", "failures": []}
+assert unqualified_result == {"action": "canary", "failures": []}
+assert missing_cost_result == {
+    "action": "block", "failures": ["operations:missing_cost"],
+}
+print(nan_result, unqualified_result, missing_cost_result)
+```
+
+??? success "Solution: repair three different boundaries"
+    **Representation:** `NaN > limit` and `NaN < limit` are both false, so these comparisons append no failure. `NaN` is not `None`, which bypasses the special missing-cost branch as well. Unknown values are not observed zero violations. Validate counts as nonnegative integers excluding booleans; validate measurements and policy limits as finite values in their declared domains. Reject invalid representations or return a typed hold/block—never promote them. A serialization boundary must enforce its own schema rather than rely on this Python probe.
+
+    **Measurement:** the finite report is still unsupported. There is no evidence that its interval came from the registered population, paired outcomes, independent units or a qualified analysis. Filling in plausible numbers repairs neither missing artifacts nor a revoked grader. Bind complete trials, manifests, scope and current qualification; preserve pending and unknown outcomes. A schema-valid packet can still be evidentially invalid.
+
+    **Authority:** even a valid numerical comparison is not a deployment permission. Require the evaluated candidate and fallback identities, current authorized action class, approved exposure budgets and expiry, monitoring readiness and a tested stop path. Recheck the relevant authority at the serving/action boundary; a past decision receipt must not silently authorize a changed system.
+
+    The `None` control shows why one missing-value test is insufficient: that input blocks, while a different invalid representation passes. The lesson's regression test runs these probes but does not fix or endorse the original function. A green test means the known defect remains reproducible and labeled.
+
+### From the counterexample to an implementation handoff
+
+| Boundary to implement | Existing worked evidence | Still needed for the target application |
+| --- | --- | --- |
+| Validate the evidence, not only its aggregate | [Evidence Spine](evidence-spine.md) and [Follow One CX Packet](cx-evidence-walkthrough.md) | Authenticated provenance, complete enrollment/outcome accounting and independent grader qualification for the actual workload |
+| Test gate and failure paths in CI | [CI Gate Lab](ci-gate-lab.md), including timeout and partial-run records | Observed enforcement in the chosen repository, protected deployment credentials and confirmed durable artifacts; book CI is not application authorization |
+| Change routing with bounded authority | [Exposure Control](exposure-control-lab.md) | Authenticated current control state, deployed identity checks, hard action/value/concurrency caps and expiry enforced by the real serving path |
+| Stop active work and reconcile effects | [Containment Katas 54–55](frontier-risk-decisions.md#kata-54-cancellation-was-acknowledged-but-the-worker-wrote) and [Process Recovery](process-recovery-study.md) | Tested propagation to queued/delegated work, external-service reconciliation and remediation for completed effects |
+
+**Interview answer:** “I separate schema validity, measurement validity and release authority. I test invalid numeric values and missing evidence, but a finite score still cannot grant canary access. The serving boundary must enforce a current, scoped decision for the exact evaluated system.”
+
+**Acceptance check:** name one failure at each boundary, the artifact or control that detects it, and who may authorize the subsequent action. Do not replace the missing implementation with a caller-supplied `approved=True`. The handoff above is not an installed production integration.
 
 ## Risk-tier release profiles
 
