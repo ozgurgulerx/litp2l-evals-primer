@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Durable window membership before execution
+
+[Kata 103](exposure-control-lab.md#kata-103-keep-the-cohort-when-the-worker-disappears) preserves all forty planned requests through a real worker kill before the first agent call. The existing execution path consumes registered cases/routes/scopes; conflicting registrations fail before work. A worked routing counterexample changes nine assignments when a canary predecessor is incorrectly replaced with expanded state. This closes immutable registration, not controller acceptance, attempt resumption or safety-stop enforcement. The registry binds a local campaign and caller-supplied manifest; hashes are consistency checks, not authenticated provenance.
+
 ### Persisted completion versus committed effect
 
 [Kata 102](exposure-control-lab.md#kata-102-the-charge-survived-the-response-did-not) executes a real process kill after the existing mock refund commits but before its full case artifact returns. The separate completion journal retains an incomplete reservation, the campaign retains one charged effect, and replay refuses to invent a completed attempt. Completed records return identical evidence without rerunning the agent. Tests reject identity conflicts and inconsistent artifact-to-request bindings. This is one-shot completion storage, not recovery of an interrupted agent, durable window membership, controller recovery or customer-delivery proof. Existing content and historical packets remain unchanged.

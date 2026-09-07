@@ -387,6 +387,40 @@ The caller must supply a manifest digest covering agent configuration, source an
 
 ### Durable campaign integration contract
 
+#### Kata 103: keep the cohort when the worker disappears
+
+**Predict:** a window worker saves its plan and dies before the first baseline or candidate runs. Which facts should survive, and how many effects should be charged?
+
+```sh
+uv run python -m unittest tests.test_window_registration.WindowRegistrationTests.test_kill_after_registration_preserves_all_members_and_zero_effects -v
+```
+
+??? success "Solution: forty planned requests, zero executed effects"
+    The process test stops a spawned worker at the first `run_case` boundary, after registration. All forty ordered members survive in the reopened registry, including full cases, routes, candidate-execution flags and baseline/shadow scopes. No refund is charged. Membership is evidence of planned work, not evidence that forty trials ran.
+
+    `execute_window` uses the shared plan builder and, in registered mode, consumes the persisted plan returned by `WindowRegistry`. Conflicting predecessor, fault intervention or manifest is rejected before agent execution. Returning the saved registration is idempotent; executing a partially completed window is not yet resumable.
+
+The optional registry is a separate schema-1 database bound to the local campaign. It preserves the **caller-supplied predecessor**, not proof of an accepted or current controller revision. Reads validate saved plans against the current fixed-study builder; incompatible source changes fail closed rather than silently reinterpret the plan. Controller compare-and-swap, safety-stop propagation and completion-journal integration remain separate work. No attempt status can be inferred from registration alone, and there is no atomic transaction spanning registration and later refunds. This test demonstrates a real process boundary in a deterministic local harness, not production failover.
+
+**Why persist routing, not just request IDs?** With this lab's forty fixed customers, canary routing selects four while expanded routing selects thirteen. A restarted worker that reloads the *latest* controller state instead of the window's registered predecessor can therefore change nine assignments under the same window label. Stable customer IDs alone do not preserve the experiment.
+
+```python
+from cx_eval_lab.exposure_control import ExposureState, route
+
+def selected(stage, percent, revision):
+    state = ExposureState("cx-simulation-v1", "baseline-v1",
+                          stage=stage, percent=percent, revision=revision)
+    return {f"user-{i}" for i in range(40)
+            if route(state, f"user-{i}", now=10) == "candidate"}
+
+canary = selected("canary", 5, 1)
+expanded = selected("expanded", 25, 2)
+assert len(canary) == 4 and len(expanded) == 13
+assert len(expanded - canary) == 9 and canary <= expanded
+```
+
+Those counts are exact for this synthetic cohort, not promises that every forty-customer sample has those allocations. The registered record must preserve the predecessor, membership, served arm, baseline/shadow scope and logical time. New safety information may stop or restrict execution; freezing the experimental assignment never authorizes ignoring revocation. Record that stop and its unfinished requests instead of relabelling the window as though a different cohort was originally selected.
+
 **Status: storage and call-chain integration implemented in Katas 100–101; campaign recovery remains unimplemented.** [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) proves a bounded cap at the separate recovery payment boundary. The optional durable backend now traverses `execute_window`, `run_case`, `MultiOrderWorld` and `RefundWorld` for served candidates. Default in-memory behavior remains available. Durable mode changes authorization, effects and evidence transactionally; it does not debit SQLite and then update a separate authoritative in-memory ledger.
 
 **Capability:** the evaluator must resume the same campaign after worker loss, preserve its spent allowance and committed refunds, reconstruct the evidence used by the existing graders, and continue the existing exposure decision path. A new standalone capped-payment demo does not meet this requirement.
@@ -421,13 +455,13 @@ The caller must supply a manifest digest covering agent configuration, source an
 
 **Non-goals of this local integration:** multi-host consensus, an external payment API, hostile-process isolation, authenticated operator identity, power-loss qualification and human/model qualification. Direct filesystem/database access remains a trusted harness capability, not a safe permission to give an adversarial agent. Busy, missing-database or schema errors must stop the durable path, never fall back to uncapped memory.
 
-**Open decisions before the recovery phase:** specify the supported agent continuation/checkpoint contract and the grader's treatment of a recovered response with an interrupted prior attempt. An arbitrary LLM session cannot be reconstructed from payment state alone. Steps 1–2 are implemented; the next handoff is step 3's explicit attempt/response/controller recovery contract and RED tests, not another detached study. Admission fencing alone does not satisfy that recovery contract.
+**Open decisions before the recovery phase:** specify the supported agent continuation/checkpoint contract and the grader's treatment of a recovered response with an interrupted prior attempt. An arbitrary LLM session cannot be reconstructed from payment state alone. Steps 1–2 are implemented; Katas 102–103 add separate completion storage and window registration. The next handoff joins these records for complete membership/outcome accounting before controller recovery. Admission fencing alone does not satisfy that recovery contract.
 
 #### Recovery implementation contract: preserve the attempt, then reconcile
 
 **Design status, not implemented behavior.** Stages 1–2 above persist effects and fence admission. The next capability is recovery of the *same registered exposure window* after a worker dies, without replenishing allowance, losing selected requests, inventing responses or applying a controller decision twice. The operator owns the campaign database and process supervisor; candidate tools do not own recovery permissions.
 
-Source inspection identifies three distinct missing records. `MultiOrderWorld.invoke` retains clarification and action results only in `_events`; `run_case` returns the response and grade only after execution; `execute_window` constructs the window and its request membership in memory. Persisting more payment fields cannot recover these records.
+The original source inspection identified three missing records. `MultiOrderWorld.invoke` still retains clarification and action results only in `_events`. Kata 102 now optionally stores the completed `run_case` artifact, and Kata 103 optionally registers the exposure window's membership before execution. These two stores are not yet joined by the exposure driver, and neither recovers an interrupted invocation. Persisting more payment fields cannot substitute for that remaining integration.
 
 | Durable record | Immutable identity and contents | Recovery rule |
 | --- | --- | --- |

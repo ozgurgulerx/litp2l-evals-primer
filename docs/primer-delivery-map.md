@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable window registration checkpoint — 7 September 2026
+
+[Kata 103](exposure-control-lab.md#kata-103-keep-the-cohort-when-the-worker-disappears) adds optional immutable window registration to the actual exposure driver. A shared pure builder creates forty full ordered cases, routes, namespaces and effect scopes. Registration binds the caller-supplied predecessor, timing, fault/maturity settings and manifest before any agent runs. A real spawned-process kill before the first agent leaves all forty members registered and zero effects charged.
+
+RED `096c4fe` and GREEN `0cb2450` preserve the implementation checkpoints. Forty-five focused tests pass; combined statement/branch coverage is 100% for the registry and 98% for the exposure driver. Lint, type checks and dependency audit pass. Main-agent comparison with the pre-refactor seven-window CLI confirms parity of non-timing/non-hash fields. The routing example and published process test pass; the catalog has 103 unique rendered kata links and the new solution opens without horizontal overflow at the checked desktop viewport.
+
+The full suite passes 661 tests in 81.846 seconds with 91% combined statement/branch coverage. Independent review approved the registration-only scope; fresh source-checked release controls and budgeted generation/replay pass with deployment authorization false. Strict book build passes.
+
+The registry validates saved plans against the current fixed-study builder; source drift can therefore refuse old-plan inspection rather than silently reinterpret it. Caller manifest equality and local campaign identity are not authenticated provenance or controller acceptance. Registration is not atomic with later effects, does not store per-request completion, and does not permit interrupted served candidates to rerun. Next, join registered membership to retained completion/missing-outcome accounting before adding durable controller acceptance. Existing legacy mode and historical packets remain unchanged; no production or live-model claim is added.
+
 ### Completion binding hardening checkpoint — 7 September 2026
 
 The two completion-review follow-ups below are repaired. RED `28f3ded` reproduced cached Boolean/integer identity confusion and publication of an invalid first result. The journal now compares canonical JSON identity values and validates initial evidence before marking it completed. Invalid publication leaves the original reservation incomplete. Thirty focused completion/exposure tests pass with 97% combined statement/branch coverage for the completion module; lint, type checks, dependency audit and independent review pass. Kata 102 explains the counterexample. This is selected-field consistency, not a full artifact-schema or provenance verifier; controller/attempt recovery remains open.
