@@ -202,6 +202,15 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: fairness
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| BF1, BF5–BF8 | [Fairness contract](robustness-safety.md#fairness-is-a-measurement-design-problem), [raw/standardized case-mix solution and intersection follow-up](robustness-safety.md#worked-micro-kata-a-raw-gap-and-a-case-mix-explanation) | Worked outcome/denominator comparison, group-support limits, harm and retained-slice reasoning; no universal fairness score. |
+| BF2–BF4 | [Matched identity-prompt and toxicity-grader exercise](robustness-safety.md#worked-micro-kata-identity-mentions-are-not-toxicity-labels) | Adds a concrete comparison protocol, differential false-positive calculation and BBQ/StereoSet construct distinction. Reference labels and groups are authored, not a collected fairness study. |
+
+BF1–BF8 now have scoped teaching routes. Actual fairness assessment still requires the affected population, justified harm criteria, reliable labels, uncertainty and appropriate governance; these examples do not establish equitable deployment.
+
 ### Item-level teaching audit: robustness and adversaries
 
 | Source IDs | Inspected teaching evidence | Finding |

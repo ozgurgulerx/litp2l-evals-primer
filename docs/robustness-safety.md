@@ -155,6 +155,18 @@ For each slice report:
 
 A raw gap can reflect different case difficulty or policy eligibility. That does not make the gap irrelevant; it means diagnosis must distinguish allocation, data coverage, system behavior, and measurement artifacts.
 
+### Worked micro-kata: identity mentions are not toxicity labels
+
+For an authored support-writing task, create matched prompts that vary only a reviewed, task-irrelevant identity descriptor. Ask for the same permitted next step, preserving policy and customer history. Review the generated responses separately for unsupported group assumptions, demeaning language and resolution quality. A difference in wording is not automatically a stereotype; define the prohibited inference and preserve context.
+
+Suppose independent reference labels classify 100 responses mentioning group A and 100 mentioning group B. Each set contains ten toxic and ninety benign responses. A classifier detects eight toxic responses in each set, but falsely flags eighteen benign A responses and three benign B responses.
+
+**Solution:** toxicity recall is 80% in both groups, but false-positive rates are `18/90 = 20%` and `3/90 ≈ 3.33%`. Raw flagged rates are 26% and 11%, despite equal reference toxicity prevalence. The apparent gap can arise from the measuring instrument; do not infer that A's outputs are more toxic from classifier flags alone. These supplied counts illustrate grader error, not evidence about any real group. Independently reviewed labels themselves require expertise, disagreement and sampling checks.
+
+Measure severity and type as well as binary toxicity. Include benign identity discussion, quoted harmful language in appropriate context, direct abuse and matched non-identity controls; keep uncertain labels separate. Repeat stochastic generation and counterbalance wording. Validate that descriptor substitution does not change legitimate task requirements. Contextual comparisons and observed disparities do not establish a causal identity effect without the relevant design assumptions.
+
+**Benchmark distinction:** [BBQ](https://aclanthology.org/2022.findings-acl.165/) contrasts under-informative and informative question contexts to examine biased answering; [StereoSet](https://arxiv.org/abs/2004.09456) evaluates stereotypical associations alongside language-modeling behavior. Neither is a complete toxicity detector or service-fairness assessment. A bias test must not reward ignoring explicit evidence, producing unrelated text or refusing every identity-related request. Pair those constructs with application-specific quality, allocation and harm outcomes rather than substituting a benchmark name for the measurement contract.
+
 ### Crossed slices
 
 An English/Turkish aggregate can conceal a failure affecting Turkish high-value timeout cases. Pre-register the intersections that carry material risk, then use exploratory analysis to discover new ones. Avoid publishing unstable rankings for tiny groups without uncertainty and privacy review.

@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Identity mentions and toxicity measurement](robustness-safety.md#worked-micro-kata-identity-mentions-are-not-toxicity-labels) | Separate generated harm from group-dependent grader false positives. |
 | [Adaptive attacker budgets](robustness-safety.md#worked-micro-kata-an-adaptive-attacker-gets-more-than-one-try) | Keep per-scenario compromise separate from dependent per-query outcomes. |
 | [Finite-candidate pass@k](metrics.md#worked-micro-kata-estimate-passk-from-generated-candidates) | Distinguish a subset estimator from plug-in probability and deployable retry success. |
 | [One deleted word reverses the claim](metrics.md#worked-micro-kata-deleting-one-word-reverses-the-claim) | Reject high lexical overlap as proof of factual correctness. |
