@@ -6,14 +6,20 @@ import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 from cx_eval_lab.action_budget import ActionBudget
 from cx_eval_lab.durable_world import DurableCampaign
 from cx_eval_lab.exposure_control import ExposureState, transition
 from cx_eval_lab.exposure_study import FaultInjectedCandidate, execute_window
-from cx_eval_lab.order_resolution import DescriptiveResolver, FirstRecordResolver, MultiOrderWorld, example_cases, run_case
-
+from cx_eval_lab.order_resolution import (
+    DescriptiveResolver,
+    FirstRecordResolver,
+    MultiOrderWorld,
+    example_cases,
+    run_case,
+)
 
 POLICY = {'campaign_id': 'exposure', 'max_actions': 2, 'currency_caps': {'USD': 8000, 'EUR': 9000}}
 
@@ -131,7 +137,7 @@ class DurableExposureTests(unittest.TestCase):
             queue.join_thread()
 
     def test_invalid_backend_combinations_stop_before_baseline_or_agent(self):
-        variants = ({'durable_campaign': self.campaign},
+        variants: tuple[dict[str, Any], ...] = ({'durable_campaign': self.campaign},
                     {'durable_campaign': self.campaign, 'execution_namespace': ' '},
                     {'durable_campaign': self.campaign, 'execution_namespace': 'fixed',
                      'action_budget': ActionBudget(1, {'EUR': 4500})})
@@ -168,6 +174,28 @@ class DurableExposureTests(unittest.TestCase):
         with patch.object(DescriptiveResolver, 'run') as run, self.assertRaises(ValueError):
             self.run_case('same', case=changed)
         run.assert_not_called()
+
+    def test_operational_input_change_conflicts_with_zero_tool_admission(self):
+        self.run_case('identity', FaultInjectedCandidate('unavailable'))
+        changed = replace(self.case, request=replace(self.case.request, utterance='A changed request'))
+        with patch.object(DescriptiveResolver, 'run') as execute, self.assertRaisesRegex(ValueError, 'operational input'):
+            self.run_case('identity', case=changed)
+        execute.assert_not_called()
+
+    def test_previous_lowlevel_evidence_cannot_be_admitted_as_fresh_case(self):
+        world = MultiOrderWorld(self.case, durable_campaign=self.campaign, execution_namespace='prior')
+        world.tools().verify_identity('customer-1', 'order-a')
+        with patch.object(DescriptiveResolver, 'run') as execute, self.assertRaisesRegex(ValueError, 'prior execution evidence'):
+            self.run_case('prior')
+        execute.assert_not_called()
+
+    def test_schema_one_is_rejected_without_implicit_migration(self):
+        with sqlite3.connect(self.path) as db:
+            db.execute('PRAGMA user_version=1')
+        with self.assertRaisesRegex(ValueError, 'schema mismatch'):
+            DurableCampaign.open(self.path, **POLICY)
+        with sqlite3.connect(self.path) as db:
+            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], 1)
 
     def test_legacy_shapes_and_in_memory_budget_are_preserved(self):
         legacy = run_case(self.case, DescriptiveResolver())
