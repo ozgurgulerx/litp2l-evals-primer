@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Few-shot examples versus ordering](benchmark-reproducibility.md#worked-micro-kata-the-examples-or-their-order) | Separate a selected winner from an order-robust demonstration-set improvement. |
 | [Generator–judge joint errors](llm-as-a-judge.md#worked-micro-kata-when-the-generator-and-judge-fail-together) | Test protection against generator failures rather than relying on overall judge accuracy. |
 | [Ratings versus independent cases](human-evaluation.md#worked-micro-kata-four-hundred-ratings-are-not-four-hundred-cases) | Budget reviewer overlap without overstating independent evidence or precision. |
 | [Reviewer effects and treatment effects](human-evaluation.md#worked-micro-kata-separate-the-reviewer-from-the-treatment) | Explain why disconnected reviewer assignments cannot identify a model improvement. |

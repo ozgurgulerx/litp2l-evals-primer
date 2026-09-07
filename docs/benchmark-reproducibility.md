@@ -87,6 +87,18 @@ Small changes can alter performance:
 
 Choose the protocol before seeing candidate results where possible. If several defensible prompts are studied, report the distribution or a registered selection rule rather than publishing only the best prompt per model.
 
+### Worked micro-kata: the examples or their order?
+
+Hold model, task IDs, instruction, decoding, scoring and request-budget limits fixed. Two disjoint-from-test demonstration sets, A and B, each contain the same number of examples. Evaluate both in forward and reverse order on the same 100 held-out tasks. Authored success counts are A-forward 80, A-reverse 78, B-forward 90 and B-reverse 70.
+
+**Exercise:** the team advertises B-forward's ten-point gain. What does the crossed comparison actually show?
+
+**Solution:** under a registered equal-weight mixture of the two orders, A scores 79% and B scores 80%—a one-point descriptive difference. Reversing order changes A by −2 points and B by −20 points, giving an order-by-set interaction contrast of −18 points. B-forward's advantage does not establish order-robust exemplar quality. Nor does the average identify which tasks were fixed or regressed: retain paired item-level outcomes before estimating uncertainty or making a release claim.
+
+If production always uses forward order, B-forward is a legitimate configuration to evaluate, but selecting it after seeing these results still creates selection bias. Freeze that choice and confirm it on untouched evidence under the intended policy. If order is randomized in production, use the registered production mixture rather than choosing favorable evaluation weights afterward. Check task/language/risk slices and actual prompt lengths; changing exemplars changes content and can change token cost, so do not claim a pure semantic effect from aggregate scores alone.
+
+Keep demonstration IDs, exact rendered prompts, ordering, source/exposure history and per-task grades. An exemplar copied from a held-out case invalidates the unseen-generalization claim even if its answer was paraphrased. This exercise demonstrates design and arithmetic, not a model-backed few-shot experiment.
+
 ## Answer extraction is part of the metric
 
 Suppose the target is `B` and the model writes:

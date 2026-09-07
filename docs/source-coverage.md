@@ -202,6 +202,19 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: prompts and dataset curation
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| P1, P5 | [Seven dataset roles](dataset-design.md#canonical-seven-dataset-roles), [weak-set redesign](dataset-design.md#exercise-improve-a-weak-dataset) | Concrete dataset composition, access boundaries and solved release-design task. |
+| P2–P3 | [Controlled prompt experiment](build-the-system.md#prompt-evaluation-as-a-controlled-experiment), [reproducibility manifest](benchmark-reproducibility.md#artifact-reproducibility-manifest) | Versioned intervention and paired quality/safety/resource comparison; not a claim that an actual prompt was optimized successfully. |
+| P4 | [Crossed demonstration-set/order example](benchmark-reproducibility.md#worked-micro-kata-the-examples-or-their-order) | Worked averages and interaction, selection-bias defense, per-item and prompt-length requirements. |
+| P6 | [Synthetic manifest and review](dataset-design.md#use-synthetic-data-deliberately), [incident promotion controls](dataset-design.md#from-incident-evidence-to-a-versioned-regression) | Concrete generation metadata and executed rejection/promotion mechanics; human validity is not inferred from a manifest. |
+| P7–P8 | [Mixed-trace workshop](dataset-design.md#mixed-trace-workshop-observations-before-causes), [sampling study](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) | Worked clustering/repair and weighted-sampling calculations; local controls do not demonstrate processing millions of real traces. |
+| P9–P10 | [Twenty-prompt selection](metrics.md#worked-micro-kata-the-winner-of-twenty-prompts), [exposed-case rejection](dataset-design.md#kata-61-a-new-case-id-does-not-make-a-fresh-holdout), [assigned-population impact](production-evals.md#worked-micro-kata-the-assisted-cases-are-still-assigned-cases) | Concrete selection, leakage and offline-to-impact counterexamples with solutions. No universal numeric correction for arbitrary adaptive reuse is claimed. |
+
+This scoped P1–P10 audit adds the missing P4 worked comparison and reuses existing dataset mechanics. It establishes teaching routes, not live prompt improvement or production-data qualification.
+
 ### Item-level teaching audit: LLM judges
 
 | Source IDs | Inspected teaching evidence | Finding |
