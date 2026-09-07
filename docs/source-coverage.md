@@ -202,6 +202,16 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: interpretability
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| I1–I2 | [Definitions and explanation limits](robustness-safety.md#interpretability-versus-explainability), [policy-passage intervention](robustness-safety.md#evaluate-explanations-with-interventions) | Concrete distinction between understandable output and causal evidence; coherent rationales are not privileged access to computation. |
+| I3–I5 | [Method-evaluation table](robustness-safety.md#evaluate-a-mechanistic-interpretability-method), [known refund mechanism](robustness-safety.md#ground-truth-and-a-toy-mechanism) | Explicit intervention/control design and worked feature precision/recall; necessity, sufficiency, coverage and false discoveries remain distinct. Corrected the blanket weight-randomization claim: a control must establish what mechanism it changed before expecting an attribution change. |
+| I6 | [False discoveries and complementary safety evidence](robustness-safety.md#false-discoveries-and-researcher-degrees-of-freedom), [frontier risk decisions](frontier-risk-decisions.md) | Bounded incorporation of mechanism evidence rather than substitution for behavioral and operational controls. |
+
+The existing I1–I6 toy example and design satisfy this scoped teaching check. No neural-model interpretability experiment was run or qualified by it. Feature-set precision and recall are only proxies in the known toy mechanism, not universal measures of causal completeness.
+
 ### Item-level teaching audit: fairness
 
 | Source IDs | Inspected teaching evidence | Finding |

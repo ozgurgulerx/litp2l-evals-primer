@@ -344,7 +344,7 @@ Ground-truth causal features are `policy_authorizes`, `identity_verified`, and `
 
 - feature precision is `1/2` because sentiment is a false discovery;
 - feature recall/completeness proxy is `1/3` because two causal features are missing;
-- randomizing the model weights should destroy the original attribution;
+- a weight-randomization control must first establish that the relevant computation or behavior changed; test whether the attribution responds to that change rather than assuming every randomization must destroy it;
 - flipping identity should cause the predicted decision change only on cases near the threshold;
 - intervening on sentiment should not change the decision.
 
