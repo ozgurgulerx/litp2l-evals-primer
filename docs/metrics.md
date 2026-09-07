@@ -101,6 +101,26 @@ The positive class must be named. For a release-blocking failure detector, a “
 
 Accuracy can be misleading under imbalance. A grader that predicts “safe” for all 990 safe and 10 unsafe items is 99% accurate and detects none of the unsafe cases.
 
+### Worked micro-kata: lower perplexity, worse service
+
+For a fixed reference token sequence, average next-token negative log-likelihood in natural-log units is `NLL = -sum(log(p_i))/N`; perplexity is `exp(NLL)`. It evaluates the probability assigned to the observed reference tokens under their preceding context. It does not grade whether a generated action is authorized or a customer's task is resolved.
+
+Consider an authored two-token example. Model A assigns reference-token probabilities `[0.5, 0.5]`; model B assigns `[0.25, 0.25]`. On a separate ten-case agent suite, A commits one unauthorized refund and B commits none.
+
+```python
+from math import exp, log
+
+for probabilities in ([0.5, 0.5], [0.25, 0.25]):
+    nll = -sum(log(p) for p in probabilities) / len(probabilities)
+    print(round(nll, 6), round(exp(nll), 6))
+# 0.693147 2.0
+# 1.386294 4.0
+```
+
+**Solution:** A has lower perplexity on this reference sequence but violates the agent suite's hard invariant. Do not let its lower language-model loss compensate for the unauthorized effect. The two measurements address different constructs, and ten cases with zero violations do not qualify B's population safety either.
+
+Report reference corpus/version, tokenizer, context windows, scored-token masking, conditional context and aggregation. Token-level perplexities across different tokenizers are not directly comparable because the prediction units differ. If token probabilities include zero, the corresponding unmodified log loss is infinite; disclose any numerical clipping instead of silently improving the score. These arrays are hypothetical and omit padding and context-window mechanics; the snippet assumes a nonempty list of valid positive probabilities. Lower perplexity can be useful for comparable language-modeling experiments without serving as a general assistant-quality metric. This answers F2 while keeping training loss, held-out language-model loss and application outcomes separate.
+
 ## Reference-based text metrics
 
 ### Exact match
