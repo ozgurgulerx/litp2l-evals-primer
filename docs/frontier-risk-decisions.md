@@ -19,6 +19,52 @@ The previous chapters explain how to measure behavior. This chapter asks how tha
 
 Do not multiply a benchmark pass rate, an unrelated misuse rate, and a monitor recall number into a “residual risk” probability. Such a calculation needs a causal model, compatible denominators, and justified conditional dependence assumptions. In the absence of those, retain the separate claims and their uncertainty.
 
+### Kata 98: identical component scores, one hundred times the failures
+
+**Scenario:** in a deliberately constructed population of 10,000 opportunities, 100 have a prohibited attempt (`A`) and 100 have a condition under which the safeguard would fail if challenged (`B`). For this toy model only, a consequential failure occurs exactly when both conditions hold. Every opportunity has both labels by construction; actual deployments rarely provide this counterfactual information.
+
+**Task:** compare three arrangements of the same labels. Does `P(A) × P(B) = 0.01 × 0.01` determine the failure rate?
+
+```python
+# kata98-start: synthetic finite populations, not estimated deployment risk
+population = frozenset(range(10_000))
+attempts = frozenset(range(100))
+failure_conditions = {
+    "disjoint": frozenset(range(100, 200)),
+    "product_overlap": frozenset({0, *range(100, 199)}),
+    "aligned": frozenset(range(100)),
+}
+for name, conditions in failure_conditions.items():
+    assert conditions <= population and len(conditions) == 100
+    escaped = len(attempts & conditions)
+    print(name, {"failures": escaped,
+                 "per_opportunity": escaped / len(population),
+                 "given_attempt": escaped / len(attempts)})
+assert [len(attempts & row) for row in failure_conditions.values()] == [0, 1, 100]
+# kata98-end
+```
+
+| Arrangement | Attempt marginal | Failure-condition marginal | Consequential failures / 10,000 | Safeguard failure given an attempt |
+| --- | ---: | ---: | ---: | ---: |
+| Disjoint | 1% | 1% | 0 | 0% |
+| Product-sized overlap | 1% | 1% | 1 | 1% |
+| Aligned | 1% | 1% | 100 | 100% |
+
+??? success "Solution: measure the conditional pathway"
+    The identity is `P(A and B) = P(A) × P(B given A)`. Replacing the conditional term with `P(B)` requires independence in the population being modeled. Multiplying the marginals predicts one failure in all three arrangements, but the aligned arrangement has one hundred. The middle arrangement has exactly the product-sized overlap by construction; it is not empirical evidence that real attempts and safeguard weaknesses are independent.
+
+    From these compatible marginals alone, the intersection lies between `max(0, P(A) + P(B) - 1)` and `min(P(A), P(B))`: here, zero to 1%, or zero to one hundred cases. Those are logical bounds for the specified population, not confidence intervals. If the two rates instead come from different tasks, populations or deployment configurations, even treating them as compatible marginals is an additional unsupported assumption.
+
+    A safeguard challenge set often measures failure **conditional on a challenge**, not a marginal over ordinary opportunities. Keep that denominator. To transport it to deployment attempts, establish that the challenge distribution represents the relevant attempts, including adaptive selection of weak cases, tool permissions and environment state. A balanced adversarial set cannot supply the field attempt rate, and missing or censored attempts are not known-safe cases.
+
+    Do not interpret the toy conjunction as a universal model of harm. In practice, successful attempts may still require access, downstream actions and affected people; consequences vary in severity and reversibility. Other pathways may bypass the modeled safeguard entirely. State the causal assumptions before assigning probabilities or aggregating losses.
+
+**Decision exercise:** an operator permits at most ten consequential failures per 10,000 opportunities under this illustrative policy. The product calculation would appear to satisfy it; the marginals alone do not establish compliance because the aligned arrangement violates it. Hold the requested expansion pending relevant joint-pathway evidence or independently enforced limits on consequences. Do not silently substitute a point estimate for the unresolved dependence.
+
+**What to collect next:** join attempt context, actual safeguard decision, completed effect and consequence under the same candidate, permissions and exposure scope. Retain no-attempt cases when estimating prevalence; retain challenged cases when estimating conditional effectiveness. Sample enough relevant opportunities for uncertainty analysis, and investigate common causes of both attempts and control failures. Link these measurements to the [containment experiment](#local-containment-test-the-write-boundary-not-just-the-alert) and [exposure budget](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent): neither a detection percentage nor a routing percentage proves a bound on completed effects.
+
+**Interview checkpoint:** distinguish a marginal from a conditional rate, a logical bound from a confidence interval, and a synthetic counterexample from an estimated real-world risk. No frontier-company safety claim or local deployment authorization follows from this exercise.
+
 ### What the frontier sources establish
 
 **Anthropic: capability thresholds can remain ambiguous.** Its February 2026 RSP discussion explains that models can pass readily available biological-knowledge tests while those tests establish neither a strong low-risk nor a strong high-risk conclusion. It describes precautionary safeguards and separates company mitigation plans from broader industry recommendations. The lesson is not to dismiss benchmarks; it is to state which link between measured capability and consequential risk remains unresolved. [Anthropic RSP v3 discussion](https://www.anthropic.com/news/responsible-scaling-policy-v3)

@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Frontier-risk dependence checkpoint — 7 September 2026
+
+[Kata 98](frontier-risk-decisions.md#kata-98-identical-component-scores-one-hundred-times-the-failures) adds executable depth to the existing six-claim safety-case framework. Three synthetic populations share the same attempt and failure-condition marginals but yield 0, 1 and 100 consequential failures. The solution derives the conditional probability identity and logical bounds, distinguishes challenge-set effectiveness from field prevalence, and applies an explicit illustrative expansion policy without pretending to estimate real harm.
+
+The published snippet executes with the stated results; independent review finds no mathematical or claim-scope blocker. Twelve book-example/link tests, strict build, dependency audit and desktop expanded-solution check pass. No runtime code, historical artifact or existing chapter content was removed. Actual joint-pathway evidence, independent human outcomes, live-model studies and deployment qualification remain open.
+
 ### Budget replay CI wiring checkpoint — 7 September 2026
 
 [Kata 97](exposure-control-lab.md#kata-97-the-packet-exists-but-did-ci-verify-it) connects fresh budget packet generation and verification to the conformance workflow. RED `aa50e75` detected the missing step; GREEN `2a4d40e` added both commands with explicit Bash execution. A structural regression checks unconditional execution, absence of error suppression, matching packet paths and always-run artifact retention. Ten targeted workflow/study tests and local fresh generation/replay pass; independent review found no blockers or added privilege. This closes dedicated workflow wiring, not observed cloud execution or required branch protection. The earlier full-suite result remains historical; this change does not modify runtime source.

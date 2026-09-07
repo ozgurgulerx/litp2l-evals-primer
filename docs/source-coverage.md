@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Dependence between attempts and safeguard failures
+
+[Kata 98](frontier-risk-decisions.md#kata-98-identical-component-scores-one-hundred-times-the-failures) turns the existing warning about multiplied risk scores into an executable finite-population counterexample. Identical 1% marginals permit zero, one or one hundred joint failures per 10,000 opportunities. The solution separates conditional effectiveness, compatible populations, logical bounds, sampling uncertainty and consequence assumptions. These are synthetic labels and exact arithmetic, not measured harmful propensity, frontier-company risk estimates or release qualification.
+
 ### Retained budgeted campaign replay
 
 [Kata 96](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) retains complete three-window execution evidence in a separately versioned budgeted packet. Fixed-builtin replay compares tool events, ledgers, namespaces, scope, budget accounting and controller decisions rather than trusting rehashed summaries. Only finite nonnegative trial timing is normalized. Exact source/interpreter matching deliberately limits portability; hashes and replay do not authenticate original execution. This closes the retained-packet follow-up below, not durable enforcement, actual model evaluation or deployment authority.
