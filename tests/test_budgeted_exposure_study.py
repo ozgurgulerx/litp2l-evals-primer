@@ -39,7 +39,13 @@ class BudgetedExposureStudyTests(unittest.TestCase):
 
     def test_retained_current_packet_replays(self):
         packet = json.loads(Path('docs/assets/budgeted-exposure-v1.json').read_text())
-        self.assertTrue(study.verify_study(packet))
+        inventory = study._inventory()
+        self.assertEqual(packet['source_inventory']['sources'], inventory['sources'])
+        if packet['source_inventory']['interpreter'] == inventory['interpreter']:
+            self.assertTrue(study.verify_study(packet))
+        else:
+            with self.assertRaisesRegex(ValueError, 'source inventory'):
+                study.verify_study(packet)
 
     def test_rehashed_semantic_mutations_fail_full_replay(self):
         mutations = (
@@ -79,7 +85,7 @@ class BudgetedExposureStudyTests(unittest.TestCase):
         packet = copy.deepcopy(self.packet)
         packet['windows'][0]['artifacts'][0]['baseline']['elapsed_ms'] = 123.0
         self.assertTrue(study.verify_study(rehash(packet)))
-        for value in (True, -1, float('inf'), float('nan'), 'fast'):
+        for value in (True, -1, float('inf'), float('nan'), 'fast', 10**400):
             packet = copy.deepcopy(self.packet)
             packet['windows'][0]['artifacts'][0]['baseline']['elapsed_ms'] = value
             with self.subTest(value=value), patch.object(study, 'execute_window') as execute:
@@ -106,6 +112,15 @@ class BudgetedExposureStudyTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             result = subprocess.run([*command, '--verify', str(output)], capture_output=True, text=True, check=False)
             self.assertEqual(result.returncode, 0, result.stderr)
+            with patch.object(sys, 'argv', ['study', '--output', str(output)]), patch.object(study, 'run_study') as run:
+                with self.assertRaises(SystemExit):
+                    study.main()
+                run.assert_not_called()
+
+    def test_cli_broken_symlink_output_rejected_before_execution(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'symlink.json'
+            output.symlink_to(Path(directory) / 'missing.json')
             with patch.object(sys, 'argv', ['study', '--output', str(output)]), patch.object(study, 'run_study') as run:
                 with self.assertRaises(SystemExit):
                     study.main()
