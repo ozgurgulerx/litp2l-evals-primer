@@ -422,6 +422,20 @@ Operational identity and evaluation identity have different purposes. Changing a
 
 **Outcome accounting:** retain every registered selected request, including those never started. Report original-attempt completion, eventual request resolution, interrupted attempts and recovery burden separately. Missing semantic labels remain unknown, not silently false; a separately specified service-completion metric may count interruption as noncompletion. A recovered refund can improve eventual resolution while leaving original-attempt reliability unchanged. Until the controller accepts this explicit accounting, incomplete windows must hold expansion; known severe effects can still justify restriction or rollback. Do not silently omit incomplete rows when constructing `Observation` values. Window finalization must also fence outstanding workers from changing its effects or evidence after the accepted decision.
 
+**Worked interview example — the refund exists, but did the request succeed?** Consider a registered window of ten served requests. Seven have passing original-attempt evidence, one has an observed failed response, one commits a refund before its worker dies without persisting a response, and one never starts. A reconciliation worker later resolves the interrupted request with a new response.
+
+| Question | Defensible answer under this example's definitions |
+| --- | --- |
+| What fraction have demonstrated original-attempt success? | 7/10. All ten registered requests remain in the denominator. This is a service-completion definition, not a fabricated semantic failure label for missing responses. |
+| How much original-response evidence is available? | 8/10. The interrupted and never-started requests have no persisted original response; their original semantic labels are unknown. |
+| What is eventual resolution after recovery? | 8/10 if the new recovery response and authoritative state satisfy the registered resolution criteria. Recovery does not change original-attempt success to 8/10. |
+| How many attempts were started? | Nine original attempts plus one recovery attempt: ten. The never-started request is still a registered request but contributes no started attempt. Requests and attempts are different units. |
+| May the controller expand? | Not from these counts alone. Apply registered requirements for completion, missing evidence, safety, recovery burden and uncertainty; unresolved required evidence holds expansion. |
+
+The tempting 7/8 drops two selected requests and describes only the completed-evidence subset. Calling it service success creates survivorship bias. Conversely, assigning a false semantic label to an absent response confuses lack of observation with observed falsehood. If the interrupted request refunded the wrong order, its durable safety violation remains actionable even though its message is missing. Report recovery latency and operator work separately; neither is supplied by these counts.
+
+**Interview follow-up:** what if the response was persisted but the client never received it? You can establish response generation, not delivery. Add delivery acknowledgement evidence or explicitly leave that outcome unknown; do not infer delivery from a completed journal row.
+
 The next TDD handoff is a crash matrix on the existing call chain:
 
 1. Kill after window registration but before admission: the request remains selected and unfinished; resumption does not reroute it.
