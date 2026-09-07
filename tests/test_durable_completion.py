@@ -1,18 +1,22 @@
 """Completion caching never invents recovery of an interrupted agent."""
 
 import multiprocessing
+import hashlib
+import json
 import sqlite3
 import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 from cx_eval_lab.durable_completion import CompletionJournal
 from cx_eval_lab.durable_world import DurableCampaign
+from cx_eval_lab.exposure_study import FaultInjectedCandidate
 from cx_eval_lab.order_resolution import DescriptiveResolver, example_cases
 
-POLICY = {'campaign_id': 'completion', 'max_actions': 2, 'currency_caps': {'USD': 8000}}
+POLICY = {'campaign_id': 'completion', 'max_actions': 2, 'currency_caps': {'USD': 8000, 'EUR': 9000}}
 MANIFEST = 'a' * 64
 
 
@@ -131,8 +135,9 @@ class CompletionTests(unittest.TestCase):
     def test_validation_and_existing_file_refusal(self):
         with self.assertRaises(ValueError):
             CompletionJournal.initialize(self.journal_path, self.campaign)
-        for namespace, digest, reverse in (('', MANIFEST, False), ('request', 'name-only', False),
-                                          ('request', MANIFEST, 1)):
+        invalid: list[Any] = [('', MANIFEST, False), ('request', 'name-only', False),
+                              ('request', MANIFEST, 1)]
+        for namespace, digest, reverse in invalid:
             with self.subTest(namespace=namespace, digest=digest), self.assertRaises(ValueError):
                 self.journal.execute(self.case, DescriptiveResolver(), namespace=namespace,
                                      manifest_digest=digest, reverse=reverse)
@@ -140,8 +145,65 @@ class CompletionTests(unittest.TestCase):
         self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
 
     def test_nonfinite_artifact_does_not_publish_completion(self):
-        with patch('cx_eval_lab.durable_completion.run_case', return_value={'elapsed_ms': float('nan')}):
-            with self.assertRaises(ValueError):
-                self.execute()
+        with (patch('cx_eval_lab.durable_completion.run_case', return_value={'elapsed_ms': float('nan')}),
+              self.assertRaises(ValueError)):
+            self.execute()
         self.assertEqual(self.journal.inspect('request')['status'], 'started')
 
+    def test_failed_agent_is_completed_evidence_not_success(self):
+        class FailedAgent(DescriptiveResolver):
+            def run(self, request, tools):
+                raise RuntimeError('unavailable')
+        agent = FailedAgent()
+        result = self.journal.execute(self.case, agent, namespace='request', manifest_digest=MANIFEST)
+        self.assertFalse(result['task_completed'])
+        self.assertIsNotNone(result['execution_error'])
+        self.assertEqual(self.journal.inspect('request')['status'], 'completed')
+        with patch('cx_eval_lab.durable_completion.run_case', side_effect=AssertionError('rerun')):
+            self.assertEqual(result, self.journal.execute(self.case, agent, namespace='request',
+                                                         manifest_digest=MANIFEST))
+
+    def test_campaign_replacement_schema_and_foreign_journal_are_rejected(self):
+        other = DurableCampaign.initialize(self.path.with_name('other.sqlite'), **POLICY)
+        with self.assertRaisesRegex(ValueError, 'binding'):
+            CompletionJournal.open(self.journal_path, other)
+        self.path.rename(self.path.with_name('old.sqlite'))
+        replacement = DurableCampaign.initialize(self.path, **POLICY)
+        with self.assertRaisesRegex(ValueError, 'binding'):
+            CompletionJournal.open(self.journal_path, replacement)
+        with self.assertRaisesRegex(ValueError, 'binding'):
+            self.execute()
+
+    def test_unavailable_journal_never_calls_runner(self):
+        self.journal_path.rename(self.journal_path.with_name('saved.sqlite'))
+        with (patch('cx_eval_lab.durable_completion.run_case', side_effect=AssertionError('fallback')),
+              self.assertRaises(ValueError)):
+            self.execute()
+        self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
+
+    def test_completion_write_failure_leaves_effect_and_incomplete(self):
+        with sqlite3.connect(self.journal_path) as db:
+            db.execute("CREATE TRIGGER fail_completion BEFORE UPDATE ON requests BEGIN "
+                       "SELECT RAISE(ABORT, 'injected disk failure'); END")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.execute()
+        self.assertEqual(self.campaign.snapshot()['charged_actions'], 1)
+        self.assertEqual(self.journal.inspect('request')['status'], 'started')
+        with self.assertRaisesRegex(ValueError, 'incomplete'):
+            self.execute()
+
+    def test_invalid_journal_schema_is_not_migrated(self):
+        with sqlite3.connect(self.journal_path) as db:
+            db.execute('PRAGMA user_version=2')
+        with self.assertRaisesRegex(ValueError, 'schema'):
+            CompletionJournal.open(self.journal_path, self.campaign)
+
+    def test_rehashed_artifact_cannot_claim_another_request(self):
+        result = self.execute()
+        result['agent'] = 'other-agent'
+        serialized = json.dumps(result, sort_keys=True, separators=(',', ':'), allow_nan=False)
+        with sqlite3.connect(self.journal_path) as db:
+            db.execute('UPDATE requests SET artifact=?, artifact_hash=?',
+                       (serialized, hashlib.sha256(serialized.encode()).hexdigest()))
+        with self.assertRaisesRegex(ValueError, 'binding'):
+            self.execute()
