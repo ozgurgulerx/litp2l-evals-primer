@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Ratings versus independent cases](human-evaluation.md#worked-micro-kata-four-hundred-ratings-are-not-four-hundred-cases) | Budget reviewer overlap without overstating independent evidence or precision. |
 | [Reviewer effects and treatment effects](human-evaluation.md#worked-micro-kata-separate-the-reviewer-from-the-treatment) | Explain why disconnected reviewer assignments cannot identify a model improvement. |
 | [The winner of twenty prompts](metrics.md#worked-micro-kata-the-winner-of-twenty-prompts) | Keep the tested family intact when selecting the best-looking result. |
 | [Semantic entropy and consistent errors](metrics.md#worked-micro-kata-different-words-same-uncertain-meaning) | Separate variation in wording, variation in meaning and verified truth. |

@@ -202,6 +202,21 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: human evaluation
+
+The H1–H8 source questions were checked against the following concrete teaching sections. These are educational coverage findings, not independent-human study results.
+
+| Source IDs | Worked teaching evidence | Scope |
+| --- | --- | --- |
+| H1–H2 | [Decision/task contrasts](human-evaluation.md#start-with-the-decision), [annotation specification](human-evaluation.md#artifact-annotation-specification), [weak-study redesign and solution](human-evaluation.md#exercise-repair-a-weak-study) | Defines construct, evidence, population, blinding, reviewer overlap and decision authority. |
+| H3 | [Anchored ordinal scale and pairwise alternatives](human-evaluation.md#choose-the-response-format) | Concrete scale and both-unacceptable counterexample; no universal superiority claim for either format. |
+| H4–H5 | [Eight-case pilot](human-evaluation.md#worked-example-eight-synthetic-cx-conversations), [Kata 72](human-evaluation.md#kata-72-did-agreement-improve-or-did-the-denominator-change), [adjudication record](human-evaluation.md#adjudication) | Item-level disagreement, exact nominal kappa calculation, missingness, rubric repair and preserved original labels. |
+| H6 | [Ratings-versus-cases planning calculation](human-evaluation.md#worked-micro-kata-four-hundred-ratings-are-not-four-hundred-cases) | Worked approximate precision and annotation-cost calculation; explicit independence, label-error and slice limitations. Not a general power calculator. |
+| H7 | [Reviewer qualification](human-evaluation.md#train-and-qualify-reviewers), [pilot H03/H06/H07](human-evaluation.md#worked-example-eight-synthetic-cx-conversations) | Distinguishes authoritative state, policy expertise, language ambiguity and subjective tone rather than declaring one reviewer universally correct. |
+| H8 | [Assignment-confounding control](human-evaluation.md#kata-73-a-reviewer-assignment-creates-a-model-advantage), [rater-effects model and solution](human-evaluation.md#worked-micro-kata-separate-the-reviewer-from-the-treatment) | Worked offset/treatment decomposition, disconnected-design non-identification and model-family cautions. No fitted empirical mixed-effects model is claimed. |
+
+This closes the H6/H8 worked-method gaps identified in this pass. It does not establish coverage of unrelated question families or replace actual reviewer qualification.
+
 ### Item-level teaching audit: calibration and statistics
 
 This pass checked the retained C1–C8 and S1–S8 questions against the teaching sections below. “Worked” means the cited section supplies concrete inputs and an explained result; it does not mean empirical qualification. The findings are limited to these sixteen questions.

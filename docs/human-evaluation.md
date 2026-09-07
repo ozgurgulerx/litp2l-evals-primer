@@ -89,6 +89,16 @@ A random sample estimates the dominant traffic distribution. It may almost never
 
 Always retain sampling weights when a deliberately balanced review set is used to estimate production prevalence. A set with 50% Turkish cases is excellent for comparison but should not be reported as the unweighted global failure rate if production is 8% Turkish.
 
+### Worked micro-kata: four hundred ratings are not four hundred cases
+
+Suppose the target is a binary outcome rate over independently sampled cases. As an initial planning approximation, a fixed-sample normal interval has half-width `z * sqrt(p*(1-p)/n)`. Using `z=1.96`, worst-case `p=0.5` and desired half-width `0.05` gives `n >= 1.96**2 * 0.25 / 0.05**2 = 384.16`, rounded up to **385 independent cases**. This is an approximate planning calculation, not a universally sufficient annotation budget or an exact interval guarantee.
+
+**Exercise:** the budget buys 400 ratings. Does assigning two reviewers to each of 200 cases meet this plan? What does the second review buy?
+
+**Solution:** no. Two reviews improve disagreement detection and may improve label quality under a valid adjudication protocol, but they do not double the number of independently sampled cases. Even assuming perfectly resolved binary labels, the worst-case approximate half-width at 200 cases is `1.96*sqrt(0.25/200) ≈ 0.0693`, or 6.93 percentage points. Two reviews for each of the planned 385 cases require 770 ratings before adjudication, training or quality-control overhead.
+
+The calculation ignores label error, reviewer effects, repeated customers, rare-event constraints and slice-specific precision. It also estimates one rate, not the power of a paired treatment comparison. Use pilot evidence to allocate case breadth, reviewer overlap and specialist review; register the appropriate uncertainty method and effective sampling unit. Do not meet a numerical target by counting adjudication as a new independent observation or by dropping unresolved labels. Budget separately for preserved disagreements and uncertain outcomes.
+
 ## Train and qualify reviewers
 
 Reviewer training should include:
