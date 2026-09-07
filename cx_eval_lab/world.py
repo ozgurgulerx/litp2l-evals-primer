@@ -5,15 +5,21 @@ from __future__ import annotations
 from dataclasses import replace
 from functools import wraps
 from threading import RLock
+from typing import TYPE_CHECKING, Callable
 from uuid import uuid4
 
 from cx_eval_lab.action_budget import ActionBudget
 from cx_eval_lab.models import RefundCase, RefundWorldSeed, ToolEvent, WorldSnapshot
 
+if TYPE_CHECKING:
+    from cx_eval_lab.durable_world import DurableCampaign
+
 
 def _serialized(method):
     @wraps(method)
     def invoke(self, *args, **kwargs):
+        if self._durable_campaign is not None:
+            return self._durable_campaign.invoke(self, method.__name__, *args, **kwargs)
         with self._lock:
             return method(self, *args, **kwargs)
     return invoke
@@ -27,7 +33,12 @@ class RefundWorld:
     """Authoritative state. The runner owns it; agents never receive this object."""
 
     def __init__(self, seed: RefundWorldSeed, *, action_budget: ActionBudget | None = None,
-                 execution_namespace: str | None = None) -> None:
+                 execution_namespace: str | None = None,
+                 durable_campaign: DurableCampaign | None = None) -> None:
+        if durable_campaign is not None and (action_budget is not None or execution_namespace is None):
+            raise ValueError('durable mode requires a fixed namespace and excludes in-memory budgets')
+        self._durable_campaign = durable_campaign
+        self._durable_effect_guard: Callable[[str, str], str | None] | None = None
         self._action_budget = action_budget
         self._lock = action_budget._lock if action_budget is not None else RLock()
         self.execution_namespace = uuid4().hex if execution_namespace is None else execution_namespace
@@ -37,6 +48,8 @@ class RefundWorld:
         self._initial_snapshot = WorldSnapshot()
         self._snapshot = self._initial_snapshot
         self._events: tuple[ToolEvent, ...] = ()
+        if durable_campaign is not None:
+            durable_campaign.register(self.execution_namespace, seed)
 
     @classmethod
     def from_case(cls, case: RefundCase) -> RefundWorld:
@@ -44,11 +57,22 @@ class RefundWorld:
 
     @property
     def snapshot(self) -> WorldSnapshot:
+        if self._durable_campaign is not None:
+            return self.durable_state()[0]
         return self._snapshot
 
     @property
     def events(self) -> tuple[ToolEvent, ...]:
+        if self._durable_campaign is not None:
+            return self.durable_state()[1]
         return self._events
+
+    def durable_state(self) -> tuple[WorldSnapshot, tuple[ToolEvent, ...]]:
+        """One consistent snapshot/events projection; separate getters may race."""
+        if self._durable_campaign is not None:
+            return self._durable_campaign.read_world(self.execution_namespace, self._seed)
+        with self._lock:
+            return self._snapshot, self._events
 
     @_serialized
     def reset(self) -> None:
@@ -93,6 +117,7 @@ class RefundWorld:
         )
         return verified
 
+    @_serialized
     def get_order(self, order_id: str) -> dict[str, int | str]:
         if order_id != self._seed.order_id:
             self._record("get_order", "not_found")
@@ -174,6 +199,7 @@ class RefundWorld:
             result = {**result, "approval_id": approval_id}
         return result
 
+    @_serialized
     def inspect_order_status(self, order_id: str) -> dict[str, int | bool]:
         if order_id != self._seed.order_id:
             self._record("inspect_order_status", "not_found")
@@ -213,6 +239,7 @@ class RefundWorld:
             return {"status": "blocked", "reason": authorization_failure}
         return self._commit_refund(order_id, idempotency_key)
 
+    @_serialized
     def _unsafe_issue_refund_for_test(
         self,
         order_id: str,
@@ -285,6 +312,12 @@ class RefundWorld:
             return {"status": "already_committed"}
 
         try:
+            if self._durable_effect_guard is not None:
+                reason = self._durable_effect_guard(order_id, idempotency_key)
+                if reason is not None:
+                    self._record('issue_refund', 'blocked_budget', reason=reason,
+                                 idempotency_key=idempotency_key)
+                    return {'status': 'blocked', 'reason': reason}
             if self._action_budget is not None:
                 reason = self._action_budget._consume(self.execution_namespace, order_id,
                     idempotency_key, self._seed.amount_cents, self._seed.currency)
