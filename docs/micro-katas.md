@@ -18,6 +18,145 @@ These first three katas exercise real defects found in the refund grader. They u
 
 [Katas 85–86](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) follow a real child-process timeout through partial evidence retention and distinguish candidate verdicts, conformance failure, upload eligibility and confirmed artifact storage. They do not authorize production deployment or claim durable recovery after runner loss.
 
+## Complete practice index
+
+All 98 numbered katas are linked below by topic. Numbers identify exercises; they are not prerequisites or a difficulty ranking. Use the [seven-checkpoint learning route](index.md#a-learning-route-with-evidence-checkpoints) for sequence, then return here to target a weak skill. The index includes both authored calculations and executed local studies: read each exercise's evidence limits before treating its result as a capability claim.
+
+For each attempt, save your prediction, result or calculation, explanation under one changed assumption, and remaining evidence gap. Mark your own work **not attempted**, **reproduced**, **explained**, or **unresolved**. These learning statuses are not qualifications or deployment permissions. Finish with the [capstone](capstone.md), not a count of opened solutions.
+
+### Contracts, execution evidence and object resolution
+
+| Kata | Exercise |
+| --- | --- |
+| 01 | [a trusted sentence that lies](#kata-01-a-trusted-sentence-that-lies) |
+| 02 | [the same message in a different situation](#kata-02-the-same-message-in-a-different-situation) |
+| 03 | [a point gain is not superiority evidence](#kata-03-a-point-gain-is-not-superiority-evidence) |
+| 04 | [recompute a grade, not just an average](#kata-04-recompute-a-grade-not-just-an-average) |
+| 21 | [remove the answer from the experiment](order-resolution-study.md#kata-21-remove-the-answer-from-the-experiment) |
+| 22 | [clarification must precede the consequential action](order-resolution-study.md#kata-22-clarification-must-precede-the-consequential-action) |
+| 23 | [a later success must not erase an earlier violation](order-resolution-study.md#kata-23-a-later-success-must-not-erase-an-earlier-violation) |
+| 32 | [reproduce yesterday without approving today](#kata-32-reproduce-yesterday-without-approving-today) |
+| 33 | [a current evaluator can grade a failed trial](#kata-33-a-current-evaluator-can-grade-a-failed-trial) |
+| 34 | [the version label did not change](#kata-34-the-version-label-did-not-change) |
+| 35 | [the IDs match but the case changed](#kata-35-the-ids-match-but-the-case-changed) |
+| 41 | [matching hashes, wrong evidence](evidence-spine.md#kata-41-matching-hashes-wrong-evidence) |
+| 42 | [a clean component cannot promote a weak experiment](evidence-spine.md#kata-42-a-clean-component-cannot-promote-a-weak-experiment) |
+| 43 | [a summary is not enough to reconstruct a decision](order-resolution-study.md#kata-43-a-summary-is-not-enough-to-reconstruct-a-decision) |
+| 44 | [an 8/8 control still cannot authorize deployment](order-resolution-study.md#kata-44-an-88-control-still-cannot-authorize-deployment) |
+| 45 | [four correct labels do not qualify a judge](order-resolution-study.md#kata-45-four-correct-labels-do-not-qualify-a-judge) |
+| 46 | [joint success and current qualification are different decisions](order-resolution-study.md#kata-46-joint-success-and-current-qualification-are-different-decisions) |
+| 49 | [matching a hash is not validating an input](evidence-spine.md#kata-49-matching-a-hash-is-not-validating-an-input) |
+| 50 | [successful replay is not permission for a new release](evidence-spine.md#kata-50-successful-replay-is-not-permission-for-a-new-release) |
+| 58 | [reconstruct one grade from its evidence](cx-evidence-walkthrough.md#kata-58-reconstruct-one-grade-from-its-evidence) |
+| 59 | [all trials pass—what may we release?](cx-evidence-walkthrough.md#kata-59-all-trials-passwhat-may-we-release) |
+| 64 | [the same failed-check name can mean different evidence](order-resolution-study.md#kata-64-the-same-failed-check-name-can-mean-different-evidence) |
+| 65 | [a useful retrospective slice is not a registered release requirement](order-resolution-study.md#kata-65-a-useful-retrospective-slice-is-not-a-registered-release-requirement) |
+
+### Datasets, human evidence and measurement qualification
+
+| Kata | Exercise |
+| --- | --- |
+| 08 | [zero errors, insufficient qualification](semantic-grading-lab.md#kata-08-zero-errors-insufficient-qualification) |
+| 09 | [false, unknown, and unqualified are different](semantic-grading-lab.md#kata-09-false-unknown-and-unqualified-are-different) |
+| 10 | [preserve the judge's evidence without changing the customer metric](semantic-grading-lab.md#kata-10-preserve-the-judges-evidence-without-changing-the-customer-metric) |
+| 18 | [reconstruct calibration from the labels](semantic-grading-lab.md#kata-18-reconstruct-calibration-from-the-labels) |
+| 19 | [disagreement cannot disappear into an aggregate](semantic-grading-lab.md#kata-19-disagreement-cannot-disappear-into-an-aggregate) |
+| 20 | [improve the dataset without contaminating qualification](semantic-grading-lab.md#kata-20-improve-the-dataset-without-contaminating-qualification) |
+| 36 | [a passing JSON verdict is not a usable judgment](semantic-grading-lab.md#kata-36-a-passing-json-verdict-is-not-a-usable-judgment) |
+| 37 | [timeout does not mean free—and token cost is not total cost](semantic-grading-lab.md#kata-37-timeout-does-not-mean-freeand-token-cost-is-not-total-cost) |
+| 47 | [a new evidence domain needs a new qualification scope](semantic-grading-lab.md#kata-47-a-new-evidence-domain-needs-a-new-qualification-scope) |
+| 48 | [an accounting pass is not a release pass](semantic-grading-lab.md#kata-48-an-accounting-pass-is-not-a-release-pass) |
+| 60 | [an approved review of the wrong case](dataset-design.md#kata-60-an-approved-review-of-the-wrong-case) |
+| 61 | [a new case ID does not make a fresh holdout](dataset-design.md#kata-61-a-new-case-id-does-not-make-a-fresh-holdout) |
+| 66 | [a correct final state can conceal a broken process](dataset-design.md#kata-66-a-correct-final-state-can-conceal-a-broken-process) |
+| 67 | [choose a repair without inventing prevalence](dataset-design.md#kata-67-choose-a-repair-without-inventing-prevalence) |
+| 70 | [recover the target population without hiding the risk slice](dataset-design.md#kata-70-recover-the-target-population-without-hiding-the-risk-slice) |
+| 71 | [a corrected point estimate still does not justify clearance](dataset-design.md#kata-71-a-corrected-point-estimate-still-does-not-justify-clearance) |
+| 72 | [did agreement improve, or did the denominator change?](human-evaluation.md#kata-72-did-agreement-improve-or-did-the-denominator-change) |
+| 73 | [a reviewer assignment creates a model advantage](human-evaluation.md#kata-73-a-reviewer-assignment-creates-a-model-advantage) |
+| 74 | [a stable slot label can hide an unstable judgment](llm-as-a-judge.md#kata-74-a-stable-slot-label-can-hide-an-unstable-judgment) |
+| 75 | [three votes can repeat one mistake](llm-as-a-judge.md#kata-75-three-votes-can-repeat-one-mistake) |
+| 82 | [a failed check must reach the decision](semantic-grading-lab.md#kata-82-a-failed-check-must-reach-the-decision) |
+| 90 | [choose the denominator before choosing the winner](calibration-decision-workshop.md#kata-90-choose-the-denominator-before-choosing-the-winner) |
+| 91 | [zero false passes is not evidence of a 1% ceiling](calibration-decision-workshop.md#kata-91-zero-false-passes-is-not-evidence-of-a-1-ceiling) |
+| 92 | [transport the error rates, not the headline accuracy](calibration-decision-workshop.md#kata-92-transport-the-error-rates-not-the-headline-accuracy) |
+
+### Statistical decisions and benchmark interpretation
+
+| Kata | Exercise |
+| --- | --- |
+| 05 | [thirty ties, unjustified certainty](statistical-method-study.md#kata-05-thirty-ties-unjustified-certainty) |
+| 06 | [two correct averages, two different questions](statistical-method-study.md#kata-06-two-correct-averages-two-different-questions) |
+| 07 | [more data, confidently wrong labels](statistical-method-study.md#kata-07-more-data-confidently-wrong-labels) |
+| 28 | [count first crossings, not marginal passes](sequential-decisions-lab.md#kata-28-count-first-crossings-not-marginal-passes) |
+| 29 | [build one valid sequential evidence process](sequential-decisions-lab.md#kata-29-build-one-valid-sequential-evidence-process) |
+| 30 | [optional-stopping validity does not repair bad data](sequential-decisions-lab.md#kata-30-optional-stopping-validity-does-not-repair-bad-data) |
+| 31 | [restarting a test is not free](sequential-decisions-lab.md#kata-31-restarting-a-test-is-not-free) |
+| 62 | [an overall improvement conceals a regression](metrics.md#kata-62-an-overall-improvement-conceals-a-regression) |
+| 63 | [missing support is not zero performance](metrics.md#kata-63-missing-support-is-not-zero-performance) |
+| 81 | [equal accuracy, different evidence](benchmark-reproducibility.md#kata-81-equal-accuracy-different-evidence) |
+| 94 | [zero ECE, no useful ranking](metrics.md#kata-94-zero-ece-no-useful-ranking) |
+
+### Retrieval, research and coding outcomes
+
+| Kata | Exercise |
+| --- | --- |
+| 51 | [the policy exists, but the query cannot find it](knowledge-action-study.md#kata-51-the-policy-exists-but-the-query-cannot-find-it) |
+| 52 | [oracle evidence cannot repair a bad tool argument](knowledge-action-study.md#kata-52-oracle-evidence-cannot-repair-a-bad-tool-argument) |
+| 53 | [do not turn constructed cases into a population claim](knowledge-action-study.md#kata-53-do-not-turn-constructed-cases-into-a-population-claim) |
+| 68 | [why did increasing top-k reduce packed evidence?](rag-research-evals.md#kata-68-why-did-increasing-top-k-reduce-packed-evidence) |
+| 69 | [repair packing without giving the retriever the answers](rag-research-evals.md#kata-69-repair-packing-without-giving-the-retriever-the-answers) |
+| 76 | [four citations do not establish five claims](rag-research-evals.md#kata-76-four-citations-do-not-establish-five-claims) |
+| 77 | [correct a false pass without rewriting history](rag-research-evals.md#kata-77-correct-a-false-pass-without-rewriting-history) |
+| 78 | [the missing claims are part of the result](long-report-study.md#kata-78-the-missing-claims-are-part-of-the-result) |
+| 79 | [covering the words is not splitting the claims](long-report-study.md#kata-79-covering-the-words-is-not-splitting-the-claims) |
+| 80 | [true premises can lead to an unsupported recommendation](long-report-study.md#kata-80-true-premises-can-lead-to-an-unsupported-recommendation) |
+| 87 | [two passing examples, an incomplete repair](coding-patch-study.md#kata-87-two-passing-examples-an-incomplete-repair) |
+| 88 | [right answer, wrong side effect—or changed examiner?](coding-patch-study.md#kata-88-right-answer-wrong-side-effector-changed-examiner) |
+| 89 | [when the acceptance test is wrong](coding-patch-study.md#kata-89-when-the-acceptance-test-is-wrong) |
+
+### Recovery, isolation and evaluation operations
+
+| Kata | Exercise |
+| --- | --- |
+| 11 | [kill after commit, before checkpoint](process-recovery-study.md#kata-11-kill-after-commit-before-checkpoint) |
+| 12 | [revoked authority versus historical fact](process-recovery-study.md#kata-12-revoked-authority-versus-historical-fact) |
+| 38 | [is an unknown bill free budget?](eval-operations-integrity.md#kata-38-is-an-unknown-bill-free-budget) |
+| 39 | [retry after the worker disappears](eval-operations-integrity.md#kata-39-retry-after-the-worker-disappears) |
+| 40 | [the cost report is incomplete—and so is the comparison](eval-operations-integrity.md#kata-40-the-cost-report-is-incompleteand-so-is-the-comparison) |
+| 56 | [the worker is new, but the state is not](cross-run-isolation-study.md#kata-56-the-worker-is-new-but-the-state-is-not) |
+| 57 | [blocking every read is not successful isolation](cross-run-isolation-study.md#kata-57-blocking-every-read-is-not-successful-isolation) |
+| 83 | [flush succeeded, evidence disappeared](telemetry-delivery-study.md#kata-83-flush-succeeded-evidence-disappeared) |
+| 84 | [feedback arrives before its trace](telemetry-delivery-study.md#kata-84-feedback-arrives-before-its-trace) |
+
+### CI, exposure and release authority
+
+| Kata | Exercise |
+| --- | --- |
+| 16 | [an expected rejection makes the test pass](ci-gate-lab.md#kata-16-an-expected-rejection-makes-the-test-pass) |
+| 17 | [why a green job must not start a canary](ci-gate-lab.md#kata-17-why-a-green-job-must-not-start-a-canary) |
+| 24 | [five percent is not a hard cap](exposure-control-lab.md#kata-24-five-percent-is-not-a-hard-cap) |
+| 25 | [missing labels cannot disappear from the denominator](exposure-control-lab.md#kata-25-missing-labels-cannot-disappear-from-the-denominator) |
+| 26 | [rollback is not containment or repair](exposure-control-lab.md#kata-26-rollback-is-not-containment-or-repair) |
+| 27 | [recovery needs stronger evidence than a single green window](exposure-control-lab.md#kata-27-recovery-needs-stronger-evidence-than-a-single-green-window) |
+| 85 | [a timeout is not a candidate BLOCK](ci-gate-lab.md#kata-85-a-timeout-is-not-a-candidate-block) |
+| 86 | [the upload step is not a durable experiment ledger](ci-gate-lab.md#kata-86-the-upload-step-is-not-a-durable-experiment-ledger) |
+| 93 | [a comparison is not evidence validation](checklist.md#kata-93-a-comparison-is-not-evidence-validation) |
+| 95 | [two refunds is not five percent](exposure-control-lab.md#kata-95-two-refunds-is-not-five-percent) |
+| 96 | [a hash is not a replay](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) |
+| 97 | [the packet exists, but did CI verify it?](exposure-control-lab.md#kata-97-the-packet-exists-but-did-ci-verify-it) |
+
+### Frontier risk and containment
+
+| Kata | Exercise |
+| --- | --- |
+| 13 | [write a bounded safety case](frontier-risk-decisions.md#kata-13-write-a-bounded-safety-case) |
+| 14 | [detection is not containment](frontier-risk-decisions.md#kata-14-detection-is-not-containment) |
+| 15 | [autonomy must be useful at the required reliability](frontier-risk-decisions.md#kata-15-autonomy-must-be-useful-at-the-required-reliability) |
+| 54 | [cancellation was acknowledged, but the worker wrote](frontier-risk-decisions.md#kata-54-cancellation-was-acknowledged-but-the-worker-wrote) |
+| 55 | [a working stop can still harm the service](frontier-risk-decisions.md#kata-55-a-working-stop-can-still-harm-the-service) |
+| 98 | [identical component scores, one hundred times the failures](frontier-risk-decisions.md#kata-98-identical-component-scores-one-hundred-times-the-failures) |
+
 ## Kata 01: a trusted sentence that lies
 
 **Know first:** transaction correctness and explanation correctness are separate evaluation surfaces. A registered message template establishes wording; its factual prerequisites establish whether that wording is true here.

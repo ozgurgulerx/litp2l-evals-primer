@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Complete practice navigation checkpoint — 7 September 2026
+
+The homepage now links a [complete topic-grouped practice index](micro-katas.md#complete-practice-index), preserving the earlier learning route and exercise explanations. A rendered-heading inventory found exactly 98 numbered katas, with no gaps or duplicate identifiers. The new seven-topic index links each once; all 98 anchors resolve in the built book. Numbers remain identifiers, not prerequisite or difficulty claims. Learners record predictions, results, changed-assumption explanations and unresolved evidence, then complete the existing capstone.
+
+Twelve book-example/link tests, strict build and dependency audit pass. Desktop review confirms seven readable tables without page overflow and a working cross-chapter link. This verifies navigation, not the depth or empirical validity of every exercise, mobile rendering, full curriculum completion or publication. Update the catalog when adding or moving a numbered kata.
+
 ### Frontier-risk dependence checkpoint — 7 September 2026
 
 [Kata 98](frontier-risk-decisions.md#kata-98-identical-component-scores-one-hundred-times-the-failures) adds executable depth to the existing six-claim safety-case framework. Three synthetic populations share the same attempt and failure-condition marginals but yield 0, 1 and 100 consequential failures. The solution derives the conditional probability identity and logical bounds, distinguishes challenge-set effectiveness from field prevalence, and applies an explicit illustrative expansion policy without pretending to estimate real harm.
