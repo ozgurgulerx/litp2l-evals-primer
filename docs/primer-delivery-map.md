@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Recovery lifecycle contract checkpoint — 7 September 2026
+
+The [recovery implementation contract](exposure-control-lab.md#recovery-implementation-contract-preserve-the-attempt-then-reconcile) makes stage 3 implementable without pretending that a committed refund reconstructs an agent session. It maps the current volatile transcript, response and window-membership seams to durable records; separates operational identity from versioned grading identity; requires action-boundary ownership fencing; and specifies eight real-process crash/race controls. Original-attempt completion, eventual resolution and recovery burden remain distinct outcomes.
+
+This is a source-grounded architecture and teaching addition, not a new runtime result. The first supported recovery procedure is explicitly separate deterministic reconciliation; arbitrary agent continuation remains unimplemented. Existing schema-2 behavior and historical packets are preserved. The next implementation starts with durable window/request registration and immutable attempt/completion evidence before controller recovery and a new process-level packet.
+
 ### Durable exposure wiring checkpoint — 7 September 2026
 
 [Kata 101](exposure-control-lab.md#kata-101-reopen-the-allowance-between-exposure-windows) completes stage 2: the optional durable backend traverses the existing exposure and multi-order runner into `RefundWorld`. Reopening between three windows preserves cumulative charges of 0, 2 and 2. Baseline and shadow remain isolated. All competing order evidence is read in one database transaction; before/after campaign balances are explicitly not per-request attribution.

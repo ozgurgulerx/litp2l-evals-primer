@@ -396,6 +396,47 @@ with TemporaryDirectory() as directory:
 
 **Open decisions before the recovery phase:** specify the supported agent continuation/checkpoint contract and the grader's treatment of a recovered response with an interrupted prior attempt. An arbitrary LLM session cannot be reconstructed from payment state alone. Steps 1–2 are implemented; the next handoff is step 3's explicit attempt/response/controller recovery contract and RED tests, not another detached study. Admission fencing alone does not satisfy that recovery contract.
 
+#### Recovery implementation contract: preserve the attempt, then reconcile
+
+**Design status, not implemented behavior.** Stages 1–2 above persist effects and fence admission. The next capability is recovery of the *same registered exposure window* after a worker dies, without replenishing allowance, losing selected requests, inventing responses or applying a controller decision twice. The operator owns the campaign database and process supervisor; candidate tools do not own recovery permissions.
+
+Source inspection identifies three distinct missing records. `MultiOrderWorld.invoke` retains clarification and action results only in `_events`; `run_case` returns the response and grade only after execution; `execute_window` constructs the window and its request membership in memory. Persisting more payment fields cannot recover these records.
+
+| Durable record | Immutable identity and contents | Recovery rule |
+| --- | --- | --- |
+| Window registration | Campaign, window identity, accepted controller predecessor, route/configuration digest and ordered request membership including baseline/shadow scopes | Register before execution. Changed membership, fault intervention or predecessor is a conflict, not a new run under the old identity. |
+| Request and attempt | Operational input digest, separate grading-specification/source identity, attempt number, worker ownership generation, start and terminal status | A retry links to the original request. It cannot delete a failed attempt or create a new denominator entry. |
+| Invocation journal | Attempt, sequence, method/arguments, invocation intent, observed result/error and any durable effect reference | Intent without an observed result means interrupted/unknown, not successful tool completion. Reconcile against authoritative effects before deciding whether another action is allowed. |
+| Completion evidence | Actual response or explicit absence, observed error, full transcript, consistent all-order snapshot and evidence hash | Atomically publish a complete immutable evidence record. Never synthesize the original customer's response from a refund row. |
+| Grade and controller decision | Evidence hash, grader/specification identity, complete request accounting, decision inputs, predecessor and resulting controller state | Regrading appends a distinct version. Applying the same accepted decision is idempotent; conflicting content or stale predecessor is rejected. |
+
+Operational identity and evaluation identity have different purposes. Changing an expected answer must not authorize another refund. It may authorize a separately versioned regrade of retained evidence. Changing the customer request, object binding or experiment intervention must fail the original registration check.
+
+**First supported recovery mode:** an evaluator-owned deterministic reconciliation procedure, visibly separate from the interrupted agent. It may inspect authoritative order status and produce a *new*, linked recovery response. It does not resume an arbitrary Python stack or LLM session. The interrupted attempt remains incomplete; the recovery attempt records its own observations, elapsed time and result. A later provider adapter must supply an explicit continuation contract, including context, approvals, tool-call identities and usage accounting, before it can claim agent resumption.
+
+**Ownership is an action-boundary check.** A timeout or expired lease alone does not prove an old worker stopped. Before takeover, either prove the supervised local process terminated or advance a durable ownership generation that every consequential action checks inside the same transaction as its effect. A stale worker must also be unable to publish a response or grade. A generation field checked only when admission starts does not fence a worker already executing. Remote provider cancellation remains a separate, unqualified boundary.
+
+**Do not splice histories.** If the process dies after the SQLite commit but before `MultiOrderWorld.invoke` appends a result, the evidence contains a committed effect and an interrupted invocation. Keep both facts. A later status lookup may establish that the refund exists, but cannot retroactively establish that the first agent received its result. Likewise, a durable response followed by a grading crash permits regrading, not rerunning the agent.
+
+**Persistence is not delivery.** A saved response establishes durable generation, not receipt by the customer. Keep delivery untested in this mock unless a separate acknowledgement/idempotent-delivery protocol is implemented. Reopening completed evidence may return the identical saved response without rerunning tools, but cannot establish exactly-once customer delivery.
+
+**Outcome accounting:** retain every registered selected request, including those never started. Report original-attempt completion, eventual request resolution, interrupted attempts and recovery burden separately. Missing semantic labels remain unknown, not silently false; a separately specified service-completion metric may count interruption as noncompletion. A recovered refund can improve eventual resolution while leaving original-attempt reliability unchanged. Until the controller accepts this explicit accounting, incomplete windows must hold expansion; known severe effects can still justify restriction or rollback. Do not silently omit incomplete rows when constructing `Observation` values. Window finalization must also fence outstanding workers from changing its effects or evidence after the accepted decision.
+
+The next TDD handoff is a crash matrix on the existing call chain:
+
+1. Kill after window registration but before admission: the request remains selected and unfinished; resumption does not reroute it.
+2. Kill after admission or clarification intent/result: retain the attempt and any observed customer reply; do not silently restart a fresh clarification transcript.
+3. Kill after refund commit but before tool result or response persistence: exactly one effect remains charged; original completion is unknown and recovery is separately recorded.
+4. Kill after response persistence but before grading: reconstruct the grade from retained evidence without calling the candidate again.
+5. Kill after grading but before controller update, then after update but before acknowledgement: one predecessor transition is accepted; replay returns the same accepted decision.
+6. Race takeover with the old worker's next action and completion publication: only the current owner can act or finish; capacity and authorization remain enforced in that same transaction.
+7. Change input, policy, grading identity, source inventory or window membership independently: reject execution conflicts; permit only explicitly versioned evidence regrading where appropriate.
+8. Compare uninterrupted and killed/recovered runs: preserve effects and request membership, while reporting—not erasing—the additional attempts, missing replies and recovery workload.
+
+Each kill test must use a real process and an explicit barrier at the intended boundary, not a supplied `crashed=True` observation. Keep the current schema-2 mode and historical packets unchanged; introduce a separately versioned recovery schema/API with explicit refusal of unsupported migrations. No existing study should acquire recovery claims merely because its database can reopen.
+
+**Handoff:** implement window/request registration and immutable attempt/completion storage first, then action-boundary ownership and deterministic reconciliation, then atomic controller acceptance. Publish a new process-level evidence packet and only then add generation/replay to CI. Full agent continuation, independent human qualification and production deployment remain separate acceptance requirements.
+
 The following is the application deployment handoff, **not an installed integration**:
 
 1. **Build and identify:** pin application image, model, prompt, tools, policy and harness. Verify deployed identities against the evaluated candidate and rollback target.
