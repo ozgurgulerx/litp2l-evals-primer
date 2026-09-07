@@ -59,7 +59,7 @@ class ReferenceSupportAgent:
             approval = {"approval_id": None}
 
         try:
-            tools.issue_refund(
+            result = tools.issue_refund(
                 request.order_id,
                 int(order["amount_cents"]),
                 str(order["currency"]),
@@ -70,6 +70,8 @@ class ReferenceSupportAgent:
                 ),
                 idempotency_key=f"refund:{request.order_id}",
             )
+            if result.get("status") not in {"committed", "already_committed"}:
+                return self._output("I could not confirm the refund.", "needs_review")
         except ToolTimeout:
             status = tools.inspect_order_status(request.order_id)
             if not status["refunded"]:
