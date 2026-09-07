@@ -165,6 +165,30 @@ class DurableWorldTests(unittest.TestCase):
         self.assertEqual(world.durable_state(), before)
         self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
 
+    def test_internal_expected_error_types_do_not_commit_partial_effect(self):
+        world = self.world()
+        tools = authorize(world)
+        before = world.durable_state()
+        for error in (ValueError, PermissionError, ToolTimeout):
+            with self.subTest(error=error.__name__):
+                with patch.object(RefundWorld, '_record', side_effect=error('internal recorder failure')), self.assertRaises(error):
+                    refund(tools)
+                self.assertEqual(world.durable_state(), before)
+                self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
+
+    def test_error_after_sql_writes_rolls_back_state_effect_and_event(self):
+        world = self.world()
+        tools = authorize(world)
+        before = world.durable_state()
+        original = DurableCampaign._save
+        def fail_after_write(campaign, *args):
+            original(campaign, *args)
+            raise RuntimeError('failed before commit')
+        with patch.object(DurableCampaign, '_save', fail_after_write), self.assertRaises(RuntimeError):
+            refund(tools)
+        self.assertEqual(world.durable_state(), before)
+        self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
+
     def test_two_processes_compete_for_final_campaign_unit(self):
         context = multiprocessing.get_context('spawn')
         barrier, queue = context.Barrier(3), context.Queue()
