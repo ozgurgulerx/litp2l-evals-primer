@@ -20,7 +20,7 @@ These first three katas exercise real defects found in the refund grader. They u
 
 ## Complete practice index
 
-All 104 numbered katas are linked below by topic. Numbers identify exercises; they are not prerequisites or a difficulty ranking. Use the [seven-checkpoint learning route](index.md#a-learning-route-with-evidence-checkpoints) for sequence, then return here to target a weak skill. The index includes both authored calculations and executed local studies: read each exercise's evidence limits before treating its result as a capability claim.
+All 105 numbered katas are linked below by topic. Numbers identify exercises; they are not prerequisites or a difficulty ranking. Use the [seven-checkpoint learning route](index.md#a-learning-route-with-evidence-checkpoints) for sequence, then return here to target a weak skill. The index includes both authored calculations and executed local studies: read each exercise's evidence limits before treating its result as a capability claim.
 
 For each attempt, save your prediction, result or calculation, explanation under one changed assumption, and remaining evidence gap. Mark your own work **not attempted**, **reproduced**, **explained**, or **unresolved**. These learning statuses are not qualifications or deployment permissions. Finish with the [capstone](capstone.md), not a count of opened solutions.
 
@@ -151,6 +151,7 @@ For each attempt, save your prediction, result or calculation, explanation under
 | 102 | [the charge survived, the response did not](exposure-control-lab.md#kata-102-the-charge-survived-the-response-did-not) |
 | 103 | [keep the cohort when the worker disappears](exposure-control-lab.md#kata-103-keep-the-cohort-when-the-worker-disappears) |
 | 104 | [do not lose the request when completion is missing](exposure-control-lab.md#kata-104-do-not-lose-the-request-when-completion-is-missing) |
+| 105 | [the controller committed, but its acknowledgement was lost](exposure-control-lab.md#kata-105-the-controller-committed-but-its-acknowledgement-was-lost) |
 
 ### Frontier risk and containment
 

@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable controller acceptance checkpoint — 7 September 2026
+
+Kata 105 adds atomic persistence around the existing simulation state machine: complete predecessor comparison, immutable decision-input binding, receipt replay and state/receipt commit in one transaction. RED `7daffc0` preceded implementation. Twenty-five focused controller/state-machine tests pass with 87% combined statement/branch coverage for the new module; lint and type checks pass. Real processes exercise contention and post-commit loss, and a SQL trigger verifies rollback after receipt insertion. No additional research or full-suite rerun was needed.
+
+Remaining integration criteria are qualified observation ingestion tied to registered membership, action-boundary fencing and interrupted-attempt recovery, then a retained end-to-end process packet and CI wiring. The controller-local transaction does not close these requirements or the separately blocked human/model/deployment qualification requirements.
+
 ### Joined window evidence checkpoint — 7 September 2026
 
 Kata 104 joins registered membership to served-candidate completion evidence and observed order state. Integration `74be89a` preserves all forty members, distinguishes missing records from missing completion, retains unknown labels and exposes wrong-order effects after a real process kill. Completion batches and world batches each use one transaction; there is no cross-database atomic snapshot or controller decision. Optional execution journals served candidates only; repeating it can reuse candidate evidence while rerunning baseline controls, not create independent trials.

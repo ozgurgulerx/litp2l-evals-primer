@@ -387,6 +387,21 @@ The caller must supply a manifest digest covering agent configuration, source an
 
 ### Durable campaign integration contract
 
+#### Kata 105: the controller committed, but its acknowledgement was lost
+
+```sh
+uv run python -m unittest tests.test_durable_controller -v
+```
+
+**Predict:** two controller processes receive different decision IDs but the same predecessor. May both advance it? What should happen when a worker dies after committing a decision but before acknowledging it?
+
+??? success "Solution: one atomic decision, replayable acknowledgement"
+    `DurableController` applies the existing simulation `transition` inside a SQLite write transaction. It stores the full inputs, returned decision and new state together. Two competing processes cannot both accept a changed predecessor. After the post-commit process kill, retrying the same decision ID and exact inputs returns its retained receipt without running the transition again.
+
+    Compare the full predecessor, not just its revision: a missing-label hold can change pending-cohort state without incrementing revision. The tests cover that case and inject a state-update failure after receipt insertion, proving that both writes roll back.
+
+This closes controller-local atomic acceptance, not the complete application release path. Observations remain caller-supplied; the controller does not qualify their evidence, consume the diagnostic join automatically, fence active agents or persist an interrupted agent's continuation. Receipt replay is historical acknowledgement, not permission to act under an old state. The database refuses incompatible direct controller/state-machine source changes; it is trusted local storage, not authenticated or portable provenance. Every returned decision retains `deployment_authorized=False`.
+
 #### Kata 103: keep the cohort when the worker disappears
 
 **Predict:** a window worker saves its plan and dies before the first baseline or candidate runs. Which facts should survive, and how many effects should be charged?

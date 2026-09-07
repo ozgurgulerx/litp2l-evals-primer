@@ -18,7 +18,7 @@ If you are arriving with a decision to make, use three questions:
 - **What evidence do I have?** Inspect the [Evidence Spine](evidence-spine.md), [executed studies](system-studies.md), and [Source Coverage Ledger](source-coverage.md).
 - **What does it justify?** Use [Release Gates](checklist.md) for application exposure and [Frontier Risk Decisions](frontier-risk-decisions.md) for the wider claim–evidence–safeguard argument.
 
-The four-part reading order remains below. The [complete practice index](micro-katas.md#complete-practice-index) links all 104 numbered katas by topic; the [delivery map](primer-delivery-map.md) distinguishes implemented material from remaining work.
+The four-part reading order remains below. The [complete practice index](micro-katas.md#complete-practice-index) links all 105 numbered katas by topic; the [delivery map](primer-delivery-map.md) distinguishes implemented material from remaining work.
 
 <div class="chapter-grid" markdown>
 
