@@ -103,7 +103,7 @@ class DurableExposureTests(unittest.TestCase):
                                         ('clarification', DescriptiveResolver(), example_cases()[-1])]:
             first = self.run_case(namespace, agent, case)
             self.assertEqual(sum(order['state']['refund_transaction_count'] for order in first['orders']), 0)
-            with self.subTest(namespace=namespace), patch.object(type(agent), 'run') as execute:
+            with self.subTest(namespace=namespace), patch.object(type(agent), 'run', wraps=agent.run) as execute:
                 with self.assertRaisesRegex(ValueError, 'prior execution evidence'):
                     self.run_case(namespace, agent, case)
                 execute.assert_not_called()

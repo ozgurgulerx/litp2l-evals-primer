@@ -10,7 +10,7 @@ from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
 from cx_eval_lab.evidence import canonical_hash
-from cx_eval_lab.models import AgentOutput, RefundAgentInput, RefundWorldSeed, WorldSnapshot
+from cx_eval_lab.models import AgentOutput, RefundAgentInput, RefundWorldSeed
 from cx_eval_lab.world import RefundWorld
 
 
@@ -121,12 +121,13 @@ class MultiOrderWorld:
                                                        for world in self._worlds.values()})
         return {world.execution_namespace: world.durable_state() for world in self._worlds.values()}
 
-    def require_fresh_evidence(self):
-        """One trusted runner per namespace; this is not a concurrent request claim."""
-        if self._durable_campaign is not None and any(
-            state != WorldSnapshot() or events for state, events in self._states().values()
-        ):
-            raise ValueError('prior execution evidence requires an explicit durable attempt recovery contract')
+    def admit_request(self, case, reverse, namespace):
+        if self._durable_campaign is not None:
+            request_hash = canonical_hash({'case_id': case.case_id, 'request': asdict(case.request),
+                'orders': [asdict(order) for order in case.orders], 'clarification_reply': case.clarification_reply,
+                'reverse': reverse})
+            self._durable_campaign.admit_request(namespace, request_hash,
+                {world.execution_namespace: world._seed for world in self._worlds.values()})
 
     def invoke(self, method, *args):
         try:
@@ -231,7 +232,7 @@ def run_case(case, agent, *, reverse=False, action_budget=None, execution_namesp
     durable_before = durable_campaign.snapshot() if durable_campaign is not None else None
     world = MultiOrderWorld(case, reverse, action_budget=action_budget,
                             execution_namespace=execution_namespace, durable_campaign=durable_campaign)
-    world.require_fresh_evidence()
+    world.admit_request(case, reverse, execution_namespace)
     started = time.perf_counter()
     error = None
     try:
@@ -248,7 +249,8 @@ def run_case(case, agent, *, reverse=False, action_budget=None, execution_namesp
                                     'execution_namespace': execution_namespace,
                                     'before': durable_before, 'after': durable_campaign.snapshot(),
                                     'snapshot_semantics': 'campaign_observation_not_case_attribution',
-                                    'trajectory_scope': 'fresh_namespace_single_trusted_runner'}}
+                                    'trajectory_scope': 'single_admitted_attempt_no_resume',
+                                    'admission': 'durable_unique_request_start'}}
                if durable_campaign is not None else {}),
             'case': asdict(case), 'agent': agent.name, 'reverse': reverse,
             'agent_input': asdict(case.request), 'orders': orders, 'tool_events': list(world._events),

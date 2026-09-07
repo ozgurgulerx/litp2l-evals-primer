@@ -5,6 +5,7 @@ events and refund effects become authoritative together at SQLite COMMIT.
 """
 
 import json
+import re
 import sqlite3
 from contextlib import closing, contextmanager
 from dataclasses import asdict, dataclass, replace
@@ -18,7 +19,8 @@ CURRENCIES = frozenset({'USD', 'EUR', 'GBP'})
 OPERATIONS = frozenset({'verify_identity', 'get_order', 'consult_refund_policy',
     'request_refund_approval', 'inspect_order_status', 'issue_refund',
     '_unsafe_issue_refund_for_test', '_invalidate_policy_for_test', '_commit_refund'})
-TABLES = frozenset({'campaign', 'worlds', 'effects', 'events'})
+TABLES = frozenset({'campaign', 'worlds', 'effects', 'events', 'request_starts'})
+SCHEMA_VERSION = 2
 
 
 def _json(value):
@@ -104,7 +106,7 @@ class DurableCampaign:
             pass
         with closing(campaign._connect()) as db, db:
             db.execute('BEGIN IMMEDIATE')
-            db.execute('PRAGMA user_version=1')
+            db.execute('PRAGMA user_version=2')
             db.execute('CREATE TABLE campaign (campaign_id TEXT PRIMARY KEY, policy TEXT NOT NULL)')
             db.execute('CREATE TABLE worlds (namespace TEXT PRIMARY KEY, seed TEXT NOT NULL, state TEXT NOT NULL)')
             db.execute('CREATE TABLE effects (sequence INTEGER PRIMARY KEY, namespace TEXT NOT NULL REFERENCES worlds(namespace), '
@@ -112,6 +114,8 @@ class DurableCampaign:
                        'unsafe INTEGER NOT NULL, UNIQUE(namespace, idempotency_key))')
             db.execute('CREATE TABLE events (namespace TEXT NOT NULL REFERENCES worlds(namespace), sequence INTEGER NOT NULL, '
                        'tool TEXT NOT NULL, status TEXT NOT NULL, details TEXT NOT NULL, PRIMARY KEY(namespace, sequence))')
+            db.execute("CREATE TABLE request_starts (namespace TEXT PRIMARY KEY, request_hash TEXT NOT NULL, "
+                       "status TEXT NOT NULL CHECK(status='started'))")
             db.execute('INSERT INTO campaign VALUES (?, ?)', (campaign.campaign_id, campaign._policy))
         return campaign
 
@@ -136,7 +140,7 @@ class DurableCampaign:
         with closing(self._connect()) as db, db:
             db.execute('BEGIN IMMEDIATE' if write else 'BEGIN')
             tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-            if not TABLES <= tables or db.execute('PRAGMA user_version').fetchone()[0] != 1:
+            if not TABLES <= tables or db.execute('PRAGMA user_version').fetchone()[0] != SCHEMA_VERSION:
                 raise ValueError('durable campaign schema mismatch')
             rows = db.execute('SELECT campaign_id, policy FROM campaign').fetchall()
             if len(rows) != 1 or tuple(rows[0]) != (self.campaign_id, self._policy):
@@ -174,6 +178,26 @@ class DurableCampaign:
         """Project all requested worlds/events from one shared read transaction."""
         with self._transaction() as db:
             return {namespace: self._load(db, namespace, seed) for namespace, seed in bindings.items()}
+
+    def admit_request(self, namespace, request_hash, bindings):
+        """Fence one high-level execution, including zero-tool attempts; no resume.
+
+        The marker is durable even if the process dies before its first tool call.
+        This is admission only, not a recovered trajectory or controller checkpoint.
+        """
+        _identifier(namespace)
+        if not isinstance(request_hash, str) or re.fullmatch(r'sha256:[0-9a-f]{64}', request_hash) is None:
+            raise ValueError('canonical operational request digest required')
+        with self._transaction(write=True) as db:
+            previous = db.execute('SELECT request_hash FROM request_starts WHERE namespace=?', (namespace,)).fetchone()
+            if previous is not None:
+                if previous['request_hash'] != request_hash:
+                    raise ValueError('request namespace conflicts with immutable operational input')
+                raise ValueError('prior execution evidence or request admission prevents reexecution')
+            states = [self._load(db, world_namespace, seed) for world_namespace, seed in bindings.items()]
+            if any(state != WorldSnapshot() or events for state, events in states):
+                raise ValueError('prior execution evidence requires an explicit durable attempt recovery contract')
+            db.execute("INSERT INTO request_starts VALUES (?, ?, 'started')", (namespace, request_hash))
 
     def _balance(self, db):
         policy = json.loads(self._policy)
