@@ -67,6 +67,16 @@ OpenAI's [skill-evaluation guidance](https://developers.openai.com/blog/eval-ski
 
 Measure selection precision/recall, abstention, instruction version, execution success, tool-side effects, and incremental token/latency cost.
 
+### Worked micro-kata: successful selection, failed capability
+
+A synthetic 20-request test set contains 12 requests requiring a refund skill and eight requiring no skill. The selector activates on ten required requests and two irrelevant requests. Of the ten correct activations, eight load the current procedure; six of those eight execute correctly. No successful execution is assumed for the other branches.
+
+**Exercise:** report selection precision/recall, version correctness, execution success and complete capability success. Can the team advertise “75% reliable”?
+
+**Solution:** selection precision is `10/12 = 83.3%`; recall is `10/12 = 83.3%`. The equal numbers have different denominators: all activations versus all required activations. Correct non-activation is `6/8 = 75%`; overall selection accuracy is `(10+6)/20 = 80%`. Current-version loading among correct selections is `8/10 = 80%`. Execution success conditional on correct selection and loading is `6/8 = 75%`, but complete success on required requests is only `6/12 = 50%`. The six required-request failures partition into two missed activations, two stale loads and two execution failures. Report the two irrelevant activations separately, including any side effects; do not mark them safe merely because they are outside the required-request denominator.
+
+For an actual run, derive these labels from the request's reviewed trigger contract, selected skill identifier, loaded bytes/version and authoritative execution outcome. Preserve missing loader records as unknown rather than silently counting them as current. Counterbalance competing skill order and include implicit requests and untrusted-text triggers. This arithmetic is an authored exercise, not a measured skill-loader result.
+
 ## Voice and multimodal workflows
 
 Text transcripts erase timing. A voice evaluation record needs an audio-event timeline:
@@ -82,7 +92,15 @@ events:
 decision: fail_premature_action
 ```
 
-The transcript may contain the correct final identifier and a successful refund, yet the action is unsafe because it began 300 ms before the customer finished correcting the order number.
+The transcript may contain the correct final identifier and a successful refund, yet the action violates a contract requiring this correction to finish before action: the supplied timestamps put its start 300 ms before speech ends. Speech completion alone is not authorization; that requires its own verified identity, policy and confirmation evidence.
+
+### Worked micro-kata: the clocks cannot decide
+
+Suppose the action timestamp is `3900 ± 250 ms` and the correction-end annotation is `4200 ± 250 ms`, with both intervals expressed on a common clock. Treat the intervals as supplied bounds, not independently measured confidence intervals. Is the action certainly premature?
+
+**Solution:** action time is in `[3650, 4150]`; correction end is in `[3950, 4450]`. The possible action-minus-end difference is `[-800, +200] ms`. Both early and late orderings fit, so classify temporal ordering as **indeterminate**, not safe or conclusively premature. At ±50 ms the difference is `[-400, -200] ms`, establishing early ordering under those bounds. Neither result measures detector accuracy or proves that the action had valid authorization.
+
+Retain original audio, clock synchronization records, timestamp semantics (queued, sent, accepted or committed), human annotation intervals and tool acknowledgements. Predeclare which event the contract constrains. A queued operation cancelled before commit differs from an irreversible action already committed. In text-versus-voice comparisons, use matched tasks and the same authorization policy; report uncertain timing and missing audio separately rather than dropping difficult calls.
 
 ### Voice test matrix
 
