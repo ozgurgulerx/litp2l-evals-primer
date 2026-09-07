@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Uncertainty wording and judge validity](llm-as-a-judge.md#micro-kata-uncertainty-wording-is-not-answer-correctness) | Separate verdict flips, false acceptance and false rejection from confidence and tone. |
 | [Adaptive item selection and mandatory safety](research-to-practice.md#micro-kata-the-most-informative-item-is-not-the-whole-release-suite) | Calculate item information without letting efficiency bypass the safety suite. |
 | [Accurate judgments, reversed ranking](llm-as-a-judge.md#micro-kata-accurate-judgments-can-reverse-a-system-ranking) | Qualify system selection separately from pooled answer-label accuracy. |
 | [Trajectory comparison contracts](agent-evals.md#micro-kata-choose-the-trajectory-comparison-contract) | Explain false passes from subset/superset matching and the limits of strict matching. |

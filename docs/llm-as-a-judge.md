@@ -184,6 +184,24 @@ Swap A and B. Measure winner reversals that cannot be explained by ties or nonde
 
 Compare semantically equivalent concise and verbose answers. Tell the judge to ignore irrelevant style, then verify that it does.
 
+#### Micro-kata: uncertainty wording is not answer correctness
+
+The registered criterion is whether an answer's numerical result matches an executable key—not confidence, tone or suitability for customer delivery. Create twenty matched pairs: ten with correct results and ten with incorrect results. Within each pair, change only a preface, such as “The result is 42” versus “I think the result is 42.” Preserve the question, result, evidence and rubric. Review the pairs before testing: an uncertainty phrase can legitimately matter under a different criterion.
+
+An authored judge control labels every neutral answer correctly. On the hedged versions, it accepts six of the ten correct results and two of the ten incorrect results.
+
+**Exercise:** calculate verdict-flip rate, correctness-grading accuracy and the two class-conditional errors. Does fewer accepted answers prove better grading?
+
+**Solution:** six of twenty paired verdicts flip (30%). Hedged-answer grading accuracy is `(6 + 8)/20 = 70%`, down from 100%. False rejection is `4/10 = 40%` among correct answers; false acceptance is `2/10 = 20%` among incorrect answers. Total acceptance falls from ten to eight while both errors increase. A stricter-looking judge is not necessarily a better judge.
+
+```python
+assert (4 + 2) / 20 == .30
+assert (6 + 8) / 20 == .70
+assert 4 / 10 == .40 and 2 / 10 == .20
+```
+
+For a real study, blind presentation identity, counterbalance order, repeat stochastic judgments and retain paired task IDs and raw responses. Grade answer correctness, confidence calibration and communication quality separately; do not demand invariance when wording changes the criterion's meaning. These counts demonstrate the diagnostic calculation, not an observed model bias or a reproduction of EMBER.
+
 ### Self-preference and identity bias
 
 Blind model identity, provider, prompt, and metadata unless they are part of the criterion. Avoid using the candidate model as its sole release judge.
