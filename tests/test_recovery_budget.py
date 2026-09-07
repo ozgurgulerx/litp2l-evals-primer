@@ -36,6 +36,12 @@ class RecoveryBudgetTests(unittest.TestCase):
         with closing(worker.connect(self.path)) as db, db:
             db.execute('INSERT OR REPLACE INTO approvals VALUES (?, ?, ?, 1)', (order, amount, currency))
 
+    def budget(self, path=None):
+        state = worker.budget_snapshot(self.path if path is None else path)
+        if state is None:
+            raise AssertionError('test requires a configured campaign')
+        return state
+
     def test_policy_count_and_currency_boundaries_are_persisted(self):
         self.initialize(3, {'USD': 4000, 'EUR': 4500})
         self.approve('eur', 4500, 'EUR')
@@ -46,7 +52,7 @@ class RecoveryBudgetTests(unittest.TestCase):
         self.assertEqual(worker.issue_payment(self.path, 'eur', 'eur', 4500, 'EUR'), 'committed')
         with self.assertRaisesRegex(PermissionError, 'currency_unregistered'):
             worker.issue_payment(self.path, 'gbp', 'gbp', 1, 'GBP')
-        state = worker.budget_snapshot(self.path)
+        state = self.budget()
         self.assertEqual(state['charged_actions'], 2)
         self.assertEqual(state['remaining_cents'], {'EUR': 0, 'USD': 0})
         self.assertFalse(state['deployment_authorized'])
@@ -60,10 +66,10 @@ class RecoveryBudgetTests(unittest.TestCase):
         self.assertEqual(worker.issue_payment(self.path, worker.OPERATION), 'already_committed')
         with self.assertRaisesRegex(PermissionError, 'approval'):
             worker.issue_payment(self.path, 'new')
-        for changes in ({'order': 'other'}, {'amount': 4001}, {'currency': 'EUR'}):
-            with self.subTest(changes=changes), self.assertRaises(ValueError):
-                worker.issue_payment(self.path, worker.OPERATION, **changes)
-        self.assertEqual(worker.budget_snapshot(self.path)['charged_actions'], 1)
+        for order, amount, currency in (('other', 4000, 'USD'), (worker.ORDER, 4001, 'USD'), (worker.ORDER, 4000, 'EUR')):
+            with self.subTest(order=order, amount=amount, currency=currency), self.assertRaises(ValueError):
+                worker.issue_payment(self.path, worker.OPERATION, order, amount, currency)
+        self.assertEqual(self.budget()['charged_actions'], 1)
 
     def test_invalid_policy_rejected_before_creating_database(self):
         policies = [(True, {'USD': 1}), (-1, {}), (2**63, {}), (1, {'USD': True}),
@@ -84,7 +90,7 @@ class RecoveryBudgetTests(unittest.TestCase):
         with closing(worker.connect(other)) as db, db:
             db.execute('UPDATE approvals SET amount_cents=?', (maximum,))
         worker.issue_payment(other, 'maximum', amount=maximum)
-        self.assertEqual(worker.budget_snapshot(other)['remaining_cents'], {'USD': 0})
+        self.assertEqual(self.budget(other)['remaining_cents'], {'USD': 0})
         with self.assertRaisesRegex(PermissionError, 'currency_limit'):
             worker.issue_payment(other, 'next', amount=maximum)
         for amount in (True, 0, -1, 2**63):
@@ -135,6 +141,8 @@ class RecoveryBudgetTests(unittest.TestCase):
         command = [sys.executable, '-m', 'cx_eval_lab.recovery_worker', '--database', str(self.path), '--pause', boundary]
         with subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as child:
             try:
+                if child.stdout is None:
+                    raise AssertionError('child requires stdout pipe')
                 ready, _, _ = select.select([child.stdout], [], [], 10)
                 self.assertTrue(ready, 'child must reach registered crash boundary')
                 marker = json.loads(child.stdout.readline())
@@ -150,19 +158,19 @@ class RecoveryBudgetTests(unittest.TestCase):
     def test_kill_after_commit_resume_does_not_charge_again(self):
         self.initialize()
         self.interrupt('after_commit')
-        self.assertEqual(worker.budget_snapshot(self.path)['charged_actions'], 1)
+        self.assertEqual(self.budget()['charged_actions'], 1)
         self.assertEqual(worker.snapshot(self.path)['checkpoints'], [])
         worker.revoke(self.path)
         self.assertEqual(worker.execute(self.path)['payment_outcome'], 'already_committed')
-        self.assertEqual(worker.budget_snapshot(self.path)['charged_actions'], 1)
+        self.assertEqual(self.budget()['charged_actions'], 1)
 
     def test_kill_inside_transaction_rolls_back_payment_and_consumption(self):
         self.initialize()
         self.interrupt('inside_transaction')
-        self.assertEqual(worker.budget_snapshot(self.path)['charged_actions'], 0)
+        self.assertEqual(self.budget()['charged_actions'], 0)
         self.assertEqual(worker.snapshot(self.path)['payments'], [])
         self.assertEqual(worker.execute(self.path)['payment_outcome'], 'committed')
-        self.assertEqual(worker.budget_snapshot(self.path)['charged_actions'], 1)
+        self.assertEqual(self.budget()['charged_actions'], 1)
 
     def test_sql_error_cannot_fall_back_to_uncapped_payment(self):
         self.initialize()

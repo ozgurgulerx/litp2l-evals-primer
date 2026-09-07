@@ -7,13 +7,12 @@ commit and workflow checkpoint deliberately occupy separate transactions.
 from __future__ import annotations
 
 import argparse
-from contextlib import closing
 import json
 import os
-from pathlib import Path
 import sqlite3
 import sys
-
+from contextlib import closing
+from pathlib import Path
 
 OPERATION = "refund:order-recovery-001"
 ORDER = "order-recovery-001"
@@ -28,6 +27,7 @@ def _validate_budget(max_actions, currency_caps):
             or any(currency not in {'USD', 'EUR', 'GBP'} or type(cap) is not int
                    or not 0 <= cap <= MAX_INTEGER for currency, cap in currency_caps.items())):
         raise ValueError('budget requires nonnegative int64 count and registered currency caps')
+    return dict(currency_caps)
 
 
 def connect(path):
@@ -43,8 +43,8 @@ def initialize(path: Path, *, max_actions=None, currency_caps=None):
     No caller-selected campaign exists on issue_payment. The DB owner is trusted;
     direct database tampering is outside this local mock boundary.
     """
-    if max_actions is not None or currency_caps is not None:
-        _validate_budget(max_actions, currency_caps)
+    validated_caps = (_validate_budget(max_actions, currency_caps)
+                      if max_actions is not None or currency_caps is not None else None)
     if path.exists() or path.is_symlink():
         raise ValueError("recovery database already exists; use a new trial directory")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -54,11 +54,11 @@ def initialize(path: Path, *, max_actions=None, currency_caps=None):
         db.execute("CREATE TABLE payments (idempotency_key TEXT PRIMARY KEY, order_id TEXT, amount_cents INTEGER, currency TEXT)")
         db.execute("CREATE TABLE checkpoints (operation TEXT PRIMARY KEY, status TEXT)")
         db.execute("INSERT INTO approvals VALUES (?, ?, ?, 1)", (ORDER, AMOUNT, CURRENCY))
-        if max_actions is not None:
+        if validated_caps is not None:
             db.execute('CREATE TABLE campaign_budget (singleton INTEGER PRIMARY KEY CHECK(singleton=1), max_actions INTEGER NOT NULL)')
             db.execute('CREATE TABLE campaign_currency_caps (currency TEXT PRIMARY KEY, max_cents INTEGER NOT NULL)')
             db.execute('INSERT INTO campaign_budget VALUES (1, ?)', (max_actions,))
-            db.executemany('INSERT INTO campaign_currency_caps VALUES (?, ?)', sorted(currency_caps.items()))
+            db.executemany('INSERT INTO campaign_currency_caps VALUES (?, ?)', sorted(validated_caps.items()))
 
 
 def _budget_state(db):
