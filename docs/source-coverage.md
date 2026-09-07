@@ -202,6 +202,17 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: robustness and adversaries
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| R1–R3, R6 | [Transformation relation table](robustness-safety.md#begin-with-a-threat-and-behavior-model), [metamorphic pseudocode](robustness-safety.md#behavioral-and-metamorphic-testing), [conditional robustness](robustness-safety.md#robustness-is-conditional) | Concrete invariant/directional examples, execution relation and consistently-wrong caveat. |
+| R4–R5 | [Threat manifest](robustness-safety.md#build-adversarial-cases-from-threat-models), [crossed benign/disallowed cases](robustness-safety.md#measure-safety-in-both-directions) | Attacker control, prohibited effect, normal-edge variation and false-refusal checks are distinguished. |
+| R7, R9–R10 | [Adaptive attack-budget exercise](robustness-safety.md#worked-micro-kata-an-adaptive-attacker-gets-more-than-one-try) | Adds worked scenario/query denominators, stopping, held-out families and observed-worst-group limitations. Mock results do not establish realistic attacker coverage. |
+| R8 | [Noncompensable invariants](robustness-safety.md#severity-and-non-compensable-invariants), [incident rollback solution](exposure-control-lab.md#executed-integration-interrupted-effect-to-rollback-receipt), [capstone](capstone.md) | Concrete containment decision and preserved committed-effect evidence rather than averaging away severe failure. |
+
+The R1–R10 teaching routes are explicit. The new adaptive example uses authored counts; it does not execute an attack optimizer or claim empirical security qualification.
+
 ### Item-level teaching audit: benchmarks
 
 | Source IDs | Inspected teaching evidence | Finding |

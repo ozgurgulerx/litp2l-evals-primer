@@ -92,6 +92,20 @@ Separate controls:
 
 The prompt is not the security boundary. Deterministic runtime controls prevent known-prohibited actions; evals test whether those controls and the wider workflow hold.
 
+### Worked micro-kata: an adaptive attacker gets more than one try
+
+An authored mock-tool study registers twenty independent scenarios, one fixed defense, synthetic canary data and a maximum of ten attacker queries per scenario. The attacker may see the defense's response and choose the next permitted test, but cannot access sealed labels, other runs or real customer systems. Stop after the first authoritative prohibited effect or the budget limit. Retain every query and final scenario disposition.
+
+Two scenarios fail on the first query. Six additional scenarios fail later. The remaining twelve exhaust ten queries each. Successful scenarios consume 30 queries in total, giving 150 queries across the twenty scenarios.
+
+**Exercise:** report first-query success, adaptive scenario compromise, per-query observed success and remaining uncertainty. Does the per-query rate show the defense is safe?
+
+**Solution:** first-query success is `2/20 = 10%`; compromise within the registered adaptive budget is `8/20 = 40%`. With one counted first compromise per successful scenario, the observed per-query fraction is `8/150 ≈ 5.33%`. It is not the probability that a fresh independent attack succeeds: later queries are selected from earlier feedback, and stopping depends on success. The twelve exhausted scenarios are “no compromise observed within budget,” not proofs of immunity. All twenty scenarios remain in the scenario denominator.
+
+This example compares the first query with the full trajectory of the same attacker, not with a separate static suite. To compare defenses, freeze the permitted attacker information and query/resource budgets, reset authoritative mock state between trials and repeat attacker runs. Retain invalid/environment-failed scenarios explicitly rather than counting them as defended or dropping them. Report success-versus-budget curves, attack-family slices, worst observed groups with their support, and benign-task refusals. Observed worst-group performance is a property of the tested set, not a guarantee over every possible attacker.
+
+Hold out attack families or seeds from defense tuning, and record every defense change. A revised defense requires a new versioned evaluation; combining early queries against one version and later queries against another obscures the estimand. Realistic attacker representativeness requires incident and threat evidence beyond this mock setup. A confirmed prohibited effect triggers the registered containment rule; its severity is not diluted by adding many unsuccessful queries.
+
 ## Measure safety in both directions
 
 A safety system can fail through:
