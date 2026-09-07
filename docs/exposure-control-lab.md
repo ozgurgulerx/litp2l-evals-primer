@@ -497,6 +497,28 @@ The tempting 7/8 drops two selected requests and describes only the completed-ev
 
 **Interview follow-up:** what if the response was persisted but the client never received it? You can establish response generation, not delivery. Add delivery acknowledgement evidence or explicitly leave that outcome unknown; do not infer delivery from a completed journal row.
 
+**Missing response, known harmful effect:** suppose an interrupted request has no persisted message, but its authoritative order ledger shows a refund to the wrong order. Its semantic response label is unknown; its observed wrong-order violation is not. The existing controller prioritizes a known hard violation over missing labels. This short control isolates that rule using authored observations; it does not demonstrate extracting them from a recovered process:
+
+```python
+from cx_eval_lab.exposure_control import (
+    ExposureState, ExposureWindow, Observation, transition,
+)
+
+state = ExposureState("candidate", "baseline", stage="canary", percent=5, revision=1)
+def decision(known_violation):
+    window = ExposureWindow("window-2", "candidate", "baseline", 1, 10, 20, (
+        Observation("user-1", None, None, known_violation, 20, "effect-1"),
+        Observation("user-2", None, None, False, 20, "effect-2"),
+    ))
+    return transition(state, window, now=20)
+
+assert decision(False).reason == "missing_mature_label"
+assert decision(True).reason == "hard_violation"
+assert decision(True).state.stage == "rolled_back"
+```
+
+Here `False` is an explicitly supplied control condition, not a conversion from absent ledger evidence. If effects cannot be inspected, keep their safety status unknown in the diagnostic report rather than silently manufacturing a controller observation with `hard_violation=False`. A joined report without retained baseline outcomes also cannot establish a paired release comparison. Restriction based on a known violation and promotion based on sufficient complete evidence have different evidence requirements.
+
 The next TDD handoff is a crash matrix on the existing call chain:
 
 1. Kill after window registration but before admission: the request remains selected and unfinished; resumption does not reroute it.
