@@ -553,7 +553,23 @@ assert decision(True).state.stage == "rolled_back"
 
 Here `False` is an explicitly supplied control condition, not a conversion from absent ledger evidence. If effects cannot be inspected, keep their safety status unknown in the diagnostic report rather than silently manufacturing a controller observation with `hard_violation=False`. A joined report without retained baseline outcomes also cannot establish a paired release comparison. Restriction based on a known violation and promotion based on sufficient complete evidence have different evidence requirements.
 
-The next TDD handoff is a crash matrix on the existing call chain:
+### Executed integration: interrupted effect to rollback receipt
+
+The [retained recovery-decision packet](assets/recovery-decision-v1.json) connects a registered 40-member window, actual agent tool execution, a killed child process, inspected durable effects and an accepted controller decision. Run a fresh packet with:
+
+```bash
+python -m cx_eval_lab.recovery_decision_study --output recovery-decision.json
+```
+
+The output path must not already exist. CI runs the same command before its artifact-upload step; that configuration is not evidence of a completed cloud run.
+
+**Exercise:** inspect `process`, `joined`, `budget`, `receipt`, `reopened_receipt` and `controller_state`. Can the missing response be marked successful? Can the window justify promotion? Did rollback reverse the refund?
+
+**Solution:** the child exits with `-9` after tools finish but before the agent returns. The join retains all 40 registered members and identifies one wrong-order effect with `no_completion`. One action remains charged. The incident-only decision records `hard_violation`, moves exposure to zero at revision 1, and returns the identical receipt after reopening. The response remains unknown; no baseline comparison establishes promotion; the refund remains committed. `conformance_passed: true` establishes this local control, while `deployment_authorized: false` preserves its authority limit.
+
+The supervisor confirms the worker has stopped before inspection. This is not an ownership-fencing or agent-continuation implementation. The packet records source hashes and extracted state, not authenticated provenance or a retained recoverable database. Its selected incident observations support restriction only; they do not replace the complete denominator preserved in `joined`. Independently qualified grading, full-window promotion and the remaining crash boundaries below remain separate requirements.
+
+The remaining TDD handoff is a crash matrix on the existing call chain:
 
 1. Kill after window registration but before admission: the request remains selected and unfinished; resumption does not reroute it.
 2. Kill after admission or clarification intent/result: retain the attempt and any observed customer reply; do not silently restart a fresh clarification transcript.

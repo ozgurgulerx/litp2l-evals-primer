@@ -169,6 +169,8 @@ Use the pointer-reading pattern above on a new index of your own. Inspect the un
 
     Therefore withhold the claim of end-to-end recoverability. The remaining demonstration must connect registered membership, qualified observations, fenced attempt recovery and controller acceptance in one versioned process study, including crash boundaries and unfinished outcomes. Component test success is necessary evidence for that build, not a substitute for the integrated experiment. Neither the original wrong refund nor an already delivered message is undone by replaying a receipt.
 
+The [integrated incident packet](exposure-control-lab.md#executed-integration-interrupted-effect-to-rollback-receipt) now demonstrates the narrow missing-response → observed wrong-order effect → durable rollback path. Use it in Variant G without promoting it to full recoverability: the interrupted agent is not resumed, no baseline comparison is recovered, and the committed refund is not reversed.
+
 Every row must be satisfied independently. Passing the original rubric does not waive these checks, and passing either rubric does not authorize deployment.
 
 | Must demonstrate | Passing addendum | Revision trigger |
