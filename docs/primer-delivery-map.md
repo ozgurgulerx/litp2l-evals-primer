@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Numerical calibration decision checkpoint — 7 September 2026
+
+[Katas 90–92](calibration-decision-workshop.md) connect criterion-specific judge errors, abstention, dataset sampling, exact zero-event uncertainty, hypothetical prevalence shift and human-review capacity in one worked qualification HOLD. Three executable examples distinguish 95% agreement from a 25% unsafe false-pass rate, derive the 13.91% upper bound for zero events in twenty independent unsafe trials, and compute the selective judge's hypothetical 90.28% nominal review-capacity load. A must-hit interview rubric connects the calculations to owner-specific next evidence. Existing lessons and source mappings remain intact.
+
+Independent numerical review found no blocking correction; its sampling-design clarification was incorporated. All three published Python blocks execute successfully, the strict book build and whitespace check pass, and all three solutions expand in the local desktop preview without horizontal document overflow (1585-pixel document width, 1595-pixel viewport). This documentation-only checkpoint does not claim a new full runtime-test run, Safari/mobile verification or publication. Counts and staffing are authored inputs, not independent annotation, model measurements or production evidence. Actual empirical qualification and the broader curriculum objective remain open.
+
 ### Executed coding-patch evaluation checkpoint — 7 September 2026
 
 [Katas 87–89](coding-patch-study.md) add a second outcome domain with actual Python subprocess execution. Five authored patch controls distinguish visible-example overfitting, an unknown-outcome denominator bug, caller-state mutation and a protected-test edit. Four controls execute two suites each, totaling forty registered checks; the fifth is blocked before execution. Full code/diffs, input/output/exception records, test definitions and file inventories remain inspectable in the [retained study](assets/coding-patch-study-v1.json). Replay runs current built-ins only, never source supplied by an artifact.

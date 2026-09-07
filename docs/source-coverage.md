@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Numerical qualification and interview decision workshop
+
+[Katas 90–92](calibration-decision-workshop.md) connect the question bank's calibration, uncertainty, data-curation and operational themes through supplied confusion matrices and executable calculations. The solutions distinguish conditional error from agreement, classification coverage from automatic acceptance, a fixed-sample zero-event bound from sequential stopping, and enriched-class sampling from representative within-class sampling. A hypothetical prevalence/queue calculation culminates in a qualification HOLD. This is an authored reasoning exercise, not new human labels, empirical model qualification or observed production staffing performance.
+
 ### Executed coding-patch outcome controls
 
 [Katas 87–89](coding-patch-study.md) add a second executable domain: five authored patch controls, two visible and eight public acceptance cases, actual subprocess results, candidate diffs, protected-file checks and parent-verified outputs/input changes. The original and overfit controls both pass visible cases but differ on acceptance; the test-edit control is blocked before execution. The [retained study](assets/coding-patch-study-v1.json) binds local built-ins, harness/test definitions and interpreter; replay never executes its stored source. This establishes local patch-evaluation mechanics, not model-generated coding performance, sealed acceptance, independent test validity or an OS sandbox. The benchmark chapter also incorporates the dated OpenAI coding-task audit and Anthropic resource-enforcement study.

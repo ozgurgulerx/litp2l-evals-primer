@@ -11,6 +11,8 @@ A strong rubric describes observable evidence, separates dimensions, and defines
 
 ## Calibration
 
+[Katas 90–92](calibration-decision-workshop.md) provide a complete numerical decision workshop: distinguish class-conditional errors from agreement, account for abstention, derive a zero-event upper bound, and translate a hypothetical prevalence shift into human-review workload. The supplied counts are authored examples, not independent calibration evidence.
+
 The [Semantic Grading Lab](semantic-grading-lab.md) turns the qualification contract into runnable Katas 08–10: class-conditional bounds, exact joint-slice scope, configuration drift, expiry/revocation, abstention, and retained judge evidence. Its fixture judge validates the integration only; human-reviewed calibration and live-model validity remain separate requirements.
 
 Create an independently human-labeled, versioned calibration set for the exact criterion and traffic distribution. Measure a confusion matrix and class-conditional errors, inspect disagreements, and revise the rubric before trusting a large run. Keep this set frozen for a judge version so score changes mean something.

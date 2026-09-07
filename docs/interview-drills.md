@@ -4,6 +4,8 @@ This page converts the supplied 118-question research bank into a smaller practi
 
 ## Answer contract
 
+For a complete numerical answer, work through [Katas 90–92: the calibration decision workshop](calibration-decision-workshop.md). Supplied confusion matrices connect rare false passes, abstention, independent sample requirements, prevalence shift and human-review capacity to one bounded decision. Its worked solutions are authored examples, not a report of an employer's interview or actual judge qualification.
+
 A strong senior answer should normally expose seven moves:
 
 1. **Decision** — What decision will the evidence inform: diagnose, select, release, expand, constrain, or roll back?
