@@ -1,6 +1,7 @@
 """Full fixed campaign replay rejects rehashed evidence fabrication."""
 
 import copy
+import hashlib
 import json
 import subprocess
 import sys
@@ -37,15 +38,18 @@ class BudgetedExposureStudyTests(unittest.TestCase):
         self.assertEqual([row['summary']['candidate_completed'] for row in windows], [40, 2, 0])
         self.assertTrue(all(row['baseline']['passed'] for window in windows for row in window['artifacts']))
 
-    def test_retained_current_packet_replays(self):
-        packet = json.loads(Path('docs/assets/budgeted-exposure-v1.json').read_text())
+    def test_retained_packet_preserves_history_and_requires_matching_environment(self):
+        raw = Path('docs/assets/budgeted-exposure-v1.json').read_bytes()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),
+                         '9a43840a5df80384f40378adf359639d971b5aaece28c4c1b4087b7ac303450a')
+        packet = json.loads(raw)
         inventory = study._inventory()
-        self.assertEqual(packet['source_inventory']['sources'], inventory['sources'])
-        if packet['source_inventory']['interpreter'] == inventory['interpreter']:
+        if packet['source_inventory'] == inventory:
             self.assertTrue(study.verify_study(packet))
         else:
-            with self.assertRaisesRegex(ValueError, 'source inventory'):
+            with patch.object(study, 'execute_window') as execute, self.assertRaisesRegex(ValueError, 'source inventory'):
                 study.verify_study(packet)
+            execute.assert_not_called()
 
     def test_rehashed_semantic_mutations_fail_full_replay(self):
         mutations = (
