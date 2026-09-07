@@ -1,5 +1,6 @@
 """Existing multi-order/exposure paths retain durable served-candidate effects."""
 
+import multiprocessing
 import sqlite3
 import tempfile
 import unittest
@@ -10,11 +11,23 @@ from unittest.mock import patch
 from cx_eval_lab.action_budget import ActionBudget
 from cx_eval_lab.durable_world import DurableCampaign
 from cx_eval_lab.exposure_control import ExposureState, transition
-from cx_eval_lab.exposure_study import execute_window
+from cx_eval_lab.exposure_study import FaultInjectedCandidate, execute_window
 from cx_eval_lab.order_resolution import DescriptiveResolver, FirstRecordResolver, MultiOrderWorld, example_cases, run_case
 
 
 POLICY = {'campaign_id': 'exposure', 'max_actions': 2, 'currency_caps': {'USD': 8000, 'EUR': 9000}}
+
+
+def compete_for_admission(path, barrier, queue):
+    campaign = DurableCampaign.open(path, **POLICY)
+    barrier.wait(timeout=10)
+    try:
+        run_case(example_cases()[0], FaultInjectedCandidate('unavailable'), durable_campaign=campaign,
+                 execution_namespace='same-request')
+        result = 'executed'
+    except ValueError:
+        result = 'rejected'
+    queue.put(result)
 
 
 class DurableExposureTests(unittest.TestCase):
@@ -84,6 +97,38 @@ class DurableExposureTests(unittest.TestCase):
             self.run_case('used')
         run.assert_not_called()
         self.assertEqual(self.campaign.snapshot()['charged_actions'], 1)
+
+    def test_zero_tool_and_clarification_only_attempts_cannot_be_reexecuted(self):
+        for namespace, agent, case in [('unavailable', FaultInjectedCandidate('unavailable'), self.case),
+                                        ('clarification', DescriptiveResolver(), example_cases()[-1])]:
+            first = self.run_case(namespace, agent, case)
+            self.assertEqual(sum(order['state']['refund_transaction_count'] for order in first['orders']), 0)
+            with self.subTest(namespace=namespace), patch.object(type(agent), 'run') as execute:
+                with self.assertRaisesRegex(ValueError, 'prior execution evidence'):
+                    self.run_case(namespace, agent, case)
+                execute.assert_not_called()
+
+    def test_two_processes_cannot_admit_the_same_zero_tool_request(self):
+        context = multiprocessing.get_context('spawn')
+        barrier, queue = context.Barrier(3), context.Queue()
+        children = [context.Process(target=compete_for_admission, args=(str(self.path), barrier, queue)) for _ in range(2)]
+        try:
+            for child in children:
+                child.start()
+            barrier.wait(timeout=10)
+            results = [queue.get(timeout=10) for _ in children]
+            for child in children:
+                child.join(timeout=10)
+                self.assertEqual(child.exitcode, 0)
+            self.assertCountEqual(results, ['executed', 'rejected'])
+            self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
+        finally:
+            for child in children:
+                if child.is_alive():
+                    child.kill()
+                child.join(timeout=5)
+            queue.close()
+            queue.join_thread()
 
     def test_invalid_backend_combinations_stop_before_baseline_or_agent(self):
         variants = ({'durable_campaign': self.campaign},
