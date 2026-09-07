@@ -6,6 +6,10 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Publication preflight — 7 September 2026
+
+The current local suite passes **679 tests in 63.089 seconds** at `acefbc0`; this is software conformance, not model or deployment qualification. The publication-range whitespace check identified only a trailing blank line in the preserved interview appendix, now corrected. The remote `main` and latest successful Publish book run (`34047693398`) remain at `019ee70a0bb48930c24afc5704e7b27b6e729547`. Therefore that hosted success does not verify the newer local content or recovery integration. The configured Pages workflow now depends on evaluation conformance before deployment. Final publication still requires review of the pending public change set, push, successful hosted execution for the exact revision and rendered-page verification; the local tests must not be reported as those receipts.
+
 ### Supplied-input identity checkpoint — 7 September 2026
 
 The source ledger now resolves the four numbered Markdown filenames to their actual titles and fingerprints all six Markdown inputs plus the later DOCX review. All six Markdown titles have corpus mappings. This closes input identification only: the ledger explicitly distinguishes its editorial section map from the still-required content-depth audit, and does not claim companion-format equivalence was reverified. No new research, runtime study or production qualification was performed.
