@@ -17,6 +17,9 @@ from cx_eval_lab.models import AgentOutput
 from cx_eval_lab.order_resolution import (
     DescriptiveResolver,
     FirstRecordResolver,
+    OrderRecord,
+    ResolutionCase,
+    UnresolvedRequest,
     _validate_backends,
     example_cases,
     run_case,
@@ -41,14 +44,19 @@ class FaultInjectedCandidate:
         return agent.run(request, tools)
 
 
-def execute_window(state, number, fault_mode, *, immature=False, action_budget=None,
-                   execution_namespace=None, durable_campaign=None):
-    _validate_backends(action_budget, durable_campaign, execution_namespace)
-    if durable_campaign is not None:
-        durable_campaign.snapshot()  # Verify storage even for shadow/baseline-only windows.
+def build_window_plan(state, number, fault_mode, *, immature=False,
+                      execution_namespace=None, manifest_digest=None, effect_backend=None):
+    """Pure fixed-cohort selection shared by registered and legacy execution."""
+    if type(number) is not int or number <= 0 or type(immature) is not bool:
+        raise ValueError('positive integer window number and boolean maturity flag required')
+    if not isinstance(state, ExposureState):
+        raise TypeError('validated exposure predecessor required')
+    FaultInjectedCandidate(fault_mode)
+    _validate_backends(None, None, execution_namespace)
+    if effect_backend not in (None, 'memory', 'durable'):
+        raise ValueError('unknown effect backend')
     start, end = (number - 1) * 10, number * 10
-    artifacts, observations = [], []
-    candidate_count = 0
+    members = []
     for index in range(40):
         customer = f'user-{index}'
         base = example_cases()[0]
@@ -58,23 +66,60 @@ def execute_window(state, number, fault_mode, *, immature=False, action_budget=N
                                     if order.customer_id == base.request.customer_id else order
                                     for order in base.orders))
         served = route(state, customer, now=start)
+        execute = state.stage == 'shadow' or served == 'candidate'
+        scope = ('served_candidate_durable_campaign' if served == 'candidate' and effect_backend == 'durable'
+                 else 'served_candidate_campaign' if served == 'candidate'
+                 else 'isolated_shadow' if execute else 'not_executed')
+        members.append({'customer_id': customer, 'case': asdict(case), 'served': served,
+                        'candidate_execute': execute,
+                        'candidate_namespace': (canonical_hash((execution_namespace, number, customer))
+                                                if execution_namespace is not None else None),
+                        'effect_scopes': {'baseline': 'isolated_baseline_counterfactual', 'candidate': scope}})
+    return json.loads(json.dumps({'schema': 1, 'predecessor': asdict(state), 'number': number,
+        'start': start, 'end': end, 'fault_mode': fault_mode, 'immature': immature,
+        'execution_namespace': execution_namespace, 'manifest_digest': manifest_digest,
+        'effect_backend': effect_backend, 'members': members}, allow_nan=False))
+
+
+def case_from_plan(value):
+    return ResolutionCase(**{**value, 'request': UnresolvedRequest(**value['request']),
+                             'orders': tuple(OrderRecord(**row) for row in value['orders'])})
+
+
+def execute_window(state, number, fault_mode, *, immature=False, action_budget=None,
+                   execution_namespace=None, durable_campaign=None, window_registry=None,
+                   manifest_digest=None):
+    _validate_backends(action_budget, durable_campaign, execution_namespace)
+    if (window_registry is None) != (manifest_digest is None):
+        raise ValueError('window registry and explicit manifest must be supplied together')
+    if window_registry is not None and durable_campaign is None:
+        raise ValueError('registered windows require a durable campaign')
+    if durable_campaign is not None:
+        durable_campaign.snapshot()  # Verify storage even for shadow/baseline-only windows.
+    plan = build_window_plan(state, number, fault_mode, immature=immature,
+        execution_namespace=execution_namespace, manifest_digest=manifest_digest,
+        effect_backend='durable' if durable_campaign is not None else 'memory' if action_budget is not None else None)
+    if window_registry is not None:
+        window_registry.require_campaign(durable_campaign)
+        plan = window_registry.register(plan)
+    start, end = plan['start'], plan['end']
+    artifacts, observations = [], []
+    candidate_count = 0
+    for member in plan['members']:
+        customer, served = member['customer_id'], member['served']
+        case = case_from_plan(member['case'])
         candidate_count += served == 'candidate'
         baseline = run_case(case, DescriptiveResolver())
         candidate = (run_case(case, FaultInjectedCandidate(fault_mode),
                              action_budget=action_budget if served == 'candidate' else None,
                              durable_campaign=durable_campaign if served == 'candidate' else None,
-                             execution_namespace=(canonical_hash((execution_namespace, number, customer))
-                                                  if execution_namespace is not None else None))
-                     if state.stage == 'shadow' or served == 'candidate' else None)
+                             execution_namespace=member['candidate_namespace'])
+                     if member['candidate_execute'] else None)
         artifact = {'customer_id': customer, 'served': served,
                     'baseline': baseline, 'candidate': candidate,
                     'fault_intervention': fault_mode}
         if action_budget is not None or durable_campaign is not None:
-            artifact = {**artifact, 'effect_scopes': {
-                'baseline': 'isolated_baseline_counterfactual',
-                'candidate': ('served_candidate_durable_campaign' if served == 'candidate' and durable_campaign is not None
-                              else 'served_candidate_campaign' if served == 'candidate'
-                              else 'isolated_shadow' if candidate is not None else 'not_executed')}}
+            artifact = {**artifact, 'effect_scopes': member['effect_scopes']}
         artifacts.append(artifact)
         if candidate is not None:
             observations.append(Observation(customer, baseline['passed'], candidate['passed'],

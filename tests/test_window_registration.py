@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 from cx_eval_lab.durable_world import DurableCampaign
@@ -68,6 +69,7 @@ class WindowRegistrationTests(unittest.TestCase):
         reopened = WindowRegistry.open(self.registry.path, self.campaign)
         self.assertEqual(reopened.register(plan), plan)
         inspected = reopened.inspect('study', 1)
+        assert inspected is not None
         self.assertEqual(inspected, plan)
         inspected['members'][0]['case']['request']['utterance'] = 'changed'
         self.assertEqual(reopened.inspect('study', 1), plan)
@@ -94,7 +96,7 @@ class WindowRegistrationTests(unittest.TestCase):
         for member, row in zip(plan['members'], rows, strict=True):
             self.assertEqual(row['customer_id'], member['customer_id'])
             self.assertEqual(row['served'], member['served'])
-            self.assertEqual(row['baseline']['case'], member['case'])
+            self.assertEqual(json.loads(json.dumps(row['baseline']['case'])), member['case'])
             self.assertEqual(row['candidate'] is not None, member['candidate_execute'])
             self.assertEqual(row['effect_scopes'], member['effect_scopes'])
 
@@ -114,7 +116,9 @@ class WindowRegistrationTests(unittest.TestCase):
                 child.join(10)
         reopened = WindowRegistry.open(self.registry.path, self.campaign)
         self.assertEqual(reopened.inspect('study', 1), self.plan())
-        self.assertEqual(len(reopened.inspect('study', 1)['members']), 40)
+        saved = reopened.inspect('study', 1)
+        assert saved is not None
+        self.assertEqual(len(saved['members']), 40)
         self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
 
     def test_concurrent_equal_and_conflicting_registration(self):
@@ -159,14 +163,74 @@ class WindowRegistrationTests(unittest.TestCase):
 
     def test_registry_pairing_and_input_validation_precedes_agents(self):
         with patch('cx_eval_lab.exposure_study.run_case') as run:
-            for kwargs in ({'window_registry': self.registry}, {'manifest_digest': MANIFEST},
-                           {'window_registry': self.registry, 'manifest_digest': MANIFEST}):
+            invalid: list[dict[str, Any]] = [{'window_registry': self.registry}, {'manifest_digest': MANIFEST},
+                           {'window_registry': self.registry, 'manifest_digest': MANIFEST}]
+            for kwargs in invalid:
                 with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
                     execute_window(self.state, 1, 'healthy', **kwargs)
             for number in (True, 0, -1, 1.5):
                 with self.subTest(number=number), self.assertRaises(ValueError):
                     build_window_plan(self.state, number, 'healthy')
             run.assert_not_called()
+
+    def test_campaign_binding_and_registry_path_fail_closed(self):
+        other = DurableCampaign.initialize(self.path / 'other.sqlite', **POLICY)
+        with patch('cx_eval_lab.exposure_study.run_case') as run, self.assertRaises(ValueError):
+            execute_window(self.state, 1, 'healthy', durable_campaign=other,
+                execution_namespace='study', window_registry=self.registry, manifest_digest=MANIFEST)
+        run.assert_not_called()
+        with self.assertRaises(ValueError):
+            WindowRegistry.open(self.registry.path, other)
+        with self.assertRaises(ValueError):
+            WindowRegistry.initialize(self.registry.path, self.campaign)
+        with self.assertRaises(ValueError):
+            WindowRegistry.open(self.path / 'missing.sqlite', self.campaign)
+        link = self.path / 'symlink.sqlite'
+        link.symlink_to(self.registry.path)
+        with self.assertRaises(ValueError):
+            WindowRegistry.open(link, self.campaign)
+        with sqlite3.connect(self.registry.path) as db:
+            db.execute("UPDATE identity SET binding='other'")
+        with self.assertRaises(ValueError):
+            self.registry.inspect('study', 1)
+
+    def test_complete_plan_shape_and_exact_json_types_are_validated(self):
+        invalid = [None, {}, {**self.plan(), 'extra': 'field'},
+                   {**self.plan(), 'effect_backend': 'memory'},
+                   {**self.plan(), 'members': []}, {**self.plan(), 'schema': True}]
+        changed = self.plan()
+        changed['members'][0]['candidate_execute'] = 1
+        invalid.append(changed)
+        for plan in invalid:
+            with self.subTest(plan=plan), self.assertRaises((ValueError, TypeError)):
+                self.registry.register(plan)
+        for namespace, number in (('', 1), ('study', True), ('study', 0)):
+            with self.subTest(namespace=namespace, number=number), self.assertRaises(ValueError):
+                self.registry.inspect(namespace, number)
+        invalid_kwargs: list[dict[str, Any]] = [{'effect_backend': 'other'}, {'immature': 1}]
+        for kwargs in invalid_kwargs:
+            with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
+                build_window_plan(self.state, 1, 'healthy', **kwargs)
+        with self.assertRaises(TypeError):
+            build_window_plan({}, 1, 'healthy')
+
+    def test_hash_valid_but_noncanonical_or_wrong_identity_is_rejected(self):
+        import hashlib
+        self.registry.register(self.plan())
+        for altered in (json.dumps(self.plan(), indent=2),
+                        json.dumps({**self.plan(), 'number': 2}, sort_keys=True, separators=(',', ':'))):
+            with sqlite3.connect(self.registry.path) as db:
+                db.execute('UPDATE windows SET plan=?, plan_hash=?',
+                           (altered, hashlib.sha256(altered.encode()).hexdigest()))
+            with self.assertRaises(ValueError):
+                self.registry.inspect('study', 1)
+
+    def test_reexecution_does_not_claim_resume_of_served_candidate(self):
+        self.state = replace(self.state, stage='canary', percent=5)
+        self.execute()
+        with self.assertRaisesRegex(ValueError, 'prevents reexecution'):
+            self.execute()
+        self.assertEqual(self.campaign.snapshot()['charged_actions'], 2)
 
 
 if __name__ == '__main__':
