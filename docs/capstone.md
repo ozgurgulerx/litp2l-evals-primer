@@ -157,6 +157,18 @@ Use the pointer-reading pattern above on a new index of your own. Inspect the un
 
 ### Advanced assessment checks
 
+??? question "Variant G: every durable component passed, so the campaign can resume"
+    The refund ledger, completion journal, window registry and controller receipt tests all pass. One worker died after a wrong-order refund without persisting its response. Another controller committed its decision but lost its acknowledgement. Explain which operations may be repeated, what evidence remains missing and whether those component results establish a recoverable application.
+
+??? success "Solution G: recover each record without inventing the missing joins"
+    Inspect the [joined window evidence](exposure-control-lab.md#kata-104-do-not-lose-the-request-when-completion-is-missing) without executing an agent. Keep all registered members and the served-candidate denominator. The observed wrong-order effect remains a violation while the missing response label stays unknown. An absent journal record is not proof that no other execution path acted. Baseline/shadow records are outside this diagnostic's retained-evidence scope, so it cannot establish a paired release comparison.
+
+    Reopen a completed request's exact bound evidence without issuing another refund. Do not restart an incomplete agent as though its prior attempt never happened. Request resumption needs an explicit continuation policy and ownership fencing at the consequential-action boundary; a receipt read or expired timeout does not stop an old worker. Repeating the exposure driver may rerun baseline controls while reusing completed candidate evidence, which is neither an independent trial nor a complete window resume.
+
+    For the controller acknowledgement, replay the same decision identity and exact inputs through [Kata 105's receipt store](exposure-control-lab.md#kata-105-the-controller-committed-but-its-acknowledgement-was-lost). It returns the accepted historical decision without advancing state again. A changed request conflicts, and a new decision must match the full current predecessor, including pending-cohort state. This local receipt transaction does not atomically join the request, effect and evidence databases or authenticate the supplied observations.
+
+    Therefore withhold the claim of end-to-end recoverability. The remaining demonstration must connect registered membership, qualified observations, fenced attempt recovery and controller acceptance in one versioned process study, including crash boundaries and unfinished outcomes. Component test success is necessary evidence for that build, not a substitute for the integrated experiment. Neither the original wrong refund nor an already delivered message is undone by replaying a receipt.
+
 Every row must be satisfied independently. Passing the original rubric does not waive these checks, and passing either rubric does not authorize deployment.
 
 | Must demonstrate | Passing addendum | Revision trigger |
@@ -165,6 +177,7 @@ Every row must be satisfied independently. Passing the original rubric does not 
 | Inspectable evidence | Separate artifact identity, exact pointers and underlying events/ledgers | New summaries merged into the old candidate's release receipt |
 | Replay versus CI evidence | Exact-environment replay limits plus actual-run evidence requirements | Hash, workflow configuration or upload existence treated as proof of a passing deployment gate |
 | Consequential-risk inference | Conditional rate, dependence bounds and explicit causal/population assumptions | Unrelated marginals multiplied into a risk certificate |
+| Recovery boundaries | Distinguish effect inspection, completed-evidence retrieval, incomplete-attempt continuation and controller acknowledgement replay | Components composed into an untested end-to-end guarantee, or a receipt read treated as worker fencing |
 | Bounded next action | Required evidence and responsible roles, with current authorization withheld | A higher task score used to waive unresolved control or evidence obligations |
 
 ## Review rubric and interview defense

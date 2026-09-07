@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Completion scope and capstone acceptance — 7 September 2026
+
+The user's objective is a comprehensive teachable primer, not an assertion that its synthetic agent has earned production qualification. External reviewers, paid model runs and a real application deployment are prerequisites for **those empirical claims**, not automatic prerequisites for explaining and exercising the methods honestly. Existing experimental commitments remain listed below; this distinction does not mark an unfinished experiment complete or waive source coverage, worked examples, correctness or publication checks.
+
+Capstone Variant G now assesses the durable components together using existing test evidence: effect inspection, retained completion, missing outcomes, attempt continuation and historical controller acknowledgement. Its solution rejects unproven end-to-end guarantees. Remaining local acceptance work is a retained integrated recovery/decision demonstration and its CI path, followed by the supplied-source coverage and final publication audit. Do not expand the topic inventory or commission external studies merely to close a teaching-status label. No overall completion is claimed here.
+
 ### Durable controller acceptance checkpoint — 7 September 2026
 
 Kata 105 adds atomic persistence around the existing simulation state machine: complete predecessor comparison, immutable decision-input binding, receipt replay and state/receipt commit in one transaction. RED `7daffc0` preceded implementation. Twenty-five focused controller/state-machine tests pass with 87% combined statement/branch coverage for the new module; lint and type checks pass. Real processes exercise contention and post-commit loss, and a SQL trigger verifies rollback after receipt insertion. No additional research or full-suite rerun was needed.
