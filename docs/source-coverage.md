@@ -202,6 +202,20 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: fundamentals
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| F1, F10 | [Evaluation contract](foundations.md#write-the-evaluation-contract), [validity](foundations.md#measurement-validity), [seven-surface repair exercise](foundations.md#worked-checkpoint-seven-surfaces-one-failed-refund-conversation) | Concrete contract, evidence distinctions and solved repair decisions; training loss is not the application objective. |
+| F2 | [Perplexity calculation](metrics.md#worked-micro-kata-lower-perplexity-worse-service) | Added missing token-loss calculation and hard-invariant counterexample. |
+| F3 | [Classification metrics](metrics.md#classification-metrics), [joint error table](llm-as-a-judge.md#worked-micro-kata-when-the-generator-and-judge-fail-together) | Formulas, class naming, imbalance counterexample and concrete conditional-error denominators. |
+| F4–F5 | [Negation/paraphrase overlap exercise](metrics.md#worked-micro-kata-deleting-one-word-reverses-the-claim) | Worked diagnostic and solution separate lexical overlap, contextual similarity and factual truth. No fabricated library scores. |
+| F6 | [Long-report study](long-report-study.md), especially Katas 78–80 | Inspectable documents, extraction/omission/compound-claim and synthesis decisions with solutions. Generic summary quality is not reduced to overlap. |
+| F7 | [Exact-match contract](metrics.md#exact-match), [identity-joined scorer exercise](benchmark-reproducibility.md#kata-81-equal-accuracy-different-evidence) | Concrete executable classification comparison, duplicate/missing-ID rejection and normalization limits. |
+| F8–F9 | [Independent release rules](foundations.md#one-decision-several-independent-rules), [human-workload counterexample](production-evals.md#worked-micro-kata-the-assisted-cases-are-still-assigned-cases) | Solved noncompensating safety constraints and misleading proxy-improvement scenario. |
+
+This F1–F10 review closes the missing perplexity and concrete overlap-counterexample gaps. It establishes scoped teaching coverage, not empirical validity of every named metric on the reader's application.
+
 ### Item-level teaching audit: prompts and dataset curation
 
 | Source IDs | Inspected teaching evidence | Finding |

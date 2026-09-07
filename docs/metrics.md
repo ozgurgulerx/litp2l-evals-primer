@@ -131,6 +131,16 @@ Use when the output contract is genuinely exact: an ID, normalized option, schem
 
 BLEU emphasizes n-gram precision and was designed for corpus-level machine-translation evaluation. ROUGE variants emphasize overlap useful in summarization settings. Both can be useful diagnostics when overlap is part of the task, but neither proves factuality, usefulness, or policy compliance.
 
+### Worked micro-kata: deleting one word reverses the claim
+
+Reference: **“the refund has not settled”**. Candidate A: **“the refund has settled”**. Candidate B: **“payment remains pending”**. For this authored task, the verified ledger is pending and the rubric accepts B's wording as equivalent to the reference.
+
+With lowercase whitespace tokens and clipped unigram counts, A shares four of its four tokens with the five-token reference: overlap precision is `4/4 = 1`, recall is `4/5 = 0.8`, and harmonic F1 is `8/9 ≈ 0.889`. B has zero token overlap under this deliberately simple tokenizer, despite being accepted by the task's meaning-based rubric. A is contradicted by the ledger. The single omitted negation matters more than its overlap score.
+
+These numbers are **unigram-overlap diagnostics**, not reported BLEU, ROUGE-L or BERTScore results. Full BLEU additionally combines modified n-gram precisions and brevity handling; ROUGE variants use different overlap structures, such as n-grams or longest common subsequences, with specified precision/recall summaries. Pin the chosen variant, tokenization, references, aggregation and smoothing before comparing implementations. Do not substitute this toy calculation for those algorithms.
+
+**Solution:** use overlap to diagnose wording similarity where relevant, but verify the settlement claim separately. A contextual-token metric may recognize B's paraphrase better than exact overlap, yet a high similarity score still cannot certify the amount, negation or actual transaction state. Test those failure cases against independent truth instead of assuming an embedding fixes validity. If the task requires an exact identifier rather than an explanation, preserve that distinct exact-output contract. Never normalize away “not,” currency, dates or entity identity merely to raise agreement.
+
 ### Embedding and learned metrics
 
 BERTScore-like semantic similarity tolerates paraphrase but can reward semantically related wrong answers. Validate any learned metric on task-specific human labels and important counterexamples.
