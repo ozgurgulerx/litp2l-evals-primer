@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Advanced capstone integration checkpoint — 7 September 2026
+
+The [advanced defense round](capstone.md#advanced-defense-budget-replay-and-consequential-risk) connects budgeted execution, replay/CI evidence and consequential-risk dependence to the final learner assessment. Three pressure variants have complete worked answers and a noncompensatory rubric. Eight exact pointers locate the newer budget evidence; the original three-artifact exercise, reference index and answer key remain unchanged. Learners must preserve separate study identities and defend unfinished work, current authority and causal assumptions.
+
+All eight pointer values were checked against the retained packet. Independent review found no blockers and confirmed preservation of the original exercise. Twelve book-example/link tests, strict build, dependency audit and desktop expansion of all three new solutions pass. This closes an assessment-integration gap, not a human evaluation of learner readiness, a model study or a deployment qualification.
+
 ### Complete practice navigation checkpoint — 7 September 2026
 
 The homepage now links a [complete topic-grouped practice index](micro-katas.md#complete-practice-index), preserving the earlier learning route and exercise explanations. A rendered-heading inventory found exactly 98 numbered katas, with no gaps or duplicate identifiers. The new seven-topic index links each once; all 98 anchors resolve in the built book. Numbers remain identifiers, not prerequisite or difficulty claims. Learners record predictions, results, changed-assumption explanations and unresolved evidence, then complete the existing capstone.

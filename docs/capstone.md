@@ -112,6 +112,61 @@ Answer each before opening its solution. Keep the original memo and record the c
 ??? success "Solution C"
     Refuse the premise: routing rollback cannot erase a completed side effect. Require an authoritative ledger reconciliation, separately authorized compensation where possible, customer-impact assessment and evidence that the repaired precommit boundary prevents recurrence. Stopping future routing and recovering prior effects are different controls. No compensation run or customer recovery is demonstrated by this study.
 
+## Advanced defense: budget, replay and consequential risk
+
+Keep the original three-artifact submission and its reference index unchanged. This separate **30-minute extension** uses the [budgeted campaign packet](assets/budgeted-exposure-v1.json), [CI replay exercise](exposure-control-lab.md#kata-97-the-packet-exists-but-did-ci-verify-it) and [risk-dependence counterexample](frontier-risk-decisions.md#kata-98-identical-component-scores-one-hundred-times-the-failures). Do not join the newer campaign to the original native candidate merely because both concern refunds.
+
+Submit an addendum of at most 400 words and a separate evidence index. For the budget artifact, record its file-byte hash and inspect at least these fields. These are lookup targets, not an independent regrading result:
+
+| Exact JSON pointer | Retained value | Interpretation to defend |
+| --- | --- | --- |
+| `/windows/1/served_candidate` | `4` | Selected candidate requests in the canary window |
+| `/windows/1/summary/candidate_completed` | `2` | Delivered completions, not all selected requests |
+| `/windows/1/summary/candidate_budget_denials` | `2` | Unfinished work caused by the capped policy |
+| `/windows/2/summary/candidate_completed` | `0` | Restriction did not restore allowance |
+| `/windows/2/summary/candidate_budget_denials` | `4` | Four further denied attempts in the restricted window |
+| `/final_budget/charged_actions` | `2` | New served-candidate effects charged across windows |
+| `/final_budget/charged_cents/EUR` | `9000` | €90 charged, not a global multi-currency amount |
+| `/deployment_authorized` | `false` | No production permission supplied by this local study |
+
+Use the pointer-reading pattern above on a new index of your own. Inspect the underlying tool events, order ledgers and budget snapshots before defending a summary. [Kata 96](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) explains complete fixed-program replay and its exact-source/interpreter requirement. A historical pointer lookup does not establish that replay passed today.
+
+??? question "Variant D: the budget worked, so exclude denied requests"
+    A stakeholder reports 100% completion among the two allowed refunds, discards the two denials, and proposes resetting the budget after restriction. What should the addendum report?
+
+??? success "Solution D: retain unfinished work and campaign identity"
+    Canary completion is 2/4 selected requests, not 2/2 after exclusions. The two denials demonstrate enforcement and unfinished service simultaneously. The next restricted window completes 0/4 because the same campaign allowance remains exhausted. Distinguish a policy-constrained delivered outcome from an intrinsic model-quality estimate; neither deleting denials nor renewing allowance silently repairs the service.
+
+    The two charged effects total EUR 9,000 cents across served candidate execution. Isolated baseline and shadow effects are different accounting scopes; their successes cannot increase delivered candidate completion. A new budget or campaign would require an explicit policy decision and preserved linkage to prior effects, not a reset that erases consumption. This packet demonstrates in-memory mock enforcement, not durable protection after process loss or authorization for a real campaign renewal.
+
+??? question "Variant E: a hash and an uploaded artifact prove the run passed"
+    The packet hash matches. A colleague supplies the workflow YAML and says an upload step proves the verifier ran successfully. Can you approve the requested expansion?
+
+??? success "Solution E: separate configuration, execution and authority"
+    No. Matching bytes do not authenticate execution or validate a judgment. Inspect the actual run revision, generation/replay step results, job conclusion and retained artifact. An always-run upload can retain evidence from a failed job. Workflow configuration alone establishes neither an observed cloud run nor a required branch-protection check.
+
+    Fresh fixed-program replay uses matching source and interpreter identities and compares complete normalized evidence; timing is explicitly excluded from semantic replay. That provides bounded consistency evidence, not signed provenance, calibrated model quality or production authority. A historical artifact from another interpreter may correctly fail exact replay. Keep it intact and produce a separate fresh packet; do not rewrite its identity to manufacture agreement.
+
+??? question "Variant F: two 1% rates justify a tiny residual risk"
+    A proposal multiplies a 1% attempt rate by a 1% safeguard-failure marginal and claims one consequential failure per 10,000 opportunities. The illustrative policy allows at most ten. What is missing?
+
+??? success "Solution F: defend the conditional pathway, not the product"
+    Under Kata 98's compatible synthetic population assumptions, the same marginals permit zero to one hundred joint failures. The aligned arrangement violates the ten-case policy. The correct factorization needs safeguard failure conditional on attempts; substituting the marginal requires justified independence. Different source populations would create an additional transport problem before that calculation even begins.
+
+    Hold expansion on this evidence. Specify the relevant joint attempt/control/effect observations and consequential pathways, or separately justified enforceable limits. Do not call logical bounds confidence intervals or extrapolate the authored populations into an empirical frontier-model risk estimate. Capability, safeguard effectiveness, exposure and consequences remain distinct claims.
+
+### Advanced assessment checks
+
+Every row must be satisfied independently. Passing the original rubric does not waive these checks, and passing either rubric does not authorize deployment.
+
+| Must demonstrate | Passing addendum | Revision trigger |
+| --- | --- | --- |
+| Budget and service outcomes | Both enforcement success and 2/4 delivered completion, with 0/4 after restriction | Denials excluded, allowance silently reset, or shadow success counted as served work |
+| Inspectable evidence | Separate artifact identity, exact pointers and underlying events/ledgers | New summaries merged into the old candidate's release receipt |
+| Replay versus CI evidence | Exact-environment replay limits plus actual-run evidence requirements | Hash, workflow configuration or upload existence treated as proof of a passing deployment gate |
+| Consequential-risk inference | Conditional rate, dependence bounds and explicit causal/population assumptions | Unrelated marginals multiplied into a risk certificate |
+| Bounded next action | Required evidence and responsible roles, with current authorization withheld | A higher task score used to waive unresolved control or evidence obligations |
+
 ## Review rubric and interview defense
 
 Use a noncompensatory rubric: polished prose cannot offset an unsupported deployment claim. Each row must pass; a failed row means revise the submission, not that the learner has failed an employment assessment.
