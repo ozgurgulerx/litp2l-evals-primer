@@ -51,7 +51,7 @@ class BudgetedExposureStudyTests(unittest.TestCase):
             ('namespace', lambda p: p['windows'][1]['budget_after']['charges'][0].update(execution_namespace='different')),
             ('policy', lambda p: p['policy'].update(max_actions=3)),
             ('decision', lambda p: p['windows'][1]['decision'].update(reason='simulation_healthy_window')),
-            ('observation', lambda p: p['windows'][1]['window']['observations'][0].update(candidate_pass=True)),
+            ('observation', lambda p: p['windows'][1]['window']['observations'][0].update(candidate_pass=False)),
             ('omitted', lambda p: p['windows'][1]['artifacts'].pop()),
             ('duplicate', lambda p: p['windows'][1]['artifacts'].append(copy.deepcopy(p['windows'][1]['artifacts'][0]))),
             ('numeric_bool', lambda p: p['windows'][1].update(served_candidate=True)),

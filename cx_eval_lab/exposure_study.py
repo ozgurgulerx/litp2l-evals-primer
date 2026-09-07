@@ -40,7 +40,12 @@ class FaultInjectedCandidate:
         return agent.run(request, tools)
 
 
-def execute_window(state, number, fault_mode, *, immature=False, action_budget=None):
+def execute_window(state, number, fault_mode, *, immature=False, action_budget=None,
+                   execution_namespace=None):
+    if execution_namespace is not None and (
+        not isinstance(execution_namespace, str) or not execution_namespace.strip()
+    ):
+        raise ValueError('trusted execution namespace must be nonempty')
     start, end = (number - 1) * 10, number * 10
     artifacts, observations = [], []
     candidate_count = 0
@@ -56,7 +61,9 @@ def execute_window(state, number, fault_mode, *, immature=False, action_budget=N
         candidate_count += served == 'candidate'
         baseline = run_case(case, DescriptiveResolver())
         candidate = (run_case(case, FaultInjectedCandidate(fault_mode),
-                             action_budget=action_budget if served == 'candidate' else None)
+                             action_budget=action_budget if served == 'candidate' else None,
+                             execution_namespace=(canonical_hash((execution_namespace, number, customer))
+                                                  if execution_namespace is not None else None))
                      if state.stage == 'shadow' or served == 'candidate' else None)
         artifact = {'customer_id': customer, 'served': served,
                     'baseline': baseline, 'candidate': candidate,

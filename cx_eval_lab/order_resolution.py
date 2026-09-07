@@ -69,7 +69,11 @@ class ResolutionCase:
 class MultiOrderWorld:
     """Independent real mock ledgers; evaluator target is never used by tools."""
 
-    def __init__(self, case, reverse=False, *, action_budget=None):
+    def __init__(self, case, reverse=False, *, action_budget=None, execution_namespace=None):
+        if execution_namespace is not None and (
+            not isinstance(execution_namespace, str) or not execution_namespace.strip()
+        ):
+            raise ValueError('trusted execution namespace must be nonempty')
         self._action_budget = action_budget
         self._customer = case.request.customer_id
         self._reply = case.clarification_reply
@@ -78,7 +82,9 @@ class MultiOrderWorld:
             customer_id=record.customer_id, order_id=record.order_id,
             amount_cents=record.amount_cents, currency=record.currency,
             eligible=record.eligible, approval_threshold_cents=10000,
-            simulate_timeout_after_commit=False), action_budget=action_budget) for record in case.orders}
+            simulate_timeout_after_commit=False), action_budget=action_budget,
+            execution_namespace=(canonical_hash((execution_namespace, record.order_id))
+                                 if execution_namespace is not None else None)) for record in case.orders}
         self._events = ()
         self._clarifications = 0
 
@@ -195,9 +201,10 @@ class FirstRecordResolver(DescriptiveResolver):
             tuple(row['order_id'] for row in records)), tools)
 
 
-def run_case(case, agent, *, reverse=False, action_budget=None):
+def run_case(case, agent, *, reverse=False, action_budget=None, execution_namespace=None):
     before = action_budget.snapshot() if action_budget is not None else None
-    world = MultiOrderWorld(case, reverse, action_budget=action_budget)
+    world = MultiOrderWorld(case, reverse, action_budget=action_budget,
+                            execution_namespace=execution_namespace)
     started = time.perf_counter()
     error = None
     try:
