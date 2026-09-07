@@ -1,6 +1,6 @@
 # Interview & Design Drills
 
-This page converts the supplied 118-question research bank into a smaller practice system without discarding its coverage. The aim is not to memorise definitions. It is to practise turning an ambiguous request into a valid measurement and release decision.
+This page converts the supplied research bank into a smaller practice system. The [complete 118-question appendix](interview-question-bank.md) preserves every canonical ID, variant and source answer outline; the drills below develop selected questions more deeply. The aim is not to memorise definitions. It is to practise turning an ambiguous request into a valid measurement and release decision.
 
 ## Answer contract
 
