@@ -166,15 +166,16 @@ class DurableWorldTests(unittest.TestCase):
         self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
 
     def test_internal_expected_error_types_do_not_commit_partial_effect(self):
-        world = self.world()
-        tools = authorize(world)
-        before = world.durable_state()
         for error in (ValueError, PermissionError, ToolTimeout):
             with self.subTest(error=error.__name__):
+                campaign = DurableCampaign.initialize(self.path.with_name(error.__name__), **POLICY)
+                world = self.world(campaign=campaign)
+                tools = authorize(world)
+                before = world.durable_state()
                 with patch.object(RefundWorld, '_record', side_effect=error('internal recorder failure')), self.assertRaises(error):
                     refund(tools)
                 self.assertEqual(world.durable_state(), before)
-                self.assertEqual(self.campaign.snapshot()['charged_actions'], 0)
+                self.assertEqual(campaign.snapshot()['charged_actions'], 0)
 
     def test_error_after_sql_writes_rolls_back_state_effect_and_event(self):
         world = self.world()

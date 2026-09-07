@@ -5,7 +5,7 @@ events and refund effects become authoritative together at SQLite COMMIT.
 """
 
 from contextlib import closing, contextmanager
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import json
 from pathlib import Path
 import sqlite3
@@ -50,6 +50,28 @@ def _seed_json(seed):
     for identity in seed.competing_order_ids:
         _identifier(identity)
     return _json(asdict(seed))
+
+
+def _expected_failure(engine, previous, error):
+    state, events = previous
+    added_events = engine._events[len(events):]
+    if isinstance(error, ToolTimeout):
+        keys = engine._snapshot.refund_idempotency_keys
+        if (len(keys) != len(state.refund_idempotency_keys) + 1
+                or keys[:-1] != state.refund_idempotency_keys
+                or not engine._seed.simulate_timeout_after_commit or state.timeout_delivered):
+            return False
+        expected = ToolEvent(len(events) + 1, 'issue_refund', 'timed_out_after_commit', tuple(sorted({
+            'idempotency_key': keys[-1], 'identity_verified': state.identity_verified,
+            'policy_consulted': state.policy_consulted, 'approval_granted': state.approval_granted,
+            'eligible': engine._seed.eligible}.items())))
+        return (engine._snapshot == replace(state, refund_idempotency_keys=keys, timeout_delivered=True)
+                and added_events == (expected,))
+    expected_errors = {('get_order', 'not_found'): ValueError, ('get_order', 'access_denied'): PermissionError,
+                       ('consult_refund_policy', 'not_found'): ValueError,
+                       ('inspect_order_status', 'not_found'): ValueError, ('issue_refund', 'not_found'): ValueError}
+    return (engine._snapshot == state and len(added_events) == 1
+            and expected_errors.get((added_events[0].tool, added_events[0].status)) is type(error))
 
 
 @dataclass(frozen=True, init=False)
@@ -204,8 +226,10 @@ class DurableCampaign:
             try:
                 result = getattr(engine, method)(*args, **kwargs)
             except (ValueError, PermissionError, ToolTimeout) as error:
-                # Expected tool errors retain their trace; timeout acknowledges a
-                # committed effect only after the outer transaction succeeds.
+                # Exception class alone is not evidence of an expected boundary.
+                # Unknown partial mutation must roll back even for these classes.
+                if not _expected_failure(engine, previous, error):
+                    raise
                 failure = error
             self._save(db, world.execution_namespace, engine, previous, method)
         if failure is not None:
