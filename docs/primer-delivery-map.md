@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Hard-budget integration design checkpoint — 7 September 2026
+
+Read-only tracing of `exposure_study`, `order_resolution`, `world` and `recovery_worker` identified the actual effect hooks and three integration hazards: baseline/shadow controls can consume the wrong budget scope; repeated order/key strings in independent worlds can cause false deduplication; and commit-before-timeout accounting cannot wait for tool success. The [hard-budget implementation contract](exposure-control-lab.md#hard-action-budgets-implementation-contract) now defines served-candidate scope, campaign ownership, authoritative per-currency amounts, replay identity, concurrent final-unit tests, reset/timeout behavior and outcome denominators. Historical artifacts remain unchanged.
+
+This checkpoint is a code-grounded design, not an implemented cap. The strict book build, whitespace check and installed dependency audit pass; no runtime or financial-enforcement result is claimed. Next is a RED regression sequence at the shared commit boundary, followed by in-process integration and separately demonstrated durable transactional enforcement. A standalone budget counter or another disconnected payment demo would not close the existing exposure-path requirement. Live application deployment and the broader goal remain open.
+
 ### Judge scope-evidence clarification checkpoint — 7 September 2026
 
 Audit of the older [groundedness example](llm-as-a-judge.md#worked-example-qualifying-a-groundedness-judge) found wording that described synthetic cases as independently reviewed and listed English scopes as qualified without the required scoped evidence. The revision preserves the original counts, hypothetical decisions and companion artifact, but explicitly identifies the missing provenance, slice denominators, error bounds and authority. It concludes that no production qualification is established by the supplied table. Three false-pass estimands and the acceptance/review workload are now worked separately.
