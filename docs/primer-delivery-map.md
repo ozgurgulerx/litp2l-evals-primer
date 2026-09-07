@@ -6,6 +6,10 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Budget replay CI wiring checkpoint — 7 September 2026
+
+[Kata 97](exposure-control-lab.md#kata-97-the-packet-exists-but-did-ci-verify-it) connects fresh budget packet generation and verification to the conformance workflow. RED `aa50e75` detected the missing step; GREEN `2a4d40e` added both commands with explicit Bash execution. A structural regression checks unconditional execution, absence of error suppression, matching packet paths and always-run artifact retention. Ten targeted workflow/study tests and local fresh generation/replay pass; independent review found no blockers or added privilege. This closes dedicated workflow wiring, not observed cloud execution or required branch protection. The earlier full-suite result remains historical; this change does not modify runtime source.
+
 ### Retained budgeted campaign checkpoint — 7 September 2026
 
 [Kata 96](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) adds a versioned packet and fixed-builtin replay for the existing budget boundary. Three executed windows retain complete cases, tool events, ledgers, scope labels, namespaces, budget snapshots and decision inputs. Shadow/canary/restricted windows produce cumulative charges 0/2/2 and denials 0/2/6. Restriction does not mint new allowance. The original unbudgeted study remains unchanged.

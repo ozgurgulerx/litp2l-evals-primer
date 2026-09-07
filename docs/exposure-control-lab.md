@@ -198,6 +198,31 @@ The output command refuses an existing destination. The packet retains case reco
 
 **Portability and authority:** exact replay requires the recorded source bytes and interpreter identity. A retained macOS packet may correctly fail verification on Linux or after a source change. Generate and verify a new packet there; do not rewrite the old inventory and call it reproduced. Hashes and local replay establish consistency with this fixed mock program, not signed provenance, human calibration, model quality, durable enforcement or production qualification. `deployment_authorized` remains false.
 
+### Kata 97: the packet exists, but did CI verify it?
+
+**Question:** a job uploads a JSON packet after running the campaign. Is that enough to claim its replay passed? No: generation, verification, retention and release authority are separate checks.
+
+The conformance workflow now contains this required step:
+
+```yaml
+- name: Generate and replay a fresh budgeted exposure campaign
+  shell: bash
+  run: |
+    uv run python -m cx_eval_lab.budgeted_exposure_study --output ci-evidence/budgeted-exposure.json
+    uv run python -m cx_eval_lab.budgeted_exposure_study --verify ci-evidence/budgeted-exposure.json
+```
+
+Both commands use the runner's current source/interpreter identity. CI does not try to pass off the historical macOS artifact as a fresh Linux execution. The existing always-run upload step includes `ci-evidence/`, so available failure evidence is retained too. An uploaded file is not a passing verdict: inspect the generation and verification exit statuses and the job conclusion.
+
+??? success "Solution: require the replay, retain the failure, withhold release authority"
+    Remove the second command and run `uv run python -m unittest tests.test_budgeted_ci -v`. The structural regression must fail. It also rejects conditional skipping, `continue-on-error`, a different output/verify path or loss of the always-run evidence upload. Restore the command before continuing.
+
+    Next, generate a packet locally, alter a charge and recompute its outer hash as in Kata 96. The verifier must exit nonzero. A CI workflow that masks that exit code, such as by appending `|| true`, no longer enforces replay. The exact-command regression rejects that wiring change; the study's semantic mutation tests independently check that altered evidence is refused.
+
+    Passing these checks establishes local software conformance. The YAML configuration is not evidence that a cloud job ran, that branch protection requires it, or that an application was deployed. Before claiming enforcement, retain an actual run URL and revision, job conclusion, downloaded artifact and replay result, and separately inspect the repository's required-check configuration. Keep production authorization false until the application-specific qualification and deployment controls are satisfied.
+
+**Interview checkpoint:** explain why a failed run can still have an uploaded artifact, why fresh same-runner replay avoids a portability mismatch, and why a required green software check cannot substitute for calibrated model evidence or a production release decision.
+
 ### Hard action budgets: implementation contract
 
 **Status: first in-process boundary and retained replayable packet implemented; durable enforcement remains open.** A 5% cohort cannot enforce a two-refund cap. Nor can a post-return counter account safely for a tool that committed a refund and then timed out. Katas 95–96 join budget accounting to the effect boundary and retain replayable evidence while preserving the unbudgeted historical study. The design requirements below remain the contract for reviewing this implementation and its remaining extensions.

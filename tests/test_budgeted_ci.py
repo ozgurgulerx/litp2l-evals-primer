@@ -1,7 +1,7 @@
 """The budget campaign must generate and replay fresh evidence in CI."""
 
-from pathlib import Path
 import unittest
+from pathlib import Path
 
 import yaml
 
