@@ -1,5 +1,19 @@
 # Micro-katas: learn by breaking and repairing an evaluation
 
+## Additional worked decision exercises
+
+These unnumbered exercises supplement the existing numbered sequence; they do not change its IDs. Each includes a worked solution and explicit evidence limits.
+
+| Exercise | Decision to defend |
+| --- | --- |
+| [Judge lineage and panel errors](llm-as-a-judge.md#worked-micro-kata-hiding-the-name-does-not-test-every-preference-leak) | Separate identity intervention, generator-group association, shared errors and review load. |
+| [Skill selection versus complete capability](modern-agent-architectures.md#worked-micro-kata-successful-selection-failed-capability) | Choose the correct denominators for activation, loading and execution. |
+| [Voice timing uncertainty](modern-agent-architectures.md#worked-micro-kata-the-clocks-cannot-decide) | Distinguish an early action, uncertain event order and valid authorization. |
+| [Interrupted effect to rollback receipt](exposure-control-lab.md#executed-integration-interrupted-effect-to-rollback-receipt) | Preserve missing completion while restricting exposure after an observed violation. |
+| [Eight-lab completion defense](courses.md#the-supplied-reports-eight-lab-completion-path) | Distinguish studying a worked method from collecting the evidence required to complete its empirical lab. |
+
+## Numbered kata sequence and capstone
+
 After the individual exercises, use the [release-decision capstone](capstone.md) to connect them: inspect three retained artifacts, submit a bounded decision, and revise it under three pressure variants. A complete worked memo and evidence index are supplied.
 
 Each kata asks you to predict a result, run a small experiment, explain the failure, and inspect a solution. The reference solution remains working. Try your changes in a separate branch or scratch copy, then use the regression tests to check your reasoning.
