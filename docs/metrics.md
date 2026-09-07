@@ -233,6 +233,25 @@ Large dashboards create many chances for an apparently significant movement. Sep
 
 Use appropriate multiplicity control when making several confirmatory claims. For exploratory slices, publish them as hypotheses for validation rather than silently promoting the most extreme result to a gate.
 
+### Worked micro-kata: the winner of twenty prompts
+
+Before evaluation, a team registers twenty fixed prompt variants, one quality endpoint, one baseline, one final analysis and a family-wise false-positive budget of 5%. Each comparison uses the same eligible cases with valid paired analysis. The supplied one-sided p-values for the three most promising variants are `0.004`, `0.018` and `0.041`; the other seventeen exceed `0.05`. The winning observed quality gain is 0.7 percentage points. These are authored inputs, not measured model results.
+
+**Exercise:** does the smallest p-value establish a family-controlled improvement? What changes if the team reports only the winning prompt?
+
+**Solution:** a registered Bonferroni rule tests each of twenty hypotheses at `0.05/20 = 0.0025`. No variant clears that threshold. The smallest adjusted p-value is `min(1, 20*0.004) = 0.08`. Reporting just the winner does not shrink the tested family to one. Hold the confirmatory improvement claim; the winning point estimate remains an exploratory result, not evidence that all variants are equivalent or worse.
+
+Why control the family? If twenty null tests were independent and each rejected with probability exactly 0.05, the probability of at least one false rejection would be `1 - 0.95**20 ≈ 64.15%`. Shared cases usually make the actual tests dependent, so that number is an illustrative independence calculation, not this experiment's measured error rate. Bonferroni instead uses the union bound: twenty valid tests each bounded by 0.0025 have total false-rejection probability at most 0.05, without requiring independence. It does not repair invalid individual p-values.
+
+```python
+family_size, alpha, smallest_p = 20, 0.05, 0.004
+print(alpha / family_size)                    # 0.0025
+print(min(1.0, family_size * smallest_p))      # 0.08
+print(round(1 - (1 - alpha)**family_size, 6))  # 0.641514
+```
+
+Two defensible next steps answer different questions. Retain the family analysis and collect evidence under a predeclared continuation design, or freeze the selected prompt and evaluate its registered claim once on genuinely untouched acceptance data. Do not retune on that acceptance result, repeatedly peek, or recycle an exposed holdout as fresh evidence. Any additional confirmatory endpoints or critical-slice claims also need an explicit error-control policy. Even a significant improvement must satisfy the practical margin, safety, workload and cost constraints before release. This example covers simultaneous prompt selection; repeated interim looks are the distinct design taught in the [Sequential Decisions Lab](sequential-decisions-lab.md).
+
 ## Rare critical failures
 
 When zero failures are observed in \(n\) independent trials, the observed rate is zero but the true rate is not proven zero. A rough 95% upper bound is approximately \(3/n\) under simple binomial assumptions.
