@@ -84,6 +84,12 @@ class CompletionJournal:
         db.execute('PRAGMA synchronous=FULL')
         return db
 
+    def require_campaign(self, campaign):
+        if _binding(campaign) != self.binding:
+            raise ValueError('completion journal campaign binding mismatch')
+        with self._transaction():
+            pass
+
     @contextmanager
     def _transaction(self, *, write=False):
         if _binding(self.campaign) != self.binding:

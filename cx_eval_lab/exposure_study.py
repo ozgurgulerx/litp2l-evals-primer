@@ -88,12 +88,17 @@ def case_from_plan(value):
 
 def execute_window(state, number, fault_mode, *, immature=False, action_budget=None,
                    execution_namespace=None, durable_campaign=None, window_registry=None,
-                   manifest_digest=None):
+                   manifest_digest=None, completion_journal=None):
     _validate_backends(action_budget, durable_campaign, execution_namespace)
     if (window_registry is None) != (manifest_digest is None):
         raise ValueError('window registry and explicit manifest must be supplied together')
     if window_registry is not None and durable_campaign is None:
         raise ValueError('registered windows require a durable campaign')
+    if completion_journal is not None:
+        if window_registry is None or durable_campaign is None:
+            raise ValueError('completion journal requires registered durable windows')
+        window_registry.require_campaign(completion_journal.campaign)
+        completion_journal.require_campaign(durable_campaign)
     if durable_campaign is not None:
         durable_campaign.snapshot()  # Verify storage even for shadow/baseline-only windows.
     plan = build_window_plan(state, number, fault_mode, immature=immature,
@@ -110,7 +115,10 @@ def execute_window(state, number, fault_mode, *, immature=False, action_budget=N
         case = case_from_plan(member['case'])
         candidate_count += served == 'candidate'
         baseline = run_case(case, DescriptiveResolver())
-        candidate = (run_case(case, FaultInjectedCandidate(fault_mode),
+        candidate = (completion_journal.execute(case, FaultInjectedCandidate(fault_mode),
+                        namespace=member['candidate_namespace'], manifest_digest=manifest_digest)
+                     if completion_journal is not None and served == 'candidate' else
+                     run_case(case, FaultInjectedCandidate(fault_mode),
                              action_budget=action_budget if served == 'candidate' else None,
                              durable_campaign=durable_campaign if served == 'candidate' else None,
                              execution_namespace=member['candidate_namespace'])
