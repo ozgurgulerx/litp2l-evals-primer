@@ -272,6 +272,28 @@ deployment proof was found for adaptive/IRT LLM release gating.
 
 ### Adaptive security testing
 
+#### Micro-kata: the most informative item is not the whole release suite
+
+For an authored one-parameter logistic teaching model, assume item difficulty `b` is already calibrated and candidate ability is currently estimated as `theta = 0`. Define success probability as `p = 1 / (1 + exp(b - theta))`. With unit discrimination and the model's local-independence assumption, item information about ability is `p * (1 - p)`.
+
+**Exercise:** compare difficulties -2, 0 and 2. Which unused item is most informative at the current estimate? May the runner omit a mandatory authorization scenario with low information?
+
+```python
+from math import exp
+theta = 0
+information = {}
+for b in [-2, 0, 2]:
+    p = 1 / (1 + exp(b - theta))
+    information[b] = p * (1 - p)
+assert max(information, key=information.get) == 0
+print([round(information[b], 6) for b in [-2, 0, 2]])
+# [0.104994, 0.25, 0.104994]
+```
+
+**Solution:** choose difficulty 0 among these optional items; its modeled success probability is 0.5. After observing a response, update the ability estimate under a registered fitting procedure and select again from unused eligible items. Stop under a registered precision/budget rule, not when a favorable answer arrives. An exhausted budget with inadequate precision remains inconclusive.
+
+The authorization scenario still runs: information about this modeled ability is not information about every safety property. This calculation assumes item parameters rather than estimating them, supplies no fitted uncertainty interval and does not qualify an adaptive evaluator. Before using one, test item-bank fit, parameter uncertainty, correlated tasks, population shift and rank stability against full-bank held-out results. Preserve the independent mandatory regression/safety suite.
+
 [Adaptive attacks on indirect prompt-injection defenses](https://aclanthology.org/2025.findings-naacl.395/)
 show why a static attack suite can overstate security. This is peer-reviewed
 attack evidence, not proof of a deployed defense. A release programme should
