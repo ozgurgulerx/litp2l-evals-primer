@@ -191,8 +191,6 @@ The book still owns the deeper treatment of:
 - source authority, atomic claims, citation completeness, and live-web validity;
 - shadow/canary control, delayed outcomes, rollback, and incident-to-regression evidence.
 
-## Course-completion template
-
 ## The supplied report's eight-lab completion path
 
 The supplied *Best Courses and YouTube Resources for Learning LLM Evaluation* report proposes eight projects in one progressively developed repository. Use the existing book exercises below as preparation, then keep each lab's receipt in the same experiment history. The report's sample counts are practice targets, not statistical qualification thresholds.
@@ -210,7 +208,7 @@ The supplied *Best Courses and YouTube Resources for Learning LLM Evaluation* re
 
 **Completion defense:** “All eight chapters exist, so all eight labs are complete.” Reject this claim. Chapter presence establishes navigation. Worked solutions teach the method. A learner's retained execution and annotation receipts establish what that learner actually performed. In particular, scripted reviewers cannot close the human lab, local built-in agents cannot establish model quality, and a configured workflow is not a successful hosted CI run. Missing receipts remain explicitly unfinished; they do not invalidate the methods already taught.
 
-### Record a completed course
+## Course-completion template
 
 For any new course, add a record only after verifying its official page.
 
