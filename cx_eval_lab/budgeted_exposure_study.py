@@ -39,7 +39,8 @@ def _artifact_without_timing(artifact):
         trial = artifact[arm]
         if trial is not None:
             duration = trial['elapsed_ms']
-            if type(duration) not in (int, float) or not math.isfinite(duration) or duration < 0:
+            if (type(duration) not in (int, float) or duration < 0
+                    or duration > sys.float_info.max or not math.isfinite(duration)):
                 raise ValueError('elapsed_ms must be finite and nonnegative')
             result[arm] = {**trial, 'elapsed_ms': 0}
     return result
@@ -145,7 +146,7 @@ def main():
         except (OSError, ValueError) as error:
             parser.error(str(error))
         return 0
-    if args.output.exists():
+    if args.output.exists() or args.output.is_symlink():
         parser.error('choose a new output path')
     report = run_study()
     args.output.parent.mkdir(parents=True, exist_ok=True)
