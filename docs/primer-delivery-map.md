@@ -6,6 +6,12 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Joined window evidence checkpoint — 7 September 2026
+
+Kata 104 joins registered membership to served-candidate completion evidence and observed order state. Integration `74be89a` preserves all forty members, distinguishes missing records from missing completion, retains unknown labels and exposes wrong-order effects after a real process kill. Completion batches and world batches each use one transaction; there is no cross-database atomic snapshot or controller decision. Optional execution journals served candidates only; repeating it can reuse candidate evidence while rerunning baseline controls, not create independent trials.
+
+The 48 focused integration/regression tests pass; lint, type checks and dependency audit pass. These existing checks are reused rather than repeating the full suite. Remaining acceptance work is durable controller acceptance and interrupted-attempt recovery, a retained integrated process packet with CI wiring, independently qualified human/model evidence, and demonstrated application deployment controls. This checkpoint does not close those requirements. Existing content and historical artifacts are preserved.
+
 ### Durable window registration checkpoint — 7 September 2026
 
 [Kata 103](exposure-control-lab.md#kata-103-keep-the-cohort-when-the-worker-disappears) adds optional immutable window registration to the actual exposure driver. A shared pure builder creates forty full ordered cases, routes, namespaces and effect scopes. Registration binds the caller-supplied predecessor, timing, fault/maturity settings and manifest before any agent runs. A real spawned-process kill before the first agent leaves all forty members registered and zero effects charged.

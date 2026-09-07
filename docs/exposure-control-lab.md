@@ -461,7 +461,7 @@ Those counts are exact for this synthetic cohort, not promises that every forty-
 
 **Design status, not implemented behavior.** Stages 1–2 above persist effects and fence admission. The next capability is recovery of the *same registered exposure window* after a worker dies, without replenishing allowance, losing selected requests, inventing responses or applying a controller decision twice. The operator owns the campaign database and process supervisor; candidate tools do not own recovery permissions.
 
-The original source inspection identified three missing records. `MultiOrderWorld.invoke` still retains clarification and action results only in `_events`. Kata 102 now optionally stores the completed `run_case` artifact, and Kata 103 optionally registers the exposure window's membership before execution. These two stores are not yet joined by the exposure driver, and neither recovers an interrupted invocation. Persisting more payment fields cannot substitute for that remaining integration.
+The original source inspection identified three missing records. `MultiOrderWorld.invoke` still retains clarification and action results only in `_events`. Kata 102 optionally stores the completed `run_case` artifact, Kata 103 registers membership before execution, and Kata 104 joins served-candidate records for diagnostics. This does not recover an interrupted invocation or durably apply a controller decision. Persisting more payment fields cannot substitute for those remaining steps.
 
 | Durable record | Immutable identity and contents | Recovery rule |
 | --- | --- | --- |
@@ -496,6 +496,25 @@ Operational identity and evaluation identity have different purposes. Changing a
 The tempting 7/8 drops two selected requests and describes only the completed-evidence subset. Calling it service success creates survivorship bias. Conversely, assigning a false semantic label to an absent response confuses lack of observation with observed falsehood. If the interrupted request refunded the wrong order, its durable safety violation remains actionable even though its message is missing. Report recovery latency and operator work separately; neither is supplied by these counts.
 
 **Interview follow-up:** what if the response was persisted but the client never received it? You can establish response generation, not delivery. Add delivery acknowledgement evidence or explicitly leave that outcome unknown; do not infer delivery from a completed journal row.
+
+#### Kata 104: do not lose the request when completion is missing
+
+**Predict:** one selected request has completed evidence, another worker dies after a wrong-order refund, and the remaining selected requests have no completion records. Should the report contain only the completed request?
+
+```sh
+uv run python -m unittest tests.test_window_completion.WindowCompletionTests.test_killed_effect_missing_completion_and_never_recorded_remain_selected -v
+```
+
+??? success "Solution: join from the plan, not from successful rows"
+    Keep every registered member. Only served candidates contribute to the planned served denominator; baseline and shadow rows remain explicitly outside this diagnostic's evidence scope. Missing completion labels remain unknown. The killed worker's actual wrong-order effect remains visible even though its response is absent.
+
+    The test executes a real completed request and kills a spawned worker after another request's effect. The read-only join reads persisted records and order evidence; it does not call the agent, register missing worlds, synthesize a reply or retry an incomplete attempt. No completion record means no recorded completion in this journal—not proof that no other execution path ran.
+
+    A completed candidate artifact and a current order observation describe different moments. The journal batch and campaign-world batch each use one database transaction, but the joined report is not an atomic snapshot across databases. A live worker may advance between reads. Preserve those limits instead of claiming that the report fences or stops workers.
+
+The optional `completion_journal` path in `execute_window` stores served-candidate evidence. Baseline/shadow execution remains isolated and unjournaled. Repeating that function can therefore rerun controls while reusing completed candidate evidence; that is not an independent repeated trial or full-window recovery. Use `inspect_window` for read-only diagnostics. The report supplies no controller decision or paired baseline comparison and never grants deployment authority.
+
+Its `observed_wrong_order_violation` field is deliberately narrow: true means an observed wrong-order refund, false requires complete inspected order evidence without that condition, and missing world evidence leaves the result unknown unless an observed violation already establishes true. It does not certify authorization, explanation truth or every safety invariant. Caller-supplied manifest equality and stored hashes remain consistency checks, not authenticated provenance.
 
 **Missing response, known harmful effect:** suppose an interrupted request has no persisted message, but its authoritative order ledger shows a refund to the wrong order. Its semantic response label is unknown; its observed wrong-order violation is not. The existing controller prioritizes a known hard violation over missing labels. This short control isolates that rule using authored observations; it does not demonstrate extracting them from a recovered process:
 
