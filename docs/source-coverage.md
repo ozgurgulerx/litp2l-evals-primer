@@ -113,6 +113,22 @@ The PDF and DOCX files supplied with the corpus are companion renderings of the 
 
 This second map checks the structure of each source, not only the combined topic taxonomy.
 
+### Input identity check — 7 September 2026
+
+The six supplied Markdown files were found locally; their actual first-line titles match the six corresponding corpus rows above. The numbered filenames resolve as follows. Fingerprints identify the inspected input version, not the quality or completeness of its treatment.
+
+| Input filename | Corpus title / role | SHA-256 |
+| --- | --- | --- |
+| `deep-research-report-9.md` | GitHub repository landscape | `00322670378566b7283ae8958bda1e74de5ecf7211e7d97d36fe8af4510a564e` |
+| `deep-research-report-10.md` | Interview question bank | `b384e42874ca12487d3854877ee7f6736d7979cb749d68efe5dd9eec83021839` |
+| `deep-research-report-13.md` | OpenAI Deep Research evaluation report | `6832298d6e379f661d708d3fa58c67f16ddd7bbdbf2d64b3f5822dcfe1a50f1c` |
+| `deep-research-report-15.md` | Courses and YouTube report | `726f05c6ac9e99e49ed3d1726c8cddc0c1f3a0fe8960cedfbd94cac92bfd50df` |
+| `Eval-Driven AI Programming A Code-First Path to Production AI Engineering.md` | Eval-driven programming | `15514e073b0b3f3d56c20e429eca462b0f8f942f5dc25f8875044984abf3da31` |
+| `x Evals, Observability and Release Gates for Production AI Systems.md` | Production evaluation operations | `21abcf7640bc529af0dc6db41f7e3671416fa2dae14a9a9267ac726026c895d0` |
+| `llm-evaluation-research-review-2026.docx` | Later research-review input; file presence/fingerprint checked, contents not re-audited in this check | `7156e7d910fe0cb1e29b8c262ca0ee65ed95450f1575ef2d33dc058192b637f6` |
+
+**Audit limit:** the following section map is an editorial coverage assertion, not a completed independent section-by-section acceptance test. Title matches, fingerprints and broad chapter links do not prove that every source example has an adequate worked solution. Companion PDF/DOCX content equivalence was not reverified in this input check. Final content acceptance must inspect the mapped teaching sections and examples; it must not infer completeness from this inventory alone.
+
 | Source | Source sections retained | Portal treatment |
 | --- | --- | --- |
 | GitHub repository landscape | Ranked shortlist; comparison dimensions; licence implications; quick starts; specialised tools; layered architecture and next steps | System Studies keeps the complete tool inventory, selection/portability/licensing contracts, worked adapter comparison, and a cross-tool reproduction exercise. Quick-start commands remain in the source because the book teaches contracts rather than duplicating change-prone vendor syntax. |

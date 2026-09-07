@@ -6,6 +6,10 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Supplied-input identity checkpoint — 7 September 2026
+
+The source ledger now resolves the four numbered Markdown filenames to their actual titles and fingerprints all six Markdown inputs plus the later DOCX review. All six Markdown titles have corpus mappings. This closes input identification only: the ledger explicitly distinguishes its editorial section map from the still-required content-depth audit, and does not claim companion-format equivalence was reverified. No new research, runtime study or production qualification was performed.
+
 ### Completion scope and capstone acceptance — 7 September 2026
 
 The user's objective is a comprehensive teachable primer, not an assertion that its synthetic agent has earned production qualification. External reviewers, paid model runs and a real application deployment are prerequisites for **those empirical claims**, not automatic prerequisites for explaining and exercising the methods honestly. Existing experimental commitments remain listed below; this distinction does not mark an unfinished experiment complete or waive source coverage, worked examples, correctness or publication checks.
