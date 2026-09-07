@@ -282,6 +282,23 @@ These labels are authored controls, not observations of real strict or lenient p
 
 **Evidence boundary:** local replay validates calculations, assignment joins and retained synthetic inputs. No actual humans or models were evaluated. The resampling range is not population qualification; hashes are not proof of independent adjudication; the original eight-item criterion remains deliberately imperfect. Next steps require a real blinded pilot and independent validation. [Katas 70–71](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) address sample selection; the [semantic grading lab](semantic-grading-lab.md) addresses how qualified evidence enters the judge lifecycle.
 
+### Worked micro-kata: separate the reviewer from the treatment
+
+For a continuous measurement with a defensible equal-interval scale, consider the illustrative model `rating = intercept + treatment_effect + reviewer_offset`. Two reviewers score identical baseline/candidate items:
+
+| Reviewer | Baseline | Candidate |
+| --- | ---: | ---: |
+| Strict | 2 | 3 |
+| Lenient | 4 | 5 |
+
+**Exercise:** anchor the strict reviewer's offset at zero. Recover the intercept, reviewer offset and treatment contrast. What happens if only the strict-baseline and lenient-candidate cells are collected?
+
+**Solution:** the intercept is 2, the lenient offset is 2, and both within-reviewer treatment differences are 1. Observing only the two diagonal cells gives a difference of 3, but cannot distinguish treatment from reviewer effects. Infinitely many allocations of that difference fit those two observations. A more sophisticated model does not create the missing overlap; a prior can impose an allocation, which must be reported as assumption-sensitive rather than identified by these data.
+
+This table has no noise and is authored, so it provides no standard errors or population inference. A real crossed model might use `y_ir = mu + beta*treatment_i + u_i + v_r + error_ir`, with item effect `u_i` and reviewer effect `v_r`, plus justified interactions when reviewers respond differently to treatment. Retain item, reviewer, treatment and presentation identifiers. Estimate variance components from sufficient replicated, connected data; inspect residuals, reviewer-by-treatment effects and sensitivity to reviewer exclusion. One shared anchor is not automatically enough support for a useful fit.
+
+Do not fit this linear example blindly to a four-level rubric: ordinal labels need an appropriate ordinal model and explicit thresholds, while binary pass/fail labels can use a suitable binary-response model. Expertise and target-user preference remain distinct constructs, not offsets to subtract until reviewers agree. Check model predictions against held-out ratings and external correctness evidence where available. Rater adjustment does not establish truth, erase legitimate disagreement or make a nonrandomized treatment contrast causal.
+
 ## Artifact: annotation specification
 
 ```yaml

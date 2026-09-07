@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Reviewer effects and treatment effects](human-evaluation.md#worked-micro-kata-separate-the-reviewer-from-the-treatment) | Explain why disconnected reviewer assignments cannot identify a model improvement. |
 | [The winner of twenty prompts](metrics.md#worked-micro-kata-the-winner-of-twenty-prompts) | Keep the tested family intact when selecting the best-looking result. |
 | [Semantic entropy and consistent errors](metrics.md#worked-micro-kata-different-words-same-uncertain-meaning) | Separate variation in wording, variation in meaning and verified truth. |
 | [Assigned customers and human workload](production-evals.md#worked-micro-kata-the-assisted-cases-are-still-assigned-cases) | Reject a post-assignment dashboard gain that hides unresolved work and assistance burden. |
