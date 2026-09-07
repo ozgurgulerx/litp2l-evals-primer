@@ -1,7 +1,7 @@
 """In-process effect-boundary and served-candidate campaign budget contracts."""
+import unittest
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
-import unittest
 from unittest.mock import patch
 
 from cx_eval_lab.action_budget import ActionBudget
@@ -80,7 +80,7 @@ class ActionBudgetTests(unittest.TestCase):
             first = world(budget)
             targets = [first, first if same_world else world(budget)]
             barrier = Barrier(2)
-            def attempt(target):
+            def attempt(target, barrier=barrier):
                 barrier.wait(timeout=5)
                 return refund(target)['status']
             with ThreadPoolExecutor(max_workers=2) as pool:
@@ -101,9 +101,8 @@ class ActionBudgetTests(unittest.TestCase):
     def test_unknown_effect_failure_retains_charge_and_latches(self):
         budget = ActionBudget(2, {'USD': 8000})
         target = world(budget)
-        with patch('cx_eval_lab.world.replace', side_effect=RuntimeError('injected')):
-            with self.assertRaises(RuntimeError):
-                refund(target)
+        with patch('cx_eval_lab.world.replace', side_effect=RuntimeError('injected')), self.assertRaises(RuntimeError):
+            refund(target)
         self.assertEqual(budget.snapshot()['charged_actions'], 1)
         self.assertTrue(budget.snapshot()['uncertain'])
         self.assertEqual(refund(world(budget))['reason'], 'budget_uncertain')

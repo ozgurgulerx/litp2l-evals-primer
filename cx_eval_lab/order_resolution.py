@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict, dataclass
 import json
-from pathlib import Path
 import time
+from dataclasses import asdict, dataclass
+from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
 from cx_eval_lab.evidence import canonical_hash
@@ -203,7 +203,7 @@ def run_case(case, agent, *, reverse=False, action_budget=None):
     try:
         execute = getattr(agent, 'run_unresolved', agent.run)
         output = execute(case.request, world.tools())
-    except Exception as failure:
+    except Exception as failure:  # noqa: BLE001 - retain arbitrary agent failures as evidence
         error = type(failure).__name__
         output = AgentOutput(message='Execution failed.', claimed_outcome='needs_review')
     orders = world.artifacts()
@@ -257,8 +257,8 @@ def example_cases():
         ('explicit-description', 'Refund the blue backpack bought on 2026-08-02.', 'order-b', None, 0),
         ('ambiguous-description', 'Refund my blue backpack.', 'order-a',
          'The blue backpack bought on 2026-08-01.', 1),
-        ('customer-correction', 'Refund the blue backpack bought on 2026-08-02. '
-         'Correction: the blue backpack bought on 2026-08-01.', 'order-a', None, 0),
+        ('customer-correction', ('Refund the blue backpack bought on 2026-08-02. '
+         'Correction: the blue backpack bought on 2026-08-01.'), 'order-a', None, 0),
         ('unresolved-description', 'Refund my blue backpack.', None, None, 1),
     ))
 

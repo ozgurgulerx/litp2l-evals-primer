@@ -1,14 +1,25 @@
 """Run exposure transitions against isolated deterministic customer/order worlds."""
 
 import argparse
-from dataclasses import asdict, replace
 import json
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from cx_eval_lab.evidence import canonical_hash
-from cx_eval_lab.exposure_control import ExposureState, ExposureWindow, Observation, route, transition
+from cx_eval_lab.exposure_control import (
+    ExposureState,
+    ExposureWindow,
+    Observation,
+    route,
+    transition,
+)
 from cx_eval_lab.models import AgentOutput
-from cx_eval_lab.order_resolution import DescriptiveResolver, FirstRecordResolver, example_cases, run_case
+from cx_eval_lab.order_resolution import (
+    DescriptiveResolver,
+    FirstRecordResolver,
+    example_cases,
+    run_case,
+)
 
 
 class FaultInjectedCandidate:
