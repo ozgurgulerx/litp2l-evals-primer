@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Persisted completion versus committed effect
+
+[Kata 102](exposure-control-lab.md#kata-102-the-charge-survived-the-response-did-not) executes a real process kill after the existing mock refund commits but before its full case artifact returns. The separate completion journal retains an incomplete reservation, the campaign retains one charged effect, and replay refuses to invent a completed attempt. Completed records return identical evidence without rerunning the agent. Tests reject identity conflicts and inconsistent artifact-to-request bindings. This is one-shot completion storage, not recovery of an interrupted agent, durable window membership, controller recovery or customer-delivery proof. Existing content and historical packets remain unchanged.
+
 ### Durable served-candidate routing and admission
 
 [Kata 101](exposure-control-lab.md#kata-101-reopen-the-allowance-between-exposure-windows) connects the persisted backend to the existing multi-order/exposure path. Reopened shadow, canary and restricted windows retain cumulative charges of 0, 2 and 2; candidate completions are 40 shadow controls, 2/4 served and 0/4 served. Baseline and shadow do not consume served-candidate allowance. Grading reads all competing orders in one transaction. A unique durable request-start marker blocks reused and concurrent namespaces, including zero-tool and clarification-only attempts. This is admission fencing and persistent accounting, not resumable attempts, response recovery, controller checkpointing or deployment qualification. Historical artifacts remain unchanged.

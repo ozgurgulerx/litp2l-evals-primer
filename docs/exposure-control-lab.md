@@ -358,6 +358,31 @@ with TemporaryDirectory() as directory:
 
 **What this run does not prove:** the Python `ExposureState` is carried in memory. Reopening a database handle between windows is not killing and recovering the controller. No complete durable response store, resumable attempt protocol, window-decision checkpoint or new retained process-level packet is supplied here. The old study CLIs and historical artifacts remain unchanged. Use `uv run python -m unittest tests.test_durable_exposure -v` for the wiring regressions; do not call their success production qualification.
 
+### Kata 102: the charge survived, the response did not
+
+**Predict:** a worker issues a refund and is killed before returning its case artifact. After reopening, should the runner repeat the agent, return a successful response inferred from the ledger, or refuse execution while retaining the incomplete record?
+
+Run the process-boundary regression from the repository root:
+
+```sh
+uv run python -m unittest tests.test_durable_completion.CompletionTests.test_kill_after_real_effect_retains_missing_completion_and_refuses_rerun -v
+```
+
+The test uses a spawned worker and a barrier after an actual mock refund commit. It kills that process, reopens storage and checks both the effect and completion journal. This is not a supplied failure flag or a paid-model trial.
+
+??? success "Solution: preserve the effect and the missing evidence"
+    One refund remains charged. The journal remains `started`: no complete returned case evidence was persisted. Retrying that request is refused. This protects against inventing a fresh trajectory, but it does not resolve the customer request. A separate recovery procedure is still needed.
+
+    `started` is a persistence status, not a liveness detector. In this test the supervisor knows it killed and joined the process. Ordinary journal inspection cannot infer that a worker is dead, that no response was generated in memory, or that no response reached a customer.
+
+    Contrast a fully completed record: reopening can return its identical retained artifact without calling the agent or tools. That is evidence retrieval, not a repeated evaluation or current deployment qualification. Its campaign balances describe the original execution, not today's remaining allowance.
+
+`CompletionJournal` is an optional wrapper around the existing durable `run_case` path. Its separately versioned journal reserves request identity before execution and publishes the full returned artifact afterward. Effects and completion are separate transactions: the crash gap is represented rather than claimed away. A failed agent result can still have complete retained evidence; journal completion does not mean task success.
+
+The caller must supply a manifest digest covering agent configuration, source and grading identity. The journal checks that supplied identity for equality; it does not independently prove the manifest is truthful or complete. It binds to the local campaign path/device/inode and policy, which deliberately limits portability and is not authenticated provenance. Artifact hashes detect inconsistent stored bytes, not malicious rewriting by a trusted database owner.
+
+**What remains open:** this wrapper is not yet integrated with durable exposure-window membership or controller checkpoints. It has no takeover, resumable agent, live-worker fencing, durable per-invocation transcript or exactly-once response-delivery protocol. Schema-2 campaign behavior and historical packets remain unchanged. Run the full `tests.test_durable_completion` module for completion replay, identity conflicts, concurrent admission and storage-failure controls.
+
 ### Durable campaign integration contract
 
 **Status: storage and call-chain integration implemented in Katas 100–101; campaign recovery remains unimplemented.** [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) proves a bounded cap at the separate recovery payment boundary. The optional durable backend now traverses `execute_window`, `run_case`, `MultiOrderWorld` and `RefundWorld` for served candidates. Default in-memory behavior remains available. Durable mode changes authorization, effects and evidence transactionally; it does not debit SQLite and then update a separate authoritative in-memory ledger.

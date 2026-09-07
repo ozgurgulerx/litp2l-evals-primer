@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable completion evidence checkpoint — 7 September 2026
+
+[Kata 102](exposure-control-lab.md#kata-102-the-charge-survived-the-response-did-not) adds a schema-1 completion journal around the existing durable `run_case`, without changing campaign schema 2. Reservation precedes execution; immutable completion evidence is stored afterward. A real spawned-process kill after refund commit preserves one charge and missing completion, while a finished record reopens without agent/tool execution. A worked ten-request interview example distinguishes original-attempt success, response coverage, eventual resolution and attempt counts.
+
+RED `7631a2b` established the missing API; RED `ac2feda` reproduced coherent artifact substitution against an unchanged request record. GREEN `f50234a` adds strict serialization, request/artifact binding, campaign-local identity and immutable publication. The 28 focused completion/exposure tests pass; completion-module combined statement/branch coverage is 97%. Targeted lint/type checks and dependency audit pass. Hashes and caller-supplied manifest equality do not establish authenticated provenance.
+
+The stable-source full suite passes 647 tests in 78.646 seconds. The published process test, fresh source-checked release controls, fresh budget replay, strict book build and 102 catalog anchors pass. Desktop solution expansion has no horizontal overflow at the checked viewport. Final review found no blocker in the limited contract; type-exact cached identity comparison and validation before initial publication remain hardening follow-ups, not claims of a complete artifact-schema verifier.
+
+This closes optional one-shot completion storage only. The exposure driver does not yet register durable window membership or use this journal, and no interrupted attempt can resume or transfer ownership. Per-invocation history, stale-worker fencing, controller checkpoints and a new retained process-level campaign packet remain open. No model-quality, customer-delivery, cloud-CI or deployment authority is claimed.
+
 ### Recovery lifecycle contract checkpoint — 7 September 2026
 
 The [recovery implementation contract](exposure-control-lab.md#recovery-implementation-contract-preserve-the-attempt-then-reconcile) makes stage 3 implementable without pretending that a committed refund reconstructs an agent session. It maps the current volatile transcript, response and window-membership seams to durable records; separates operational identity from versioned grading identity; requires action-boundary ownership fencing; and specifies eight real-process crash/race controls. Original-attempt completion, eventual resolution and recovery burden remain distinct outcomes.
