@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [One retrieval hit is not complete evidence](rag-research-evals.md#worked-micro-kata-one-hit-is-not-complete-evidence) | Compare recall, reciprocal rank and graded relevance on the same ranked results. |
 | [Identity mentions and toxicity measurement](robustness-safety.md#worked-micro-kata-identity-mentions-are-not-toxicity-labels) | Separate generated harm from group-dependent grader false positives. |
 | [Adaptive attacker budgets](robustness-safety.md#worked-micro-kata-an-adaptive-attacker-gets-more-than-one-try) | Keep per-scenario compromise separate from dependent per-query outcomes. |
 | [Finite-candidate pass@k](metrics.md#worked-micro-kata-estimate-passk-from-generated-candidates) | Distinguish a subset estimator from plug-in probability and deployable retry success. |

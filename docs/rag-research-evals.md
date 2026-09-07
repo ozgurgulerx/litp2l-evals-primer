@@ -85,6 +85,27 @@ Also measure:
 - latency and cost;
 - sensitivity to chunking, index, embeddings, reranker, and top-k.
 
+### Worked micro-kata: one hit is not complete evidence
+
+For one authored query, the collection contains three relevant documents with grades 3, 2 and 1; all others have grade 0. The top three retrieved results have grades `[0, 2, 1]`: the highest-grade document is missing. Grade greater than zero counts as relevant for binary metrics.
+
+**Solution:** hit@3 is 1, precision@3 is `2/3`, recall@3 is `2/3`, and reciprocal rank is `1/2` because the first relevant result is second. MRR averages reciprocal rank across queries; this is one query's contribution, not an independently measured multi-query mean.
+
+For this registered nDCG convention, use gain `2**grade - 1` and rank discount `log2(rank+1)`. Ideal DCG uses the best three documents from the judged collection—not merely a rearrangement of what the retriever happened to return:
+
+```python
+from math import log2
+
+def dcg(grades):
+    return sum((2**g - 1) / log2(rank + 1)
+               for rank, g in enumerate(grades, start=1))
+
+actual, ideal = dcg([0, 2, 1]), dcg([3, 2, 1])
+print(round(actual, 6), round(ideal, 6), round(actual / ideal, 6))
+```
+
+The hit metric says that some evidence was found, while recall reveals the omission and nDCG also penalizes missing high-grade evidence and poor ordering. Do not assume an unjudged document is irrelevant, count duplicate chunks as independent required documents, or invent a score when ideal DCG is zero. Register unit, relevance grades, tie handling and undefined-case policy. The labels here are complete by construction; real collections often need pooled assessment and explicit unjudged coverage. None of these retrieval scores proves that the generated answer used the evidence correctly; continue with the context-packing and oracle studies below.
+
 ## Evaluate context construction
 
 High recall can still damage generation when the context contains contradictions, duplicated chunks, stale policies, or irrelevant distractors. Record:

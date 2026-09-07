@@ -202,6 +202,17 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: RAG and agents
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| A1, A3–A6 | [Knowledge-to-action study](knowledge-action-study.md), [context-packing Katas 68–69](rag-research-evals.md#executed-study-retrieved-evidence-that-never-reaches-the-agent), [citation Katas 76–77](rag-research-evals.md#executed-report-and-citation-workshop) | Executed local decomposition, oracle controls and claim/citation outcomes with worked solutions. |
+| A2 | [Ranked-evidence calculation](rag-research-evals.md#worked-micro-kata-one-hit-is-not-complete-evidence) | Adds concrete hit/precision/recall, reciprocal-rank and nDCG calculation with judged-collection assumptions. |
+| A7–A11 | [Timeout-after-commit example](agent-evals.md#worked-example-timeout-after-commit), [two valid paths exercise](agent-evals.md#exercise-accept-two-paths-reject-one), [process recovery study](process-recovery-study.md), [incident rollback](exposure-control-lab.md#executed-integration-interrupted-effect-to-rollback-receipt) | State, trajectory, recovery, irreversible effects, efficiency and noncompensating release decisions remain separate. Generic agent continuation is not implemented. |
+| A12 | [Model/harness factorial](eval-operations-integrity.md#model-versus-harness-factorial-experiment), [deployed/eliciting comparison](rag-research-evals.md#worked-example-deployed-and-capability-eliciting-configurations), [order-resolution study](order-resolution-study.md) | Worked attribution and answer-leakage distinctions; fixed-control results are not evidence of emergent model capability. |
+
+A1–A12 now have concrete teaching routes. This completes the question-family mapping, not verification of every claim in the other research reports or execution of every proposed architecture study.
+
 ### Item-level teaching audit: tooling and continuous evaluation
 
 | Source IDs | Inspected teaching evidence | Finding |
