@@ -490,6 +490,8 @@ Do not infer acceptance of the other 102 questions from this subset or treat the
 
 ## Observability and release gates
 
+**Operational-depth check — 7 September 2026:** the source's ownership, traceability, incident, cost and resource-planning requirements have concrete teaching routes: the release chapter's requirement/owner/evidence table and expiring exception record; the production chapter's hard-rollback canary example; the telemetry and incident-promotion execution studies; and the build chapter's capacity worksheet. The [evaluation-budget micro-kata](build-the-system.md#micro-kata-budget-the-evaluation-workload) closes the formula-only cost treatment with a $960/$1,120 worked comparison and explicit omitted-cost assumptions. This checks those operational requirements, not the source's legal dates or every external case-study claim. Hosted book conformance and deployment passed for `8c79990` in run `34092166560`; that is book delivery evidence, not a deployed customer application's rollout.
+
 | Concepts | Book home | Example/artifact |
 | --- | --- | --- |
 | Evals, observability, and gates as one closed loop | Foundations; Production; Release Gates | Four planes and incident loop |

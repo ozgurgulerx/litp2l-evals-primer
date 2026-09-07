@@ -264,6 +264,23 @@ C_{eval}
 
 where \(R\) is repeats per offline case, \(q\) is the semantic-review sampling rate, and \(s\) is the shadow fraction. Name what each cost includes. A model-only token estimate is incomplete when tools, retrieval, simulation, reviewers, storage, and incident work matter.
 
+### Micro-kata: budget the evaluation workload
+
+Assume monthly totals of 1,000 offline cases, three trials per case at $0.02 per candidate trial, 100,000 production requests, 10% semantic sampling at $0.01 per judgment, and 5% shadow traffic at $0.02 per execution. Human review costs $600 and storage/platform costs $100. These are authored planning inputs, not vendor prices. The offline count includes all scheduled runs; baseline execution is excluded from this first estimate.
+
+**Exercise:** calculate the total, then include an equally sized baseline run and double semantic sampling. Does the larger sample justify promotion?
+
+**Solution:** offline $60 + judging $100 + shadow $100 + humans $600 + platform $100 = **$960/month**. Adding baseline execution costs $60; doubling sampling adds $100, producing **$1,120/month** if the other inputs remain fixed.
+
+```python
+initial = 1000 * 3 * .02 + .10 * 100000 * .01 + .05 * 100000 * .02 + 600 + 100
+revised = initial + 1000 * 3 * .02 + .10 * 100000 * .01
+assert round(initial, 2) == 960
+assert round(revised, 2) == 1120
+```
+
+Extra sampling purchases observations, not release authority. Check representativeness, dependence, grader qualification and the registered decision rule. Recalculate review capacity if more judgments create more escalations; holding human cost fixed is a scenario assumption. Add omitted tool, retry, simulator, baseline-grading and incident costs before treating this as a complete operating budget.
+
 ### Spend for information, not volume
 
 | Lever | Safe use | Distortion to watch |
