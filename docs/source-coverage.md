@@ -111,7 +111,9 @@ Katas 41–42 add pinned campaign-snapshot validation against packet execution, 
 | Evals, Observability and Release Gates for Production AI Systems | Control loop, telemetry, release policy, canaries, incidents, governance, ownership, economics | Production Evals and Release Gates |
 | Evaluating LLM-Based AI Systems: Research Review and Production Blueprint | 2025–26 frontier methods, deployment evidence, extreme-tail reliability, stateful personalization, evaluator meta-evaluation, dynamic audits, monitorability, and realtime modalities | Research-to-Practice Evidence plus linked Part I chapters |
 
-The PDF and DOCX files supplied with the corpus are companion renderings of the same titled research. Their editable Markdown counterparts are the canonical content inputs; format duplication does not create a second curriculum requirement.
+The supplied PDF and DOCX files have corresponding research titles, but title agreement does not establish content equivalence. The editable Markdown counterparts remain the canonical teaching inputs; retain the companion files as provenance and check for additional source links or substantive differences before treating them as redundant.
+
+**Companion-PDF preservation check — 7 September 2026:** text extraction from all four supplied PDFs found substantial shared wording with the corresponding Markdown, but not identical text. The interview PDF contains all 118 canonical question IDs preserved in the appendix; an additional regex match, `P02`, is part of an ACL source URL, not a missing question. The PDFs also expose explicit reference URLs where some Markdown uses generated citation markers. Those links are potentially useful provenance, not duplicate curriculum topics. This check establishes question-ID preservation only: token overlap cannot establish sentence, table, answer-outline or source-link equivalence, and no PDF layout assessment or DOCX-equivalence claim is made.
 
 ## Section-level completeness audit
 
