@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import replace
 from functools import wraps
 from threading import RLock
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 from uuid import uuid4
 
 from cx_eval_lab.action_budget import ActionBudget

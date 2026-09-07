@@ -4,15 +4,14 @@ The memory world is only a transaction-local transition engine. Persistent state
 events and refund effects become authoritative together at SQLite COMMIT.
 """
 
+import json
+import sqlite3
 from contextlib import closing, contextmanager
 from dataclasses import asdict, dataclass, replace
-import json
 from pathlib import Path
-import sqlite3
 
 from cx_eval_lab.models import RefundWorldSeed, ToolEvent, WorldSnapshot
 from cx_eval_lab.world import RefundWorld, ToolTimeout
-
 
 MAX_INTEGER = 2**63 - 1
 CURRENCIES = frozenset({'USD', 'EUR', 'GBP'})
@@ -38,7 +37,7 @@ def _integer(value):
 
 def _seed_json(seed):
     if not isinstance(seed, RefundWorldSeed):
-        raise ValueError('refund seed required')
+        raise ValueError('refund seed required')  # noqa: TRY004 - invalid configuration uses ValueError
     for identity in (seed.customer_id, seed.order_id):
         _identifier(identity)
     for value in (seed.amount_cents, seed.approval_threshold_cents):
@@ -84,7 +83,7 @@ class DurableCampaign:
         _identifier(campaign_id)
         _integer(max_actions)
         if not isinstance(currency_caps, dict):
-            raise ValueError('currency caps must be a mapping')
+            raise ValueError('currency caps must be a mapping')  # noqa: TRY004 - invalid configuration uses ValueError
         caps = dict(currency_caps)
         for currency, cap in caps.items():
             if currency not in CURRENCIES:

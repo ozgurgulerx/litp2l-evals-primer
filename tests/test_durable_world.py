@@ -13,7 +13,6 @@ from cx_eval_lab.durable_world import DurableCampaign
 from cx_eval_lab.models import RefundWorldSeed
 from cx_eval_lab.world import RefundTools, RefundWorld, ToolTimeout
 
-
 SEED = RefundWorldSeed('customer', 'order', 4000, 'USD', True, 10000, False)
 POLICY = {'campaign_id': 'campaign', 'max_actions': 1, 'currency_caps': {'USD': 4000}}
 
