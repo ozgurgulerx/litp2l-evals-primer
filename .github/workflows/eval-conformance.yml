@@ -78,6 +78,11 @@ jobs:
         run: uv run python -m cx_eval_lab.long_report --output ci-evidence/long-report-study.json
       - name: Execute fixed coding patches and protected-test integrity controls
         run: uv run python -m cx_eval_lab.coding_patch_study --output ci-evidence/coding-patch-study.json
+      - name: Generate and replay a fresh budgeted exposure campaign
+        shell: bash
+        run: |
+          uv run python -m cx_eval_lab.budgeted_exposure_study --output ci-evidence/budgeted-exposure.json
+          uv run python -m cx_eval_lab.budgeted_exposure_study --verify ci-evidence/budgeted-exposure.json
       - name: Reconstruct mixed-trace error-analysis teaching views
         run: >-
           uv run python -m cx_eval_lab.error_analysis_workshop
