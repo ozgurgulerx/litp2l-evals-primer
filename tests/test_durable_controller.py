@@ -1,6 +1,7 @@
 """Persist existing simulation decisions without duplicate state advancement."""
 
 import multiprocessing
+import sqlite3
 import tempfile
 import unittest
 from dataclasses import replace
@@ -72,10 +73,15 @@ class DurableControllerTests(unittest.TestCase):
         self.assertEqual(self.controller.state().revision, 1)
 
     def test_transaction_failure_rolls_back_state_and_receipt(self):
-        with patch('cx_eval_lab.durable_controller._encode', side_effect=ValueError('serialization')):
-            with self.assertRaises(ValueError):
-                self.controller.apply('decision', initial(), window(), now=10)
+        with sqlite3.connect(self.path) as db:
+            db.execute("CREATE TRIGGER fail_update BEFORE UPDATE ON controller "
+                       "BEGIN SELECT RAISE(ABORT, 'injected update failure'); END")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.controller.apply('decision', initial(), window(), now=10)
         self.assertEqual(self.controller.state(), initial())
+        with sqlite3.connect(self.path) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM receipts').fetchone()[0], 0)
+            db.execute('DROP TRIGGER fail_update')
         self.controller.apply('decision', initial(), window(), now=10)
 
     def test_two_processes_cannot_accept_same_predecessor_twice(self):
