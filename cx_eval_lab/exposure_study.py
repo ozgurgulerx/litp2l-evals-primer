@@ -17,6 +17,7 @@ from cx_eval_lab.models import AgentOutput
 from cx_eval_lab.order_resolution import (
     DescriptiveResolver,
     FirstRecordResolver,
+    _validate_backends,
     example_cases,
     run_case,
 )
@@ -41,11 +42,10 @@ class FaultInjectedCandidate:
 
 
 def execute_window(state, number, fault_mode, *, immature=False, action_budget=None,
-                   execution_namespace=None):
-    if execution_namespace is not None and (
-        not isinstance(execution_namespace, str) or not execution_namespace.strip()
-    ):
-        raise ValueError('trusted execution namespace must be nonempty')
+                   execution_namespace=None, durable_campaign=None):
+    _validate_backends(action_budget, durable_campaign, execution_namespace)
+    if durable_campaign is not None:
+        durable_campaign.snapshot()  # Verify storage even for shadow/baseline-only windows.
     start, end = (number - 1) * 10, number * 10
     artifacts, observations = [], []
     candidate_count = 0
@@ -62,16 +62,18 @@ def execute_window(state, number, fault_mode, *, immature=False, action_budget=N
         baseline = run_case(case, DescriptiveResolver())
         candidate = (run_case(case, FaultInjectedCandidate(fault_mode),
                              action_budget=action_budget if served == 'candidate' else None,
+                             durable_campaign=durable_campaign if served == 'candidate' else None,
                              execution_namespace=(canonical_hash((execution_namespace, number, customer))
                                                   if execution_namespace is not None else None))
                      if state.stage == 'shadow' or served == 'candidate' else None)
         artifact = {'customer_id': customer, 'served': served,
                     'baseline': baseline, 'candidate': candidate,
                     'fault_intervention': fault_mode}
-        if action_budget is not None:
+        if action_budget is not None or durable_campaign is not None:
             artifact = {**artifact, 'effect_scopes': {
                 'baseline': 'isolated_baseline_counterfactual',
-                'candidate': ('served_candidate_campaign' if served == 'candidate'
+                'candidate': ('served_candidate_durable_campaign' if served == 'candidate' and durable_campaign is not None
+                              else 'served_candidate_campaign' if served == 'candidate'
                               else 'isolated_shadow' if candidate is not None else 'not_executed')}}
         artifacts.append(artifact)
         if candidate is not None:

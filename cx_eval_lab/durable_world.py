@@ -170,6 +170,11 @@ class DurableCampaign:
         with self._transaction() as db:
             return self._load(db, namespace, seed)
 
+    def read_worlds(self, bindings):
+        """Project all requested worlds/events from one shared read transaction."""
+        with self._transaction() as db:
+            return {namespace: self._load(db, namespace, seed) for namespace, seed in bindings.items()}
+
     def _balance(self, db):
         policy = json.loads(self._policy)
         caps = policy['currency_caps']

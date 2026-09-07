@@ -10,7 +10,7 @@ from pathlib import Path
 
 from cx_eval_lab.agents import ReferenceSupportAgent
 from cx_eval_lab.evidence import canonical_hash
-from cx_eval_lab.models import AgentOutput, RefundAgentInput, RefundWorldSeed
+from cx_eval_lab.models import AgentOutput, RefundAgentInput, RefundWorldSeed, WorldSnapshot
 from cx_eval_lab.world import RefundWorld
 
 
@@ -66,15 +66,22 @@ class ResolutionCase:
             raise ValueError('this study supports zero or one necessary clarification')
 
 
+def _validate_backends(action_budget, durable_campaign, execution_namespace):
+    if durable_campaign is not None and (action_budget is not None or execution_namespace is None):
+        raise ValueError('durable mode requires a fixed namespace and excludes in-memory budgets')
+    if execution_namespace is not None and (
+        not isinstance(execution_namespace, str) or not execution_namespace.strip()
+    ):
+        raise ValueError('trusted execution namespace must be nonempty')
+
+
 class MultiOrderWorld:
     """Independent real mock ledgers; evaluator target is never used by tools."""
 
-    def __init__(self, case, reverse=False, *, action_budget=None, execution_namespace=None):
-        if execution_namespace is not None and (
-            not isinstance(execution_namespace, str) or not execution_namespace.strip()
-        ):
-            raise ValueError('trusted execution namespace must be nonempty')
+    def __init__(self, case, reverse=False, *, action_budget=None, execution_namespace=None, durable_campaign=None):
+        _validate_backends(action_budget, durable_campaign, execution_namespace)
         self._action_budget = action_budget
+        self._durable_campaign = durable_campaign
         self._customer = case.request.customer_id
         self._reply = case.clarification_reply
         self._records = tuple(reversed(case.orders)) if reverse else case.orders
@@ -82,7 +89,7 @@ class MultiOrderWorld:
             customer_id=record.customer_id, order_id=record.order_id,
             amount_cents=record.amount_cents, currency=record.currency,
             eligible=record.eligible, approval_threshold_cents=10000,
-            simulate_timeout_after_commit=False), action_budget=action_budget,
+            simulate_timeout_after_commit=False), action_budget=action_budget, durable_campaign=durable_campaign,
             execution_namespace=(canonical_hash((execution_namespace, record.order_id))
                                  if execution_namespace is not None else None)) for record in case.orders}
         self._events = ()
@@ -96,13 +103,30 @@ class MultiOrderWorld:
         return sum(world.snapshot.refund_transaction_count for world in self._worlds.values())
 
     def artifacts(self):
-        return [{**({'execution_namespace': self._worlds[record.order_id].execution_namespace}
-                    if self._action_budget is not None else {}),
-                 'order': asdict(record), 'state': {
-                    **asdict(self._worlds[record.order_id].snapshot),
-                    'refund_transaction_count': self._worlds[record.order_id].snapshot.refund_transaction_count},
-                 'events': [event.to_dict() for event in self._worlds[record.order_id].events]}
-                for record in self._records]
+        states = self._states()
+        artifacts = []
+        for record in self._records:
+            world = self._worlds[record.order_id]
+            state, events = states[world.execution_namespace]
+            artifacts.append({**({'execution_namespace': world.execution_namespace}
+                                 if self._action_budget is not None or self._durable_campaign is not None else {}),
+                              'order': asdict(record), 'state': {**asdict(state),
+                                  'refund_transaction_count': state.refund_transaction_count},
+                              'events': [event.to_dict() for event in events]})
+        return artifacts
+
+    def _states(self):
+        if self._durable_campaign is not None:
+            return self._durable_campaign.read_worlds({world.execution_namespace: world._seed
+                                                       for world in self._worlds.values()})
+        return {world.execution_namespace: world.durable_state() for world in self._worlds.values()}
+
+    def require_fresh_evidence(self):
+        """One trusted runner per namespace; this is not a concurrent request claim."""
+        if self._durable_campaign is not None and any(
+            state != WorldSnapshot() or events for state, events in self._states().values()
+        ):
+            raise ValueError('prior execution evidence requires an explicit durable attempt recovery contract')
 
     def invoke(self, method, *args):
         try:
@@ -201,10 +225,13 @@ class FirstRecordResolver(DescriptiveResolver):
             tuple(row['order_id'] for row in records)), tools)
 
 
-def run_case(case, agent, *, reverse=False, action_budget=None, execution_namespace=None):
+def run_case(case, agent, *, reverse=False, action_budget=None, execution_namespace=None, durable_campaign=None):
+    _validate_backends(action_budget, durable_campaign, execution_namespace)
     before = action_budget.snapshot() if action_budget is not None else None
+    durable_before = durable_campaign.snapshot() if durable_campaign is not None else None
     world = MultiOrderWorld(case, reverse, action_budget=action_budget,
-                            execution_namespace=execution_namespace)
+                            execution_namespace=execution_namespace, durable_campaign=durable_campaign)
+    world.require_fresh_evidence()
     started = time.perf_counter()
     error = None
     try:
@@ -217,6 +244,12 @@ def run_case(case, agent, *, reverse=False, action_budget=None, execution_namesp
     metrics = grade_resolution_execution(case, output, orders, world._events, error)
     return {**({'action_budget': {'before': before, 'after': action_budget.snapshot()}}
                if action_budget is not None else {}),
+            **({'durable_campaign': {'campaign_id': durable_campaign.campaign_id,
+                                    'execution_namespace': execution_namespace,
+                                    'before': durable_before, 'after': durable_campaign.snapshot(),
+                                    'snapshot_semantics': 'campaign_observation_not_case_attribution',
+                                    'trajectory_scope': 'fresh_namespace_single_trusted_runner'}}
+               if durable_campaign is not None else {}),
             'case': asdict(case), 'agent': agent.name, 'reverse': reverse,
             'agent_input': asdict(case.request), 'orders': orders, 'tool_events': list(world._events),
             'output': asdict(output), 'execution_error': error,
