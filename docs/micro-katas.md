@@ -6,6 +6,7 @@ These unnumbered exercises supplement the existing numbered sequence; they do no
 
 | Exercise | Decision to defend |
 | --- | --- |
+| [Semantic entropy and consistent errors](metrics.md#worked-micro-kata-different-words-same-uncertain-meaning) | Separate variation in wording, variation in meaning and verified truth. |
 | [Assigned customers and human workload](production-evals.md#worked-micro-kata-the-assisted-cases-are-still-assigned-cases) | Reject a post-assignment dashboard gain that hides unresolved work and assistance burden. |
 | [Judge lineage and panel errors](llm-as-a-judge.md#worked-micro-kata-hiding-the-name-does-not-test-every-preference-leak) | Separate identity intervention, generator-group association, shared errors and review load. |
 | [Skill selection versus complete capability](modern-agent-architectures.md#worked-micro-kata-successful-selection-failed-capability) | Choose the correct denominators for activation, loading and execution. |

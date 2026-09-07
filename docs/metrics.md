@@ -257,6 +257,28 @@ When a system emits probabilities, evaluate both discrimination and calibration.
 
 These probability-calibration metrics are different from qualifying an LLM judge against human labels. Chapter 5 covers judge calibration and selective abstention.
 
+### Worked micro-kata: different words, same uncertain meaning
+
+Semantic entropy measures variation across meanings rather than exact strings. The authors distinguish meaning variation from paraphrasing and warn that consistently wrong beliefs can escape detection. Meaning grouping is itself fallible and context-dependent. [Authors' methodological explanation](https://oatml.cs.ox.ac.uk/blog/2024/06/19/detecting_hallucinations_2024.html)
+
+For an authored example, six equally weighted samples answer whether a refund has settled. Four distinct phrasings say **settled**, one says **pending**, and one says **unknown**. A reviewed, task-specific grouping gives counts `[4, 1, 1]`. Use the empirical frequency estimator here—not token log-probabilities or a reproduction of a paper's full estimator:
+
+```python
+from math import log2
+
+def empirical_entropy(counts):
+    total = sum(counts)
+    return -sum((n / total) * log2(n / total) for n in counts if n)
+
+print(round(empirical_entropy([1, 1, 1, 1, 1, 1]), 6))
+print(round(empirical_entropy([4, 1, 1]), 6))
+print(round(empirical_entropy([6]), 6))
+```
+
+**Predict and explain:** outputs are `2.584963`, `1.251629` and `0.0` bits. Exact-string diversity overstates variation when several strings express the same claim. But if all six samples falsely claim settlement, meaning entropy is zero while the answer is wrong. Neither low entropy nor the largest cluster authorizes a financial-status claim; compare with authoritative settlement evidence.
+
+The calculation assumes positive total count and valid supplied clusters. In a real evaluation, freeze sampling settings, sample count and grouping protocol; retain all outputs and cluster decisions; test grouping errors and sensitivity to added samples. Distinguish refusals, insufficient evidence and contradictory answers according to the task instead of pooling everything vague together. Fit any escalation threshold on separate development data and evaluate held-out correctness, risk–coverage, slice performance and added generation/grouping cost. Six authored answers establish arithmetic, not a calibrated probability of truth. This addresses interview-bank C6–C8 without equating sample agreement with factuality.
+
 ### Worked calibration example
 
 Use ten synthetic automation decisions whose `confidence` is the probability that the proposed resolution is correct:
