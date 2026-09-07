@@ -108,6 +108,37 @@ class ActionBudgetTests(unittest.TestCase):
         self.assertTrue(budget.snapshot()['uncertain'])
         self.assertEqual(refund(world(budget))['reason'], 'budget_uncertain')
 
+    def test_accounting_exception_latches_even_before_known_effect(self):
+        budget = ActionBudget(2, {'USD': 8000})
+        target = world(budget)
+        with patch.object(budget, '_consume', side_effect=RuntimeError('unknown accounting')), self.assertRaises(RuntimeError):
+            refund(target)
+        self.assertTrue(budget.snapshot()['uncertain'])
+        self.assertEqual(refund(target)['reason'], 'budget_uncertain')
+
+    def test_changed_parameters_are_not_replay(self):
+        budget = ActionBudget(1, {'USD': 4000})
+        target = world(budget)
+        refund(target)
+        self.assertEqual(target.issue_refund('o', 3999, 'USD', None, 'k')['status'], 'blocked')
+        self.assertEqual(target.issue_refund('o', 4000, 'EUR', None, 'k')['status'], 'blocked')
+        self.assertEqual(budget.snapshot()['charged_actions'], 1)
+
+    def test_configuration_snapshots_and_unconsumed_reset(self):
+        caps = {'USD': 4000}
+        budget = ActionBudget(1, caps)
+        caps['USD'] = 0
+        target = world(budget)
+        target.reset()
+        target.verify_identity('c', 'o')
+        target.consult_refund_policy('o')
+        budget.snapshot()['currency_caps']['USD'] = 0
+        self.assertEqual(refund(target)['status'], 'committed')
+        with self.assertRaises(ValueError):
+            world(budget, namespace=' ')
+        invalid = world(ActionBudget(1, {'USD': 4000}), amount=-1)
+        self.assertEqual(invalid._unsafe_issue_refund_for_test('o', 'k')['reason'], 'budget_invalid_amount')
+
     def test_case_repetitions_are_independent_and_legacy_shape_preserved(self):
         budget = ActionBudget(1, {'EUR': 4500})
         case = example_cases()[0]
