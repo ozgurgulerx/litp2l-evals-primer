@@ -16,7 +16,22 @@ class StatusTools(RefundTools):
         return {} if self.status is None else {"status": self.status}
 
 
+class CommittedUnknownTools(RefundTools):
+    def issue_refund(self, *args, **kwargs):
+        super().issue_refund(*args, **kwargs)
+        return {"status": "unknown"}
+
+
 class ReferenceDenialTests(unittest.TestCase):
+    def test_unknown_return_after_effect_is_reconciled_before_claiming_state(self):
+        seed = RefundWorldSeed("customer", "order", 4000, "USD", True, 10000, False)
+        world = RefundWorld(seed)
+        request = RefundAgentInput("Refund this order", "customer", "order", ("order",))
+        result = ReferenceSupportAgent().run(request, CommittedUnknownTools(world))
+        self.assertEqual("refunded", result.claimed_outcome)
+        self.assertEqual(1, world.snapshot.refund_transaction_count)
+        self.assertTrue(any(event.tool == "inspect_order_status" for event in world.events))
+
     def test_denied_unknown_or_missing_status_does_not_claim_refunded(self):
         seed = RefundWorldSeed("customer", "order", 4000, "USD", True, 10000, False)
         request = RefundAgentInput("Refund this order", "customer", "order", ("order",))
