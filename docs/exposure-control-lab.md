@@ -381,6 +381,8 @@ The test uses a spawned worker and a barrier after an actual mock refund commit.
 
 The caller must supply a manifest digest covering agent configuration, source and grading identity. The journal checks that supplied identity for equality; it does not independently prove the manifest is truthful or complete. It binds to the local campaign path/device/inode and policy, which deliberately limits portability and is not authenticated provenance. Artifact hashes detect inconsistent stored bytes, not malicious rewriting by a trusted database owner.
 
+**Binding counterexample:** Python considers `False == 0` true, but those are different JSON values. A cached record with `reverse: 0` must not match a request registered with `reverse: false`, even if someone recomputes the artifact hash. The journal compares canonical JSON identity values and performs the same binding check before first publication. An invalid first result leaves the reservation incomplete rather than publishing evidence that only fails on the next read. These checks establish selected field consistency, not a complete artifact-schema or provenance validation.
+
 **What remains open:** this wrapper is not yet integrated with durable exposure-window membership or controller checkpoints. It has no takeover, resumable agent, live-worker fencing, durable per-invocation transcript or exactly-once response-delivery protocol. Schema-2 campaign behavior and historical packets remain unchanged. Run the full `tests.test_durable_completion` module for completion replay, identity conflicts, concurrent admission and storage-failure controls.
 
 ### Durable campaign integration contract

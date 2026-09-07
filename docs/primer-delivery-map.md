@@ -6,6 +6,10 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Completion binding hardening checkpoint — 7 September 2026
+
+The two completion-review follow-ups below are repaired. RED `28f3ded` reproduced cached Boolean/integer identity confusion and publication of an invalid first result. The journal now compares canonical JSON identity values and validates initial evidence before marking it completed. Invalid publication leaves the original reservation incomplete. Thirty focused completion/exposure tests pass with 97% combined statement/branch coverage for the completion module; lint, type checks, dependency audit and independent review pass. Kata 102 explains the counterexample. This is selected-field consistency, not a full artifact-schema or provenance verifier; controller/attempt recovery remains open.
+
 ### Durable completion evidence checkpoint — 7 September 2026
 
 [Kata 102](exposure-control-lab.md#kata-102-the-charge-survived-the-response-did-not) adds a schema-1 completion journal around the existing durable `run_case`, without changing campaign schema 2. Reservation precedes execution; immutable completion evidence is stored afterward. A real spawned-process kill after refund commit preserves one charge and missing completion, while a finished record reopens without agent/tool execution. A worked ten-request interview example distinguishes original-attempt success, response coverage, eventual resolution and attempt counts.
