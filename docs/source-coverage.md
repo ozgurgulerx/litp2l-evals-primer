@@ -202,6 +202,24 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: calibration and statistics
+
+This pass checked the retained C1–C8 and S1–S8 questions against the teaching sections below. “Worked” means the cited section supplies concrete inputs and an explained result; it does not mean empirical qualification. The findings are limited to these sixteen questions.
+
+| Source IDs | Exact teaching evidence | Finding |
+| --- | --- | --- |
+| C1–C3 | [Ten probability/outcome rows and score calculations](metrics.md#worked-calibration-example); [zero-ECE counterexample](metrics.md#kata-94-zero-ece-no-useful-ranking) | Worked definitions, probability-versus-correctness distinction, Brier/NLL/ECE calculations and failure case. |
+| C4 | [Threshold decisions](metrics.md#thresholds-turn-calibration-into-an-action); [qualification/workload workshop](calibration-decision-workshop.md) | Worked coverage, selective error and review-load decisions; independent validation required. |
+| C5 | [Fixed-bin support, mean-confidence and accuracy table](metrics.md#worked-calibration-example) | Reliability-diagram coordinates and binning method are supplied. A plotted diagram is not supplied by this section; readers can draw the listed coordinates. |
+| C6–C8 | [Meaning-frequency entropy exercise](metrics.md#worked-micro-kata-different-words-same-uncertain-meaning); [sequence likelihood normalization](benchmark-reproducibility.md#raw-and-normalized-likelihood-answer-different-questions) | Worked string/meaning distinction, length-normalization reversal and consistently-wrong counterexample. No claim to reproduce the source's theoretical hallucination theorem. |
+| S1–S2, S7 | [First divergent boundary](benchmark-reproducibility.md#find-the-first-divergent-boundary), [Kata 81](benchmark-reproducibility.md#kata-81-equal-accuracy-different-evidence), [manifest](benchmark-reproducibility.md#artifact-reproducibility-manifest) | Concrete disagreement/join exercise, solution and retained-field contract. External-framework execution is still not demonstrated. |
+| S3–S4 | [Paired bootstrap code](metrics.md#bite-sized-paired-bootstrap); [zero-discordance counterexample](statistical-method-study.md#kata-05-thirty-ties-unjustified-certainty) | Code preserves pairing; worked counterexample explains why a narrow interval can fail. The short bootstrap function is instructional, not a validated general-purpose API. |
+| S5 | [Benchmark decision exercise](benchmark-reproducibility.md#exercise-audit-a-benchmark-claim); [capstone decision defense](capstone.md) | Worked evidence-demand and hold/block reasoning, including quality, risk, costs and scope. |
+| S6 | [Multiplicity discussion](metrics.md#multiple-comparisons); [sequential decision study](sequential-decisions-lab.md) | Principles and repeated-look experiments exist. A concrete simultaneous multi-prompt selection example remains a teaching gap; sequential looks are not automatically the same experiment. |
+| S8 | [Repeated-trial command and five-cluster hold](evidence-spine.md#repeated-trials-are-not-new-cases); [unequal-cluster exercise](statistical-method-study.md#kata-06-two-correct-averages-two-different-questions) | Worked distinction between repeats, independent customers and weighting. General hierarchical resampling with stochastic generation remains a methodological extension, not implemented by the short bootstrap snippet. |
+
+Do not infer acceptance of the other 102 questions from this subset or treat the source answer outlines as full worked solutions.
+
 ### Fundamentals & evaluation metrics
 
 | Concepts | Book home | Example/artifact |
