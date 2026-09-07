@@ -6,6 +6,14 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable exposure wiring checkpoint — 7 September 2026
+
+[Kata 101](exposure-control-lab.md#kata-101-reopen-the-allowance-between-exposure-windows) completes stage 2: the optional durable backend traverses the existing exposure and multi-order runner into `RefundWorld`. Reopening between three windows preserves cumulative charges of 0, 2 and 2. Baseline and shadow remain isolated. All competing order evidence is read in one database transaction; before/after campaign balances are explicitly not per-request attribution.
+
+Initial RED/GREEN `0b882f3` / `66e4559` established wiring. Review found that empty order events do not prove an attempt never started. RED `347d990` and GREEN `eb827a0` add schema-2 unique durable request admission before agent execution, including zero-tool, clarification-only and competing-process cases. Final tests `2358dde` add operational-input identity and schema-refusal boundaries. Independent review found no blockers; 77 focused tests pass with 97% combined statement/branch coverage and 92% branch coverage across the targeted modules. Targeted lint/type checks and dependency audit pass.
+
+The full suite passes 634 tests in 78.181 seconds with 90% combined statement/branch coverage. The published three-window example, fresh source-checked release controls, fresh budgeted packet generation/replay, strict book build and 101 catalog anchors pass locally. The new solution opens without horizontal overflow at the checked desktop viewport. Existing artifacts remain unchanged. This supersedes the prior checkpoint's unwired-driver limitation only: durable responses, resumable attempts, controller checkpoints and a retained campaign-process recovery packet remain open. No paid-model, human-qualification, cloud-CI, Safari/mobile or production result is claimed.
+
 ### Durable world backend checkpoint — 7 September 2026
 
 [Kata 100](exposure-control-lab.md#kata-100-reopen-the-evidence-not-just-the-balance) completes the first storage/world stage of the integration contract. Existing `RefundWorld` tools can use an optional SQLite campaign that persists immutable seed bindings, current authorization, effects and events atomically. Reopened instances see prior evidence and cross-instance revocation; `durable_state()` supplies a paired snapshot/event projection. Reference-agent output, timeout handling and regrading match the memory path on the tested cases. Unsafe commits retain their specific unauthorized-action failure.

@@ -252,7 +252,7 @@ Argo Rollouts provides a concrete orchestration example: analysis can succeed, f
 
 ### Kata 100: reopen the evidence, not just the balance
 
-**Implemented first stage:** persistence now sits behind the existing `RefundWorld` tool contract. This is not a restartable exposure campaign: call-chain wiring and controller/attempt checkpoints below remain unimplemented.
+**Implemented first stage:** persistence now sits behind the existing `RefundWorld` tool contract. Kata 101 adds call-chain wiring; controller/attempt recovery remains unimplemented, so this is not yet a restartable exposure campaign.
 
 The acceptance exercise has two independent questions. First, can a new world instance recover the original refund and its evidence? Second, does an already-open instance observe authorization revoked through another instance before its next attempted action? Passing only the first permits a stale-authorization failure.
 
@@ -309,9 +309,58 @@ The grader parity check reuses a customer output retained by the test harness. I
 
 This stage uses trusted local mock state. It does not restore arbitrary model context, reconstruct missing customer messages, authenticate database ownership or prove that a routing decision survived process loss. Those remain separate obligations in the contract below.
 
+### Kata 101: reopen the allowance between exposure windows
+
+**Question:** does the existing routing experiment use one durable allowance, or create a fresh cap for each window? This exercise follows the real `execute_window` → `run_case` → `MultiOrderWorld` → `RefundWorld` path. It does not substitute a separate payment demonstration.
+
+```python
+# kata101-start: deterministic local routing, no real traffic
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from cx_eval_lab.durable_world import DurableCampaign
+from cx_eval_lab.exposure_control import ExposureState, transition
+from cx_eval_lab.exposure_study import execute_window
+
+with TemporaryDirectory() as directory:
+    path = Path(directory) / "campaign.sqlite"
+    policy = {"campaign_id": "durable-exposure", "max_actions": 2,
+              "currency_caps": {"EUR": 9000}}
+    DurableCampaign.initialize(path, **policy)
+    state = ExposureState("cx-simulation-v1", "baseline-v1")
+    results = []
+    for number in (1, 2, 3):
+        campaign = DurableCampaign.open(path, **policy)
+        window, rows, served = execute_window(
+            state, number, "healthy", durable_campaign=campaign,
+            execution_namespace="study")
+        completed = sum(row["candidate"]["task_completed"] for row in rows
+                        if row["candidate"] is not None)
+        assert sum(row["baseline"]["task_completed"] for row in rows) == 40
+        results.append((state.stage, served, completed,
+                        campaign.snapshot()["charged_actions"]))
+        decision = transition(state, window, now=window.end)
+        assert decision.deployment_authorized is False
+        state = decision.state
+    assert results == [("shadow", 0, 40, 0), ("canary", 4, 2, 2),
+                       ("restricted", 4, 0, 2)]
+    print(results)
+# kata101-end
+```
+
+??? success "Solution: one effect ledger, separate execution scopes"
+    Shadow executes forty candidate controls but serves none of them; those mock effects do not spend the served-candidate budget. Canary selects four requests, completes two and denies two. The following restricted window selects four and completes none: reopening the database did not replenish the two-effect, EUR 9,000-cent allowance. Forty baseline controls complete independently in every window.
+
+    Inspect each served candidate's `durable_campaign` metadata and namespaced order artifacts. The metadata's before/after balances are campaign observations, not guaranteed per-request attribution if other requests execute concurrently. All competing orders' state and events are extracted in one database read transaction for grading. The regression deliberately interleaves a writer between order reads to check that the result does not combine different database snapshots.
+
+    Denials remain in the outcome denominator. The controller's quality-regression reason describes delivered outcomes under the capped policy; it is not proof that the model became intrinsically worse. Baseline and shadow successes cannot be added to served-candidate completion.
+
+**Do not retry by pretending the request is new.** A durable request-start admission marker is written before agent execution, including attempts that produce no order events. The high-level runner rejects an already-started namespace rather than inventing a complete fresh trajectory. Low-level world inspection remains available. A marker establishes admission, not completion: recovery of an interrupted attempt still needs its transcript, response and explicit continuation policy. Schema version 2 adds this marker; opening an older schema fails explicitly rather than silently migrating or dropping evidence.
+
+**What this run does not prove:** the Python `ExposureState` is carried in memory. Reopening a database handle between windows is not killing and recovering the controller. No complete durable response store, resumable attempt protocol, window-decision checkpoint or new retained process-level packet is supplied here. The old study CLIs and historical artifacts remain unchanged. Use `uv run python -m unittest tests.test_durable_exposure -v` for the wiring regressions; do not call their success production qualification.
+
 ### Durable campaign integration contract
 
-**Status: durable world backend implemented in Kata 100; full durable exposure campaign remains unimplemented.** [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) proves a bounded cap at the separate recovery payment boundary. The campaign still selects the in-memory `RefundWorld` path; its optional durable backend is not yet threaded through `execute_window`. Calling the SQLite budget first and then changing an authoritative in-memory snapshot would create two failure boundaries, not one atomic effect.
+**Status: storage and call-chain integration implemented in Katas 100–101; campaign recovery remains unimplemented.** [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) proves a bounded cap at the separate recovery payment boundary. The optional durable backend now traverses `execute_window`, `run_case`, `MultiOrderWorld` and `RefundWorld` for served candidates. Default in-memory behavior remains available. Durable mode changes authorization, effects and evidence transactionally; it does not debit SQLite and then update a separate authoritative in-memory ledger.
 
 **Capability:** the evaluator must resume the same campaign after worker loss, preserve its spent allowance and committed refunds, reconstruct the evidence used by the existing graders, and continue the existing exposure decision path. A new standalone capped-payment demo does not meet this requirement.
 
@@ -331,6 +380,8 @@ This stage uses trusted local mock state. It does not restore arbitrary model co
 
 **State transitions and evidence:** distinguish request registered, attempt started, effect committed, response recorded, grade completed and window decision applied. A payment may be committed while the response and grade remain missing. On recovery, reconcile the effect first; retain the interrupted attempt rather than fabricate a completed trace. Completed requests can reuse their retained evidence only after identity checks. Unfinished requests require an explicit resume policy and a new linked attempt; do not concatenate two attempts into an apparently uninterrupted trajectory or discard failed attempts from the denominator.
 
+**Interim runner constraint:** persisted order events are not the same as the runner's complete clarification/action transcript. A failed attempt may only ask a question or call no tools at all, leaving order events empty. Before any agent work, the integrated runner therefore needs a unique durable request-start marker bound to namespace and immutable operational input. Reject previously started namespaces at the high-level runner, including concurrent admission; no resume is supported yet. Low-level world reopening and historical status inspection remain valid. This admission fence is not complete attempt recovery or exactly-once execution: a started request may never finish. All-order state/event extraction must use one database read transaction; before/after campaign balances are separate observations, not causal attribution to that request.
+
 **Replay compatibility decision:** keep the current public `RefundWorld.issue_refund` contract, which validates authorization before issuing an action. Its durable transaction order is current authorization → exact replay or key conflict → capacity for a new effect → insertion and commit. Thus an authorized exact replay stays free at exhaustion. Use authoritative status reconciliation to report historical refunds after revocation; do not silently import the recovery worker's replay-first public behavior into every caller. The storage transaction must still bind duplicate keys to the exact original effect. Whichever interface performs historical lookup must be documented separately from permission for a new action, with tests for both.
 
 **Delivery sequence:**
@@ -343,7 +394,7 @@ This stage uses trusted local mock state. It does not restore arbitrary model co
 
 **Non-goals of this local integration:** multi-host consensus, an external payment API, hostile-process isolation, authenticated operator identity, power-loss qualification and human/model qualification. Direct filesystem/database access remains a trusted harness capability, not a safe permission to give an adversarial agent. Busy, missing-database or schema errors must stop the durable path, never fall back to uncapped memory.
 
-**Open decisions before the recovery phase:** specify the supported agent continuation/checkpoint contract and the grader's treatment of a recovered response with an interrupted prior attempt. An arbitrary LLM session cannot be reconstructed from payment state alone. These decisions do not block storage-boundary tests, but they do block claiming an end-to-end resumed agent campaign. The next handoff is TDD implementation of step 1, followed by integration—not another detached study.
+**Open decisions before the recovery phase:** specify the supported agent continuation/checkpoint contract and the grader's treatment of a recovered response with an interrupted prior attempt. An arbitrary LLM session cannot be reconstructed from payment state alone. Steps 1–2 are implemented; the next handoff is step 3's explicit attempt/response/controller recovery contract and RED tests, not another detached study. Admission fencing alone does not satisfy that recovery contract.
 
 The following is the application deployment handoff, **not an installed integration**:
 

@@ -20,7 +20,7 @@ These first three katas exercise real defects found in the refund grader. They u
 
 ## Complete practice index
 
-All 100 numbered katas are linked below by topic. Numbers identify exercises; they are not prerequisites or a difficulty ranking. Use the [seven-checkpoint learning route](index.md#a-learning-route-with-evidence-checkpoints) for sequence, then return here to target a weak skill. The index includes both authored calculations and executed local studies: read each exercise's evidence limits before treating its result as a capability claim.
+All 101 numbered katas are linked below by topic. Numbers identify exercises; they are not prerequisites or a difficulty ranking. Use the [seven-checkpoint learning route](index.md#a-learning-route-with-evidence-checkpoints) for sequence, then return here to target a weak skill. The index includes both authored calculations and executed local studies: read each exercise's evidence limits before treating its result as a capability claim.
 
 For each attempt, save your prediction, result or calculation, explanation under one changed assumption, and remaining evidence gap. Mark your own work **not attempted**, **reproduced**, **explained**, or **unresolved**. These learning statuses are not qualifications or deployment permissions. Finish with the [capstone](capstone.md), not a count of opened solutions.
 
@@ -147,6 +147,7 @@ For each attempt, save your prediction, result or calculation, explanation under
 | 96 | [a hash is not a replay](exposure-control-lab.md#kata-96-a-hash-is-not-a-replay) |
 | 97 | [the packet exists, but did CI verify it?](exposure-control-lab.md#kata-97-the-packet-exists-but-did-ci-verify-it) |
 | 100 | [reopen the evidence, not just the balance](exposure-control-lab.md#kata-100-reopen-the-evidence-not-just-the-balance) |
+| 101 | [reopen the allowance between exposure windows](exposure-control-lab.md#kata-101-reopen-the-allowance-between-exposure-windows) |
 
 ### Frontier risk and containment
 

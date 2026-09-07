@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Durable served-candidate routing and admission
+
+[Kata 101](exposure-control-lab.md#kata-101-reopen-the-allowance-between-exposure-windows) connects the persisted backend to the existing multi-order/exposure path. Reopened shadow, canary and restricted windows retain cumulative charges of 0, 2 and 2; candidate completions are 40 shadow controls, 2/4 served and 0/4 served. Baseline and shadow do not consume served-candidate allowance. Grading reads all competing orders in one transaction. A unique durable request-start marker blocks reused and concurrent namespaces, including zero-tool and clarification-only attempts. This is admission fencing and persistent accounting, not resumable attempts, response recovery, controller checkpointing or deployment qualification. Historical artifacts remain unchanged.
+
 ### Durable existing-world evidence and authorization
 
 [Kata 100](exposure-control-lab.md#kata-100-reopen-the-evidence-not-just-the-balance) puts optional persisted campaign state behind the existing `RefundWorld` methods. Seed bindings, current authorization, refund effects and events are stored transactionally; paired state/event reads preserve grading evidence after reopen. Reference/timeout parity and specific unauthorized-action failures are tested. Review reproduced and repaired partial commits caused by broad exception handling. This is the first integration stage, not wiring through multi-order exposure, durable response storage, a process-recovery packet or production authority. Existing artifacts remain historical and unchanged.
