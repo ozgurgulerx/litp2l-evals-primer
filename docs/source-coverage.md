@@ -123,6 +123,24 @@ The supplied PDF and DOCX files have corresponding research titles, but title ag
 
 ### Companion source-recovery receipt
 
+#### Ranked frontier-review method map
+
+The numbers below are the 46 entries in section 5 of the supplied later DOCX, not independent validations of its paper findings. Several papers motivate the same learning method; the book need not reproduce each benchmark to teach that method.
+
+| Source entries | Worked teaching route | Acceptance boundary |
+| --- | --- | --- |
+| 1, 2, 3, 6, 25, 26, 27, 28, 40, 42, 43, 44, 45 | [Judge qualification, ranking reversal, lineage and sensitivity](llm-as-a-judge.md); [annotation and denominator controls](human-evaluation.md); [calibration decision workshop](calibration-decision-workshop.md) | Covers local validity, reference dependence, protocol effects, correlated errors and qualified decisions; authored labels are not expert studies. |
+| 4, 13, 20 | [Metrics and uncertainty](metrics.md); [statistical-method study](statistical-method-study.md); [frontier risk decisions](frontier-risk-decisions.md) | Paired/clustered uncertainty and rare-event assumptions require separate qualification; no universal tail guarantee. |
+| 5, 10, 11, 29, 30, 31 | [Benchmark reproduction](benchmark-reproducibility.md); [coding-patch study](coding-patch-study.md); [long-report study](long-report-study.md) | Worked freshness, harness, scoring and construct-validity distinctions, not reproduction of all named benchmarks. |
+| 7, 8, 9, 12, 34, 35, 36, 37 | [Agent evaluation](agent-evals.md); [recovery](process-recovery-study.md); [modern architectures](modern-agent-architectures.md) | Outcome, trajectory, subgoals, budgets and persistence; some architecture observations remain supplied fixtures. |
+| 14, 15, 16, 18, 19, 32, 33 | [Safety and reward optimization](robustness-safety.md); [frontier risk/containment](frontier-risk-decisions.md); [cross-run isolation](cross-run-isolation-study.md) | Separates capability, harmful effects, monitoring and enforcement; local controls do not establish field prevalence. |
+| 17 | [Assigned-cohort human-workload comparison](production-evals.md#worked-micro-kata-the-assisted-cases-are-still-assigned-cases) and deployment-simulation protocol | Illustrates offline/field and user-outcome boundaries; not a personalized-product field replication. |
+| 21, 22, 23, 24, 38, 39 | Existing [research evaluation](rag-research-evals.md), [knowledge-to-action](knowledge-action-study.md) and report studies | Existing decomposition and stateful evidence routes retained; further RAG expansion deferred at the user's request. |
+| 41 | Judge style-bias guidance and sensitivity workshop | **Specific remaining depth check:** an epistemic-wording-only intervention with unchanged task facts and an explicit solution. General verbosity tests do not establish this invariance. |
+| 46 | [Voice and timing examples](modern-agent-architectures.md) | Audio-condition and action-timing protocol with authored timing arithmetic, not recorded voice-model qualification. |
+
+This closes the missing routing inventory. It does not certify every source claim, empirical transfer, or complete reproduction; entry 41 remains a named teaching-depth follow-up.
+
 **Ranked-review depth check — 7 September 2026:** the later DOCX's ranked evidence capsules include an explicit instance-versus-system-ranking validity distinction (entry 25). The [ranking-reversal kata](llm-as-a-judge.md#micro-kata-accurate-judgments-can-reverse-a-system-ranking) supplies the missing numerical counterexample and solution. The fourteen-headline map remains useful but is not a substitute for inspecting the detailed methods. This check reads the supplied claims; it does not independently verify the reported findings or reproduce all 46 studies.
 
 The [extracted companion reference index](assets/companion-source-links.json) preserves 198 within-document distinct URL strings across the four PDFs and two matching DOCX files, with source filenames, SHA-256 fingerprints and extraction method. URLs can recur across documents. This is a recovery index, not a new bibliography endorsement: extraction may stop at a wrapped line, and each recovered URL still needs resolution and claim-level attribution before it supports a new factual statement. Existing references remain unchanged.
