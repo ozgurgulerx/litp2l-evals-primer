@@ -202,6 +202,21 @@ This addendum does not replace the source-by-source audit. It extends the book w
 
 ## Interview-taxonomy coverage
 
+### Item-level teaching audit: tooling and continuous evaluation
+
+| Source IDs | Inspected teaching evidence | Finding |
+| --- | --- | --- |
+| M1–M2 | [Controlled prompt development](build-the-system.md#prompt-evaluation-as-a-controlled-experiment), [test pyramid](checklist.md#use-an-ai-test-pyramid), [CI Katas 16–17](ci-gate-lab.md#kata-16-an-expected-rejection-makes-the-test-pass) | Concrete iteration and CI contracts; expected candidate rejection can be a successful software test. |
+| M3 | [Telemetry Delivery Study](telemetry-delivery-study.md), [sensitive payload controls](production-evals.md#protect-sensitive-payloads) | Executed loopback payload/receiver evidence and feedback joins; raw prompts are not indiscriminately logged. |
+| M4, M7 | [Matured outcome contract](production-evals.md#delayed-outcomes-and-censoring), [Exposure Control Lab](exposure-control-lab.md), [assigned-population example](production-evals.md#worked-micro-kata-the-assisted-cases-are-still-assigned-cases) | Worked missing-label, exposure, quality and human-work outcomes. Proxy drift is a trigger, not proof of changed true outcome rates. |
+| M5 | [Gate dependency order](checklist.md#gate-in-dependency-order), [unsafe shortcut counterexample](checklist.md#kata-93-a-comparison-is-not-evidence-validation), [release capstone](capstone.md) | Concrete pass/hold/block reasoning with independent constraints, evidence identity and authority. |
+| M6 | [Layered production sampling](production-evals.md#sample-by-risk-and-information-value), [weighted sampling study](dataset-design.md#executed-sampling-study-the-same-system-different-apparent-failure-rates) | Executed sampling arithmetic and decision limits rather than grading every event semantically. |
+| M8 | [Tool-selection matrix](system-studies.md#tool-selection-matrix), [stack-selection exercise](system-studies.md#exercise-select-a-stack) | Worked contract-based choice; vendor popularity does not establish suitability or lifecycle support. |
+| M9 | [Incident-to-regression controls](dataset-design.md#from-incident-evidence-to-a-versioned-regression), [interrupted-effect rollback](exposure-control-lab.md#executed-integration-interrupted-effect-to-rollback-receipt) | Executed local incident reproduction, reviewed-fixture promotion and bounded containment decision. |
+| M10 | [Service architecture](eval-operations-integrity.md#evaluation-service-architecture), [budget campaign Katas 38–40](eval-operations-integrity.md#executed-campaign-reserve-before-judging), [partial-run exercise](eval-operations-integrity.md#exercise-partial-run-after-quota-exhaustion) | Concrete component contracts, accounting and incomplete-pair solution. Distributed multi-tenant operation is not demonstrated by local fragments or SQLite stores. |
+
+M1–M10 have worked teaching routes. Hosted book conformance and Pages publication succeeded at `aed856e`; that is not deployment of the evaluated customer-support application. The source outline's binary pass/fail is deliberately expanded to pass/hold/block so insufficient evidence is not confused with a proven candidate failure.
+
 ### Item-level teaching audit: safety and alignment
 
 | Source IDs | Inspected teaching evidence | Finding |
