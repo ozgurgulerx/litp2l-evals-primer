@@ -1,14 +1,37 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from cx_eval_lab.durable_completion import CompletionJournal
 from cx_eval_lab.durable_world import DurableCampaign
 from cx_eval_lab.exposure_study import FaultInjectedCandidate, case_from_plan, build_window_plan
 from cx_eval_lab.exposure_control import ExposureState
+from cx_eval_lab.exposure_study import execute_window
+from cx_eval_lab.window_registration import WindowRegistry
 
 
 class WindowCompletionTests(unittest.TestCase):
+    def test_execution_and_read_only_join_preserve_planned_denominator(self):
+        from cx_eval_lab.window_completion import inspect_window
+        with tempfile.TemporaryDirectory() as directory:
+            campaign = DurableCampaign.initialize(Path(directory) / 'effects', campaign_id='test',
+                max_actions=2, currency_caps={'EUR': 9000})
+            journal = CompletionJournal.initialize(Path(directory) / 'journal', campaign)
+            registry = WindowRegistry.initialize(Path(directory) / 'windows', campaign)
+            state = ExposureState('candidate', 'baseline', stage='canary', percent=5)
+            execute_window(state, 1, 'healthy', durable_campaign=campaign, window_registry=registry,
+                completion_journal=journal, manifest_digest='a' * 64, execution_namespace='study')
+            with patch('cx_eval_lab.durable_completion.run_case', side_effect=AssertionError('read only')):
+                report = inspect_window(registry, journal, 'study', 1, manifest_digest='a' * 64)
+            selected = [row for row in report['members'] if row['served'] == 'candidate']
+            self.assertEqual(len(report['members']), 40)
+            self.assertEqual(report['planned_served'], len(selected))
+            self.assertTrue(all(row['status'] == 'completed' for row in selected))
+            self.assertTrue(all(row['status'] == 'out_of_scope' for row in report['members']
+                                if row['served'] != 'candidate'))
+            self.assertFalse(report['deployment_authorized'])
+
     def test_bound_batch_missing_completed_and_identity_conflict(self):
         with tempfile.TemporaryDirectory() as directory:
             campaign = DurableCampaign.initialize(Path(directory) / 'effects', campaign_id='test',
