@@ -735,7 +735,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.11695799184963107,
+            "elapsed_ms": 0.11999998241662979,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -983,7 +983,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.07141695823520422,
+            "elapsed_ms": 0.07562502287328243,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -1240,7 +1240,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0635830219835043,
+            "elapsed_ms": 0.06812496576458216,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -1488,7 +1488,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.054374977480620146,
+            "elapsed_ms": 0.060582999140024185,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -1745,7 +1745,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05579099524766207,
+            "elapsed_ms": 0.07179100066423416,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -1993,7 +1993,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.053292023949325085,
+            "elapsed_ms": 0.06525003118440509,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -2250,7 +2250,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.08695799624547362,
+            "elapsed_ms": 0.06091699469834566,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -2498,7 +2498,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.053333991672843695,
+            "elapsed_ms": 0.05937495734542608,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -2755,7 +2755,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05579099524766207,
+            "elapsed_ms": 0.0855830148793757,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -3003,7 +3003,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05579204298555851,
+            "elapsed_ms": 0.057375000324100256,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -3260,7 +3260,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05583302117884159,
+            "elapsed_ms": 0.06512500112876296,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -3508,7 +3508,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05420902743935585,
+            "elapsed_ms": 0.060665945056825876,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -3765,7 +3765,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05591695662587881,
+            "elapsed_ms": 0.07866701344028115,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -4013,7 +4013,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05400000372901559,
+            "elapsed_ms": 0.06645795656368136,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -4270,7 +4270,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.055916025303304195,
+            "elapsed_ms": 0.05966599564999342,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -4518,7 +4518,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05358300404623151,
+            "elapsed_ms": 0.05687499651685357,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -4775,7 +4775,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05724997026845813,
+            "elapsed_ms": 0.06491696694865823,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -5023,7 +5023,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05420902743935585,
+            "elapsed_ms": 0.058792007621377707,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -5280,7 +5280,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06533297710120678,
+            "elapsed_ms": 0.06275001214817166,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -5528,7 +5528,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0622090301476419,
+            "elapsed_ms": 0.08279195753857493,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -5785,7 +5785,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06512500112876296,
+            "elapsed_ms": 0.057958008255809546,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -6033,7 +6033,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05712499842047691,
+            "elapsed_ms": 0.0558749889023602,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -6290,7 +6290,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.058125006034970284,
+            "elapsed_ms": 0.057333032600581646,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -6538,7 +6538,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.052332994528114796,
+            "elapsed_ms": 0.06183399818837643,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -6795,7 +6795,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056374992709606886,
+            "elapsed_ms": 0.06445898907259107,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -7043,7 +7043,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05324999801814556,
+            "elapsed_ms": 0.05770899588242173,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -7300,7 +7300,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.058582983911037445,
+            "elapsed_ms": 0.06404198938980699,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -7548,7 +7548,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05404104012995958,
+            "elapsed_ms": 0.05770899588242173,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -7805,7 +7805,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0652089947834611,
+            "elapsed_ms": 0.06608403054997325,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -8053,7 +8053,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05354202585294843,
+            "elapsed_ms": 0.05600001895800233,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -8310,7 +8310,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05620799493044615,
+            "elapsed_ms": 0.07608399027958512,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -8558,7 +8558,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05299999611452222,
+            "elapsed_ms": 0.06337498780339956,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -8815,7 +8815,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05795905599370599,
+            "elapsed_ms": 0.058957957662642,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -9063,7 +9063,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06383302388712764,
+            "elapsed_ms": 0.06208400009199977,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -9320,7 +9320,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06508396472781897,
+            "elapsed_ms": 0.054374977480620146,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -9568,7 +9568,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.057333032600581646,
+            "elapsed_ms": 0.07466704118996859,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -9825,7 +9825,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.062000006437301636,
+            "elapsed_ms": 0.07070897845551372,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -10073,7 +10073,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.058959005400538445,
+            "elapsed_ms": 0.06554200081154704,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -10330,7 +10330,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06170797860249877,
+            "elapsed_ms": 0.057958008255809546,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -10578,7 +10578,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.3933329717256129,
+            "elapsed_ms": 0.056416960433125496,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -10835,7 +10835,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0648329732939601,
+            "elapsed_ms": 0.05608401261270046,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -11083,7 +11083,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05920900730416179,
+            "elapsed_ms": 0.47500000800937414,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -11340,7 +11340,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.057958997786045074,
+            "elapsed_ms": 0.06683298852294683,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -11588,7 +11588,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05720899207517505,
+            "elapsed_ms": 0.06387499161064625,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -11845,7 +11845,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05816604243591428,
+            "elapsed_ms": 0.0706670107319951,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -12093,7 +12093,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05820899968966842,
+            "elapsed_ms": 0.056500022765249014,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -12350,7 +12350,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056500022765249014,
+            "elapsed_ms": 0.06900000153109431,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -12598,7 +12598,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05208299262449145,
+            "elapsed_ms": 0.055416952818632126,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -12855,7 +12855,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05662499461323023,
+            "elapsed_ms": 0.05745899397879839,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -13103,7 +13103,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05504203727468848,
+            "elapsed_ms": 0.05866697756573558,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -13360,7 +13360,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06591598503291607,
+            "elapsed_ms": 0.05512504139915109,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -13608,7 +13608,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06087496876716614,
+            "elapsed_ms": 0.07070798892527819,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -13865,7 +13865,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.058624951634556055,
+            "elapsed_ms": 0.05916703958064318,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -14113,7 +14113,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05604204488918185,
+            "elapsed_ms": 0.058792007621377707,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -14370,7 +14370,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05845801206305623,
+            "elapsed_ms": 0.06175000453367829,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -14618,7 +14618,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05445897113531828,
+            "elapsed_ms": 0.054917007219046354,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -14875,7 +14875,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05566701292991638,
+            "elapsed_ms": 0.05725002847611904,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -15123,7 +15123,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056833960115909576,
+            "elapsed_ms": 0.05912495544180274,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -15380,7 +15380,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05608296487480402,
+            "elapsed_ms": 0.060416990891098976,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -15628,7 +15628,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056292046792805195,
+            "elapsed_ms": 0.06437505362555385,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -15885,7 +15885,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.055541982874274254,
+            "elapsed_ms": 0.05741603672504425,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -16133,7 +16133,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06670900620520115,
+            "elapsed_ms": 0.05908397724851966,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -16390,7 +16390,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05495903315022588,
+            "elapsed_ms": 0.06770901381969452,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -16638,7 +16638,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05416700150817633,
+            "elapsed_ms": 0.05479203537106514,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -16895,7 +16895,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06912503158673644,
+            "elapsed_ms": 0.05920801777392626,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -17143,7 +17143,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06754201604053378,
+            "elapsed_ms": 0.055334006901830435,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -17400,7 +17400,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.059125013649463654,
+            "elapsed_ms": 0.056541000958532095,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -17648,7 +17648,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056750024668872356,
+            "elapsed_ms": 0.05504098953679204,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -17905,7 +17905,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05658302688971162,
+            "elapsed_ms": 0.06074999691918492,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -18153,7 +18153,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.061959028244018555,
+            "elapsed_ms": 0.05720899207517505,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -18410,7 +18410,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05625002086162567,
+            "elapsed_ms": 0.05495804361999035,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -18658,7 +18658,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06954098353162408,
+            "elapsed_ms": 0.053750001825392246,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -18915,7 +18915,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.060542020946741104,
+            "elapsed_ms": 0.056958000641316175,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -19163,7 +19163,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.057416968047618866,
+            "elapsed_ms": 0.07254205411300063,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -19420,7 +19420,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.054917007219046354,
+            "elapsed_ms": 0.06033299723640084,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -19668,7 +19668,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05383300594985485,
+            "elapsed_ms": 0.061416998505592346,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -19925,7 +19925,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06579101318493485,
+            "elapsed_ms": 0.06362504791468382,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -20173,7 +20173,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056541990488767624,
+            "elapsed_ms": 0.059125013649463654,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -20430,7 +20430,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05800003418698907,
+            "elapsed_ms": 0.06841699359938502,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -20678,7 +20678,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0552500132471323,
+            "elapsed_ms": 0.05704100476577878,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -21227,7 +21227,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.08158298442140222,
+            "elapsed_ms": 0.06633403245359659,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -21485,7 +21485,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06304198177531362,
+            "elapsed_ms": 0.05716702435165644,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -21784,7 +21784,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06704096449539065,
+            "elapsed_ms": 0.07925002137199044,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -22041,7 +22041,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06283301627263427,
+            "elapsed_ms": 0.0558749889023602,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -22355,7 +22355,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06283301627263427,
+            "elapsed_ms": 0.06737496005371213,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -22612,7 +22612,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06279203807935119,
+            "elapsed_ms": 0.05870795575901866,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -22870,7 +22870,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0588749535381794,
+            "elapsed_ms": 0.05483400309458375,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -23128,7 +23128,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.055500015150755644,
+            "elapsed_ms": 0.06266700802370906,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -23386,7 +23386,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05533295916393399,
+            "elapsed_ms": 0.06729102460667491,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -23644,7 +23644,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05908298771828413,
+            "elapsed_ms": 0.05691597471013665,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -23902,7 +23902,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.07154198829084635,
+            "elapsed_ms": 0.05562498699873686,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -24160,7 +24160,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0607079709880054,
+            "elapsed_ms": 0.054374977480620146,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -24418,7 +24418,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06587500683963299,
+            "elapsed_ms": 0.07108302088454366,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -24676,7 +24676,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05829101428389549,
+            "elapsed_ms": 0.05745800444856286,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -24934,7 +24934,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06350001785904169,
+            "elapsed_ms": 0.06804201984778047,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -25192,7 +25192,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.057165976613759995,
+            "elapsed_ms": 0.06087502697482705,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -25450,7 +25450,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056791992392390966,
+            "elapsed_ms": 0.05379103822633624,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -25708,7 +25708,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05366699770092964,
+            "elapsed_ms": 0.060790975112468004,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -25966,7 +25966,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05366699770092964,
+            "elapsed_ms": 0.05845801206305623,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -26224,7 +26224,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.060458958614617586,
+            "elapsed_ms": 0.05508400499820709,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -26482,7 +26482,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05804101238027215,
+            "elapsed_ms": 0.05308300023898482,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -26827,7 +26827,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.08104194421321154,
+            "elapsed_ms": 0.07175002247095108,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -27084,7 +27084,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0582499778829515,
+            "elapsed_ms": 0.07537496276199818,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -27342,7 +27342,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06308400770649314,
+            "elapsed_ms": 0.057750032283365726,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -27600,7 +27600,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06504199700430036,
+            "elapsed_ms": 0.056374992709606886,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -27858,7 +27858,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05612499080598354,
+            "elapsed_ms": 0.05970802158117294,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -28116,7 +28116,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05966704338788986,
+            "elapsed_ms": 0.053458032198250294,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -28374,7 +28374,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05379098001867533,
+            "elapsed_ms": 0.054709031246602535,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -28632,7 +28632,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0521670444868505,
+            "elapsed_ms": 0.05299999611452222,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -28890,7 +28890,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05929201142862439,
+            "elapsed_ms": 0.0546250375919044,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -29148,7 +29148,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.058333040215075016,
+            "elapsed_ms": 0.05504104774445295,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -29406,7 +29406,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.07033301517367363,
+            "elapsed_ms": 0.057165976613759995,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -29664,7 +29664,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06291602039709687,
+            "elapsed_ms": 0.055957993026822805,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -29922,7 +29922,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06237498018890619,
+            "elapsed_ms": 0.06904196925461292,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -30180,7 +30180,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.08304201764985919,
+            "elapsed_ms": 0.05725002847611904,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -30438,7 +30438,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05245901411399245,
+            "elapsed_ms": 0.054709031246602535,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -30696,7 +30696,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.052958959713578224,
+            "elapsed_ms": 0.053750001825392246,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -30954,7 +30954,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.055917014833539724,
+            "elapsed_ms": 0.05679100286215544,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -31212,7 +31212,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.052875024266541004,
+            "elapsed_ms": 0.05562498699873686,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -31574,7 +31574,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06758299423381686,
+            "elapsed_ms": 0.06874999962747097,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -31831,7 +31831,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06891600787639618,
+            "elapsed_ms": 0.05687499651685357,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -32089,7 +32089,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06729102460667491,
+            "elapsed_ms": 0.05783303640782833,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -32347,7 +32347,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05612504901364446,
+            "elapsed_ms": 0.05562498699873686,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -32605,7 +32605,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.059083045925945044,
+            "elapsed_ms": 0.0754999928176403,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -33229,7 +33229,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06345799192786217,
+            "elapsed_ms": 0.06329198367893696,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -33487,7 +33487,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05645799683406949,
+            "elapsed_ms": 0.06670900620520115,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -33865,7 +33865,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06470899097621441,
+            "elapsed_ms": 0.06250001024454832,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -34122,7 +34122,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05870801396667957,
+            "elapsed_ms": 0.05804101238027215,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -34516,7 +34516,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06024999311193824,
+            "elapsed_ms": 0.06170797860249877,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -34773,7 +34773,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05870801396667957,
+            "elapsed_ms": 0.06516702705994248,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -35031,7 +35031,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056999968364834785,
+            "elapsed_ms": 0.0570830306969583,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -35289,7 +35289,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.07025001104921103,
+            "elapsed_ms": 0.055709038861095905,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -35547,7 +35547,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06295798812061548,
+            "elapsed_ms": 0.07199996616691351,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -35805,7 +35805,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06254203617572784,
+            "elapsed_ms": 0.058500037994235754,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -36063,7 +36063,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05745899397879839,
+            "elapsed_ms": 0.05608296487480402,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -36321,7 +36321,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05254102870821953,
+            "elapsed_ms": 0.05445798160508275,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -36579,7 +36579,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05416700150817633,
+            "elapsed_ms": 0.05258299643173814,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -36837,7 +36837,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05529198097065091,
+            "elapsed_ms": 0.05720899207517505,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -37095,7 +37095,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05370797589421272,
+            "elapsed_ms": 0.053875031881034374,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -37353,7 +37353,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.054500007536262274,
+            "elapsed_ms": 0.052499992307275534,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -37611,7 +37611,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.054708041716367006,
+            "elapsed_ms": 0.056541000958532095,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -37869,7 +37869,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05220796447247267,
+            "elapsed_ms": 0.05433295154944062,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -38127,7 +38127,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.0667079584673047,
+            "elapsed_ms": 0.054875039495527744,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -38385,7 +38385,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05712499842047691,
+            "elapsed_ms": 0.06595801096409559,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -38643,7 +38643,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05324999801814556,
+            "elapsed_ms": 0.05383300594985485,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -39053,7 +39053,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06104202475398779,
+            "elapsed_ms": 0.06045802729204297,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -39310,7 +39310,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056999968364834785,
+            "elapsed_ms": 0.060999998822808266,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -39568,7 +39568,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05804200191050768,
+            "elapsed_ms": 0.07300003198906779,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -39826,7 +39826,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.055374985095113516,
+            "elapsed_ms": 0.05904101999476552,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -40084,7 +40084,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05641701864078641,
+            "elapsed_ms": 0.06929197115823627,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -40342,7 +40342,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05749997217208147,
+            "elapsed_ms": 0.06766704609617591,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -40600,7 +40600,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05724997026845813,
+            "elapsed_ms": 0.06258301436901093,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -40858,7 +40858,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06749999010935426,
+            "elapsed_ms": 0.07012503920122981,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -41116,7 +41116,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06329198367893696,
+            "elapsed_ms": 0.07179199019446969,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -41374,7 +41374,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05425000563263893,
+            "elapsed_ms": 0.05524995503947139,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -41632,7 +41632,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05370797589421272,
+            "elapsed_ms": 0.05458301166072488,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -41890,7 +41890,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05416700150817633,
+            "elapsed_ms": 0.053333002142608166,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -42148,7 +42148,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06491696694865823,
+            "elapsed_ms": 0.07283396553248167,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -42406,7 +42406,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05379202775657177,
+            "elapsed_ms": 0.07075001485645771,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -42664,7 +42664,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05595805123448372,
+            "elapsed_ms": 0.055917014833539724,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -42922,7 +42922,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05441700341179967,
+            "elapsed_ms": 0.059041951317340136,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -43180,7 +43180,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.055333017371594906,
+            "elapsed_ms": 0.054333009757101536,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -43438,7 +43438,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.22658403031527996,
+            "elapsed_ms": 0.05725002847611904,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -43864,7 +43864,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.06570899859070778,
+            "elapsed_ms": 0.25354098761454225,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -44121,7 +44121,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.057375000324100256,
+            "elapsed_ms": 0.06504100747406483,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -44379,7 +44379,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05512504139915109,
+            "elapsed_ms": 0.06204203236848116,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -44637,7 +44637,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.05966698518022895,
+            "elapsed_ms": 0.06433296948671341,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -44895,7 +44895,7 @@
               "escalation_reason": null
             },
             "execution_error": null,
-            "elapsed_ms": 0.056541990488767624,
+            "elapsed_ms": 0.06395898526534438,
             "wrong_order_commits": 0,
             "unnecessary_clarifications": 0,
             "missing_clarifications": 0,
@@ -45125,7 +45125,7 @@
       "source:cx_eval_lab/advanced.py": "sha256:d4656eded62f9ba2aa7238e897eb3e6b0be9d58c7ca4efe68c8cacd7a60e417b",
       "source:cx_eval_lab/agents.py": "sha256:a14f2640e967d5815c223fc3d526f65bbd790d0270ca6e22ecfb6377cfc6da82",
       "source:cx_eval_lab/artifacts.py": "sha256:a108afaf21c9d32aa94d29c65b6650755626fb21245b57bc80fc69f43f52cbb8",
-      "source:cx_eval_lab/budgeted_exposure_study.py": "sha256:0c893fb103932dccd2325545bf3abb2988da3278f930ea228262b57e945d4c69",
+      "source:cx_eval_lab/budgeted_exposure_study.py": "sha256:6b8d9ef4fa62a4bcfdfd6bce01ae29026f274eb5d3e7430c1d8adc155da12500",
       "source:cx_eval_lab/budgeted_judge.py": "sha256:b30d4af0bd32f8943a6084157603e1d022b3616aca0ed9df745840dd8a411a8a",
       "source:cx_eval_lab/calibration_data.py": "sha256:0568d843fd428d435b68cf422dd683b70297ce8296b7796bf0537eae6a0f59fa",
       "source:cx_eval_lab/campaign_budget.py": "sha256:38dd2f28216fae871eabff7e324061a1b4c1f78ba869da285cb06c1aaa07e815",
@@ -45193,5 +45193,5 @@
   "artifact_hash_semantics": "Complete artifact with only baseline/candidate elapsed_ms set to zero.",
   "deployment_authorized": false,
   "limitations": "Fixed deterministic agents and mock effects, not model quality or production qualification. Shared Python locks provide no crash durability or multiprocess authority. Baseline and shadow effects are isolated simulations, not evidence that real shadowing prevents writes. Budget-denied work remains unfinished; policy outcomes are not intrinsic candidate-quality estimates. Hashes and local replay establish consistency, not authenticated execution provenance.",
-  "report_hash": "sha256:0f7ce0067648d608b5e49fa36734bfa93620e1d57f5a1bfe57b5d9b1104a1183"
+  "report_hash": "sha256:86114bba841d4fae11d2a76524e89ce249fad898ccc0f7300a3183a45e88ef86"
 }

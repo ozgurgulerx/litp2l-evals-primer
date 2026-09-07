@@ -14,7 +14,6 @@ from cx_eval_lab.exposure_control import ExposureState, transition
 from cx_eval_lab.exposure_study import execute_window
 from cx_eval_lab.source_provenance import capture_source_inputs
 
-
 SCHEMA = 'budgeted-exposure-v1'
 CAMPAIGN = 'fixed-budget-campaign-v1'
 
