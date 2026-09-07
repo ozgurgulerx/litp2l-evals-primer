@@ -109,6 +109,24 @@ If policy allows both first reads, exact matching to A is brittle. The required 
 
 ## Verify state outside the agent
 
+### Micro-kata: choose the trajectory comparison contract
+
+For this exercise, define strict matching as sequence equality, subset matching as observed tool names contained in the reference set, and superset matching as the observed set containing all reference names. Framework naming varies; register the actual relation. These set modes intentionally ignore order, multiplicity and arguments.
+
+```python
+reference = ["verify", "policy", "refund"]
+def compare(observed):
+    return (observed == reference,
+            set(observed) <= set(reference),
+            set(observed) >= set(reference))
+
+assert compare(["verify", "policy"]) == (False, True, False)
+assert compare(["refund", "verify", "policy"]) == (False, True, True)
+assert compare(reference + ["refund"]) == (False, True, True)
+```
+
+**Solution:** subset matching accepts an unfinished task. Both set modes accept a write before verification and a repeated refund call. Strict matching distinguishes these paths but also rejects harmless read reordering. Use partial-order checks for prerequisites, typed argument and authorization checks for each action, and authoritative state for committed effects. A repeated call is not necessarily a duplicate payment when idempotency holds; inspect both the call and its effect. None of these three comparison scores alone establishes task success.
+
 The agent’s statement `claimed_outcome="refunded"` is evidence about its claim, not the refund. Read the ledger or mock world.
 
 ```python

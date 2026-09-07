@@ -505,6 +505,8 @@ Do not infer acceptance of the other 102 questions from this subset or treat the
 
 ## Course and project practice
 
+**Code-first exercise check — 7 September 2026:** the source's progressive sequence maps to the typed CX runner, full trial artifacts, mixed-trace analysis (Katas 66–67), semantic qualification lab, paired slice diagnostics, incident promotion and CI gate controls. Its explicit strict/subset/superset trajectory exercise now has an [executable comparison and solution](agent-evals.md#micro-kata-choose-the-trajectory-comparison-contract). The book adapts account/invoice operations to the existing customer/order refund domain; it does not claim to have executed the source's independent twenty-trace human pilot or every suggested model/tool-description intervention. Those learner experiments remain distinct from the retained synthetic controls.
+
 The research corpus recommends one evolving lab rather than unrelated notebooks. The CX Eval Lab is the implemented core; the projects below have different maturity levels. A required learning artifact is not automatically completed proof.
 
 | Project | Book home | Required learning artifact | Current evidence status |
