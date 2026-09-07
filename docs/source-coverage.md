@@ -7,6 +7,10 @@ This ledger prevents the book from becoming a selective summary. It maps every s
 
 ## Source inventory
 
+### Durable existing-world evidence and authorization
+
+[Kata 100](exposure-control-lab.md#kata-100-reopen-the-evidence-not-just-the-balance) puts optional persisted campaign state behind the existing `RefundWorld` methods. Seed bindings, current authorization, refund effects and events are stored transactionally; paired state/event reads preserve grading evidence after reopen. Reference/timeout parity and specific unauthorized-action failures are tested. Review reproduced and repaired partial commits caused by broad exception handling. This is the first integration stage, not wiring through multi-order exposure, durable response storage, a process-recovery packet or production authority. Existing artifacts remain historical and unchanged.
+
 ### Durable local payment allowance
 
 [Kata 99](process-recovery-study.md#kata-99-the-process-died-but-the-allowance-did-not-reset) adds optional database-owned policy to the existing recovery payment boundary. Approval, capacity and effect insertion share a write transaction; consumption derives from committed payments. Separate processes test competition for the final unit and worker loss before/after commit. This is a bounded local database implementation, not a durable integration of the multi-window exposure campaign or a remote payment system. Historical unbudgeted artifacts remain unchanged. The historical budgeted-packet test now pins its original file bytes and expects exact replay refusal after source/interpreter drift; fresh-packet replay remains required.

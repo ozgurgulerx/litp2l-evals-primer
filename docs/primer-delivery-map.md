@@ -6,6 +6,16 @@ Existing chapters, source mappings, and examples remain part of the curriculum. 
 
 ## Required learning contract
 
+### Durable world backend checkpoint — 7 September 2026
+
+[Kata 100](exposure-control-lab.md#kata-100-reopen-the-evidence-not-just-the-balance) completes the first storage/world stage of the integration contract. Existing `RefundWorld` tools can use an optional SQLite campaign that persists immutable seed bindings, current authorization, effects and events atomically. Reopened instances see prior evidence and cross-instance revocation; `durable_state()` supplies a paired snapshot/event projection. Reference-agent output, timeout handling and regrading match the memory path on the tested cases. Unsafe commits retain their specific unauthorized-action failure.
+
+Worker RED/GREEN `d3083c4` / `aaa769b` and independent grader RED/GREEN `f04f21f` / `e71101d` capture the initial implementation. Review then reproduced a partial-effect commit caused by treating every `ValueError` or `PermissionError` as an expected tool rejection. RED `7e6d5d0` and GREEN `62421a5` require matching state/event evidence before deferring a known failure; unexpected partial transitions roll back. Final cleanup `3b7bc5f` changes formatting only. Independent re-review found no remaining boundary blockers.
+
+The full regression run passes 619 tests in 76.179 seconds. Targeted lint/type checks, fresh source-checked release controls, fresh budget replay, strict build, published snippet and desktop solution expansion pass. The catalog now links 100 unique katas with valid rendered anchors. No historical artifact was regenerated or removed.
+
+The exposure driver and multi-order runner do not yet select this backend. Durable customer-response storage, attempt/window checkpoints, whole-agent continuation and retained campaign-process evidence remain open. The tests reuse their retained output when regrading; they do not prove that a killed agent's response was recovered. No cloud execution, paid model study, human qualification or production authorization is claimed.
+
 ### Durable campaign integration architecture checkpoint — 7 September 2026
 
 Source inspection of `execute_window`, `run_case`, `MultiOrderWorld`, `RefundWorld`, grading and recovery storage established why the two budget implementations cannot simply be joined: the campaign's authoritative effect and authorization snapshot remain in memory. The [integration contract](exposure-control-lab.md#durable-campaign-integration-contract) now specifies one durable owner for seed/authority/effect/event state, mutually exclusive backends, served-only accounting, stable reopen identity, consistent grader projections and request/window recovery checkpoints. It preserves the existing public authorization-first tool behavior and separates historical reconciliation.
