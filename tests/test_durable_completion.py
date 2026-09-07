@@ -1,8 +1,8 @@
 """Completion caching never invents recovery of an interrupted agent."""
 
-import multiprocessing
 import hashlib
 import json
+import multiprocessing
 import sqlite3
 import tempfile
 import unittest
@@ -13,7 +13,6 @@ from unittest.mock import patch
 
 from cx_eval_lab.durable_completion import CompletionJournal
 from cx_eval_lab.durable_world import DurableCampaign
-from cx_eval_lab.exposure_study import FaultInjectedCandidate
 from cx_eval_lab.order_resolution import DescriptiveResolver, example_cases
 
 POLICY = {'campaign_id': 'completion', 'max_actions': 2, 'currency_caps': {'USD': 8000, 'EUR': 9000}}
