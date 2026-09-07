@@ -6,7 +6,9 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock, patch
 
+from cx_eval_lab import recovery_decision_study as study
 from cx_eval_lab.recovery_decision_study import run_study
 
 
@@ -44,3 +46,29 @@ class RecoveryDecisionStudyTests(unittest.TestCase):
         command = 'uv run python -m cx_eval_lab.recovery_decision_study --output ci-evidence/recovery-decision.json'
         self.assertIn(command, workflow)
         self.assertLess(workflow.index(command), workflow.index('Retain available evidence even on failure'))
+
+    def test_cli_entrypoint_and_early_overwrite_refusal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'packet.json'
+            with patch.object(sys, 'argv', ['study', '--output', str(path)]):
+                study.main()
+                with patch.object(study, 'run_study') as execute, self.assertRaises(SystemExit):
+                    study.main()
+                execute.assert_not_called()
+            self.assertTrue(json.loads(path.read_text())['conformance_passed'])
+
+    def test_worker_can_finish_if_supervisor_does_not_interrupt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            campaign = study.DurableCampaign.initialize(root / 'effects', **study.POLICY)
+            journal = study.CompletionJournal.initialize(root / 'journal', campaign)
+            plan = study.build_window_plan(study.ExposureState('candidate', 'baseline'), 1,
+                'wrong_order', execution_namespace='study', manifest_digest='a' * 64,
+                effect_backend='durable')
+            ready, release = Mock(), Mock()
+            member = plan['members'][0]
+            study._worker(campaign.path, journal.path, member, 'a' * 64, ready, release)
+            ready.set.assert_called_once()
+            release.wait.assert_called_once_with(30)
+            self.assertEqual(journal.inspect(member['candidate_namespace'])['status'], 'completed')
+            self.assertEqual(campaign.snapshot()['charged_actions'], 1)
