@@ -284,14 +284,14 @@ class RefundWorld:
             )
             return {"status": "already_committed"}
 
-        if self._action_budget is not None:
-            reason = self._action_budget._consume(self.execution_namespace, order_id,
-                idempotency_key, self._seed.amount_cents, self._seed.currency)
-            if reason is not None:
-                self._record('issue_refund', 'blocked_budget', reason=reason,
-                             idempotency_key=idempotency_key)
-                return {'status': 'blocked', 'reason': reason}
         try:
+            if self._action_budget is not None:
+                reason = self._action_budget._consume(self.execution_namespace, order_id,
+                    idempotency_key, self._seed.amount_cents, self._seed.currency)
+                if reason is not None:
+                    self._record('issue_refund', 'blocked_budget', reason=reason,
+                                 idempotency_key=idempotency_key)
+                    return {'status': 'blocked', 'reason': reason}
             return self._apply_refund_effect(idempotency_key)
         except ToolTimeout:
             raise
